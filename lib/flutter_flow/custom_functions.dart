@@ -12,9 +12,8 @@ String storyGetPrompt(List<dynamic> questions) {
   var prompt =
       'Act as a storytelling professional. You will create a bedtime story appropriate for children of 5, '
       'which should last about <duration> minutes to read. You will base the story on all the following elements. '
-      'The main character of the story is <characterName>, a <characterType>. The story happens <location>. '
-      'The main character is <power>. The main character has to face a struggle of your choice. '
-      '<object> is important in the story.';
+      'The main character of the story is <character>. The story happens <location>. The main character is <power>. '
+      'The main character has to face a struggle of your choice. <object> is important in the story.';
 
   for (var question in questions) {
     var key = question['key'];
@@ -39,13 +38,18 @@ String utilsTestPrompt() {
 }
 
 List<dynamic> characterInitQuestions(
-  String characterName,
+  String character,
   String characterType,
 ) {
-  const numRequiredQuestions = 2;
-
-  const templates = [
-    /** POWER */
+  return [
+    {
+      'key': 'character',
+      'answer': character,
+    },
+    {
+      'key': 'characterType',
+      'answer': characterType,
+    },
     {
       'key': 'power',
       'text': 'The main character is...',
@@ -53,24 +57,12 @@ List<dynamic> characterInitQuestions(
         {
           'text': 'Very strong',
           'icon': 'power_strength',
-          'value': 'very strong',
-          'exclude': [],
+          'value': 'very strong'
         },
-        {
-          'text': 'Able to fly',
-          'icon': 'power_fly',
-          'value': 'able to fly',
-          'exclude': ['dove'],
-        },
-        {
-          'text': 'Very smart',
-          'icon': 'power_smart',
-          'value': 'very smart',
-          'exclude': [],
-        },
-      ],
+        {'text': 'Able to fly', 'icon': 'power_fly', 'value': 'able to fly'},
+        {'text': 'Very smart', 'icon': 'power_smart', 'value': 'very smart'},
+      ]
     },
-    /** LOCATION */
     {
       'key': 'location',
       'text': 'The story takes place...',
@@ -78,111 +70,34 @@ List<dynamic> characterInitQuestions(
         {
           'text': 'Deep in the ocean',
           'icon': 'place_ocean',
-          'value': 'deep in the ocean',
-          'exclude': ['dog', 'dove'],
+          'value': 'deep in the ocean'
         },
-        {
-          'text': 'In the woods',
-          'icon': 'place_tree',
-          'value': 'in the woods',
-          'exclude': ['fish'],
-        },
+        {'text': 'In the woods', 'icon': 'place_tree', 'value': 'in the woods'},
         {
           'text': 'In a magical kingdom',
           'icon': 'place_magic',
-          'value': 'in a magical kingdom',
-          'exclude': [],
+          'value': 'in a magical kingdom'
         },
-      ],
+      ]
     },
-    /** OBJECT */
     {
       'key': 'object',
       'text': 'The main character has...',
       'choices': [
-        {
-          'text': 'A guitar',
-          'icon': 'object_guitar',
-          'value': 'a guitar',
-          'exclude': [],
-        },
-        {
-          'text': 'A hat',
-          'icon': 'object_hat',
-          'value': 'a hat',
-          'exclude': [],
-        },
-        {
-          'text': 'A rocket',
-          'icon': 'object_rocket',
-          'value': 'a rocket',
-          'exclude': [],
-        },
-      ],
-    }
+        {'text': 'A guitar', 'icon': 'object_guitar', 'value': 'a guitar'},
+        {'text': 'A hat', 'icon': 'object_hat', 'value': 'a hat'},
+        {'text': 'A rocket', 'icon': 'object_rocket', 'value': 'a rocket'},
+      ]
+    },
+    {
+      'key': 'duration',
+      'text': 'How long is the story?',
+      'choices': [
+        {'text': 'Short (2 min)', 'icon': 'duration_short', 'value': '2'},
+        {'text': 'Long (5 min)', 'icon': 'duration_long', 'value': '5'},
+      ]
+    },
   ];
-
-  List<dynamic> questions = [
-    {'key': 'characterName', 'answer': characterName},
-    {'key': 'characterType', 'answer': characterType}
-  ];
-
-  // Create a random list of indices for required questions
-  List<int> requiredIndices = [for (var i = 0; i < templates.length; i += 1) i]
-    ..shuffle();
-  requiredIndices = requiredIndices.take(numRequiredQuestions).toList();
-
-  templates.asMap().forEach((index, template) {
-    // Remove the choices forbidden to the character
-    var choices = template['choices']! as List<Map<String, dynamic>>;
-    choices.removeWhere((choice) {
-      if (!choice.containsKey('exclude')) {
-        return false;
-      }
-      var exclude = choice['exclude'] as List;
-      if (exclude.isEmpty) {
-        return false;
-      }
-      return exclude.contains(characterType);
-    });
-
-    if (requiredIndices.contains(index)) {
-      // The question is required: copy the template as a question
-      questions.add({
-        'key': template['key'],
-        'text': template['text'],
-        'choices': choices,
-      });
-    } else {
-      // Choose a random answer for the user
-      choices.shuffle();
-      questions.add({
-        'key': template['key'],
-        'answer': choices.first['value'],
-      });
-    }
-  });
-
-  questions.add({
-    'key': 'duration',
-    'text': 'How long should the story be?',
-    'choices': [
-      {
-        'text': 'Short (2 min)',
-        'icon': 'duration_short',
-        'value': '2',
-        'exclude': [],
-      },
-      {
-        'text': 'Long (5 min)',
-        'icon': 'duration_long',
-        'value': '5',
-        'exclude': [],
-      },
-    ],
-  });
-
-  return questions;
 }
 
 String questionGetChoiceText(
@@ -246,16 +161,15 @@ String utilsGetAnswer(
   return '';
 }
 
-int utilsGetNextQuestionIndex(
-  int start,
-  List<dynamic> questions,
-) {
-  for (var i = start; i < questions.length; i++) {
-    if (!questions[i].containsKey('answer')) {
+int characterGetFirstQuestionIndex(List<dynamic> questions) {
+  var i = 0;
+  for (var question in questions) {
+    if (!question.containsKey('answer')) {
       return i;
     }
+    i++;
   }
-  return questions.length;
+  return i;
 }
 
 String questionGetChoiceIcon(

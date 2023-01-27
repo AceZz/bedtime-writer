@@ -24,13 +24,6 @@ class QuestionChoiceButtonWidget extends StatefulWidget {
 class _QuestionChoiceButtonWidgetState
     extends State<QuestionChoiceButtonWidget> {
   @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
-  }
-
-  @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
@@ -45,15 +38,12 @@ class _QuestionChoiceButtonWidgetState
                     FFAppState().questions.toList())
                 .toList();
           });
-          if (functions.utilsGetNextQuestionIndex(
-                  widget.questionIndex!, FFAppState().questions.toList()) <
-              FFAppState().questions.length) {
+          if (widget.questionIndex! + 1 < FFAppState().questions.length) {
             context.pushNamed(
               'Question',
               queryParams: {
                 'questionIndex': serializeParam(
-                  functions.utilsGetNextQuestionIndex(
-                      widget.questionIndex!, FFAppState().questions.toList()),
+                  widget.questionIndex! + 1,
                   ParamType.int,
                 ),
               }.withoutNulls,

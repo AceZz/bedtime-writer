@@ -29,18 +29,17 @@ class _LoadingWidgetState extends State<LoadingWidget> {
       apiResultrre = await OpenAiBedtimeStoryCall.call(
         prompt: functions.storyGetPrompt(FFAppState().questions.toList()),
       );
-      apiResult9mp = await OpenAiDalleCall.call(
-        characterType: functions.utilsGetAnswer(
-            'characterType', FFAppState().questions.toList()),
-        location: functions.utilsGetAnswer(
-            'location', FFAppState().questions.toList()),
-      );
       if ((apiResultrre?.succeeded ?? true)) {
         FFAppState().update(() {
           FFAppState().storyText = OpenAiBedtimeStoryCall.text(
             (apiResultrre?.jsonBody ?? ''),
           ).toString();
         });
+        apiResult9mp = await OpenAiDalleCall.call(
+          characterType: FFAppState().characterType,
+          location: functions.utilsGetAnswer(
+              'location', FFAppState().questions.toList()),
+        );
         if ((apiResult9mp?.succeeded ?? true)) {
           FFAppState().update(() {
             FFAppState().storyImage = OpenAiDalleCall.url(
@@ -52,8 +51,6 @@ class _LoadingWidgetState extends State<LoadingWidget> {
         }
       }
     });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override

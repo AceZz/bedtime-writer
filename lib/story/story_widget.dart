@@ -37,8 +37,6 @@ class _StoryWidgetState extends State<StoryWidget> {
         });
       }
     });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -88,7 +86,7 @@ class _StoryWidgetState extends State<StoryWidget> {
                             );
                           },
                           child: Text(
-                            'The story of ${functions.utilsGetAnswer('characterName', FFAppState().questions.toList())}, who is ${functions.utilsGetAnswer('power', FFAppState().questions.toList())}.',
+                            'The story of ${functions.utilsGetAnswer('character', FFAppState().questions.toList())}, who is ${functions.utilsGetAnswer('power', FFAppState().questions.toList())}.',
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context).subtitle1,
                           ),
@@ -163,7 +161,7 @@ class _StoryWidgetState extends State<StoryWidget> {
                             );
                           },
                           text: FFLocalizations.of(context).getText(
-                            'sw9vnusl' /* Share */,
+                            'gshkc43r' /* Share */,
                           ),
                           options: FFButtonOptions(
                             width: 130,

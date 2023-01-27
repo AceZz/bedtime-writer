@@ -11,13 +11,11 @@ class CharacterChoiceButtonWidget extends StatefulWidget {
     Key? key,
     this.text,
     this.icon,
-    this.characterName,
     this.characterType,
   }) : super(key: key);
 
   final String? text;
   final Widget? icon;
-  final String? characterName;
   final String? characterType;
 
   @override
@@ -28,13 +26,6 @@ class CharacterChoiceButtonWidget extends StatefulWidget {
 class _CharacterChoiceButtonWidgetState
     extends State<CharacterChoiceButtonWidget> {
   @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
-  }
-
-  @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
@@ -42,8 +33,7 @@ class _CharacterChoiceButtonWidgetState
       onTap: () async {
         FFAppState().update(() {
           FFAppState().questions = functions
-              .characterInitQuestions(
-                  widget.characterName!, widget.characterType!)
+              .characterInitQuestions(widget.text!, widget.characterType!)
               .toList();
         });
 
@@ -51,8 +41,8 @@ class _CharacterChoiceButtonWidgetState
           'Question',
           queryParams: {
             'questionIndex': serializeParam(
-              functions.utilsGetNextQuestionIndex(
-                  0, FFAppState().questions.toList()),
+              functions.characterGetFirstQuestionIndex(
+                  FFAppState().questions.toList()),
               ParamType.int,
             ),
           }.withoutNulls,

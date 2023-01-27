@@ -105,7 +105,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   },
   // Story
   {
-    'sw9vnusl': {
+    'gshkc43r': {
       'en': 'Share',
       'de': '',
       'fr': '',

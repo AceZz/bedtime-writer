@@ -18,13 +18,6 @@ class _CharacterWidgetState extends State<CharacterWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
-  }
-
-  @override
   void dispose() {
     _unfocusNode.dispose();
     super.dispose();
@@ -94,7 +87,6 @@ class _CharacterWidgetState extends State<CharacterWidget> {
                               size: 50,
                             ),
                             characterType: 'dog',
-                            characterName: 'Diddy',
                           ),
                         ),
                       ),
@@ -122,7 +114,6 @@ class _CharacterWidgetState extends State<CharacterWidget> {
                               size: 50,
                             ),
                             characterType: 'dove',
-                            characterName: 'Davie',
                           ),
                         ),
                       ),
@@ -150,7 +141,6 @@ class _CharacterWidgetState extends State<CharacterWidget> {
                               size: 50,
                             ),
                             characterType: 'fish',
-                            characterName: 'Fifi',
                           ),
                         ),
                       ),
