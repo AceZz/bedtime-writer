@@ -1,6 +1,7 @@
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,13 @@ class IconTextWidget extends StatefulWidget {
 }
 
 class _IconTextWidgetState extends State<IconTextWidget> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
   @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
@@ -48,6 +56,7 @@ class _IconTextWidgetState extends State<IconTextWidget> {
           widget.icon!,
           Text(
             widget.text!,
+            textAlign: TextAlign.center,
             style: FlutterFlowTheme.of(context).bodyText1.override(
                   fontFamily: 'Outfit',
                   fontSize: 20,

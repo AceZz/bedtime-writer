@@ -18,7 +18,7 @@ class OpenAiBedtimeStoryCall {
   "model": "text-davinci-003",
   "prompt": "${prompt}",
   "temperature": 0.9,
-  "max_tokens": 4000,
+  "max_tokens": 3900,
   "frequency_penalty": 0,
   "presence_penalty": 0
 }''';

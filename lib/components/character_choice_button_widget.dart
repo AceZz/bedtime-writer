@@ -3,6 +3,7 @@ import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -11,11 +12,13 @@ class CharacterChoiceButtonWidget extends StatefulWidget {
     Key? key,
     this.text,
     this.icon,
+    this.characterName,
     this.characterType,
   }) : super(key: key);
 
   final String? text;
   final Widget? icon;
+  final String? characterName;
   final String? characterType;
 
   @override
@@ -26,6 +29,13 @@ class CharacterChoiceButtonWidget extends StatefulWidget {
 class _CharacterChoiceButtonWidgetState
     extends State<CharacterChoiceButtonWidget> {
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
@@ -33,7 +43,8 @@ class _CharacterChoiceButtonWidgetState
       onTap: () async {
         FFAppState().update(() {
           FFAppState().questions = functions
-              .characterInitQuestions(widget.text!, widget.characterType!)
+              .characterInitQuestions(
+                  widget.characterName!, widget.characterType!)
               .toList();
         });
 
@@ -41,8 +52,8 @@ class _CharacterChoiceButtonWidgetState
           'Question',
           queryParams: {
             'questionIndex': serializeParam(
-              functions.characterGetFirstQuestionIndex(
-                  FFAppState().questions.toList()),
+              functions.utilsGetNextQuestionIndex(
+                  0, FFAppState().questions.toList()),
               ParamType.int,
             ),
           }.withoutNulls,

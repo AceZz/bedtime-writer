@@ -3,6 +3,7 @@ import '../flutter_flow/flutter_flow_util.dart';
 import '../custom_code/widgets/index.dart' as custom_widgets;
 import '../flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +25,13 @@ class QuestionChoiceButtonWidget extends StatefulWidget {
 class _QuestionChoiceButtonWidgetState
     extends State<QuestionChoiceButtonWidget> {
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
@@ -38,12 +46,15 @@ class _QuestionChoiceButtonWidgetState
                     FFAppState().questions.toList())
                 .toList();
           });
-          if (widget.questionIndex! + 1 < FFAppState().questions.length) {
+          if (functions.utilsGetNextQuestionIndex(
+                  widget.questionIndex!, FFAppState().questions.toList()) <
+              FFAppState().questions.length) {
             context.pushNamed(
               'Question',
               queryParams: {
                 'questionIndex': serializeParam(
-                  widget.questionIndex! + 1,
+                  functions.utilsGetNextQuestionIndex(
+                      widget.questionIndex!, FFAppState().questions.toList()),
                   ParamType.int,
                 ),
               }.withoutNulls,
@@ -100,6 +111,7 @@ class _QuestionChoiceButtonWidgetState
               Text(
                 functions.questionGetChoiceText(widget.questionIndex!,
                     widget.choiceIndex!, FFAppState().questions.toList()),
+                textAlign: TextAlign.center,
                 style: FlutterFlowTheme.of(context).bodyText1.override(
                       fontFamily: 'Outfit',
                       fontSize: 20,

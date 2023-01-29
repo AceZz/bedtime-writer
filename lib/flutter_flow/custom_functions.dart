@@ -10,10 +10,11 @@ import 'place.dart';
 
 String storyGetPrompt(List<dynamic> questions) {
   var prompt =
-      'Act as a storytelling professional. You will create a bedtime story appropriate for children of 5, '
-      'which should last about <duration> minutes to read. You will base the story on all the following elements. '
-      'The main character of the story is <character>. The story happens <location>. The main character is <power>. '
-      'The main character has to face a struggle of your choice. <object> is important in the story.';
+      'Act as a storyteller. Tell a bedtime story, with details, for a 5-year old, which should last about <duration> minutes. '
+      'The main character of the story is <characterName>, a <characterType>. It has a flaw: <flaw>. It has a power: <power>. '
+      'It will be challenged with <challenge>. '
+      'The story happens <place>. This object shall be important: <object>. '
+      'The story shall end well and with this moral: <moral>';
 
   for (var question in questions) {
     var key = question['key'];
@@ -24,80 +25,334 @@ String storyGetPrompt(List<dynamic> questions) {
   return prompt;
 }
 
-String utilsTestPrompt() {
-  return '''Once upon a time, there lived a very smart fish named Fifi. She lived deep in the ocean, surrounded by her sea friends.\n\n'''
-      '''One day, Fifi noticed a strange hat floating around in the water. She was curious and wanted to find out what it was. '''
-      '''She swam closer and suddenly the hat started to glow!\n\n'''
-      '''Fifi was amazed and decided to pick it up. When she did, a voice came from the hat. It said “hello, I am a magical hat. '''
-      '''I can make your wildest dreams come true. All you have to do is put me on your head and make a wish”.\n\n'''
-      '''Fifi was so excited and quickly put on the hat. But then she realized that with great power comes great responsibility. '''
-      '''She had to use the magic wisely, for the good of all the sea creatures.\n\n'''
-      '''But the problem was, Fifi didn\'t know how to use her new-found power correctly. She was suddenly faced with a huge struggle.\n\n'''
-      '''Fifi swam around, trying to think of a way to use the hat\'s magic. Suddenly, she had an idea!\n\n'''
-      '''She used the hat\'s magic to turn the ocean into a safe place for all the sea creatures''';
-}
-
 List<dynamic> characterInitQuestions(
-  String character,
+  String characterName,
   String characterType,
 ) {
-  return [
+  const numRequiredQuestions = 2;
+
+  const templates = [
+    /** FLAW */
     {
-      'key': 'character',
-      'answer': character,
-    },
-    {
-      'key': 'characterType',
-      'answer': characterType,
-    },
-    {
-      'key': 'power',
-      'text': 'The main character is...',
+      'key': 'flaw',
+      'text': 'What flaw does the main character have?',
       'choices': [
         {
-          'text': 'Very strong',
-          'icon': 'power_strength',
-          'value': 'very strong'
+          'text': 'Being afraid of failure',
+          'icon': 'flaw_afraid_failure',
+          'value': 'being afraid of failure',
+          'exclude': [],
         },
-        {'text': 'Able to fly', 'icon': 'power_fly', 'value': 'able to fly'},
-        {'text': 'Very smart', 'icon': 'power_smart', 'value': 'very smart'},
-      ]
+        {
+          'text': 'Lacking self-confidence',
+          'icon': 'flaw_not_confident',
+          'value': 'lacking self-confidence',
+          'exclude': [],
+        },
+        {
+          'text': 'Being a bit lazy',
+          'icon': 'flaw_lazy',
+          'value': 'being a bit lazy',
+          'exclude': [],
+        },
+        {
+          'text': 'Giving up easily',
+          'icon': 'flaw_give_up',
+          'value': 'being a bit lazy',
+          'exclude': [],
+        },
+        {
+          'text': 'Thinking they are ugly',
+          'icon': 'flaw_ugly',
+          'value': 'being a bit lazy',
+          'exclude': [],
+        },
+        {
+          'text': 'Not listening to advice',
+          'icon': 'flaw_no_advice',
+          'value': 'not listening to advice',
+          'exclude': [],
+        },
+      ],
     },
+    /** PLACE */
     {
-      'key': 'location',
+      'key': 'place',
       'text': 'The story takes place...',
       'choices': [
         {
-          'text': 'Deep in the ocean',
-          'icon': 'place_ocean',
-          'value': 'deep in the ocean'
-        },
-        {'text': 'In the woods', 'icon': 'place_tree', 'value': 'in the woods'},
-        {
-          'text': 'In a magical kingdom',
+          'text': 'In a magical forest',
           'icon': 'place_magic',
-          'value': 'in a magical kingdom'
+          'value': 'in a magical forest',
+          'exclude': [],
         },
-      ]
+        {
+          'text': 'In a quiet village',
+          'icon': 'place_village',
+          'value': 'in a quiet village',
+          'exclude': [],
+        },
+        {
+          'text': 'In an underwater kingdom',
+          'icon': 'place_underwater',
+          'value': 'in an underwater kingdom',
+          'exclude': ['horse'],
+        },
+        {
+          'text': 'In a space station',
+          'icon': 'place_space',
+          'value': 'in a space station',
+          'exclude': [],
+        },
+        {
+          'text': 'In a dry desert',
+          'icon': 'place_desert',
+          'value': 'in a dry desert',
+          'exclude': [],
+        },
+        {
+          'text': 'On a sunny beach',
+          'icon': 'place_beach',
+          'value': 'on a sunny beach',
+          'exclude': [],
+        },
+      ],
     },
+    /** CHALLENGE */
+    {
+      'key': 'challenge',
+      'text': 'What challenge does the main character encounter?',
+      'choices': [
+        {
+          'text': 'Being lost',
+          'icon': 'challenge_lost',
+          'value': 'being lost',
+          'exclude': [],
+        },
+        {
+          'text': 'Captured by a witch',
+          'icon': 'challenge_witch',
+          'value': 'being captured by a witch',
+          'exclude': [],
+        },
+        {
+          'text': 'Fighting a big animal',
+          'icon': 'challenge_animal',
+          'value': 'fighting a big animal',
+          'exclude': [],
+        },
+        {
+          'text': 'Rescuing a friend',
+          'icon': 'challenge_friend',
+          'value': 'rescuing a friend',
+          'exclude': [],
+        },
+        {
+          'text': 'Solving a riddle',
+          'icon': 'challenge_riddle',
+          'value': 'solving a riddle',
+          'exclude': [],
+        },
+      ],
+    },
+    /** POWER */
+    {
+      'key': 'power',
+      'text': 'The main character...',
+      'choices': [
+        {
+          'text': 'Is able to fly',
+          'icon': 'power_fly',
+          'value': 'able to fly',
+          'exclude': ['dove', 'dragon'],
+        },
+        {
+          'text': 'Can communicate with animals',
+          'icon': 'power_animals',
+          'value': 'able to communicate with animals',
+          'exclude': ['dove', 'dragon', 'horse'],
+        },
+        {
+          'text': 'Can become invisible',
+          'icon': 'power_invisible',
+          'value': 'able to become invisible',
+          'exclude': [],
+        },
+        {
+          'text': 'Can control the weather',
+          'icon': 'power_weather',
+          'value': 'able to control the weather',
+          'exclude': [],
+        },
+        {
+          'text': 'Can heal the others',
+          'icon': 'power_heal',
+          'value': 'able to heal the others',
+          'exclude': [],
+        },
+        {
+          'text': 'Can read minds',
+          'icon': 'power_minds',
+          'value': 'able to read minds',
+          'exclude': [],
+        },
+      ],
+    },
+    /** OBJECT */
     {
       'key': 'object',
-      'text': 'The main character has...',
+      'text': 'Choose an important object',
       'choices': [
-        {'text': 'A guitar', 'icon': 'object_guitar', 'value': 'a guitar'},
-        {'text': 'A hat', 'icon': 'object_hat', 'value': 'a hat'},
-        {'text': 'A rocket', 'icon': 'object_rocket', 'value': 'a rocket'},
-      ]
+        {
+          'text': 'A magical ring',
+          'icon': 'object_ring',
+          'value': 'a magical ring',
+          'exclude': [],
+        },
+        {
+          'text': 'A powerful amulet',
+          'icon': 'object_amulet',
+          'value': 'a powerful amulet',
+          'exclude': [],
+        },
+        {
+          'text': 'An enchanted shield',
+          'icon': 'object_shield',
+          'value': 'an enchanted shield',
+          'exclude': [],
+        },
+        {
+          'text': 'A rare flower',
+          'icon': 'object_flower',
+          'value': 'an rare flower',
+          'exclude': [],
+        },
+        {
+          'text': 'A big diamond',
+          'icon': 'object_diamond',
+          'value': 'a big diamond',
+          'exclude': [],
+        },
+      ],
     },
+    /** MORAL */
     {
-      'key': 'duration',
-      'text': 'How long is the story?',
+      'key': 'moral',
+      'text': 'Choose the moral of the story',
       'choices': [
-        {'text': 'Short (2 min)', 'icon': 'duration_short', 'value': '2'},
-        {'text': 'Long (5 min)', 'icon': 'duration_long', 'value': '5'},
-      ]
-    },
+        {
+          'text': 'Always believe in yourself',
+          'icon': 'moral_believe',
+          'value': 'Always believe in yourself.',
+          'exclude': [],
+        },
+        {
+          'text': 'Never, ever, give up',
+          'icon': 'moral_never_give_up',
+          'value': 'Never, ever, give up.',
+          'exclude': [],
+        },
+        {
+          'text': 'Honesty is the best policy',
+          'icon': 'moral_honesty',
+          'value': 'Honesty is the best policy.',
+          'exclude': [],
+        },
+        {
+          'text': 'Treat others kindly',
+          'icon': 'moral_others',
+          'value': 'Treat others kindly.',
+          'exclude': [],
+        },
+        {
+          'text': 'True beauty comes from within',
+          'icon': 'moral_beauty',
+          'value': 'True beauty comes from within.',
+          'exclude': [],
+        },
+        {
+          'text': 'Do what is right, not what is easy',
+          'icon': 'moral_what_is_right',
+          'value': 'Do what is right, not what is easy.',
+          'exclude': [],
+        },
+      ],
+    }
   ];
+
+  List<dynamic> questions = [
+    {'key': 'characterName', 'answer': characterName},
+    {'key': 'characterType', 'answer': characterType}
+  ];
+
+  // Create a random list of indices for required questions
+  List<int> requiredIndices = [for (var i = 0; i < templates.length; i += 1) i]
+    ..shuffle();
+  requiredIndices = requiredIndices.take(numRequiredQuestions).toList();
+
+  templates.asMap().forEach((index, template) {
+    // Remove the choices forbidden to the character
+    var choices = List.from(template['choices']! as List<Map<String, dynamic>>,
+        growable: true);
+    choices.removeWhere((choice) {
+      if (!choice.containsKey('exclude')) {
+        return false;
+      }
+      var exclude = choice['exclude'] as List;
+      if (exclude.isEmpty) {
+        return false;
+      }
+      return exclude.contains(characterType);
+    });
+    choices.shuffle();
+
+    if (requiredIndices.contains(index)) {
+      // The question is required: copy the template as a question
+      questions.add({
+        'key': template['key'],
+        'text': template['text'],
+        'choices': choices,
+      });
+    } else {
+      // Choose a random answer for the user
+      questions.add({
+        'key': template['key'],
+        'answer': choices.first['value'],
+      });
+    }
+  });
+
+  questions.add({
+    'key': 'duration',
+    'text': 'How long should the story be?',
+    'choices': [
+      {
+        'text': 'Short (2 min)',
+        'icon': 'duration_short',
+        'value': '2',
+        'exclude': [],
+      },
+      {
+        'text': 'Long (5 min)',
+        'icon': 'duration_long',
+        'value': '5',
+        'exclude': [],
+      },
+    ],
+  });
+
+  return questions;
+}
+
+String loadingGetLottieUrl() {
+  final List<String> stringList = [
+    "https://assets4.lottiefiles.com/private_files/lf30_uqcbmc4h.json",
+    "https://assets4.lottiefiles.com/packages/lf20_OT15QW.json"
+  ];
+  var random = new math.Random();
+  int randomIndex = random.nextInt(stringList.length);
+  final String lottieUrl = stringList[randomIndex];
+  return lottieUrl;
 }
 
 String questionGetChoiceText(
@@ -161,15 +416,16 @@ String utilsGetAnswer(
   return '';
 }
 
-int characterGetFirstQuestionIndex(List<dynamic> questions) {
-  var i = 0;
-  for (var question in questions) {
-    if (!question.containsKey('answer')) {
+int utilsGetNextQuestionIndex(
+  int start,
+  List<dynamic> questions,
+) {
+  for (var i = start; i < questions.length; i++) {
+    if (!questions[i].containsKey('answer')) {
       return i;
     }
-    i++;
   }
-  return i;
+  return questions.length;
 }
 
 String questionGetChoiceIcon(
@@ -185,4 +441,11 @@ String questionGetChoiceIcon(
   }
 
   return '';
+}
+
+String loadingGetRivePath() {
+  final List<String> stringList = ["assets/sloth.riv", "assets/cat.riv"];
+  var random = new math.Random();
+  int randomIndex = random.nextInt(stringList.length);
+  return stringList[randomIndex];
 }

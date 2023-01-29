@@ -4,6 +4,7 @@ import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -29,28 +30,31 @@ class _LoadingWidgetState extends State<LoadingWidget> {
       apiResultrre = await OpenAiBedtimeStoryCall.call(
         prompt: functions.storyGetPrompt(FFAppState().questions.toList()),
       );
+      apiResult9mp = await OpenAiDalleCall.call(
+        characterType: functions.utilsGetAnswer(
+            'characterType', FFAppState().questions.toList()),
+        location: functions.utilsGetAnswer(
+            'location', FFAppState().questions.toList()),
+      );
       if ((apiResultrre?.succeeded ?? true)) {
-        FFAppState().update(() {
-          FFAppState().storyText = OpenAiBedtimeStoryCall.text(
-            (apiResultrre?.jsonBody ?? ''),
-          ).toString();
-        });
-        apiResult9mp = await OpenAiDalleCall.call(
-          characterType: FFAppState().characterType,
-          location: functions.utilsGetAnswer(
-              'location', FFAppState().questions.toList()),
-        );
         if ((apiResult9mp?.succeeded ?? true)) {
           FFAppState().update(() {
             FFAppState().storyImage = OpenAiDalleCall.url(
               (apiResult9mp?.jsonBody ?? ''),
             );
           });
+          FFAppState().update(() {
+            FFAppState().storyText = OpenAiBedtimeStoryCall.text(
+              (apiResultrre?.jsonBody ?? ''),
+            ).toString();
+          });
 
           context.pushNamed('Story');
         }
       }
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -77,8 +81,8 @@ class _LoadingWidgetState extends State<LoadingWidget> {
                 alignment: AlignmentDirectional(0, 0),
                 child: Lottie.network(
                   'https://assets2.lottiefiles.com/packages/lf20_aZTdD5.json',
-                  width: 150,
-                  height: 130,
+                  width: 180,
+                  height: 180,
                   fit: BoxFit.cover,
                   animate: true,
                 ),
@@ -90,6 +94,7 @@ class _LoadingWidgetState extends State<LoadingWidget> {
                 style: FlutterFlowTheme.of(context).bodyText1.override(
                       fontFamily: 'Outfit',
                       fontSize: 24,
+                      letterSpacing: 0.3,
                     ),
               ),
             ],

@@ -2,6 +2,8 @@ import '../components/character_choice_button_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +18,20 @@ class CharacterWidget extends StatefulWidget {
 class _CharacterWidgetState extends State<CharacterWidget> {
   final _unfocusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      FFAppState().update(() {
+        FFAppState().lottieUrl =
+            'https://assets2.lottiefiles.com/packages/lf20_aZTdD5.json';
+      });
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
 
   @override
   void dispose() {
@@ -80,13 +96,14 @@ class _CharacterWidgetState extends State<CharacterWidget> {
                             ],
                           ),
                           child: CharacterChoiceButtonWidget(
-                            text: 'Diddy the Dog',
+                            text: 'Blaze, the kind dragon',
                             icon: FaIcon(
-                              FontAwesomeIcons.dog,
+                              FontAwesomeIcons.dragon,
                               color: FlutterFlowTheme.of(context).primaryText,
                               size: 50,
                             ),
-                            characterType: 'dog',
+                            characterType: 'dragon',
+                            characterName: 'Blaze',
                           ),
                         ),
                       ),
@@ -107,13 +124,14 @@ class _CharacterWidgetState extends State<CharacterWidget> {
                             ],
                           ),
                           child: CharacterChoiceButtonWidget(
-                            text: 'Davie the Dove',
+                            text: 'Sparkles, the magical horse',
                             icon: FaIcon(
-                              FontAwesomeIcons.dove,
+                              FontAwesomeIcons.horseHead,
                               color: FlutterFlowTheme.of(context).primaryText,
                               size: 50,
                             ),
-                            characterType: 'dove',
+                            characterType: 'horse',
+                            characterName: 'Sparkles',
                           ),
                         ),
                       ),
@@ -134,13 +152,14 @@ class _CharacterWidgetState extends State<CharacterWidget> {
                             ],
                           ),
                           child: CharacterChoiceButtonWidget(
-                            text: 'Fifi the Fish',
+                            text: 'Captain Courage, the pirate',
                             icon: FaIcon(
-                              FontAwesomeIcons.fish,
+                              FontAwesomeIcons.skullCrossbones,
                               color: FlutterFlowTheme.of(context).primaryText,
                               size: 50,
                             ),
-                            characterType: 'fish',
+                            characterType: 'pirate',
+                            characterName: 'Captain Courage',
                           ),
                         ),
                       ),

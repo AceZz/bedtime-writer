@@ -25,12 +25,6 @@ class FFAppState extends ChangeNotifier {
 
   late SharedPreferences prefs;
 
-  String _characterType = '';
-  String get characterType => _characterType;
-  set characterType(String _value) {
-    _characterType = _value;
-  }
-
   List<dynamic> _questions = [
     jsonDecode(
         '{\"id\":\"power\",\"question\":\"Choose a power\",\"choices\":[{\"text\":\"Fly very fast\"}]}')
@@ -58,6 +52,24 @@ class FFAppState extends ChangeNotifier {
   String get storyImage => _storyImage;
   set storyImage(String _value) {
     _storyImage = _value;
+  }
+
+  String _lottieUrl = '';
+  String get lottieUrl => _lottieUrl;
+  set lottieUrl(String _value) {
+    _lottieUrl = _value;
+  }
+
+  String _riveUrl = '';
+  String get riveUrl => _riveUrl;
+  set riveUrl(String _value) {
+    _riveUrl = _value;
+  }
+
+  int _randomNum = 0;
+  int get randomNum => _randomNum;
+  set randomNum(int _value) {
+    _randomNum = _value;
   }
 }
 
