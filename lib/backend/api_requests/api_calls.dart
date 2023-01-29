@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import '../../flutter_flow/flutter_flow_util.dart';
 import 'api_manager.dart';
 
 export 'api_manager.dart' show ApiCallResponse;
-
-const _kPrivateApiFunctionName = 'ffPrivateApiCall';
 
 class OpenAiBedtimeStoryCall {
   static Future<ApiCallResponse> call({
@@ -14,7 +10,7 @@ class OpenAiBedtimeStoryCall {
     final body = '''
 {
   "model": "text-davinci-003",
-  "prompt": "${prompt}",
+  "prompt": "$prompt",
   "temperature": 0.9,
   "max_tokens": 3900,
   "frequency_penalty": 0,
@@ -52,7 +48,7 @@ class OpenAiDalleCall {
   }) {
     final body = '''
 {
-  "prompt": "An beautiful professional children illustration of a ${characterType}. It takes place ${location}.",
+  "prompt": "A beautiful professional children illustration of a $characterType. It takes place $location.",
   "n": 1,
   "size": "512x512"
 }''';
@@ -95,22 +91,4 @@ class ApiPagingParams {
   @override
   String toString() =>
       'PagingParams(nextPageNumber: $nextPageNumber, numItems: $numItems, lastResponse: $lastResponse,)';
-}
-
-String _serializeList(List? list) {
-  list ??= <String>[];
-  try {
-    return json.encode(list);
-  } catch (_) {
-    return '[]';
-  }
-}
-
-String _serializeJson(dynamic jsonVar) {
-  jsonVar ??= {};
-  try {
-    return json.encode(jsonVar);
-  } catch (_) {
-    return '{}';
-  }
 }
