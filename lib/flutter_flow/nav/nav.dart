@@ -1,18 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
-import '../flutter_flow_theme.dart';
 
 import '../../index.dart';
-import '../../main.dart';
-import '../lat_lng.dart';
-import '../place.dart';
 import 'serialization_util.dart';
 
 export 'package:go_router/go_router.dart';
+
 export 'serialization_util.dart';
 
 const kTransitionInfoKey = '__transition_info__';
@@ -76,10 +72,12 @@ extension NavParamExtensions on Map<String, String?> {
 extension _GoRouterStateExtensions on GoRouterState {
   Map<String, dynamic> get extraMap =>
       extra != null ? extra as Map<String, dynamic> : {};
+
   Map<String, dynamic> get allParams => <String, dynamic>{}
     ..addAll(params)
     ..addAll(queryParams)
     ..addAll(extraMap);
+
   TransitionInfo get transitionInfo => extraMap.containsKey(kTransitionInfoKey)
       ? extraMap[kTransitionInfoKey] as TransitionInfo
       : TransitionInfo.appDefault();
@@ -99,9 +97,12 @@ class FFParameters {
       state.allParams.isEmpty ||
       (state.extraMap.length == 1 &&
           state.extraMap.containsKey(kTransitionInfoKey));
+
   bool isAsyncParam(MapEntry<String, dynamic> param) =>
       asyncParams.containsKey(param.key) && param.value is String;
+
   bool get hasFutures => state.allParams.entries.any(isAsyncParam);
+
   Future<bool> completeFutures() => Future.wait(
         state.allParams.entries.where(isAsyncParam).map(
           (param) async {

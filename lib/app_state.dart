@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'flutter_flow/lat_lng.dart';
-import 'dart:convert';
 
 class FFAppState extends ChangeNotifier {
   static final FFAppState _instance = FFAppState._internal();
@@ -29,7 +31,9 @@ class FFAppState extends ChangeNotifier {
     jsonDecode(
         '{\"id\":\"power\",\"question\":\"Choose a power\",\"choices\":[{\"text\":\"Fly very fast\"}]}')
   ];
+
   List<dynamic> get questions => _questions;
+
   set questions(List<dynamic> _value) {
     _questions = _value;
   }
@@ -43,31 +47,41 @@ class FFAppState extends ChangeNotifier {
   }
 
   String _storyText = '';
+
   String get storyText => _storyText;
+
   set storyText(String _value) {
     _storyText = _value;
   }
 
   String _storyImage = '';
+
   String get storyImage => _storyImage;
+
   set storyImage(String _value) {
     _storyImage = _value;
   }
 
   String _lottieUrl = '';
+
   String get lottieUrl => _lottieUrl;
+
   set lottieUrl(String _value) {
     _lottieUrl = _value;
   }
 
   String _riveUrl = '';
+
   String get riveUrl => _riveUrl;
+
   set riveUrl(String _value) {
     _riveUrl = _value;
   }
 
   int _randomNum = 0;
+
   int get randomNum => _randomNum;
+
   set randomNum(int _value) {
     _randomNum = _value;
   }

@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:core';
+import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:http/http.dart' as http;
 import 'package:equatable/equatable.dart';
+import 'package:http/http.dart' as http;
 
 import '../../flutter_flow/local_file.dart';
 
@@ -27,6 +27,7 @@ enum BodyType {
 class ApiCallRecord extends Equatable {
   ApiCallRecord(this.callName, this.apiUrl, this.headers, this.params,
       this.body, this.bodyType);
+
   final String callName;
   final String apiUrl;
   final Map<String, dynamic> headers;
@@ -41,11 +42,14 @@ class ApiCallRecord extends Equatable {
 
 class ApiCallResponse {
   const ApiCallResponse(this.jsonBody, this.headers, this.statusCode);
+
   final dynamic jsonBody;
   final Map<String, String> headers;
   final int statusCode;
+
   // Whether we received a 2xx status (which generally marks success).
   bool get succeeded => statusCode >= 200 && statusCode < 300;
+
   String getHeader(String headerName) => headers[headerName] ?? '';
 
   static ApiCallResponse fromHttpResponse(
@@ -78,6 +82,7 @@ class ApiManager {
   static Map<ApiCallRecord, ApiCallResponse> _apiCache = {};
 
   static ApiManager? _instance;
+
   static ApiManager get instance => _instance ??= ApiManager._();
 
   // If your API calls need authentication, populate this field once
