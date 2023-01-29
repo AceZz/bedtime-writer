@@ -41,7 +41,6 @@ dependencies:
   lottie: 1.2.1
   page_transition: 2.0.4
   provider: 6.0.4
-  rive:
   share_plus: 2.1.4
   shared_preferences: 2.0.15
   sqflite: 2.2.0+2
