@@ -10,19 +10,19 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../main.dart';
 
-import 'lat_lng.dart';
-
-export 'lat_lng.dart';
-export 'place.dart';
-export 'local_file.dart';
-export '../app_state.dart';
+export 'dart:convert' show jsonEncode, jsonDecode;
 export 'dart:math' show min, max;
 export 'dart:typed_data' show Uint8List;
-export 'dart:convert' show jsonEncode, jsonDecode;
+
 export 'package:intl/intl.dart';
 export 'package:page_transition/page_transition.dart';
+
+export '../app_state.dart';
 export 'internationalization.dart' show FFLocalizations;
+export 'lat_lng.dart';
+export 'local_file.dart';
 export 'nav/nav.dart';
+export 'place.dart';
 
 T valueOrDefault<T>(T? value, T defaultValue) =>
     (value is String && value.isEmpty) || value == null ? defaultValue : value;
@@ -141,8 +141,11 @@ DateTime get getCurrentTimestamp => DateTime.now();
 
 extension DateTimeComparisonOperators on DateTime {
   bool operator <(DateTime other) => isBefore(other);
+
   bool operator >(DateTime other) => isAfter(other);
+
   bool operator <=(DateTime other) => this < other || isAtSameMomentAs(other);
+
   bool operator >=(DateTime other) => this > other || isAtSameMomentAs(other);
 }
 
@@ -172,12 +175,16 @@ Rect? getWidgetBoundingBox(BuildContext context) {
 }
 
 bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
 bool get isiOS => !kIsWeb && Platform.isIOS;
+
 bool get isWeb => kIsWeb;
 
 const kMobileWidthCutoff = 479.0;
+
 bool isMobileWidth(BuildContext context) =>
     MediaQuery.of(context).size.width < kMobileWidthCutoff;
+
 bool responsiveVisibility({
   required BuildContext context,
   bool phone = true,
