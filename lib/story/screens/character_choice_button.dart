@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../flutter_flow/custom_functions.dart' as functions;
-import '../flutter_flow/flutter_flow_util.dart';
-import '../widgets/icon_text_widget.dart';
+import '../../flutter_flow/custom_functions.dart' as functions;
+import '../../flutter_flow/flutter_flow_util.dart';
+import '../../widgets/icon_text_widget.dart';
 
-class CharacterChoiceButtonWidget extends StatefulWidget {
-  const CharacterChoiceButtonWidget({
+class CharacterChoiceButton extends StatefulWidget {
+  const CharacterChoiceButton({
     Key? key,
     this.text,
     this.icon,
@@ -20,12 +20,12 @@ class CharacterChoiceButtonWidget extends StatefulWidget {
   final String? characterType;
 
   @override
-  _CharacterChoiceButtonWidgetState createState() =>
-      _CharacterChoiceButtonWidgetState();
+  _CharacterChoiceButtonState createState() =>
+      _CharacterChoiceButtonState();
 }
 
-class _CharacterChoiceButtonWidgetState
-    extends State<CharacterChoiceButtonWidget> {
+class _CharacterChoiceButtonState
+    extends State<CharacterChoiceButton> {
   @override
   void initState() {
     super.initState();

@@ -3,18 +3,18 @@ import 'package:flutter/scheduler.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-import '../backend/api_requests/api_calls.dart';
-import '../flutter_flow/custom_functions.dart' as functions;
-import '../flutter_flow/flutter_flow_util.dart';
+import '../../flutter_flow/custom_functions.dart' as functions;
+import '../../flutter_flow/flutter_flow_util.dart';
+import '../backend/api_calls.dart';
 
-class LoadingWidget extends StatefulWidget {
-  const LoadingWidget({Key? key}) : super(key: key);
+class LoadingScreen extends StatefulWidget {
+  const LoadingScreen({Key? key}) : super(key: key);
 
   @override
-  _LoadingWidgetState createState() => _LoadingWidgetState();
+  _LoadingScreenState createState() => _LoadingScreenState();
 }
 
-class _LoadingWidgetState extends State<LoadingWidget> {
+class _LoadingScreenState extends State<LoadingScreen> {
   ApiCallResponse? apiResult9mp;
   ApiCallResponse? apiResultrre;
   final _unfocusNode = FocusNode();

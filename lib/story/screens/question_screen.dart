@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../flutter_flow/flutter_flow_util.dart';
-import 'character_choice_button_widget.dart';
+import '../../flutter_flow/flutter_flow_util.dart';
+import 'question_choice_button.dart';
 
-class CharacterWidget extends StatefulWidget {
-  const CharacterWidget({Key? key}) : super(key: key);
+class QuestionScreen extends StatefulWidget {
+  const QuestionScreen({
+    Key? key,
+    int? questionIndex,
+  })  : this.questionIndex = questionIndex ?? 0,
+        super(key: key);
+
+  final int questionIndex;
 
   @override
-  _CharacterWidgetState createState() => _CharacterWidgetState();
+  _QuestionScreenState createState() => _QuestionScreenState();
 }
 
-class _CharacterWidgetState extends State<CharacterWidget> {
+class _QuestionScreenState extends State<QuestionScreen> {
   final _unfocusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      FFAppState().update(() {
-        FFAppState().lottieUrl =
-            'https://assets2.lottiefiles.com/packages/lf20_aZTdD5.json';
-      });
-    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -53,7 +50,10 @@ class _CharacterWidgetState extends State<CharacterWidget> {
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
                 child: Text(
-                  "Tonight's story main character is:",
+                  getJsonField(
+                    FFAppState().questions[widget.questionIndex],
+                    r'''$.text''',
+                  ).toString(),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).primaryTextTheme.headlineMedium,
                 ),
@@ -73,15 +73,9 @@ class _CharacterWidgetState extends State<CharacterWidget> {
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.background,
                         ),
-                        child: CharacterChoiceButtonWidget(
-                          text: 'Blaze, the kind dragon',
-                          icon: FaIcon(
-                            FontAwesomeIcons.dragon,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            size: 50,
-                          ),
-                          characterType: 'dragon',
-                          characterName: 'Blaze',
+                        child: QuestionChoiceButton(
+                          questionIndex: widget.questionIndex,
+                          choiceIndex: 0,
                         ),
                       ),
                     ),
@@ -93,15 +87,9 @@ class _CharacterWidgetState extends State<CharacterWidget> {
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.background,
                         ),
-                        child: CharacterChoiceButtonWidget(
-                          text: 'Sparkles, the magical horse',
-                          icon: FaIcon(
-                            FontAwesomeIcons.horseHead,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            size: 50,
-                          ),
-                          characterType: 'horse',
-                          characterName: 'Sparkles',
+                        child: QuestionChoiceButton(
+                          questionIndex: widget.questionIndex,
+                          choiceIndex: 1,
                         ),
                       ),
                     ),
@@ -113,15 +101,9 @@ class _CharacterWidgetState extends State<CharacterWidget> {
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.background,
                         ),
-                        child: CharacterChoiceButtonWidget(
-                          text: 'Captain Courage, the pirate',
-                          icon: FaIcon(
-                            FontAwesomeIcons.skullCrossbones,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            size: 50,
-                          ),
-                          characterType: 'pirate',
-                          characterName: 'Captain Courage',
+                        child: QuestionChoiceButton(
+                          questionIndex: widget.questionIndex,
+                          choiceIndex: 2,
                         ),
                       ),
                     ),
