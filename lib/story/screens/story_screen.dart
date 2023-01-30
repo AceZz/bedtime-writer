@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../flutter_flow/custom_functions.dart' as functions;
-import '../flutter_flow/flutter_flow_util.dart';
-import '../widgets/ff_button_widget.dart';
+import '../../flutter_flow/custom_functions.dart' as functions;
+import '../../flutter_flow/flutter_flow_util.dart';
+import '../../widgets/ff_button_widget.dart';
 
-class StoryWidget extends StatefulWidget {
-  const StoryWidget({Key? key}) : super(key: key);
+class StoryScreen extends StatefulWidget {
+  const StoryScreen({Key? key}) : super(key: key);
 
   @override
-  _StoryWidgetState createState() => _StoryWidgetState();
+  _StoryScreenState createState() => _StoryScreenState();
 }
 
-class _StoryWidgetState extends State<StoryWidget> {
+class _StoryScreenState extends State<StoryScreen> {
   final _unfocusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 

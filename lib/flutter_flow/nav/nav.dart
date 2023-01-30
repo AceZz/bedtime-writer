@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../../index.dart';
+import '../../story/index.dart';
 import 'serialization_util.dart';
 
 export 'package:go_router/go_router.dart';
@@ -26,34 +26,34 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       initialLocation: '/',
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
-      errorBuilder: (context, _) => CharacterWidget(),
+      errorBuilder: (context, _) => CharacterScreen(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) => CharacterWidget(),
+          builder: (context, _) => CharacterScreen(),
           routes: [
             FFRoute(
               name: 'Character',
               path: 'character',
-              builder: (context, params) => CharacterWidget(),
+              builder: (context, params) => CharacterScreen(),
             ),
             FFRoute(
               name: 'Question',
               path: 'question',
-              builder: (context, params) => QuestionWidget(
+              builder: (context, params) => QuestionScreen(
                 questionIndex: params.getParam('questionIndex', ParamType.int),
               ),
             ),
             FFRoute(
               name: 'Loading',
               path: 'loading',
-              builder: (context, params) => LoadingWidget(),
+              builder: (context, params) => LoadingScreen(),
             ),
             FFRoute(
               name: 'Story',
               path: 'story',
-              builder: (context, params) => StoryWidget(),
+              builder: (context, params) => StoryScreen(),
             )
           ].map((r) => r.toRoute(appStateNotifier)).toList(),
         ).toRoute(appStateNotifier),

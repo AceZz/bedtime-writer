@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../widgets/string_icon.dart';
-import '../flutter_flow/custom_functions.dart' as functions;
-import '../flutter_flow/flutter_flow_util.dart';
+import '../../../widgets/string_icon.dart';
+import '../../flutter_flow/custom_functions.dart' as functions;
+import '../../flutter_flow/flutter_flow_util.dart';
 
-class QuestionChoiceButtonWidget extends StatefulWidget {
-  const QuestionChoiceButtonWidget({
+class QuestionChoiceButton extends StatefulWidget {
+  const QuestionChoiceButton({
     Key? key,
     this.questionIndex,
     this.choiceIndex,
@@ -16,12 +16,12 @@ class QuestionChoiceButtonWidget extends StatefulWidget {
   final int? choiceIndex;
 
   @override
-  _QuestionChoiceButtonWidgetState createState() =>
-      _QuestionChoiceButtonWidgetState();
+  _QuestionChoiceButtonState createState() =>
+      _QuestionChoiceButtonState();
 }
 
-class _QuestionChoiceButtonWidgetState
-    extends State<QuestionChoiceButtonWidget> {
+class _QuestionChoiceButtonState
+    extends State<QuestionChoiceButton> {
   @override
   void initState() {
     super.initState();
