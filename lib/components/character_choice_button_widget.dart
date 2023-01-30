@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../components/icon_text_widget.dart';
 import '../flutter_flow/custom_functions.dart' as functions;
 import '../flutter_flow/flutter_flow_util.dart';
+import '../widgets/icon_text_widget.dart';
 
 class CharacterChoiceButtonWidget extends StatefulWidget {
   const CharacterChoiceButtonWidget({
