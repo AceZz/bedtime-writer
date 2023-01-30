@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../custom_code/widgets/index.dart' as custom_widgets;
+import '../../widgets/string_icon.dart';
 import '../flutter_flow/custom_functions.dart' as functions;
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -100,7 +100,7 @@ class _QuestionChoiceButtonWidgetState
                 Container(
                   width: 60,
                   height: 60,
-                  child: custom_widgets.StringIcon(
+                  child: StringIcon(
                     width: 60,
                     height: 60,
                     icon: functions.questionGetChoiceIcon(widget.questionIndex!,

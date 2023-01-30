@@ -5,7 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import '../flutter_flow/custom_functions.dart' as functions;
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
+import '../widgets/ff_button_widget.dart';
 
 class StoryWidget extends StatefulWidget {
   const StoryWidget({Key? key}) : super(key: key);
