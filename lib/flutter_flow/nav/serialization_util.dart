@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:from_css_color/from_css_color.dart';
 
-import '../../flutter_flow/local_file.dart';
-
 /// SERIALIZATION HELPERS
 
 String dateTimeRangeToString(DateTimeRange dateTimeRange) {
@@ -12,8 +10,6 @@ String dateTimeRangeToString(DateTimeRange dateTimeRange) {
   final endStr = dateTimeRange.end.millisecondsSinceEpoch.toString();
   return '$startStr|$endStr';
 }
-
-String localFileToString(FFLocalFile localFile) => localFile.serialize();
 
 String? serializeParam(
   dynamic param,
@@ -47,8 +43,6 @@ String? serializeParam(
         return dateTimeRangeToString(param as DateTimeRange);
       case ParamType.Color:
         return (param as Color).toCssString();
-      case ParamType.FFLocalFile:
-        return localFileToString(param as FFLocalFile);
       case ParamType.JSON:
         return json.encode(param);
 
@@ -75,9 +69,6 @@ DateTimeRange? dateTimeRangeFromString(String dateTimeRangeStr) {
     end: DateTime.fromMillisecondsSinceEpoch(int.parse(pieces.last)),
   );
 }
-
-FFLocalFile localFileFromString(String localFileStr) =>
-    FFLocalFile.deserialize(localFileStr);
 
 enum ParamType {
   int,
@@ -133,8 +124,6 @@ dynamic deserializeParam<T>(
         return dateTimeRangeFromString(param);
       case ParamType.Color:
         return fromCssColor(param);
-      case ParamType.FFLocalFile:
-        return localFileFromString(param);
       case ParamType.JSON:
         return json.decode(param);
 
