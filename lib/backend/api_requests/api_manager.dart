@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
 import 'package:http/http.dart' as http;
-
-import '../../flutter_flow/local_file.dart';
 
 enum ApiCallType {
   GET,
@@ -167,21 +164,11 @@ class ApiManager {
       {ApiCallType.POST, ApiCallType.PUT, ApiCallType.PATCH}.contains(type),
       'Invalid ApiCallType $type for request with body',
     );
-    final nonFileParams = toStringMap(
-        Map.fromEntries(params.entries.where((e) => e.value is! FFLocalFile)));
-    final files = params.entries.where((e) => e.value is FFLocalFile).map((e) {
-      final localFile = e.value as FFLocalFile;
-      return http.MultipartFile.fromBytes(
-        e.key,
-        localFile.bytes ?? Uint8List.fromList([]),
-        filename: localFile.name,
-      );
-    });
+    final mapParams = toStringMap(Map.fromEntries(params.entries));
     final request = http.MultipartRequest(
         type.toString().split('.').last, Uri.parse(apiUrl))
-      ..headers.addAll(toStringMap(headers))
-      ..files.addAll(files);
-    nonFileParams.forEach((key, value) => request.fields[key] = value);
+      ..headers.addAll(toStringMap(headers));
+    mapParams.forEach((key, value) => request.fields[key] = value);
 
     final response = await http.Response.fromStream(await request.send());
     return ApiCallResponse.fromHttpResponse(response, returnBody, decodeUtf8);
