@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../flutter_flow/custom_functions.dart' as functions;
@@ -20,12 +21,10 @@ class CharacterChoiceButton extends StatefulWidget {
   final String? characterType;
 
   @override
-  _CharacterChoiceButtonState createState() =>
-      _CharacterChoiceButtonState();
+  _CharacterChoiceButtonState createState() => _CharacterChoiceButtonState();
 }
 
-class _CharacterChoiceButtonState
-    extends State<CharacterChoiceButton> {
+class _CharacterChoiceButtonState extends State<CharacterChoiceButton> {
   @override
   void initState() {
     super.initState();
@@ -46,22 +45,11 @@ class _CharacterChoiceButtonState
               .toList();
         });
 
-        context.pushNamed(
-          'Question',
-          queryParams: {
-            'questionIndex': serializeParam(
-              functions.utilsGetNextQuestionIndex(
-                  0, FFAppState().questions.toList()),
-              ParamType.int,
-            ),
-          }.withoutNulls,
-          extra: <String, dynamic>{
-            kTransitionInfoKey: TransitionInfo(
-              hasTransition: true,
-              transitionType: PageTransitionType.rightToLeft,
-            ),
-          },
-        );
+        context.goNamed('question', params: {
+          'questionId': functions
+              .utilsGetNextQuestionIndex(0, FFAppState().questions.toList())
+              .toString(),
+        });
       },
       child: IconTextWidget(
         text: widget.text,

@@ -14,4 +14,5 @@ All rights reserved to Tristan Stampfler and Pierre Wan-Fat
     * `index.start`: should reexport the screens
   * `widgets/`: contains widgets that are reused across screens
   * `main.dart`: entry point of the application
+  * `router.dart`: the routes of the application
   * `theme.dart`: the theme for the entire application

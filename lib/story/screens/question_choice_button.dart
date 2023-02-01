@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../widgets/string_icon.dart';
@@ -16,12 +17,10 @@ class QuestionChoiceButton extends StatefulWidget {
   final int? choiceIndex;
 
   @override
-  _QuestionChoiceButtonState createState() =>
-      _QuestionChoiceButtonState();
+  _QuestionChoiceButtonState createState() => _QuestionChoiceButtonState();
 }
 
-class _QuestionChoiceButtonState
-    extends State<QuestionChoiceButton> {
+class _QuestionChoiceButtonState extends State<QuestionChoiceButton> {
   @override
   void initState() {
     super.initState();
@@ -47,32 +46,13 @@ class _QuestionChoiceButtonState
           if (functions.utilsGetNextQuestionIndex(
                   widget.questionIndex!, FFAppState().questions.toList()) <
               FFAppState().questions.length) {
-            context.pushNamed(
-              'Question',
-              queryParams: {
-                'questionIndex': serializeParam(
-                  functions.utilsGetNextQuestionIndex(
-                      widget.questionIndex!, FFAppState().questions.toList()),
-                  ParamType.int,
-                ),
-              }.withoutNulls,
-              extra: <String, dynamic>{
-                kTransitionInfoKey: TransitionInfo(
-                  hasTransition: true,
-                  transitionType: PageTransitionType.rightToLeft,
-                ),
-              },
-            );
+            context.goNamed('question', params: {
+              'questionId': functions
+                  .utilsGetNextQuestionIndex(0, FFAppState().questions.toList())
+                  .toString(),
+            });
           } else {
-            context.pushNamed(
-              'Loading',
-              extra: <String, dynamic>{
-                kTransitionInfoKey: TransitionInfo(
-                  hasTransition: true,
-                  transitionType: PageTransitionType.rightToLeft,
-                ),
-              },
-            );
+            context.goNamed('loading');
           }
         },
         child: Container(
