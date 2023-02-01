@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 
 class IconTextWidget extends StatefulWidget {
@@ -34,32 +33,21 @@ class _IconTextWidgetState extends State<IconTextWidget> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 1,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).alternate,
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 12,
-            color: Color(0x33000000),
-            offset: Offset(0, 5),
-          )
-        ],
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(20),
         shape: BoxShape.rectangle,
       ),
       alignment: AlignmentDirectional(0, 0),
       child: Column(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           widget.icon!,
           Text(
             widget.text!,
             textAlign: TextAlign.center,
-            style: FlutterFlowTheme.of(context).bodyText1.override(
-                  fontFamily: 'Outfit',
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(context).primaryTextTheme.titleMedium,
           ),
         ],
       ),
