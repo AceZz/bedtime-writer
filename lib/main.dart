@@ -3,13 +3,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'flutter_flow/flutter_flow_util.dart';
-import 'flutter_flow/internationalization.dart';
 import 'theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await FFLocalizations.initialize();
 
   final appState = FFAppState(); // Initialize FFAppState
 
@@ -29,8 +26,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale? _locale = FFLocalizations.getStoredLocale();
-
   late AppStateNotifier _appStateNotifier;
   late GoRouter _router;
 
@@ -41,27 +36,16 @@ class _MyAppState extends State<MyApp> {
     _router = createRouter(_appStateNotifier);
   }
 
-  void setLocale(String language) {
-    setState(() => _locale = createLocale(language));
-    FFLocalizations.storeLocale(language);
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Bedtime writer',
       localizationsDelegates: [
-        FFLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      locale: _locale,
-      supportedLocales: const [
-        Locale('en'),
-        Locale('fr'),
-        Locale('de'),
-      ],
+      locale: Locale('en-US'),
       theme: theme,
       themeMode: ThemeMode.system,
       routeInformationParser: _router.routeInformationParser,
