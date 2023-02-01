@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../../widgets/string_icon.dart';
 import '../flutter_flow/custom_functions.dart' as functions;
-import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 
 class QuestionChoiceButtonWidget extends StatefulWidget {
@@ -80,14 +79,7 @@ class _QuestionChoiceButtonWidgetState
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height * 1,
           decoration: BoxDecoration(
-            color: FlutterFlowTheme.of(context).alternate,
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 12,
-                color: Color(0x33000000),
-                offset: Offset(0, 5),
-              )
-            ],
+            color: Theme.of(context).colorScheme.primary,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -111,11 +103,7 @@ class _QuestionChoiceButtonWidgetState
                 functions.questionGetChoiceText(widget.questionIndex!,
                     widget.choiceIndex!, FFAppState().questions.toList()),
                 textAlign: TextAlign.center,
-                style: FlutterFlowTheme.of(context).bodyText1.override(
-                      fontFamily: 'Outfit',
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(context).primaryTextTheme.titleMedium,
               ),
             ],
           ),

@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import '../backend/api_requests/api_calls.dart';
 import '../flutter_flow/custom_functions.dart' as functions;
-import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 
 class LoadingWidget extends StatefulWidget {
@@ -68,7 +67,7 @@ class _LoadingWidgetState extends State<LoadingWidget> {
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
@@ -87,14 +86,8 @@ class _LoadingWidgetState extends State<LoadingWidget> {
                 ),
               ),
               Text(
-                FFLocalizations.of(context).getText(
-                  'ar0rrzuk' /* Your story is being created... */,
-                ),
-                style: FlutterFlowTheme.of(context).bodyText1.override(
-                      fontFamily: 'Outfit',
-                      fontSize: 24,
-                      letterSpacing: 0.3,
-                    ),
+                'Your story is being created...',
+                style: Theme.of(context).primaryTextTheme.headlineSmall,
               ),
             ],
           ),

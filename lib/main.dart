@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
+import 'theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +30,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Locale? _locale = FFLocalizations.getStoredLocale();
-  ThemeMode _themeMode = ThemeMode.system;
 
   late AppStateNotifier _appStateNotifier;
   late GoRouter _router;
@@ -45,10 +45,6 @@ class _MyAppState extends State<MyApp> {
     setState(() => _locale = createLocale(language));
     FFLocalizations.storeLocale(language);
   }
-
-  void setThemeMode(ThemeMode mode) => setState(() {
-        _themeMode = mode;
-      });
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +62,8 @@ class _MyAppState extends State<MyApp> {
         Locale('fr'),
         Locale('de'),
       ],
-      theme: ThemeData(brightness: Brightness.light),
-      themeMode: _themeMode,
+      theme: theme,
+      themeMode: ThemeMode.system,
       routeInformationParser: _router.routeInformationParser,
       routerDelegate: _router.routerDelegate,
     );

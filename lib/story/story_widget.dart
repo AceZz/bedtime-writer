@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../flutter_flow/custom_functions.dart' as functions;
-import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../widgets/ff_button_widget.dart';
 
@@ -37,7 +36,7 @@ class _StoryWidgetState extends State<StoryWidget> {
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
@@ -60,11 +59,9 @@ class _StoryWidgetState extends State<StoryWidget> {
                                 content: Text(
                                   functions.storyGetPrompt(
                                       FFAppState().questions.toList()),
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    fontWeight: FontWeight.normal,
-                                  ),
+                                  style: Theme.of(context)
+                                      .primaryTextTheme
+                                      .bodySmall,
                                 ),
                                 duration: Duration(milliseconds: 10000),
                                 backgroundColor: Color(0x00000000),
@@ -72,13 +69,11 @@ class _StoryWidgetState extends State<StoryWidget> {
                             );
                           },
                           child: Text(
-                            'The story of ${functions.utilsGetAnswer('characterName', FFAppState().questions.toList())}, who is ${functions.utilsGetAnswer('power', FFAppState().questions.toList())}.',
+                            'The story of ${functions.utilsGetAnswer('characterName', FFAppState().questions.toList())}, who is ${functions.utilsGetAnswer('power', FFAppState().questions.toList())}',
                             textAlign: TextAlign.center,
-                            style: FlutterFlowTheme.of(context).title2.override(
-                                  fontFamily: 'Outfit',
-                                  fontSize: 26,
-                                  letterSpacing: 0.3,
-                                ),
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .headlineMedium,
                           ),
                         ),
                       ),
@@ -103,13 +98,7 @@ class _StoryWidgetState extends State<StoryWidget> {
                         padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
                         child: Text(
                           FFAppState().storyText,
-                          style:
-                              FlutterFlowTheme.of(context).bodyText1.override(
-                                    fontFamily: 'Outfit',
-                                    fontSize: 18,
-                                    letterSpacing: 0.3,
-                                    lineHeight: 1.5,
-                                  ),
+                          style: Theme.of(context).primaryTextTheme.bodySmall,
                         ),
                       ),
                       Builder(
@@ -121,19 +110,13 @@ class _StoryWidgetState extends State<StoryWidget> {
                                   getWidgetBoundingBox(context),
                             );
                           },
-                          text: FFLocalizations.of(context).getText(
-                            'sw9vnusl' /* Share */,
-                          ),
+                          text: 'Share',
                           options: FFButtonOptions(
                             width: 130,
                             height: 40,
-                            color: FlutterFlowTheme.of(context).primaryColor,
+                            color: Theme.of(context).colorScheme.primary,
                             textStyle:
-                                FlutterFlowTheme.of(context).subtitle2.override(
-                                      fontFamily: 'Outfit',
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                    ),
+                                Theme.of(context).primaryTextTheme.bodyMedium,
                             borderSide: BorderSide(
                               color: Colors.transparent,
                               width: 1,
