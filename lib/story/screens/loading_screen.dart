@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -47,7 +48,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
             ).toString();
           });
 
-          context.pushNamed('Story');
+          context.goNamed('story');
         }
       }
     });

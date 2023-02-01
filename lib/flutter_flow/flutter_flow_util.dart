@@ -9,7 +9,6 @@ export 'package:intl/intl.dart';
 export 'package:page_transition/page_transition.dart';
 
 export '../app_state.dart';
-export 'nav/nav.dart';
 
 dynamic getJsonField(
   dynamic response,
