@@ -29,28 +29,27 @@ class CreateStoryScreen extends ConsumerWidget {
       );
 
     if (!storyState.hasQuestions) {
-      ApiCallResponse? apiResult9mp;
-      ApiCallResponse? apiResultrre;
-
       // On page load action.
       SchedulerBinding.instance.addPostFrameCallback((_) async {
-        apiResultrre = await OpenAiBedtimeStoryCall.call(
-          prompt: storyState.storyParams.prompt,
-        );
-        apiResult9mp = await OpenAiDalleCall.call(
-          prompt: storyState.storyParams.imagePrompt,
-        );
-        if ((apiResultrre?.succeeded ?? true)) {
-          if ((apiResult9mp?.succeeded ?? true)) {
-            var story = OpenAiBedtimeStoryCall.text(
-              (apiResultrre?.jsonBody ?? ''),
-            ).toString();
-            var storyImage = OpenAiDalleCall.url(
-              (apiResult9mp?.jsonBody ?? ''),
-            );
-            ref.read(storyStateProvider.notifier).setStory(story, storyImage);
-          }
+        String storyText;
+        String storyImage;
+
+        // Simpler way to get results from text generation and image API calls
+        try {
+          storyText = await callOpenAiTextGeneration(
+              prompt: storyState.storyParams.prompt);
+        } catch (e) {
+          storyText =
+              'Simply say \"Sorry, your story could not be generated.\"';
         }
+        try {
+          storyImage = await callOpenAiImageGeneration(
+              prompt: storyState.storyParams.imagePrompt);
+        } catch (e) {
+          storyImage = '';
+        }
+
+        ref.read(storyStateProvider.notifier).setStory(storyText, storyImage);
       });
 
       return LoadingContent();
