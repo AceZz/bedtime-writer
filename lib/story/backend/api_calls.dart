@@ -1,93 +1,76 @@
-import '../../flutter_flow/flutter_flow_util.dart';
-import 'api_manager.dart';
+import 'dart:convert';
+import 'dart:io';
 
-export 'api_manager.dart' show ApiCallResponse;
+import 'package:http/http.dart' as http;
 
-class OpenAiBedtimeStoryCall {
-  static Future<ApiCallResponse> call({
-    String? prompt = 'Just say \"Error: no prompt provided\"',
-  }) {
-    final body = '''
-{
-  "model": "text-davinci-003",
-  "prompt": "$prompt",
-  "temperature": 0.9,
-  "max_tokens": 3900,
-  "frequency_penalty": 0,
-  "presence_penalty": 0
-}''';
-    return ApiManager.instance.makeApiCall(
-      callName: 'open ai bedtime story',
-      apiUrl: 'https://api.openai.com/v1/completions',
-      callType: ApiCallType.POST,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization':
-            'Bearer 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',
-      },
-      params: {},
-      body: body,
-      bodyType: BodyType.JSON,
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: true,
-      cache: false,
-    );
-  }
-
-  static dynamic text(dynamic response) => getJsonField(
-        response,
-        r'''$.choices[:].text''',
-      );
-}
-
-class OpenAiDalleCall {
-  static Future<ApiCallResponse> call({
-    required String prompt,
-  }) {
-    final body = '''
-{
-  "prompt": "$prompt",
-  "n": 1,
-  "size": "512x512"
-}''';
-    return ApiManager.instance.makeApiCall(
-      callName: 'open ai dalle',
-      apiUrl: 'https://api.openai.com/v1/images/generations',
-      callType: ApiCallType.POST,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization':
-            'Bearer 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',
-      },
-      params: {},
-      body: body,
-      bodyType: BodyType.JSON,
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-    );
-  }
-
-  static dynamic url(dynamic response) => getJsonField(
-        response,
-        r'''$.data[:].url''',
-      );
-}
-
-class ApiPagingParams {
-  int nextPageNumber = 0;
-  int numItems = 0;
-  dynamic lastResponse;
-
-  ApiPagingParams({
-    required this.nextPageNumber,
-    required this.numItems,
-    required this.lastResponse,
+/// GPT-3 API Call
+/// Call example: callOpenAiTextGeneration('Generate a story with a dragon')
+Future<String> callOpenAiTextGeneration({required String prompt}) async {
+  // Parameters for API call
+  final apiKey = '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';
+  final promptJson = jsonEncode({
+    'prompt': prompt,
+    'model': 'text-davinci-003',
+    'max_tokens': 3900,
+    'temperature': 0.9,
+    'frequency_penalty': 0,
+    'presence_penalty': 0,
   });
 
-  @override
-  String toString() =>
-      'PagingParams(nextPageNumber: $nextPageNumber, numItems: $numItems, lastResponse: $lastResponse,)';
+  // POST the API call
+  try {
+    final response = await http.post(
+      Uri.parse('https://api.openai.com/v1/completions'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $apiKey',
+      },
+      body: promptJson,
+    );
+
+    // Decode API response with Utf-8
+    if (response.statusCode == 200) {
+      final responseJson =
+          jsonDecode(Utf8Decoder().convert(response.bodyBytes));
+      return responseJson['choices'][0]['text'];
+    } else {
+      throw Exception('Failed to generate text');
+    }
+  } on SocketException catch (_) {
+    rethrow;
+  }
+}
+
+/// DALL-E API Call
+/// Call example: callOpenAiImageGeneration(characterType: 'dragon', location: 'in the mountains')
+Future<String> callOpenAiImageGeneration({required String prompt}) async {
+  // Parameters for API call
+  final apiKey = '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';
+  final promptJson = jsonEncode({
+    'prompt': prompt,
+    'n': 1,
+    'size': '512x512',
+  });
+
+  // POST the API call
+  try {
+    final response = await http.post(
+      Uri.parse('https://api.openai.com/v1/images/generations'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $apiKey',
+      },
+      body: promptJson,
+    );
+
+    // Decode API response
+    if (response.statusCode == 200) {
+      final responseJson = jsonDecode(response.body);
+      return responseJson['data'][0]['url'];
+    } else {
+      throw Exception('Failed to generate image');
+    }
+  } on SocketException catch (_) {
+    rethrow;
+  }
 }
