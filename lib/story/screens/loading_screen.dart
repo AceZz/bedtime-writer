@@ -16,22 +16,20 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-  ApiCallResponse? apiResult9mp;
-  ApiCallResponse? apiResultrre;
   final _unfocusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
+
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      /// Simpler way to get results from text generation and image API calls
 
+      /// Simpler way to get results from text generation and image API calls
       String storyText = await OpenAiTextGenerationCall.getText(
           prompt: functions.storyGetPrompt(FFAppState().questions.toList())
       );
-
       String storyImage = await OpenAiImageGenerationCall.getUrl(
         characterType: functions.utilsGetAnswer(
             'characterType', FFAppState().questions.toList()),
@@ -39,33 +37,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
             'location', FFAppState().questions.toList()),
       );
 
+      /// Update App State with API results
       FFAppState().update(() {
         FFAppState().storyText = storyText;
         FFAppState().storyImage = storyImage;
       });
-      /*
-      apiResultrre = await OpenAiBedtimeStoryCall.call(
-        prompt: functions.storyGetPrompt(FFAppState().questions.toList()),
-      );
-      apiResult9mp = await OpenAiDalleCall.call(
-        characterType: functions.utilsGetAnswer(
-            'characterType', FFAppState().questions.toList()),
-        location: functions.utilsGetAnswer(
-            'location', FFAppState().questions.toList()),
-      );
-      if ((apiResultrre?.succeeded ?? true)) {
-        if ((apiResult9mp?.succeeded ?? true)) {
-          FFAppState().update(() {
-            FFAppState().storyImage = OpenAiDalleCall.url(
-              (apiResult9mp?.jsonBody ?? ''),
-            );
-          });
-          FFAppState().update(() {
-            FFAppState().storyText = OpenAiBedtimeStoryCall.text(
-              (apiResultrre?.jsonBody ?? ''),
-            ).toString();
-          });
-          */
+
+      /// Move to Story page
       context.goNamed('story');
     });
 
