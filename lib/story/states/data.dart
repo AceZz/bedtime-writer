@@ -340,3 +340,24 @@ Question moralQuestion = Question(
   ],
   answer: ((story, choice) => story.copyWith(moral: choice.value)),
 );
+
+/// DURATION
+
+const Choice durationShort = const Choice<int>(
+  text: 'Short (2 mins)',
+  icon: FontAwesomeIcons.bolt,
+  value: 2,
+);
+
+const Choice durationLong = const Choice<int>(
+  text: 'Long (5 mins)',
+  icon: FontAwesomeIcons.clock,
+  value: 5,
+);
+
+Question durationQuestion = Question(
+  text: 'How long should the story be?',
+  choices: [durationShort, durationLong],
+  randomAllowed: false,
+  answer: ((story, choice) => story.copyWith(duration: choice.value)),
+);

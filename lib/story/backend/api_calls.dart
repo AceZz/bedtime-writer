@@ -43,12 +43,11 @@ class OpenAiBedtimeStoryCall {
 
 class OpenAiDalleCall {
   static Future<ApiCallResponse> call({
-    String? characterType = '',
-    String? location = '',
+    required String prompt,
   }) {
     final body = '''
 {
-  "prompt": "A beautiful professional children illustration of a $characterType. It takes place $location.",
+  "prompt": "$prompt",
   "n": 1,
   "size": "512x512"
 }''';
