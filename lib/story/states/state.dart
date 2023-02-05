@@ -8,7 +8,7 @@ import 'data.dart';
 
 final _random = new Random();
 
-/// State for the story feature.
+/// State for the story creation feature.
 ///
 /// This object contains a [StoryParams] and a queue of [questions]. It can
 /// [update] its [StoryParams] by answering the questions in the
@@ -16,6 +16,8 @@ final _random = new Random();
 ///
 /// The maximum number of randomly answered questions is controlled by
 /// [numRandom].
+///
+/// When the story is generated, the result is stored in [story].
 @immutable
 class StoryState {
   final StoryParams storyParams;
@@ -25,10 +27,15 @@ class StoryState {
   /// Maximum number of questions which can be answered randomly.
   final int numRandom;
 
-  const StoryState(
-      {required this.storyParams,
-      required this.questions,
-      required this.numRandom});
+  /// The content of the story.
+  final String? story;
+
+  const StoryState({
+    required this.storyParams,
+    required this.questions,
+    required this.numRandom,
+    required this.story,
+  });
 
   bool get hasQuestions => this.questions.isNotEmpty;
 
@@ -48,6 +55,7 @@ class StoryState {
         storyParams: current.answerRandom(storyParams),
         questions: questions.sublist(1),
         numRandom: numRandom - 1,
+        story: story,
       );
     }
 
@@ -55,6 +63,7 @@ class StoryState {
       storyParams: current.answer(storyParams, choice),
       questions: questions.sublist(1),
       numRandom: numRandom,
+      story: story,
     );
   }
 
@@ -107,6 +116,7 @@ class StoryStateNotifier extends StateNotifier<StoryState> {
             moralQuestion,
           ],
           numRandom: 4,
+          story: null,
         ));
 
   void set(StoryState storyState) {
