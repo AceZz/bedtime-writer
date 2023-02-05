@@ -26,6 +26,24 @@ class _LoadingScreenState extends State<LoadingScreen> {
     super.initState();
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      /// Simpler way to get results from text generation and image API calls
+
+      String storyText = await OpenAiTextGenerationCall.getText(
+          prompt: functions.storyGetPrompt(FFAppState().questions.toList())
+      );
+
+      String storyImage = await OpenAiImageGenerationCall.getUrl(
+        characterType: functions.utilsGetAnswer(
+            'characterType', FFAppState().questions.toList()),
+        location: functions.utilsGetAnswer(
+            'location', FFAppState().questions.toList()),
+      );
+
+      FFAppState().update(() {
+        FFAppState().storyText = storyText;
+        FFAppState().storyImage = storyImage;
+      });
+      /*
       apiResultrre = await OpenAiBedtimeStoryCall.call(
         prompt: functions.storyGetPrompt(FFAppState().questions.toList()),
       );
@@ -47,10 +65,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
               (apiResultrre?.jsonBody ?? ''),
             ).toString();
           });
-
-          context.goNamed('story');
-        }
-      }
+          */
+      context.goNamed('story');
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
