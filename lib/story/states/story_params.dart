@@ -119,6 +119,23 @@ class StoryParams {
       '$_promptPlace'
       '$_promptObject'
       '$_promptMoral';
+
+  /// Returns a title for this story.
+  String get title =>
+      character == null ? "Tonight's story" : "The story of ${character?.name}";
+
+  String get _imagePromptType {
+    var type = character?.type;
+    return type == null ? '.' : ' of a $type.';
+  }
+
+  String get _imagePromptPlace =>
+      place == null ? '' : ' It takes place $place.';
+
+  /// Returns an image prompt for this story.
+  String get imagePrompt => 'A beautiful professional children illustration'
+      '$_imagePromptType'
+      '$_imagePromptPlace';
 }
 
 void _defaultIsAvailable(StoryParams story) => true;

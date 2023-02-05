@@ -30,20 +30,40 @@ class StoryState {
   /// The content of the story.
   final String? story;
 
+  /// The URL to the story image.
+  final String? storyImage;
+
   const StoryState({
     required this.storyParams,
     required this.questions,
     required this.numRandom,
     required this.story,
+    required this.storyImage,
   });
 
   bool get hasQuestions => this.questions.isNotEmpty;
 
-  Question get current => this.questions.first;
+  Question get currentQuestion => this.questions.first;
 
-  /// Answers the [current] question.
+  StoryState copyWith({
+    StoryParams? storyParams,
+    List<Question>? questions,
+    int? numRandom,
+    String? story,
+    String? storyImage,
+  }) {
+    return StoryState(
+      storyParams: storyParams ?? this.storyParams,
+      questions: questions ?? this.questions,
+      numRandom: numRandom ?? this.numRandom,
+      story: story ?? this.story,
+      storyImage: storyImage ?? this.storyImage,
+    );
+  }
+
+  /// Answers the [currentQuestion] question.
   ///
-  /// If [choice] is provided, answers the [current] question with it.
+  /// If [choice] is provided, answers the [currentQuestion] with it.
   /// Otherwise, answers randomly.
   StoryState _answer(Choice? choice) {
     // No question, so no answer.
@@ -51,25 +71,22 @@ class StoryState {
 
     if (choice == null) {
       // Answer randomly.
-      return StoryState(
-        storyParams: current.answerRandom(storyParams),
+      return copyWith(
+        storyParams: currentQuestion.answerRandom(storyParams),
         questions: questions.sublist(1),
         numRandom: numRandom - 1,
-        story: story,
       );
     }
 
-    return StoryState(
-      storyParams: current.answer(storyParams, choice),
+    return copyWith(
+      storyParams: currentQuestion.answer(storyParams, choice),
       questions: questions.sublist(1),
-      numRandom: numRandom,
-      story: story,
     );
   }
 
-  /// Updates the provided [story].
+  /// Updates the [story].
   ///
-  /// If a [choice] is provided, answers the [current] question with it.
+  /// If a [choice] is provided, answers the [currentQuestion] with it.
   ///
   /// In all cases, tries to answer the following questions randomly.
   /// To decide whether a question should be answered randomly, a random draw is
@@ -86,7 +103,7 @@ class StoryState {
       // randomly.
       var numRandomQuestions =
           newState.questions.where((question) => question.randomAllowed).length;
-      var answerRandomly = newState.current.randomAllowed &&
+      var answerRandomly = newState.currentQuestion.randomAllowed &&
           _random.nextInt(numRandomQuestions) < newState.numRandom;
 
       if (answerRandomly) {
@@ -114,13 +131,21 @@ class StoryStateNotifier extends StateNotifier<StoryState> {
             flawQuestion,
             challengeQuestion,
             moralQuestion,
+            durationQuestion,
           ],
           numRandom: 4,
           story: null,
+          storyImage: null,
         ));
 
-  void set(StoryState storyState) {
-    state = storyState;
+  /// Updates the story, as done by [StoryState.update].
+  void updateStoryParams([Choice? choice]) {
+    state = state.update(choice);
+  }
+
+  /// Sets the story and the story image.
+  void setStory(String story, String storyImage) {
+    state = state.copyWith(story: story, storyImage: storyImage);
   }
 }
 

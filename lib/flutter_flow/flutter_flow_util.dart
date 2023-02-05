@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:json_path/json_path.dart';
 
 export 'dart:convert' show jsonEncode, jsonDecode;
@@ -24,13 +23,4 @@ dynamic getJsonField(
   }
   final value = field.first.value;
   return isForList && value is! Iterable ? [value] : value;
-}
-
-Rect? getWidgetBoundingBox(BuildContext context) {
-  try {
-    final renderBox = context.findRenderObject() as RenderBox?;
-    return renderBox!.localToGlobal(Offset.zero) & renderBox.size;
-  } catch (_) {
-    return null;
-  }
 }
