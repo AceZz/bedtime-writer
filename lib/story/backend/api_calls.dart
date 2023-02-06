@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
-/// For later: handle cases when API calls fail
-
 /// GPT-3 API Call
 /// Call example: callOpenAiTextGeneration('Generate a story with a dragon')
 Future<String> callOpenAiTextGeneration({required String prompt}) async {
@@ -31,8 +29,8 @@ Future<String> callOpenAiTextGeneration({required String prompt}) async {
 
     // Decode API response with Utf-8
     if (response.statusCode == 200) {
-      final responseJson = jsonDecode(
-          Utf8Decoder().convert(response.bodyBytes));
+      final responseJson =
+          jsonDecode(Utf8Decoder().convert(response.bodyBytes));
       return responseJson['choices'][0]['text'];
     } else {
       throw Exception('Failed to generate text');

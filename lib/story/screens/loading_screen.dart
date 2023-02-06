@@ -25,15 +25,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-
       String storyText;
       String storyImage;
 
       // Simpler way to get results from text generation and image API calls
       try {
         storyText = await callOpenAiTextGeneration(
-            prompt: functions.storyGetPrompt(FFAppState().questions.toList())
-        );
+            prompt: functions.storyGetPrompt(FFAppState().questions.toList()));
       } catch (e) {
         storyText = 'Simply say \"Sorry, your story could not be generated.\"';
       }
