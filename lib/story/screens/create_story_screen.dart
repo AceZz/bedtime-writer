@@ -34,18 +34,19 @@ class CreateStoryScreen extends ConsumerWidget {
         String storyText;
         String storyImage;
 
-        // Simpler way to get results from text generation and image API calls
         try {
-          storyText = await callOpenAiTextGeneration(
-              prompt: storyState.storyParams.prompt);
+          // Parallelization of API calls
+          var apiResults = await Future.wait([
+            callOpenAiTextGeneration(prompt: storyState.storyParams.prompt),
+            callOpenAiImageGeneration(
+                prompt: storyState.storyParams.imagePrompt)
+          ]);
+
+          storyText = apiResults[0];
+          storyImage = apiResults[1];
         } catch (e) {
           storyText =
-              'Simply say \"Sorry, your story could not be generated.\"';
-        }
-        try {
-          storyImage = await callOpenAiImageGeneration(
-              prompt: storyState.storyParams.imagePrompt);
-        } catch (e) {
+              'Simply say \"Sorry, your story could not be generated. Please try again.\"';
           storyImage = '';
         }
 
