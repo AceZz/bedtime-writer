@@ -26,24 +26,35 @@ class _LoadingScreenState extends State<LoadingScreen> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
 
-      /// Simpler way to get results from text generation and image API calls
-      String storyText = await OpenAiTextGenerationCall.getText(
-          prompt: functions.storyGetPrompt(FFAppState().questions.toList())
-      );
-      String storyImage = await OpenAiImageGenerationCall.getUrl(
-        characterType: functions.utilsGetAnswer(
-            'characterType', FFAppState().questions.toList()),
-        location: functions.utilsGetAnswer(
-            'location', FFAppState().questions.toList()),
-      );
+      String storyText;
+      String storyImage;
 
-      /// Update App State with API results
+      // Simpler way to get results from text generation and image API calls
+      try {
+        storyText = await callOpenAiTextGeneration(
+            prompt: functions.storyGetPrompt(FFAppState().questions.toList())
+        );
+      } catch (e) {
+        storyText = 'Simply say \"Sorry, your story could not be generated.\"';
+      }
+      try {
+        storyImage = await callOpenAiImageGeneration(
+          characterType: functions.utilsGetAnswer(
+              'characterType', FFAppState().questions.toList()),
+          location: functions.utilsGetAnswer(
+              'location', FFAppState().questions.toList()),
+        );
+      } catch (e) {
+        storyImage = '';
+      }
+
+      // Update App State with API results
       FFAppState().update(() {
         FFAppState().storyText = storyText;
         FFAppState().storyImage = storyImage;
       });
 
-      /// Move to Story page
+      // Move to Story page
       context.goNamed('story');
     });
 
