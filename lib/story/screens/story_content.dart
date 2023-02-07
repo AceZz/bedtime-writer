@@ -33,25 +33,27 @@ class StoryContent extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         child: Image.network(
           storyImage,
-          width: 180,
-          height: 180,
+          width: 240,
+          height: 240,
           fit: BoxFit.cover,
         ),
       ),
     );
     // Widget imageWidget = Center(child: Container());
 
+    Widget imageTextGap = SizedBox(height: 5);
+
     Widget textWidget = Padding(
-      padding: EdgeInsetsDirectional.all(20),
+      padding: EdgeInsetsDirectional.all(30),
       child: Text(
         story.trim(),
-        style: Theme.of(context).primaryTextTheme.bodySmall,
+        style: Theme.of(context).primaryTextTheme.bodyMedium,
       ),
     );
 
     Widget shareWidget = Center(
       child: ShareButton(
-        text: 'Hey! Check out this amazing child story I made with '
+        text: 'Hey! Check out this amazing story I made with '
             'Bedtime stories: \n\n $story',
       ),
     );
@@ -60,6 +62,7 @@ class StoryContent extends StatelessWidget {
       children: [
         titleWidget,
         imageWidget,
+        imageTextGap,
         textWidget,
         shareWidget,
       ],
