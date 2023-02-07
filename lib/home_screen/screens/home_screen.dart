@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../widgets/fade_in.dart';
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -10,23 +12,31 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Widget titleWidget = Padding(
       padding: const EdgeInsets.symmetric(vertical: 50.0),
-      child: Text(
-        'Bedtime Stories',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).primaryTextTheme.headlineLarge,
+      child: FadeIn(
+        duration: Duration(milliseconds: 1500),
+        delay: Duration(milliseconds: 500),
+        child: Text(
+          'Bedtime Stories',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).primaryTextTheme.headlineLarge,
+        ),
       ),
     );
 
-    Widget newStoryButton = ElevatedButton(
-      onPressed: () {
-        ref.read(storyStateProvider.notifier).reset();
-        context.push('/create_story');
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Text(
-          'New story',
-          style: Theme.of(context).primaryTextTheme.headlineSmall,
+    Widget newStoryButton = FadeIn(
+      duration: Duration(milliseconds: 1500),
+      delay: Duration(milliseconds: 1500),
+      child: ElevatedButton(
+        onPressed: () {
+          ref.read(storyStateProvider.notifier).reset();
+          context.push('/create_story');
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(
+            'New story',
+            style: Theme.of(context).primaryTextTheme.headlineSmall,
+          ),
         ),
       ),
     );
