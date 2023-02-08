@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import 'home/index.dart';
+import 'settings/index.dart';
 import 'story/index.dart';
 
 final GoRouter router = GoRouter(
@@ -14,6 +15,11 @@ final GoRouter router = GoRouter(
       name: 'create_story',
       path: '/create_story',
       builder: (context, state) => CreateStoryScreen(),
+    ),
+    GoRoute(
+      name: 'settings',
+      path: '/settings',
+      builder: (context, state) => SettingsScreen(),
     ),
   ],
 );

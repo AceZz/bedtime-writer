@@ -23,20 +23,29 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
 
-    Widget newStoryButton = FadeIn(
-      duration: Duration(milliseconds: 1500),
-      delay: Duration(milliseconds: 1500),
-      child: ElevatedButton(
-        onPressed: () {
-          ref.read(storyStateProvider.notifier).reset();
-          context.push('/create_story');
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Text(
-            'New story',
-            style: Theme.of(context).primaryTextTheme.headlineSmall,
-          ),
+    Widget newStoryButton = ElevatedButton(
+      onPressed: () {
+        ref.read(storyStateProvider.notifier).reset();
+        context.push('/create_story');
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Text(
+          'New story',
+          style: Theme.of(context).primaryTextTheme.headlineSmall,
+        ),
+      ),
+    );
+
+    Widget settingsButton = ElevatedButton(
+      onPressed: () {
+        context.push('/settings');
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Text(
+          'Settings',
+          style: Theme.of(context).primaryTextTheme.headlineSmall,
         ),
       ),
     );
@@ -44,7 +53,23 @@ class HomeScreen extends ConsumerWidget {
     Widget menuWidget = Padding(
       padding: const EdgeInsets.only(top: 50.0),
       child: Column(
-        children: [newStoryButton],
+        children: [newStoryButton, settingsButton]
+            .asMap()
+            .map(
+              // The buttons will fade in one after the other
+              (i, button) => MapEntry(
+                  i,
+                  FadeIn(
+                    duration: Duration(milliseconds: 1500),
+                    delay: Duration(milliseconds: 500 + 1000 * (i + 1)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 35.0),
+                      child: button,
+                    ),
+                  )),
+            )
+            .values
+            .toList(),
       ),
     );
 

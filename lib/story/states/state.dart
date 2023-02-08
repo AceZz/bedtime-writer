@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:bedtime_writer/story/states/story_params.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data.dart';
 
@@ -130,9 +131,10 @@ class StoryStateNotifier extends StateNotifier<StoryState> {
         ));
 
   /// Reset the StoryState.
-  void reset() {
+  void reset() async {
+    final prefs = await SharedPreferences.getInstance();
     state = StoryState(
-      storyParams: StoryParams(),
+      storyParams: StoryParams(age: prefs.getInt('age') ?? 5),
       questions: [
         characterQuestion,
         placeQuestion,
