@@ -18,6 +18,12 @@ var theme = ThemeData(
     onError: Colors.white,
   ),
   primaryTextTheme: TextTheme(
+    // Application name on the home screen
+    headlineLarge: GoogleFonts.handlee(
+      color: onPrimary,
+      fontWeight: FontWeight.w400,
+      fontSize: 90,
+    ),
     // Page title (question, story title, etc.)
     headlineMedium: GoogleFonts.outfit(
       color: onPrimary,
