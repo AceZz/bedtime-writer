@@ -69,5 +69,6 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  # Every subfolder of assets need to be added here manually
   assets:
-    - assets/lottie_loading.json
+    - assets/lottie/
