@@ -123,20 +123,31 @@ class StoryStateNotifier extends StateNotifier<StoryState> {
   StoryStateNotifier()
       : super(StoryState(
           storyParams: StoryParams(),
-          questions: [
-            characterQuestion,
-            placeQuestion,
-            objectQuestion,
-            powerQuestion,
-            flawQuestion,
-            challengeQuestion,
-            moralQuestion,
-            durationQuestion,
-          ],
-          numRandom: 4,
+          questions: [],
+          numRandom: 0,
           story: null,
           storyImage: null,
         ));
+
+  /// Reset the StoryState.
+  void reset() {
+    state = StoryState(
+      storyParams: StoryParams(),
+      questions: [
+        characterQuestion,
+        placeQuestion,
+        objectQuestion,
+        powerQuestion,
+        flawQuestion,
+        challengeQuestion,
+        moralQuestion,
+        durationQuestion,
+      ],
+      numRandom: 4,
+      story: null,
+      storyImage: null,
+    );
+  }
 
   /// Updates the story, as done by [StoryState.update].
   void updateStoryParams([Choice? choice]) {
