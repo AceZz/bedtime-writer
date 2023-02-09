@@ -28,26 +28,27 @@ class StoryContent extends StatelessWidget {
       ),
     );
 
-    Widget imageWidget = Center(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: Image.network(
-          storyImage,
-          width: 240,
-          height: 240,
-          fit: BoxFit.cover,
+    Widget imageWidget = Padding(
+      padding: const EdgeInsets.all(15),
+      child: Center(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: Image.network(
+            storyImage,
+            width: 240,
+            height: 240,
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );
-    // Widget imageWidget = Center(child: Container());
-
-    Widget imageTextGap = SizedBox(height: 5);
 
     Widget textWidget = Padding(
       padding: EdgeInsetsDirectional.all(30),
       child: Text(
         story.trim(),
         style: Theme.of(context).primaryTextTheme.bodyMedium,
+        textAlign: TextAlign.justify,
       ),
     );
 
@@ -62,7 +63,6 @@ class StoryContent extends StatelessWidget {
       children: [
         titleWidget,
         imageWidget,
-        imageTextGap,
         textWidget,
         shareWidget,
       ],

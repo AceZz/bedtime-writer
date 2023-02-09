@@ -47,7 +47,7 @@ var theme = ThemeData(
       color: onPrimary,
       fontWeight: FontWeight.normal,
       fontSize: 20,
-      letterSpacing: 1.3
+      letterSpacing: 1.2,
     ),
     // Snack bar for debug
     bodySmall: GoogleFonts.outfit(

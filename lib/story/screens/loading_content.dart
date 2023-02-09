@@ -9,8 +9,7 @@ class LoadingContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // select a random lottie for loading
-    String lottiePath = randomLottie();
+   final String lottiePath = randomLottie();
 
     return Column(
       mainAxisSize: MainAxisSize.max,
