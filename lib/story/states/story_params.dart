@@ -133,7 +133,7 @@ class StoryParams {
       place == null ? '' : ' It takes place $place.';
 
   /// Returns an image prompt for this story.
-  String get imagePrompt => 'A beautiful professional children illustration'
+  String get imagePrompt => 'Dreamy and whimsical beautiful illustration'
       '$_imagePromptType'
       '$_imagePromptPlace';
 }

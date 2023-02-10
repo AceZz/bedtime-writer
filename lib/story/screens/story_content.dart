@@ -7,6 +7,9 @@ class StoryContent extends StatelessWidget {
   final String story;
   final String storyImage;
 
+  final double imageWidth = 380;
+  final double imageHeight = 380;
+
   const StoryContent({
     Key? key,
     required this.title,
@@ -29,22 +32,33 @@ class StoryContent extends StatelessWidget {
     );
 
     Widget imageWidget = Padding(
-      padding: const EdgeInsets.all(15),
-      child: Center(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: Image.network(
-            storyImage,
-            width: 240,
-            height: 240,
-            fit: BoxFit.cover,
+        padding: const EdgeInsets.all(10),
+        child: Stack(
+            alignment: Alignment.center,
+            children: [
+          // Wraps the image in a circle
+          Container(
+            width: imageWidth,
+            height: imageHeight,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: NetworkImage(storyImage),
+                fit: BoxFit.fill,
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+          LinearFadeWidget(imageWidth: imageWidth, imageHeight: imageHeight),
+          EdgesFadeWidget(imageWidth: imageWidth, imageHeight: imageHeight),
+        ]));
 
     Widget textWidget = Padding(
-      padding: EdgeInsetsDirectional.all(30),
+      padding: EdgeInsetsDirectional.only(
+        start: 30,
+        end: 30,
+        top: 15,
+        bottom: 30
+      ),
       child: Text(
         story.trim(),
         style: Theme.of(context).primaryTextTheme.bodyMedium,
@@ -66,6 +80,69 @@ class StoryContent extends StatelessWidget {
         textWidget,
         shareWidget,
       ],
+    );
+  }
+}
+
+class EdgesFadeWidget extends StatelessWidget {
+  const EdgesFadeWidget({
+    Key? key,
+    required this.imageWidth,
+    required this.imageHeight,
+  }) : super(key: key);
+
+  final double imageWidth;
+  final double imageHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: imageWidth,
+      height: imageHeight,
+      decoration: BoxDecoration(
+        gradient: RadialGradient(
+          stops: [0,0.9,1],
+          colors: [
+            Colors.transparent,
+            Colors.transparent,
+            Theme.of(context).colorScheme.background
+          ],
+        ),
+        shape: BoxShape.circle,
+      ),
+    );
+  }
+}
+
+class LinearFadeWidget extends StatelessWidget {
+  const LinearFadeWidget({
+    Key? key,
+    required this.imageWidth,
+    required this.imageHeight,
+  }) : super(key: key);
+
+  final double imageWidth;
+  final double imageHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+        opacity: 0.4,
+        child: Container(
+          width: imageWidth,
+          height: imageHeight,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.transparent,
+                Theme.of(context).colorScheme.background
+                ],
+            ),
+            shape: BoxShape.circle,
+          ),
+        ),
     );
   }
 }
