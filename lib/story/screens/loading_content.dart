@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 
-import '../frontend//lottie_loading.dart';
+import '../frontend/lottie_loading.dart';
 
 class LoadingContent extends ConsumerWidget {
   const LoadingContent({Key? key}) : super(key: key);
