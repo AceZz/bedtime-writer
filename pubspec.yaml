@@ -70,4 +70,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/lottie_loading.json
+    - assets/lottie/
