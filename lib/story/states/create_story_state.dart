@@ -1,11 +1,11 @@
 import 'dart:math';
 
-import 'package:bedtime_writer/story/states/story_params.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data.dart';
+import 'story_params.dart';
 
 final _random = new Random();
 
@@ -20,7 +20,7 @@ final _random = new Random();
 ///
 /// When the story is generated, the result is stored in [story].
 @immutable
-class StoryState {
+class CreateStoryState {
   final StoryParams storyParams;
 
   final List<Question> questions;
@@ -34,7 +34,7 @@ class StoryState {
   /// The URL to the story image.
   final String? storyImage;
 
-  const StoryState({
+  const CreateStoryState({
     required this.storyParams,
     required this.questions,
     required this.numRandom,
@@ -46,14 +46,14 @@ class StoryState {
 
   Question get currentQuestion => this.questions.first;
 
-  StoryState copyWith({
+  CreateStoryState copyWith({
     StoryParams? storyParams,
     List<Question>? questions,
     int? numRandom,
     String? story,
     String? storyImage,
   }) {
-    return StoryState(
+    return CreateStoryState(
       storyParams: storyParams ?? this.storyParams,
       questions: questions ?? this.questions,
       numRandom: numRandom ?? this.numRandom,
@@ -66,7 +66,7 @@ class StoryState {
   ///
   /// If [choice] is provided, answers the [currentQuestion] with it.
   /// Otherwise, answers randomly.
-  StoryState _answer(Choice? choice) {
+  CreateStoryState _answer(Choice? choice) {
     // No question, so no answer.
     if (!hasQuestions) return this;
 
@@ -92,7 +92,7 @@ class StoryState {
   /// In all cases, tries to answer the following questions randomly.
   /// To decide whether a question should be answered randomly, a random draw is
   /// made, taking the number of remaining questions into account.
-  StoryState update([Choice? choice]) {
+  CreateStoryState update([Choice? choice]) {
     var newState = this;
 
     if (choice != null) newState = _answer(choice);
@@ -120,9 +120,9 @@ class StoryState {
   }
 }
 
-class StoryStateNotifier extends StateNotifier<StoryState> {
-  StoryStateNotifier()
-      : super(StoryState(
+class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
+  CreateStoryStateNotifier()
+      : super(CreateStoryState(
           storyParams: StoryParams(),
           questions: [],
           numRandom: 0,
@@ -133,7 +133,7 @@ class StoryStateNotifier extends StateNotifier<StoryState> {
   /// Reset the StoryState.
   void reset() async {
     final prefs = await SharedPreferences.getInstance();
-    state = StoryState(
+    state = CreateStoryState(
       storyParams: StoryParams(age: prefs.getInt('age') ?? 5),
       questions: [
         characterQuestion,
@@ -151,7 +151,7 @@ class StoryStateNotifier extends StateNotifier<StoryState> {
     );
   }
 
-  /// Updates the story, as done by [StoryState.update].
+  /// Updates the story, as done by [CreateStoryState.update].
   void updateStoryParams([Choice? choice]) {
     state = state.update(choice);
   }
@@ -162,6 +162,6 @@ class StoryStateNotifier extends StateNotifier<StoryState> {
   }
 }
 
-final storyStateProvider =
-    StateNotifierProvider<StoryStateNotifier, StoryState>(
-        (ref) => StoryStateNotifier());
+final createStoryStateProvider =
+    StateNotifierProvider<CreateStoryStateNotifier, CreateStoryState>(
+        (ref) => CreateStoryStateNotifier());

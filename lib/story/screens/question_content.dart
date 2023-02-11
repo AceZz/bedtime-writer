@@ -1,7 +1,7 @@
-import 'package:bedtime_writer/story/states/state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../states/create_story_state.dart';
 import '../states/story_params.dart';
 
 /// The maximum number of choices that can be displayed.
@@ -39,7 +39,7 @@ class _ChoiceButton extends ConsumerWidget {
       padding: EdgeInsetsDirectional.all(30),
       child: InkWell(
         onTap: () {
-          ref.read(storyStateProvider.notifier).updateStoryParams(choice);
+          ref.read(createStoryStateProvider.notifier).updateStoryParams(choice);
         },
         borderRadius: BorderRadius.circular(20),
         child: Ink(
