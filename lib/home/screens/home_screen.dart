@@ -37,6 +37,19 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
 
+    Widget libraryButton = ElevatedButton(
+      onPressed: () {
+        context.pushNamed('library');
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Text(
+          'Library',
+          style: Theme.of(context).primaryTextTheme.headlineSmall,
+        ),
+      ),
+    );
+
     Widget settingsButton = ElevatedButton(
       onPressed: () {
         context.push('/settings');
@@ -53,7 +66,7 @@ class HomeScreen extends ConsumerWidget {
     Widget menuWidget = Padding(
       padding: const EdgeInsets.only(top: 50.0),
       child: Column(
-        children: [newStoryButton, settingsButton]
+        children: [newStoryButton, libraryButton, settingsButton]
             .asMap()
             .map(
               // The buttons will fade in one after the other
