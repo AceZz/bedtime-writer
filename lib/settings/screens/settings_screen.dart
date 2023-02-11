@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../widgets/app_scaffold.dart';
+
 class _AgeDropdown extends StatefulWidget {
   const _AgeDropdown({Key? key}) : super(key: key);
 
@@ -83,20 +85,14 @@ class SettingsScreen extends ConsumerWidget {
       ),
     );
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: SafeArea(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              title,
-              age,
-            ],
-          ),
-        ),
+    return AppScaffold(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          title,
+          age,
+        ],
       ),
     );
   }

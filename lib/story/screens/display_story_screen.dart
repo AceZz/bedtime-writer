@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../widgets/app_scaffold.dart';
 import '../backend/firebase.dart';
 import 'story_image.dart';
 import 'story_widget.dart';
@@ -29,15 +30,7 @@ class DisplayStoryScreen extends StatelessWidget {
           );
         }
 
-        return Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          body: SafeArea(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              child: content,
-            ),
-          ),
-        );
+        return AppScaffold(child: content);
       },
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../widgets/app_scaffold.dart';
 import '../backend/firebase.dart';
 import '../frontend/lottie_loading.dart';
 import 'story_image.dart';
@@ -97,16 +98,10 @@ class LibraryScreen extends StatelessWidget {
           children.add(lottieWidget);
         }
 
-        return Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          body: SafeArea(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              child: ListView(
-                padding: const EdgeInsets.all(10.0),
-                children: children,
-              ),
-            ),
+        return AppScaffold(
+          child: ListView(
+            padding: const EdgeInsets.all(10.0),
+            children: children,
           ),
         );
       },

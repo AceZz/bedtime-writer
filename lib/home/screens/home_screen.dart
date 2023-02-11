@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../story/index.dart';
+import '../../widgets/app_scaffold.dart';
 import '../../widgets/fade_in.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -86,19 +87,14 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
 
-    return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: SafeArea(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                titleWidget,
-                menuWidget,
-              ],
-            ),
-          ),
-        ));
+    return AppScaffold(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          titleWidget,
+          menuWidget,
+        ],
+      ),
+    );
   }
 }

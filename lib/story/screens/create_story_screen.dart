@@ -4,6 +4,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
+import '../../widgets/app_scaffold.dart';
 import '../backend/api_calls.dart';
 import '../backend/firebase.dart';
 import '../states/create_story_state.dart';
@@ -77,14 +78,7 @@ class CreateStoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: SafeArea(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            child: _getContent(ref),
-          ),
-        ));
+    return AppScaffold(child: _getContent(ref));
   }
 }
 
