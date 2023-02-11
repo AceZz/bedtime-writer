@@ -33,9 +33,7 @@ class StoryContent extends StatelessWidget {
 
     Widget imageWidget = Padding(
         padding: const EdgeInsets.all(10),
-        child: Stack(
-            alignment: Alignment.center,
-            children: [
+        child: Stack(alignment: Alignment.center, children: [
           // Wraps the image in a circle
           Container(
             width: imageWidth,
@@ -53,12 +51,8 @@ class StoryContent extends StatelessWidget {
         ]));
 
     Widget textWidget = Padding(
-      padding: EdgeInsetsDirectional.only(
-        start: 30,
-        end: 30,
-        top: 15,
-        bottom: 30
-      ),
+      padding:
+          EdgeInsetsDirectional.only(start: 30, end: 30, top: 15, bottom: 30),
       child: Text(
         story.trim(),
         style: Theme.of(context).primaryTextTheme.bodyMedium,
@@ -101,7 +95,7 @@ class EdgesFadeWidget extends StatelessWidget {
       height: imageHeight,
       decoration: BoxDecoration(
         gradient: RadialGradient(
-          stops: [0,0.9,1],
+          stops: [0, 0.9, 1],
           colors: [
             Colors.transparent,
             Colors.transparent,
@@ -127,22 +121,22 @@ class LinearFadeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Opacity(
-        opacity: 0.4,
-        child: Container(
-          width: imageWidth,
-          height: imageHeight,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.transparent,
-                Theme.of(context).colorScheme.background
-                ],
-            ),
-            shape: BoxShape.circle,
+      opacity: 0.4,
+      child: Container(
+        width: imageWidth,
+        height: imageHeight,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.transparent,
+              Theme.of(context).colorScheme.background
+            ],
           ),
+          shape: BoxShape.circle,
         ),
+      ),
     );
   }
 }
