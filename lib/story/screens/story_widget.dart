@@ -10,13 +10,17 @@ class StoryWidget extends StatelessWidget {
   final String title;
   final String story;
   final Widget image;
+  late final List<Widget> extra;
 
-  const StoryWidget({
+  StoryWidget({
     Key? key,
     required this.title,
     required this.story,
     required this.image,
-  }) : super(key: key);
+    List<Widget>? extra,
+  }) : super(key: key) {
+    this.extra = extra ?? [];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +62,7 @@ class StoryWidget extends StatelessWidget {
         imageWidget,
         textWidget,
         shareWidget,
+        ...extra,
       ],
     );
   }
