@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>596701039771-l5583cm0tolhnn6tjapmad51akjel1k5.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.596701039771-l5583cm0tolhnn6tjapmad51akjel1k5</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAxg_LFlr0sZrbpHe27rAqIsEfFMACSecI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>596701039771</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.tap.bedtimewriter</string>
+	<key>PROJECT_ID</key>
+	<string>bedtime-writer</string>
+	<key>STORAGE_BUCKET</key>
+	<string>bedtime-writer.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:596701039771:ios:c7dbc0fefbb30fbc758a3e</string>
+</dict>
+</plist>
