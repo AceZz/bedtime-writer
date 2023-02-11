@@ -1,8 +1,8 @@
-import 'package:bedtime_writer/story/states/state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../story/index.dart';
 import '../../widgets/fade_in.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -25,8 +25,8 @@ class HomeScreen extends ConsumerWidget {
 
     Widget newStoryButton = ElevatedButton(
       onPressed: () {
-        ref.read(storyStateProvider.notifier).reset();
-        context.push('/create_story');
+        ref.read(createStoryStateProvider.notifier).reset();
+        context.pushNamed('create_story');
       },
       child: Padding(
         padding: const EdgeInsets.all(12.0),

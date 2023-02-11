@@ -3,7 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../backend/api_calls.dart';
-import '../states/state.dart';
+import '../states/create_story_state.dart';
 import 'loading_content.dart';
 import 'question_content.dart';
 import 'story_content.dart';
@@ -17,18 +17,18 @@ class CreateStoryScreen extends ConsumerWidget {
   const CreateStoryScreen({Key? key}) : super(key: key);
 
   Widget _getContent(WidgetRef ref) {
-    StoryState storyState = ref.watch(storyStateProvider);
-    var story = storyState.story;
-    var storyImage = storyState.storyImage;
+    CreateStoryState state = ref.watch(createStoryStateProvider);
+    var story = state.story;
+    var storyImage = state.storyImage;
 
     if (story != null && storyImage != null)
       return StoryContent(
-        title: storyState.storyParams.title,
+        title: state.storyParams.title,
         story: story,
         storyImage: storyImage,
       );
 
-    if (!storyState.hasQuestions) {
+    if (!state.hasQuestions) {
       // On page load action.
       SchedulerBinding.instance.addPostFrameCallback((_) async {
         String storyText;
@@ -37,9 +37,9 @@ class CreateStoryScreen extends ConsumerWidget {
         try {
           // Parallelization of API calls
           var apiResults = await Future.wait([
-            callOpenAiTextGeneration(prompt: storyState.storyParams.prompt),
+            callOpenAiTextGeneration(prompt: state.storyParams.prompt),
             callOpenAiImageGeneration(
-                prompt: storyState.storyParams.imagePrompt)
+                prompt: state.storyParams.imagePrompt)
           ]);
 
           storyText = apiResults[0];
@@ -50,13 +50,15 @@ class CreateStoryScreen extends ConsumerWidget {
           storyImage = '';
         }
 
-        ref.read(storyStateProvider.notifier).setStory(storyText, storyImage);
+        ref
+            .read(createStoryStateProvider.notifier)
+            .setStory(storyText, storyImage);
       });
 
       return LoadingContent();
     }
 
-    return QuestionContent(question: storyState.currentQuestion);
+    return QuestionContent(question: state.currentQuestion);
   }
 
   @override

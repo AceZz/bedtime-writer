@@ -13,7 +13,7 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       name: 'create_story',
-      path: '/create_story',
+      path: '/story/new',
       builder: (context, state) => CreateStoryScreen(),
     ),
     GoRoute(
