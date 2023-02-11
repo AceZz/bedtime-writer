@@ -6,7 +6,8 @@ import '../backend/api_calls.dart';
 import '../states/create_story_state.dart';
 import 'loading_content.dart';
 import 'question_content.dart';
-import 'story_content.dart';
+import 'story_image.dart';
+import 'story_widget.dart';
 
 /// Entry point of the story creation.
 ///
@@ -22,10 +23,14 @@ class CreateStoryScreen extends ConsumerWidget {
     var storyImage = state.storyImage;
 
     if (story != null && storyImage != null)
-      return StoryContent(
+      return StoryWidget(
         title: state.storyParams.title,
         story: story,
-        storyImage: storyImage,
+        image: StoryImage(
+          url: storyImage,
+          width: 240,
+          height: 240,
+        ),
       );
 
     if (!state.hasQuestions) {
@@ -38,8 +43,7 @@ class CreateStoryScreen extends ConsumerWidget {
           // Parallelization of API calls
           var apiResults = await Future.wait([
             callOpenAiTextGeneration(prompt: state.storyParams.prompt),
-            callOpenAiImageGeneration(
-                prompt: state.storyParams.imagePrompt)
+            callOpenAiImageGeneration(prompt: state.storyParams.imagePrompt)
           ]);
 
           storyText = apiResults[0];
