@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 
 import '../backend/api_calls.dart';
+import '../backend/firebase.dart';
 import '../states/create_story_state.dart';
 import 'loading_content.dart';
 import 'question_content.dart';
@@ -22,16 +25,22 @@ class CreateStoryScreen extends ConsumerWidget {
     var story = state.story;
     var storyImage = state.storyImage;
 
-    if (story != null && storyImage != null)
-      return StoryWidget(
+    if (story != null && storyImage != null) {
+      var payload = _SavePayload(
         title: state.storyParams.title,
         story: story,
-        image: StoryImage(
-          url: storyImage,
-          width: 240,
-          height: 240,
-        ),
+        storyImage: storyImage,
+        prompt: state.storyParams.prompt,
+        imagePrompt: state.storyParams.imagePrompt,
       );
+
+      return StoryWidget(
+        title: payload.title,
+        story: payload.story,
+        image: StoryImage(url: payload.storyImage, width: 240, height: 240),
+        extra: [Center(child: _SaveButton(payload: payload))],
+      );
+    }
 
     if (!state.hasQuestions) {
       // On page load action.
@@ -49,6 +58,7 @@ class CreateStoryScreen extends ConsumerWidget {
           storyText = apiResults[0];
           storyImage = apiResults[1];
         } catch (e) {
+          print(e.toString());
           storyText =
               'Simply say \"Sorry, your story could not be generated. Please try again.\"';
           storyImage = '';
@@ -75,5 +85,59 @@ class CreateStoryScreen extends ConsumerWidget {
             child: _getContent(ref),
           ),
         ));
+  }
+}
+
+/// Helper class that wraps a save payload.
+class _SavePayload {
+  final String title;
+  final String story;
+  final String storyImage;
+  final String prompt;
+  final String imagePrompt;
+
+  const _SavePayload({
+    required this.title,
+    required this.story,
+    required this.storyImage,
+    required this.prompt,
+    required this.imagePrompt,
+  });
+}
+
+/// Saves the story.
+class _SaveButton extends StatelessWidget {
+  final _SavePayload payload;
+
+  const _SaveButton({Key? key, required this.payload}) : super(key: key);
+
+  Future _onSave(BuildContext context) async {
+    return Future.wait([
+      // Adds the story to Firestore.
+      storiesReference.add({
+        'date': Timestamp.now(),
+        'title': payload.title,
+        'text': payload.story,
+        'prompt': payload.prompt,
+        'imagePrompt': payload.imagePrompt,
+      }),
+      // Downloads the image.
+      http.get(Uri.parse(payload.storyImage))
+    ]).then((results) {
+      // Saves the image in Storage.
+      var story = results[0] as DocumentReference;
+      var image = results[1] as http.Response;
+      return storyImageReference(story.id).putData(image.bodyBytes);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) => ElevatedButton(
+        onPressed: () => _onSave(context),
+        child: const Text('Save this story'),
+      ),
+    );
   }
 }
