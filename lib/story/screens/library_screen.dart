@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
 
 import '../../widgets/app_scaffold.dart';
 import '../backend/firebase.dart';
-import '../frontend/lottie_loading.dart';
+import '../../widgets/lottie_loading.dart';
 import 'story_image.dart';
 
 /// Displays the [title], the [creationDate] and the image of a story in a
@@ -52,8 +51,6 @@ class _StoryTile extends StatelessWidget {
 }
 
 class LibraryScreen extends StatelessWidget {
-  final String lottiePath = randomLottie();
-
   LibraryScreen({Key? key}) : super(key: key);
 
   @override
@@ -64,13 +61,7 @@ class LibraryScreen extends StatelessWidget {
       style: Theme.of(context).primaryTextTheme.headlineMedium,
     );
 
-    final lottieWidget = Lottie.asset(
-      lottiePath,
-      width: 180,
-      height: 180,
-      fit: BoxFit.cover,
-      animate: true,
-    );
+    final lottieWidget = LottieLoading();
 
     return FutureBuilder(
       future: storiesReference.get(),

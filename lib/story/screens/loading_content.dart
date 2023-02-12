@@ -8,6 +8,16 @@ class LoadingContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return LottieLoadingWidget();
+    return Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          LottieLoading(),
+          Text(
+            'Your story is being created...',
+            style: Theme.of(context).primaryTextTheme.headlineSmall,
+          ),
+        ]);
   }
 }

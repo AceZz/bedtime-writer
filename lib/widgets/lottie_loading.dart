@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 
-final files = [
+final _files = [
   'assets/lottie/dog.json',
   'assets/lottie/cat.json',
   'assets/lottie/dragon.json',
@@ -10,35 +10,24 @@ final files = [
   'assets/lottie/pandas.json',
 ];
 
-String randomLottie() {
+String _randomLottie() {
   // Return a random Lottie file
-  return files[Random().nextInt(files.length)].toString();
+  return _files[Random().nextInt(_files.length)].toString();
 }
 
-class LottieLoadingWidget extends StatelessWidget {
-  const LottieLoadingWidget({
+class LottieLoading extends StatelessWidget {
+  const LottieLoading({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Lottie.asset(
-          randomLottie(),
-          width: 180,
-          height: 180,
-          fit: BoxFit.cover,
-          animate: true,
-        ),
-        Text(
-          'Your story is being created...',
-          style: Theme.of(context).primaryTextTheme.headlineSmall,
-        ),
-      ],
+    return Lottie.asset(
+      _randomLottie(),
+      width: 180,
+      height: 180,
+      fit: BoxFit.cover,
+      animate: true,
     );
   }
 }
