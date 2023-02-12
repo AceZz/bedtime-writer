@@ -36,7 +36,7 @@ class _ChoiceButton extends ConsumerWidget {
     );
 
     return Padding(
-      padding: EdgeInsetsDirectional.all(30),
+      padding: const EdgeInsets.all(30),
       child: InkWell(
         onTap: () {
           ref.read(createStoryStateProvider.notifier).updateStoryParams(choice);
@@ -71,7 +71,7 @@ class QuestionContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget questionText = Padding(
-      padding: EdgeInsetsDirectional.all(20),
+      padding: const EdgeInsets.all(20),
       child: Text(
         question.text,
         textAlign: TextAlign.center,

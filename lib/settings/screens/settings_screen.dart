@@ -58,7 +58,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Widget title = Padding(
-      padding: EdgeInsetsDirectional.all(20),
+      padding: const EdgeInsets.all(20),
       child: Text(
         'Settings',
         style: Theme.of(context).primaryTextTheme.headlineMedium,
@@ -74,7 +74,7 @@ class SettingsScreen extends ConsumerWidget {
             style: Theme.of(context).primaryTextTheme.bodyMedium,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: const _AgeDropdown(),
           ),
           Text(
