@@ -53,7 +53,7 @@ class HomeScreen extends ConsumerWidget {
 
     Widget settingsButton = ElevatedButton(
       onPressed: () {
-        context.push('/settings');
+        context.pushNamed('settings');
       },
       child: Padding(
         padding: const EdgeInsets.all(12.0),
