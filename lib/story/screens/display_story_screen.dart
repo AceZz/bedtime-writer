@@ -9,7 +9,7 @@ import 'story_widget.dart';
 class DisplayStoryScreen extends StatelessWidget {
   final String id;
 
-  DisplayStoryScreen({Key? key, required this.id}) : super(key: key);
+  const DisplayStoryScreen({Key? key, required this.id}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class DisplayStoryScreen extends StatelessWidget {
         AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot,
       ) {
         final data = snapshot.data;
-        Widget content = CircularProgressIndicator();
+        Widget content = const CircularProgressIndicator();
 
         if (data != null) {
           content = StoryWidget(

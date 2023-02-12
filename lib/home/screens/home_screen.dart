@@ -14,8 +14,8 @@ class HomeScreen extends ConsumerWidget {
     Widget titleWidget = Padding(
       padding: const EdgeInsets.symmetric(vertical: 50.0),
       child: FadeIn(
-        duration: Duration(milliseconds: 1500),
-        delay: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 1500),
+        delay: const Duration(milliseconds: 500),
         child: Text(
           'Bedtime Stories',
           textAlign: TextAlign.center,
@@ -74,7 +74,7 @@ class HomeScreen extends ConsumerWidget {
               (i, button) => MapEntry(
                   i,
                   FadeIn(
-                    duration: Duration(milliseconds: 1500),
+                    duration: const Duration(milliseconds: 1500),
                     delay: Duration(milliseconds: 500 + 1000 * (i + 1)),
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
