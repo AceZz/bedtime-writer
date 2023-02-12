@@ -9,7 +9,7 @@ class StorageStoryImage extends StatelessWidget {
   final double width;
   final double height;
 
-  StorageStoryImage(
+  const StorageStoryImage(
       {Key? key, required this.id, required this.width, required this.height})
       : super(key: key);
 
@@ -25,7 +25,7 @@ class StorageStoryImage extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Icon(FontAwesomeIcons.triangleExclamation);
         }
-        return CircularProgressIndicator();
+        return const CircularProgressIndicator();
       },
     );
   }
