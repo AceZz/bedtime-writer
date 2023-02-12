@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../widgets/index.dart';
 import 'story_image.dart';
@@ -11,6 +12,11 @@ class StoryWidget extends StatelessWidget {
   final String story;
   final Widget image;
   late final List<Widget> extra;
+
+  final TextStyle firstLetterStyle = GoogleFonts.croissantOne(
+    fontWeight: FontWeight.bold,
+    fontSize: 42,
+  );
 
   StoryWidget({
     Key? key,
@@ -40,14 +46,28 @@ class StoryWidget extends StatelessWidget {
         Padding(padding: const EdgeInsets.all(10), child: image);
 
     Widget textWidget = Padding(
-      padding:
-          EdgeInsetsDirectional.only(start: 30, end: 30, top: 15, bottom: 30),
-      child: Text(
-        story.trim(),
-        style: Theme.of(context).primaryTextTheme.bodyMedium,
-        textAlign: TextAlign.justify,
-      ),
-    );
+        padding:
+            EdgeInsetsDirectional.only(start: 30, end: 30, top: 15, bottom: 30),
+        child: RichText(
+          text: TextSpan(
+            // Sets a big first letter
+            text: story.trim()[0],
+            style: firstLetterStyle,
+            // Writes the rest of the text
+            children: <TextSpan>[
+              TextSpan(
+                text: story.trim().substring(1),
+                style: Theme.of(context).primaryTextTheme.bodyMedium,
+              ),
+            ],
+          ),
+          strutStyle: (StrutStyle(
+            fontSize: Theme.of(context).primaryTextTheme.bodyMedium?.fontSize,
+            height: Theme.of(context).primaryTextTheme.bodyMedium?.height,
+            forceStrutHeight: true,
+          )),
+          textAlign: TextAlign.justify,
+        ));
 
     Widget shareWidget = Center(
       child: ShareButton(
