@@ -14,8 +14,8 @@ class StoryWidget extends StatelessWidget {
   late final List<Widget> extra;
 
   final TextStyle firstLetterStyle = GoogleFonts.croissantOne(
-  fontWeight: FontWeight.bold,
-  fontSize: 42,
+    fontWeight: FontWeight.bold,
+    fontSize: 42,
   );
 
   StoryWidget({
