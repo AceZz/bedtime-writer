@@ -29,7 +29,7 @@ class _StoryTile extends StatelessWidget {
 
     return ListTile(
       key: ValueKey(id),
-      contentPadding: EdgeInsetsDirectional.all(8.0),
+      contentPadding: const EdgeInsets.all(8.0),
       tileColor: Theme.of(context).colorScheme.primary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
@@ -76,7 +76,7 @@ class LibraryScreen extends StatelessWidget {
           children.addAll(
             data.docs.map(
               (doc) => Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: _StoryTile(
                   id: doc.id,
                   title: doc['title'],

@@ -34,7 +34,7 @@ class StoryWidget extends StatelessWidget {
     // they will take the full width, unless they are surrounded by `Center`.
 
     Widget titleWidget = Padding(
-      padding: EdgeInsetsDirectional.all(20),
+      padding: const EdgeInsets.all(20),
       child: Text(
         title,
         textAlign: TextAlign.center,
@@ -47,7 +47,7 @@ class StoryWidget extends StatelessWidget {
 
     Widget textWidget = Padding(
         padding:
-            EdgeInsetsDirectional.only(start: 30, end: 30, top: 15, bottom: 30),
+            const EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 30),
         child: RichText(
           text: TextSpan(
             // Sets a big first letter
