@@ -33,22 +33,25 @@ class StoryContent extends StatelessWidget {
 
     Widget imageWidget = Padding(
         padding: const EdgeInsets.all(10),
-        child: Stack(alignment: Alignment.center, children: [
-          // Wraps the image in a circle
-          Container(
-            width: imageWidth,
-            height: imageHeight,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: NetworkImage(storyImage),
-                fit: BoxFit.fill,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Wraps the image in a circle
+            Container(
+              width: imageWidth,
+              height: imageHeight,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: NetworkImage(storyImage),
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
-          ),
-          LinearFadeWidget(imageWidth: imageWidth, imageHeight: imageHeight),
-          EdgesFadeWidget(imageWidth: imageWidth, imageHeight: imageHeight),
-        ]));
+            LinearFadeWidget(imageWidth: imageWidth, imageHeight: imageHeight),
+            EdgesFadeWidget(imageWidth: imageWidth, imageHeight: imageHeight),
+          ],
+        ));
 
     Widget textWidget = Padding(
       padding:
