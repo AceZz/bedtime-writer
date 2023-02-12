@@ -60,8 +60,7 @@ class CreateStoryScreen extends ConsumerWidget {
           storyImage = apiResults[1];
         } catch (e) {
           print(e.toString());
-          storyText =
-              'Simply say \"Sorry, your story could not be generated. Please try again.\"';
+          storyText = 'Sorry, your story could not be generated';
           storyImage = '';
         }
 
