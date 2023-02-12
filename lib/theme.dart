@@ -48,18 +48,12 @@ var theme = ThemeData(
       fontWeight: FontWeight.normal,
       fontSize: 20,
       letterSpacing: 1.2,
-      height: 1.2,
     ),
     // Snack bar for debug
     bodySmall: GoogleFonts.outfit(
       color: onPrimary,
       fontWeight: FontWeight.normal,
       fontSize: 14,
-    ),
-    displayLarge: GoogleFonts.croissantOne(
-      color: onPrimary,
-      fontWeight: FontWeight.bold,
-      fontSize: 42,
     ),
   ),
 );

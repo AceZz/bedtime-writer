@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../widgets/index.dart';
 import 'story_image.dart';
@@ -11,6 +12,11 @@ class StoryWidget extends StatelessWidget {
   final String story;
   final Widget image;
   late final List<Widget> extra;
+
+  final TextStyle firstLetterStyle = GoogleFonts.croissantOne(
+  fontWeight: FontWeight.bold,
+  fontSize: 42,
+  );
 
   StoryWidget({
     Key? key,
@@ -46,7 +52,7 @@ class StoryWidget extends StatelessWidget {
           text: TextSpan(
             // Sets a big first letter
             text: story.trim()[0],
-            style: Theme.of(context).primaryTextTheme.displayLarge,
+            style: firstLetterStyle,
             // Writes the rest of the text
             children: <TextSpan>[
               TextSpan(
