@@ -69,7 +69,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '596701039771',
     projectId: 'bedtime-writer',
     storageBucket: 'bedtime-writer.appspot.com',
-    iosClientId: '596701039771-l5583cm0tolhnn6tjapmad51akjel1k5.apps.googleusercontent.com',
+    iosClientId:
+        '596701039771-l5583cm0tolhnn6tjapmad51akjel1k5.apps.googleusercontent.com',
     iosBundleId: 'com.tap.bedtimewriter',
   );
 }
