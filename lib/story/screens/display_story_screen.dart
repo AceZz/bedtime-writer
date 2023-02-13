@@ -26,7 +26,7 @@ class DisplayStoryScreen extends StatelessWidget {
           content = StoryWidget(
             title: data['title'],
             story: data['text'],
-            image: StorageStoryImage(id: id, width: 240, height: 240),
+            image: StorageStoryImage(id: id, width: 380, height: 380),
           );
         }
 

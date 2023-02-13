@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 import '../../widgets/index.dart';
 import 'story_image.dart';
@@ -13,9 +14,12 @@ class StoryWidget extends StatelessWidget {
   final Widget image;
   late final List<Widget> extra;
 
-  final TextStyle firstLetterStyle = GoogleFonts.croissantOne(
+  final TextStyle _firstLetterStyle = GoogleFonts.croissantOne(
     fontWeight: FontWeight.bold,
     fontSize: 42,
+  );
+  final TextStyle _storyTitleStyle = GoogleFonts.amaticSc(
+    fontWeight: FontWeight.bold,
   );
 
   StoryWidget({
@@ -35,10 +39,12 @@ class StoryWidget extends StatelessWidget {
 
     Widget titleWidget = Padding(
       padding: const EdgeInsets.all(20),
-      child: Text(
+      child: AutoSizeText(
         title,
         textAlign: TextAlign.center,
-        style: Theme.of(context).primaryTextTheme.headlineMedium,
+        maxLines: 2,
+        presetFontSizes: [60,50,40,30,20], // Starts with biggest font first
+        style: _storyTitleStyle
       ),
     );
 
@@ -52,7 +58,7 @@ class StoryWidget extends StatelessWidget {
           text: TextSpan(
             // Sets a big first letter
             text: story.trim()[0],
-            style: firstLetterStyle,
+            style: _firstLetterStyle,
             // Writes the rest of the text
             children: <TextSpan>[
               TextSpan(
@@ -70,9 +76,12 @@ class StoryWidget extends StatelessWidget {
         ));
 
     Widget shareWidget = Center(
-      child: ShareButton(
-        text: 'Hey! Check out this amazing story I made with '
-            'Bedtime stories: \n\n $story',
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: ShareButton(
+          text: 'Hey! Check out this amazing story I made with '
+              'Bedtime stories: \n\n $story',
+        ),
       ),
     );
 
