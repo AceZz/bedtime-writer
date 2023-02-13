@@ -30,13 +30,17 @@ class StoryWidget extends StatelessWidget {
     // they will take the full width, unless they are surrounded by `Center`.
 
     // Define additional styles here as they need context
+    final TextStyle _storyTitleStyle = GoogleFonts.amaticSc(
+      fontWeight: FontWeight.bold,
+    );
     final TextStyle _firstLetterStyle = GoogleFonts.croissantOne(
       fontWeight: FontWeight.bold,
       fontSize: 42,
       color: Theme.of(context).primaryTextTheme.bodyMedium?.color,
     );
-    final TextStyle _storyTitleStyle = GoogleFonts.amaticSc(
+    final TextStyle _theEndStyle = GoogleFonts.amaticSc(
       fontWeight: FontWeight.bold,
+      fontSize: 42,
     );
 
     Widget titleWidget = Padding(
@@ -55,7 +59,7 @@ class StoryWidget extends StatelessWidget {
 
     Widget textWidget = Padding(
         padding:
-            const EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 30),
+            const EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 10),
         child: RichText(
           text: TextSpan(
             // Sets a big first letter
@@ -77,6 +81,15 @@ class StoryWidget extends StatelessWidget {
           textAlign: TextAlign.justify,
         ));
 
+    Widget theEndWidget = Padding(
+      padding: const EdgeInsets.all(5),
+      child: Text(
+          "The End",
+          textAlign: TextAlign.center,
+          style: _theEndStyle
+      ),
+    );
+
     Widget shareWidget = Center(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -92,6 +105,7 @@ class StoryWidget extends StatelessWidget {
         titleWidget,
         imageWidget,
         textWidget,
+        theEndWidget,
         shareWidget,
         ...extra,
       ],
