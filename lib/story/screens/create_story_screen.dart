@@ -130,9 +130,12 @@ class _SaveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Builder(
-      builder: (context) => ElevatedButton(
+      builder: (context) => IconButton(
         onPressed: () => _onSave(context),
-        child: const Text('Save this story'),
+        icon: Icon(
+          Icons.favorite,
+          color: Theme.of(context).textTheme.bodyMedium?.color,
+        ),
       ),
     );
   }
