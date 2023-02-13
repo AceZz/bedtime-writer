@@ -24,6 +24,14 @@ class StoryWidget extends StatelessWidget {
     this.extra = extra ?? [];
   }
 
+  // Removes "The End." within story if present to avoid duplicate
+  String removeTheEnd(String text) {
+    if (text.substring(0, text.length - 9).toLowerCase().endsWith("the end.")) {
+      return text.substring(0, text.length - 9);
+    }
+    return text;
+  }
+
   @override
   Widget build(BuildContext context) {
     // Note: the following widgets will be children of a `ListView`. This means
@@ -45,13 +53,12 @@ class StoryWidget extends StatelessWidget {
 
     Widget titleWidget = Padding(
       padding: const EdgeInsets.all(20),
-      child: AutoSizeText(
-        title,
-        textAlign: TextAlign.center,
-        maxLines: 2,
-        presetFontSizes: [60,50,40,30,20], // Tries with biggest font first
-        style: _storyTitleStyle
-      ),
+      child: AutoSizeText(title,
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          presetFontSizes: [60, 50, 40, 30, 20],
+          // Tries with biggest font first
+          style: _storyTitleStyle),
     );
 
     Widget imageWidget =
@@ -83,11 +90,7 @@ class StoryWidget extends StatelessWidget {
 
     Widget theEndWidget = Padding(
       padding: const EdgeInsets.all(5),
-      child: Text(
-          "The End",
-          textAlign: TextAlign.center,
-          style: _theEndStyle
-      ),
+      child: Text("The End", textAlign: TextAlign.center, style: _theEndStyle),
     );
 
     Widget shareWidget = Center(
