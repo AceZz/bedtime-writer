@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 
 import '../../widgets/index.dart';
 import 'story_image.dart';
@@ -38,9 +37,8 @@ class StoryWidget extends StatelessWidget {
     // they will take the full width, unless they are surrounded by `Center`.
 
     // Define additional styles here as they need context
-    final TextStyle _storyTitleStyle = GoogleFonts.amaticSc(
-      fontWeight: FontWeight.bold,
-    );
+    final TextStyle _storyTitleStyle =
+        GoogleFonts.amaticSc(fontWeight: FontWeight.bold, fontSize: 56);
     final TextStyle _firstLetterStyle = GoogleFonts.croissantOne(
       fontWeight: FontWeight.bold,
       fontSize: 42,
@@ -53,12 +51,8 @@ class StoryWidget extends StatelessWidget {
 
     Widget titleWidget = Padding(
       padding: const EdgeInsets.all(20),
-      child: AutoSizeText(title,
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          presetFontSizes: [60, 50, 40, 30, 20],
-          // Tries with biggest font first
-          style: _storyTitleStyle),
+      child: Text(title,
+          textAlign: TextAlign.center, maxLines: 2, style: _storyTitleStyle),
     );
 
     Widget imageWidget =
