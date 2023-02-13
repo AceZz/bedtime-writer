@@ -14,14 +14,6 @@ class StoryWidget extends StatelessWidget {
   final Widget image;
   late final List<Widget> extra;
 
-  final TextStyle _firstLetterStyle = GoogleFonts.croissantOne(
-    fontWeight: FontWeight.bold,
-    fontSize: 42,
-  );
-  final TextStyle _storyTitleStyle = GoogleFonts.amaticSc(
-    fontWeight: FontWeight.bold,
-  );
-
   StoryWidget({
     Key? key,
     required this.title,
@@ -37,13 +29,23 @@ class StoryWidget extends StatelessWidget {
     // Note: the following widgets will be children of a `ListView`. This means
     // they will take the full width, unless they are surrounded by `Center`.
 
+    // Define additional styles here as they need context
+    final TextStyle _firstLetterStyle = GoogleFonts.croissantOne(
+      fontWeight: FontWeight.bold,
+      fontSize: 42,
+      color: Theme.of(context).primaryTextTheme.bodyMedium?.color,
+    );
+    final TextStyle _storyTitleStyle = GoogleFonts.amaticSc(
+      fontWeight: FontWeight.bold,
+    );
+
     Widget titleWidget = Padding(
       padding: const EdgeInsets.all(20),
       child: AutoSizeText(
         title,
         textAlign: TextAlign.center,
         maxLines: 2,
-        presetFontSizes: [60,50,40,30,20], // Starts with biggest font first
+        presetFontSizes: [60,50,40,30,20], // Tries with biggest font first
         style: _storyTitleStyle
       ),
     );
@@ -77,7 +79,7 @@ class StoryWidget extends StatelessWidget {
 
     Widget shareWidget = Center(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(10),
         child: ShareButton(
           text: 'Hey! Check out this amazing story I made with '
               'Bedtime stories: \n\n $story',
