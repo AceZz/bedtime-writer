@@ -207,41 +207,51 @@ class _ChoiceButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: make it more responsive.
-    var buttonWidth = 0.60 * MediaQuery.of(context).size.width;
-    var buttonHeight = 0.15 * MediaQuery.of(context).size.height;
+    double buttonWidth = 180;
+    double textWidth = 130;
 
-    var icon = Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Icon(
-        choice.icon,
-        size: 50,
-      ),
+    var image = Image.asset(
+      'assets/choices/pinguin.png',
     );
-    var text = Text(
-      choice.text,
-      textAlign: TextAlign.center,
-      style: Theme.of(context).primaryTextTheme.titleMedium,
+
+    var text = Container(
+      width: textWidth,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Text(
+          choice.text,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).primaryTextTheme.titleMedium,
+        ),
+      ),
     );
 
     return Padding(
-      padding: const EdgeInsets.all(30),
-      child: InkWell(
-        onTap: () {
-          ref.read(createStoryStateProvider.notifier).updateStoryParams(choice);
-        },
-        borderRadius: BorderRadius.circular(20),
-        child: Ink(
-          width: buttonWidth,
-          height: buttonHeight,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [icon, text],
+      padding: const EdgeInsets.all(20),
+      child: Container(
+        width: buttonWidth + textWidth,
+        child: Material(
+          color: Theme.of(context).colorScheme.primary,
+          elevation: 10,
+          borderRadius: BorderRadius.circular(100),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          child: InkWell(
+            onTap: () {
+              ref
+                  .read(createStoryStateProvider.notifier)
+                  .updateStoryParams(choice);
+            },
+            child: Ink(
+              child: Row(
+                children: [
+                  Container(
+                    width: buttonWidth,
+                    child: ClipOval(child: image),
+                  ),
+                  text,
+                ],
+              ),
+            ),
           ),
         ),
       ),
