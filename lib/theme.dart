@@ -6,7 +6,7 @@ const onPrimary = Colors.white;
 var theme = ThemeData(
   colorScheme: ColorScheme(
     brightness: Brightness.dark,
-    primary: const Color(0xFFE9AFA3),
+    primary: const Color(0xFFA54657),
     onPrimary: onPrimary,
     secondary: const Color(0xFFFF7B00),
     onSecondary: Colors.black,
