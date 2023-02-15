@@ -149,7 +149,7 @@ void _defaultIsAvailable(StoryParams story) => true;
 class Choice<T> {
   final String text;
   final T value;
-  final IconData? icon;
+  final Image? image;
 
   /// Whether this choice should be available. Defaults to true.
   final Function(StoryParams story) isAvailable;
@@ -157,7 +157,7 @@ class Choice<T> {
   const Choice({
     required this.text,
     required this.value,
-    this.icon,
+    this.image,
     this.isAvailable = _defaultIsAvailable,
   });
 }
