@@ -10,7 +10,7 @@ final Choice characterBlaze = Choice<Character>(
     name: 'Blaze, the kind dragon',
     type: 'dragon',
   ),
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/character/dragon.png'),
 );
 
 final Choice characterSparkles = Choice<Character>(
@@ -19,21 +19,21 @@ final Choice characterSparkles = Choice<Character>(
     name: 'Sparkles, the magical horse',
     type: 'horse',
   ),
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/character/horse.png'),
 );
 
-final Choice characterCourage = Choice<Character>(
-  text: 'Captain Courage, the pirate',
+final Choice characterPinguin = Choice<Character>(
+  text: 'Frosty, the pinguin',
   value: const Character(
-    name: 'Captain Courage, the pirate',
-    type: 'pirate',
+    name: 'Frosty, the pinguin',
+    type: 'pinguin',
   ),
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/character/pinguin.png'),
 );
 
 Question characterQuestion = Question(
   text: "Who is the hero of tonight\'s story?",
-  choices: [characterBlaze, characterSparkles, characterCourage],
+  choices: [characterBlaze, characterSparkles, characterPinguin],
   answer: ((story, choice) {
     return story.copyWith(character: choice.value);
   }),
@@ -45,37 +45,31 @@ Question characterQuestion = Question(
 final Choice flawFailure = Choice<String>(
   text: 'Being afraid of failure',
   value: 'being afraid of failure',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/flaw/failure.png'),
 );
 
 final Choice flawSelfConfidence = Choice<String>(
   text: 'Lacking self-confidence',
   value: 'lacking self-confidence',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/flaw/self_confidence.png'),
 );
 
 final Choice flawLazy = Choice<String>(
   text: 'Being a bit lazy',
   value: 'being a bit lazy',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/flaw/lazy.png'),
 );
 
 final Choice flawGiveUp = Choice<String>(
   text: 'Giving up easily',
   value: 'being a bit lazy',
-  image: Image.asset('assets/choices/pinguin.png'),
-);
-
-final Choice flawUgly = Choice<String>(
-  text: 'Thinking they are ugly',
-  value: 'being a bit lazy',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/flaw/give_up.png'),
 );
 
 final Choice flawNoAdvice = Choice<String>(
   text: 'Not listening to advice',
   value: 'not listening to advice',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/flaw/no_advice.png'),
 );
 
 Question flawQuestion = Question(
@@ -85,7 +79,6 @@ Question flawQuestion = Question(
     flawSelfConfidence,
     flawLazy,
     flawGiveUp,
-    flawUgly,
     flawNoAdvice
   ],
   answer: ((story, choice) {
@@ -98,38 +91,38 @@ Question flawQuestion = Question(
 
 final Choice placeMagic = Choice<String>(
   text: 'In a magical forest',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/place/magic.png'),
   value: 'in a magical forest',
 );
 
 final Choice placeVillage = Choice<String>(
   text: 'In a quiet village',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/place/village.png'),
   value: 'in a quiet village',
 );
 
 final Choice placeUnderwater = Choice<String>(
   text: 'In an underwater kingdom',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/place/underwater.png'),
   value: 'in an underwater kingdom',
   isAvailable: (story) => story.character?.type != 'horse',
 );
 
 final Choice placeSpace = Choice<String>(
   text: 'In a space station',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/place/space.png'),
   value: 'in a space station',
 );
 
 final Choice placeDesert = Choice<String>(
   text: 'In a dry desert',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/place/desert.png'),
   value: 'in a dry desert',
 );
 
 final Choice placeBeach = Choice<String>(
   text: 'On a sunny beach',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/place/beach.png'),
   value: 'on a sunny beach',
 );
 
@@ -150,31 +143,31 @@ Question placeQuestion = Question(
 
 final Choice challengeLost = Choice<String>(
   text: 'Being lost',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/challenge/lost.png'),
   value: 'being lost',
 );
 
 final Choice challengeWitch = Choice<String>(
   text: 'Captured by a witch',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/challenge/witch.png'),
   value: 'being captured by a witch',
 );
 
 final Choice challengeAnimal = Choice<String>(
   text: 'Fighting a big animal',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/challenge/animal.png'),
   value: 'fighting a big animal',
 );
 
 final Choice challengeFriend = Choice<String>(
   text: 'Rescuing a friend',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/challenge/friend.png'),
   value: 'rescuing a friend',
 );
 
 final Choice challengeRiddle = Choice<String>(
   text: 'Solving a riddle',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/challenge/riddle.png'),
   value: 'solving a riddle',
 );
 
@@ -195,14 +188,14 @@ Question challengeQuestion = Question(
 
 Choice powerFly = Choice<String>(
   text: 'Is able to fly',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/power/fly.png'),
   value: 'able to fly',
   isAvailable: (story) => !['dove', 'dragon'].contains(story.character?.type),
 );
 
 final Choice powerAnimals = Choice<String>(
   text: 'Can communicate with animals',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/power/animals.png'),
   value: 'able to communicate with animals',
   isAvailable: (story) =>
       !['dove', 'dragon', 'horse'].contains(story.character?.type),
@@ -210,25 +203,25 @@ final Choice powerAnimals = Choice<String>(
 
 final Choice powerInvisible = Choice<String>(
   text: 'Can become invisible',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/power/invisible.png'),
   value: 'able to become invisible',
 );
 
 final Choice powerWeather = Choice<String>(
   text: 'Can control the weather',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/power/weather.png'),
   value: 'able to control the weather',
 );
 
 final Choice powerHeal = Choice<String>(
   text: 'Can heal the others',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/power/heal.png'),
   value: 'able to heal the others',
 );
 
 final Choice powerMinds = Choice<String>(
   text: 'Can read minds',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/power/minds.png'),
   value: 'able to read minds',
 );
 
@@ -250,31 +243,31 @@ Question powerQuestion = Question(
 
 final Choice objectRing = Choice<String>(
   text: 'A magical ring',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/object/ring.png'),
   value: 'a magical ring',
 );
 
 final Choice objectAmulet = Choice<String>(
   text: 'A powerful amulet',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/object/amulet.png'),
   value: 'a powerful amulet',
 );
 
 final Choice objectShield = Choice<String>(
   text: 'An enchanted shield',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/object/shield.png'),
   value: 'an enchanted shield',
 );
 
 final Choice objectFlower = Choice<String>(
   text: 'A rare flower',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/object/flower.png'),
   value: 'an rare flower',
 );
 
 final Choice objectDiamond = Choice<String>(
   text: 'A big diamond',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/object/diamond.png'),
   value: 'a big diamond',
 );
 
@@ -290,41 +283,41 @@ Question objectQuestion = Question(
   answer: ((story, choice) => story.copyWith(object: choice.value)),
 );
 
-/// MORALS
+/// MORAL
 
 final Choice moralBelieve = Choice<String>(
   text: 'Always believe in yourself',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/moral/believe.png'),
   value: 'Always believe in yourself',
 );
 
 final Choice moralNoGiveUp = Choice<String>(
   text: 'Never, ever, give up',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/moral/no_give_up.png'),
   value: 'Never, ever, give up',
 );
 
 final Choice moralHonesty = Choice<String>(
   text: 'Honesty is the best policy',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/moral/honesty.png'),
   value: 'Honesty is the best policy',
 );
 
 final Choice moralKindToOthers = Choice<String>(
   text: 'Treat others kindly',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/moral/kind_to_others.png'),
   value: 'Treat others kindly',
 );
 
 final Choice moralBeauty = Choice<String>(
   text: 'True beauty comes from within',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/moral/beauty.png'),
   value: 'True beauty comes from within',
 );
 
 final Choice moralRight = Choice<String>(
   text: 'Do what is right, not what is easy',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/moral/right.png'),
   value: 'Do what is right, not what is easy',
 );
 
@@ -345,13 +338,13 @@ Question moralQuestion = Question(
 
 final Choice durationShort = Choice<int>(
   text: 'Short (2 mins)',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/duration/short.png'),
   value: 2,
 );
 
 final Choice durationLong = Choice<int>(
   text: 'Long (5 mins)',
-  image: Image.asset('assets/choices/pinguin.png'),
+  image: Image.asset('assets/choices/duration/long.png'),
   value: 5,
 );
 

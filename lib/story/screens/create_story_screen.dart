@@ -199,7 +199,7 @@ class _QuestionContent extends StatelessWidget {
   }
 }
 
-/// Displays a [Choice]: [Choice.icon] on top of [Choice.text].
+/// Displays a [Choice]: [Choice.image] on top of [Choice.text].
 ///
 /// When clicking on this widget, the state is updated using the provided
 /// [choice].
@@ -212,10 +212,6 @@ class _ChoiceButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double buttonWidth = 180;
     double textWidth = 130;
-
-    var image = Image.asset(
-      'assets/choices/pinguin.png',
-    );
 
     var text = Container(
       width: textWidth,
@@ -249,7 +245,7 @@ class _ChoiceButton extends ConsumerWidget {
                 children: [
                   Container(
                     width: buttonWidth,
-                    child: ClipOval(child: image),
+                    child: ClipOval(child: choice.image),
                   ),
                   text,
                 ],
