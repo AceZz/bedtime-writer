@@ -210,8 +210,9 @@ class _ChoiceButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double buttonWidth = 180;
-    double textWidth = 130;
+    Size size = MediaQuery.of(context).size;
+    double buttonWidth = 0.3 * size.width;
+    double textWidth = 0.6 * size.width;
 
     var text = Container(
       width: textWidth,
