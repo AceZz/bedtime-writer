@@ -25,10 +25,11 @@ class StoryWidget extends StatelessWidget {
 
   // Removes "The End." within story if present to avoid duplicate
   String removeTheEnd(String text) {
-    if (text.substring(0, text.length - 9).toLowerCase().endsWith("the end.")) {
-      return text.substring(0, text.length - 9);
+    String trimmedText = text.trim();
+    if (trimmedText.substring(0, trimmedText.length - 9).toLowerCase().endsWith("the end.")) {
+      return trimmedText.substring(0, trimmedText.length - 9);
     }
-    return text;
+    return trimmedText;
   }
 
   @override
@@ -52,7 +53,7 @@ class StoryWidget extends StatelessWidget {
     Widget titleWidget = Padding(
       padding: const EdgeInsets.all(20),
       child: Text(title,
-          textAlign: TextAlign.center, maxLines: 2, style: _storyTitleStyle),
+          textAlign: TextAlign.center, maxLines: 2, style: _storyTitleStyle,),
     );
 
     Widget imageWidget =
@@ -69,7 +70,7 @@ class StoryWidget extends StatelessWidget {
             // Writes the rest of the text
             children: <TextSpan>[
               TextSpan(
-                text: story.trim().substring(1),
+                text: removeTheEnd(story).substring(1),
                 style: Theme.of(context).primaryTextTheme.bodyMedium,
               ),
             ],
@@ -84,7 +85,7 @@ class StoryWidget extends StatelessWidget {
 
     Widget theEndWidget = Padding(
       padding: const EdgeInsets.all(5),
-      child: Text("The End", textAlign: TextAlign.center, style: _theEndStyle),
+      child: Text('The End', textAlign: TextAlign.center, style: _theEndStyle),
     );
 
     Widget shareWidget = Center(
