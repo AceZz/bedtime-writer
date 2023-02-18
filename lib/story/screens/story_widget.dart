@@ -26,7 +26,10 @@ class StoryWidget extends StatelessWidget {
   // Removes "The End." within story if present to avoid duplicate
   String removeTheEnd(String text) {
     String trimmedText = text.trim();
-    if (trimmedText.substring(0, trimmedText.length - 9).toLowerCase().endsWith("the end.")) {
+    if (trimmedText
+        .substring(trimmedText.length - 8, trimmedText.length)
+        .toLowerCase()
+        .endsWith('the end.')) {
       return trimmedText.substring(0, trimmedText.length - 9);
     }
     return trimmedText;
@@ -52,8 +55,12 @@ class StoryWidget extends StatelessWidget {
 
     Widget titleWidget = Padding(
       padding: const EdgeInsets.all(20),
-      child: Text(title,
-          textAlign: TextAlign.center, maxLines: 2, style: _storyTitleStyle,),
+      child: Text(
+        title,
+        textAlign: TextAlign.center,
+        maxLines: 2,
+        style: _storyTitleStyle,
+      ),
     );
 
     Widget imageWidget =
