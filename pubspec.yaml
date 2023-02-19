@@ -25,7 +25,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  auto_size_text: 3.0.0
+  auto_size_text: ^3.0.0
   cached_network_image: 3.2.1
   equatable: 2.0.3
   flutter_animate: 1.0.0
@@ -54,8 +54,6 @@ dependencies:
   firebase_core: ^2.5.0
   firebase_storage: ^11.0.11
   cloud_firestore: ^4.3.2
-  flutter_launcher_icons: ^0.11.0
-  flutter_native_splash: ^2.2.16
 
 dev_dependencies:
 
@@ -84,4 +82,3 @@ flutter:
     - assets/story/place/
     - assets/story/power/
     - assets/story/duration/
-    - assets/icon/

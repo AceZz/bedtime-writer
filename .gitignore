@@ -48,3 +48,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# iOS build related
+/ios/Runner.xcodeproj/project.pbxproj

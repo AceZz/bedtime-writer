@@ -18,9 +18,12 @@ class ShareButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Builder(
-      builder: (context) => ElevatedButton(
+      builder: (context) => IconButton(
         onPressed: () => _onShare(context, text),
-        child: const Text('Share'),
+        icon: Icon(
+          Icons.ios_share,
+          color: Theme.of(context).textTheme.bodyMedium?.color,
+        ),
       ),
     );
   }
