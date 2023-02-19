@@ -1,39 +1,39 @@
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/material.dart';
 
 import 'story_params.dart';
 
 /// CHARACTERS
 
-const Choice characterBlaze = const Choice<Character>(
+final Choice characterBlaze = Choice<Character>(
   text: 'Blaze, the kind dragon',
   value: const Character(
     name: 'Blaze, the kind dragon',
     type: 'dragon',
   ),
-  icon: FontAwesomeIcons.dragon,
+  image: Image.asset('assets/story/character/dragon.png'),
 );
 
-const Choice characterSparkles = const Choice<Character>(
+final Choice characterSparkles = Choice<Character>(
   text: 'Sparkles, the magical horse',
   value: const Character(
     name: 'Sparkles, the magical horse',
     type: 'horse',
   ),
-  icon: FontAwesomeIcons.horseHead,
+  image: Image.asset('assets/story/character/horse.png'),
 );
 
-const Choice characterCourage = const Choice<Character>(
-  text: 'Captain Courage, the pirate',
+final Choice characterPinguin = Choice<Character>(
+  text: 'Frosty, the pinguin',
   value: const Character(
-    name: 'Captain Courage, the pirate',
-    type: 'pirate',
+    name: 'Frosty, the pinguin',
+    type: 'pinguin',
   ),
-  icon: FontAwesomeIcons.skullCrossbones,
+  image: Image.asset('assets/story/character/pinguin.png'),
 );
 
 Question characterQuestion = Question(
   text: "Who is the hero of tonight\'s story?",
-  choices: [characterBlaze, characterSparkles, characterCourage],
+  choices: [characterBlaze, characterSparkles, characterPinguin],
   answer: ((story, choice) {
     return story.copyWith(character: choice.value);
   }),
@@ -42,40 +42,34 @@ Question characterQuestion = Question(
 
 /// FLAWS
 
-const Choice flawFailure = const Choice<String>(
+final Choice flawFailure = Choice<String>(
   text: 'Being afraid of failure',
   value: 'being afraid of failure',
-  icon: FontAwesomeIcons.triangleExclamation,
+  image: Image.asset('assets/story/flaw/failure.png'),
 );
 
-const Choice flawSelfConfidence = const Choice<String>(
+final Choice flawSelfConfidence = Choice<String>(
   text: 'Lacking self-confidence',
   value: 'lacking self-confidence',
-  icon: FontAwesomeIcons.comment,
+  image: Image.asset('assets/story/flaw/self_confidence.png'),
 );
 
-const Choice flawLazy = const Choice<String>(
+final Choice flawLazy = Choice<String>(
   text: 'Being a bit lazy',
   value: 'being a bit lazy',
-  icon: FontAwesomeIcons.pause,
+  image: Image.asset('assets/story/flaw/lazy.png'),
 );
 
-const Choice flawGiveUp = const Choice<String>(
+final Choice flawGiveUp = Choice<String>(
   text: 'Giving up easily',
   value: 'being a bit lazy',
-  icon: FontAwesomeIcons.xmark,
+  image: Image.asset('assets/story/flaw/give_up.png'),
 );
 
-const Choice flawUgly = const Choice<String>(
-  text: 'Thinking they are ugly',
-  value: 'being a bit lazy',
-  icon: FontAwesomeIcons.heartCrack,
-);
-
-const Choice flawNoAdvice = const Choice<String>(
+final Choice flawNoAdvice = Choice<String>(
   text: 'Not listening to advice',
   value: 'not listening to advice',
-  icon: FontAwesomeIcons.earDeaf,
+  image: Image.asset('assets/story/flaw/no_advice.png'),
 );
 
 Question flawQuestion = Question(
@@ -85,7 +79,6 @@ Question flawQuestion = Question(
     flawSelfConfidence,
     flawLazy,
     flawGiveUp,
-    flawUgly,
     flawNoAdvice
   ],
   answer: ((story, choice) {
@@ -96,40 +89,40 @@ Question flawQuestion = Question(
 
 /// PLACES
 
-const Choice placeMagic = const Choice<String>(
+final Choice placeMagic = Choice<String>(
   text: 'In a magical forest',
-  icon: FontAwesomeIcons.wandMagicSparkles,
+  image: Image.asset('assets/story/place/magic.png'),
   value: 'in a magical forest',
 );
 
-const Choice placeVillage = const Choice<String>(
+final Choice placeVillage = Choice<String>(
   text: 'In a quiet village',
-  icon: FontAwesomeIcons.houseChimney,
+  image: Image.asset('assets/story/place/village.png'),
   value: 'in a quiet village',
 );
 
-Choice placeUnderwater = Choice<String>(
+final Choice placeUnderwater = Choice<String>(
   text: 'In an underwater kingdom',
-  icon: FontAwesomeIcons.water,
+  image: Image.asset('assets/story/place/underwater.png'),
   value: 'in an underwater kingdom',
   isAvailable: (story) => story.character?.type != 'horse',
 );
 
-const Choice placeSpace = const Choice<String>(
+final Choice placeSpace = Choice<String>(
   text: 'In a space station',
-  icon: FontAwesomeIcons.rocket,
+  image: Image.asset('assets/story/place/space.png'),
   value: 'in a space station',
 );
 
-const Choice placeDesert = const Choice<String>(
+final Choice placeDesert = Choice<String>(
   text: 'In a dry desert',
-  icon: FontAwesomeIcons.sunPlantWilt,
+  image: Image.asset('assets/story/place/desert.png'),
   value: 'in a dry desert',
 );
 
-const Choice placeBeach = const Choice<String>(
+final Choice placeBeach = Choice<String>(
   text: 'On a sunny beach',
-  icon: FontAwesomeIcons.umbrellaBeach,
+  image: Image.asset('assets/story/place/beach.png'),
   value: 'on a sunny beach',
 );
 
@@ -148,33 +141,33 @@ Question placeQuestion = Question(
 
 /// CHALLENGES
 
-const Choice challengeLost = const Choice<String>(
+final Choice challengeLost = Choice<String>(
   text: 'Being lost',
-  icon: FontAwesomeIcons.map,
+  image: Image.asset('assets/story/challenge/lost.png'),
   value: 'being lost',
 );
 
-const Choice challengeWitch = const Choice<String>(
+final Choice challengeWitch = Choice<String>(
   text: 'Captured by a witch',
-  icon: FontAwesomeIcons.dungeon,
+  image: Image.asset('assets/story/challenge/witch.png'),
   value: 'being captured by a witch',
 );
 
-const Choice challengeAnimal = const Choice<String>(
+final Choice challengeAnimal = Choice<String>(
   text: 'Fighting a big animal',
-  icon: FontAwesomeIcons.cow,
+  image: Image.asset('assets/story/challenge/animal.png'),
   value: 'fighting a big animal',
 );
 
-const Choice challengeFriend = const Choice<String>(
+final Choice challengeFriend = Choice<String>(
   text: 'Rescuing a friend',
-  icon: FontAwesomeIcons.userGroup,
+  image: Image.asset('assets/story/challenge/friend.png'),
   value: 'rescuing a friend',
 );
 
-const Choice challengeRiddle = const Choice<String>(
+final Choice challengeRiddle = Choice<String>(
   text: 'Solving a riddle',
-  icon: FontAwesomeIcons.question,
+  image: Image.asset('assets/story/challenge/riddle.png'),
   value: 'solving a riddle',
 );
 
@@ -195,40 +188,40 @@ Question challengeQuestion = Question(
 
 Choice powerFly = Choice<String>(
   text: 'Is able to fly',
-  icon: FontAwesomeIcons.feather,
+  image: Image.asset('assets/story/power/fly.png'),
   value: 'able to fly',
   isAvailable: (story) => !['dove', 'dragon'].contains(story.character?.type),
 );
 
-Choice powerAnimals = Choice<String>(
+final Choice powerAnimals = Choice<String>(
   text: 'Can communicate with animals',
-  icon: FontAwesomeIcons.cow,
+  image: Image.asset('assets/story/power/animals.png'),
   value: 'able to communicate with animals',
   isAvailable: (story) =>
       !['dove', 'dragon', 'horse'].contains(story.character?.type),
 );
 
-const Choice powerInvisible = const Choice<String>(
+final Choice powerInvisible = Choice<String>(
   text: 'Can become invisible',
-  icon: FontAwesomeIcons.eyeSlash,
+  image: Image.asset('assets/story/power/invisible.png'),
   value: 'able to become invisible',
 );
 
-const Choice powerWeather = const Choice<String>(
+final Choice powerWeather = Choice<String>(
   text: 'Can control the weather',
-  icon: FontAwesomeIcons.cloud,
+  image: Image.asset('assets/story/power/weather.png'),
   value: 'able to control the weather',
 );
 
-const Choice powerHeal = const Choice<String>(
+final Choice powerHeal = Choice<String>(
   text: 'Can heal the others',
-  icon: FontAwesomeIcons.briefcaseMedical,
+  image: Image.asset('assets/story/power/heal.png'),
   value: 'able to heal the others',
 );
 
-const Choice powerMinds = const Choice<String>(
+final Choice powerMinds = Choice<String>(
   text: 'Can read minds',
-  icon: FontAwesomeIcons.brain,
+  image: Image.asset('assets/story/power/minds.png'),
   value: 'able to read minds',
 );
 
@@ -248,33 +241,33 @@ Question powerQuestion = Question(
 
 /// OBJECTS
 
-const Choice objectRing = const Choice<String>(
+final Choice objectRing = Choice<String>(
   text: 'A magical ring',
-  icon: FontAwesomeIcons.ring,
+  image: Image.asset('assets/story/object/ring.png'),
   value: 'a magical ring',
 );
 
-const Choice objectAmulet = const Choice<String>(
+final Choice objectAmulet = Choice<String>(
   text: 'A powerful amulet',
-  icon: FontAwesomeIcons.ankh,
+  image: Image.asset('assets/story/object/amulet.png'),
   value: 'a powerful amulet',
 );
 
-const Choice objectShield = const Choice<String>(
+final Choice objectShield = Choice<String>(
   text: 'An enchanted shield',
-  icon: FontAwesomeIcons.shield,
+  image: Image.asset('assets/story/object/shield.png'),
   value: 'an enchanted shield',
 );
 
-const Choice objectFlower = const Choice<String>(
+final Choice objectFlower = Choice<String>(
   text: 'A rare flower',
-  icon: FontAwesomeIcons.leaf,
+  image: Image.asset('assets/story/object/flower.png'),
   value: 'an rare flower',
 );
 
-const Choice objectDiamond = const Choice<String>(
+final Choice objectDiamond = Choice<String>(
   text: 'A big diamond',
-  icon: FontAwesomeIcons.gem,
+  image: Image.asset('assets/story/object/diamond.png'),
   value: 'a big diamond',
 );
 
@@ -290,41 +283,41 @@ Question objectQuestion = Question(
   answer: ((story, choice) => story.copyWith(object: choice.value)),
 );
 
-/// MORALS
+/// MORAL
 
-const Choice moralBelieve = const Choice<String>(
+final Choice moralBelieve = Choice<String>(
   text: 'Always believe in yourself',
-  icon: FontAwesomeIcons.star,
+  image: Image.asset('assets/story/moral/believe.png'),
   value: 'Always believe in yourself',
 );
 
-const Choice moralNoGiveUp = const Choice<String>(
+final Choice moralNoGiveUp = Choice<String>(
   text: 'Never, ever, give up',
-  icon: FontAwesomeIcons.star,
+  image: Image.asset('assets/story/moral/no_give_up.png'),
   value: 'Never, ever, give up',
 );
 
-const Choice moralHonesty = const Choice<String>(
+final Choice moralHonesty = Choice<String>(
   text: 'Honesty is the best policy',
-  icon: FontAwesomeIcons.star,
+  image: Image.asset('assets/story/moral/honesty.png'),
   value: 'Honesty is the best policy',
 );
 
-const Choice moralKindToOthers = const Choice<String>(
+final Choice moralKindToOthers = Choice<String>(
   text: 'Treat others kindly',
-  icon: FontAwesomeIcons.star,
+  image: Image.asset('assets/story/moral/kind_to_others.png'),
   value: 'Treat others kindly',
 );
 
-const Choice moralBeauty = const Choice<String>(
+final Choice moralBeauty = Choice<String>(
   text: 'True beauty comes from within',
-  icon: FontAwesomeIcons.star,
+  image: Image.asset('assets/story/moral/beauty.png'),
   value: 'True beauty comes from within',
 );
 
-const Choice moralRight = const Choice<String>(
+final Choice moralRight = Choice<String>(
   text: 'Do what is right, not what is easy',
-  icon: FontAwesomeIcons.star,
+  image: Image.asset('assets/story/moral/right.png'),
   value: 'Do what is right, not what is easy',
 );
 
@@ -343,15 +336,15 @@ Question moralQuestion = Question(
 
 /// DURATION
 
-const Choice durationShort = const Choice<int>(
+final Choice durationShort = Choice<int>(
   text: 'Short (2 mins)',
-  icon: FontAwesomeIcons.bolt,
+  image: Image.asset('assets/story/duration/short.png'),
   value: 2,
 );
 
-const Choice durationLong = const Choice<int>(
+final Choice durationLong = Choice<int>(
   text: 'Long (5 mins)',
-  icon: FontAwesomeIcons.clock,
+  image: Image.asset('assets/story/duration/long.png'),
   value: 5,
 );
 

@@ -199,7 +199,7 @@ class _QuestionContent extends StatelessWidget {
   }
 }
 
-/// Displays a [Choice]: [Choice.icon] on top of [Choice.text].
+/// Displays a [Choice]: [Choice.image] next to [Choice.text].
 ///
 /// When clicking on this widget, the state is updated using the provided
 /// [choice].
@@ -210,41 +210,48 @@ class _ChoiceButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: make it more responsive.
-    var buttonWidth = 0.60 * MediaQuery.of(context).size.width;
-    var buttonHeight = 0.15 * MediaQuery.of(context).size.height;
+    Size size = MediaQuery.of(context).size;
+    double buttonWidth = 0.3 * size.width;
+    double textWidth = 0.6 * size.width;
 
-    var icon = Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Icon(
-        choice.icon,
-        size: 50,
+    var text = Container(
+      width: textWidth,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Text(
+          choice.text,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).primaryTextTheme.titleMedium,
+        ),
       ),
-    );
-    var text = Text(
-      choice.text,
-      textAlign: TextAlign.center,
-      style: Theme.of(context).primaryTextTheme.titleMedium,
     );
 
     return Padding(
-      padding: const EdgeInsets.all(30),
-      child: InkWell(
-        onTap: () {
-          ref.read(createStoryStateProvider.notifier).updateStoryParams(choice);
-        },
-        borderRadius: BorderRadius.circular(20),
-        child: Ink(
-          width: buttonWidth,
-          height: buttonHeight,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [icon, text],
+      padding: const EdgeInsets.all(20),
+      child: Container(
+        width: buttonWidth + textWidth,
+        child: Material(
+          color: Theme.of(context).colorScheme.primary,
+          elevation: 10,
+          borderRadius: BorderRadius.circular(100),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          child: InkWell(
+            onTap: () {
+              ref
+                  .read(createStoryStateProvider.notifier)
+                  .updateStoryParams(choice);
+            },
+            child: Ink(
+              child: Row(
+                children: [
+                  Container(
+                    width: buttonWidth,
+                    child: ClipOval(child: choice.image),
+                  ),
+                  text,
+                ],
+              ),
+            ),
           ),
         ),
       ),
