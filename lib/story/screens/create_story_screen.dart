@@ -41,7 +41,13 @@ class CreateStoryScreen extends ConsumerWidget {
         title: payload.title,
         story: payload.story,
         image: StoryImage(url: payload.storyImage, width: 380, height: 380),
-        extra: [Center(child: _SaveButton(payload: payload))],
+        extra: [
+          Center(
+              child: _SaveButton(
+            payload: payload,
+            iconSize: 40,
+          ))
+        ],
       );
     }
 
@@ -104,8 +110,10 @@ class _SavePayload {
 /// Saves the story.
 class _SaveButton extends StatelessWidget {
   final _SavePayload payload;
+  final double iconSize;
 
-  const _SaveButton({Key? key, required this.payload}) : super(key: key);
+  const _SaveButton({Key? key, required this.payload, required this.iconSize})
+      : super(key: key);
 
   Future _onSave(BuildContext context) async {
     return Future.wait([
@@ -131,6 +139,7 @@ class _SaveButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) => IconButton(
+        iconSize: iconSize,
         onPressed: () => _onSave(context),
         icon: Icon(
           Icons.favorite,

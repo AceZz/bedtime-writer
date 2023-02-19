@@ -92,17 +92,27 @@ class StoryWidget extends StatelessWidget {
 
     Widget theEndWidget = Padding(
       padding: const EdgeInsets.all(5),
-      child: Text('The End', textAlign: TextAlign.center, style: _theEndStyle),
+      child: Center(
+          child: Text('The End',
+              textAlign: TextAlign.center, style: _theEndStyle)),
     );
 
     Widget shareWidget = Center(
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: ShareButton(
+          iconSize: 40,
           text: 'Hey! Check out this amazing story I made with '
               'Bedtime stories: \n\n $story',
         ),
       ),
+    );
+
+    List<Widget> iconButtons = [shareWidget, ...extra];
+
+    Widget iconsRow = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: iconButtons,
     );
 
     return ListView(
@@ -111,8 +121,7 @@ class StoryWidget extends StatelessWidget {
         imageWidget,
         textWidget,
         theEndWidget,
-        shareWidget,
-        ...extra,
+        iconsRow,
       ],
     );
   }
