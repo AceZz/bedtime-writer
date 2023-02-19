@@ -74,11 +74,11 @@ flutter:
 
   assets:
     - assets/lottie/
-    - assets/choices/challenge/
-    - assets/choices/character/
-    - assets/choices/flaw/
-    - assets/choices/moral/
-    - assets/choices/object/
-    - assets/choices/place/
-    - assets/choices/power/
-    - assets/choices/duration/
+    - assets/story/challenge/
+    - assets/story/character/
+    - assets/story/flaw/
+    - assets/story/moral/
+    - assets/story/object/
+    - assets/story/place/
+    - assets/story/power/
+    - assets/story/duration/
