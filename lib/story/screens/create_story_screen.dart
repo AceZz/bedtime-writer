@@ -40,7 +40,7 @@ class CreateStoryScreen extends ConsumerWidget {
       return StoryWidget(
         title: payload.title,
         story: payload.story,
-        image: StoryImage(url: payload.storyImage, width: 240, height: 240),
+        image: StoryImage(url: payload.storyImage, width: 380, height: 380),
         extra: [Center(child: _SaveButton(payload: payload))],
       );
     }
@@ -130,9 +130,12 @@ class _SaveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Builder(
-      builder: (context) => ElevatedButton(
+      builder: (context) => IconButton(
         onPressed: () => _onSave(context),
-        child: const Text('Save this story'),
+        icon: Icon(
+          Icons.favorite,
+          color: Theme.of(context).textTheme.bodyMedium?.color,
+        ),
       ),
     );
   }
