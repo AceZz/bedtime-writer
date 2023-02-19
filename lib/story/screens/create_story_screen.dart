@@ -199,7 +199,7 @@ class _QuestionContent extends StatelessWidget {
   }
 }
 
-/// Displays a [Choice]: [Choice.image] on top of [Choice.text].
+/// Displays a [Choice]: [Choice.image] next to [Choice.text].
 ///
 /// When clicking on this widget, the state is updated using the provided
 /// [choice].
