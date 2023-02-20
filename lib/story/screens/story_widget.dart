@@ -110,9 +110,12 @@ class StoryWidget extends StatelessWidget {
 
     List<Widget> iconButtons = [shareWidget, homeWidget, ...extra];
 
-    Widget iconsRow = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: iconButtons,
+    Widget iconsRow = Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: iconButtons,
+      ),
     );
 
     return ListView(
