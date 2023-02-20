@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../widgets/index.dart';
+import '../../widgets/home_button.dart';
 import 'story_image.dart';
 
 /// Displays a story: [title], [image], [story] and a Share button.
@@ -97,18 +98,17 @@ class StoryWidget extends StatelessWidget {
               textAlign: TextAlign.center, style: _theEndStyle)),
     );
 
-    Widget shareWidget = Center(
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: ShareButton(
-          iconSize: 40,
-          text: 'Hey! Check out this amazing story I made with '
-              'Bedtime stories: \n\n $story',
-        ),
-      ),
+    Widget shareWidget = ShareButton(
+      iconSize: 40,
+      text: 'Hey! Check out this amazing story I made with '
+          'Bedtime stories: \n\n $story',
     );
 
-    List<Widget> iconButtons = [shareWidget, ...extra];
+    Widget homeWidget = HomeButton(
+      iconSize: 40,
+    );
+
+    List<Widget> iconButtons = [shareWidget, homeWidget, ...extra];
 
     Widget iconsRow = Row(
       mainAxisAlignment: MainAxisAlignment.center,
