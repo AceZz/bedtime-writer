@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
+import '../../widgets/home_button.dart';
 import '../backend/api_calls.dart';
 import '../backend/firebase.dart';
 import '../states/create_story_state.dart';
@@ -199,11 +200,22 @@ class _QuestionContent extends StatelessWidget {
         .map((choice) => _ChoiceButton(choice: choice))
         .toList();
 
+    Widget homeWidget = Padding(
+      padding: const EdgeInsets.only(top: 50,),
+      child: HomeButton(
+        iconSize: 40,
+      ),
+    );
+
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: [questionText] + choiceButtons,
+      children: [
+        questionText,
+        ...choiceButtons,
+        homeWidget,
+      ],
     );
   }
 }
