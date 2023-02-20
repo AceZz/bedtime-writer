@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../widgets/index.dart';
-import '../../widgets/home_button.dart';
 import 'story_image.dart';
 
 /// Displays a story: [title], [image], [story] and a Share button.
@@ -51,7 +50,7 @@ class StoryWidget extends StatelessWidget {
     );
     final TextStyle _theEndStyle = GoogleFonts.amaticSc(
       fontWeight: FontWeight.bold,
-      fontSize: 42,
+      fontSize: 46,
     );
 
     Widget titleWidget = Padding(
@@ -93,9 +92,13 @@ class StoryWidget extends StatelessWidget {
 
     Widget theEndWidget = Padding(
       padding: const EdgeInsets.all(5),
-      child: Center(
-          child: Text('The End',
-              textAlign: TextAlign.center, style: _theEndStyle)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+        ),
+        child:
+            Text('The End', textAlign: TextAlign.center, style: _theEndStyle),
+      ),
     );
 
     Widget shareWidget = ShareButton(
@@ -104,17 +107,17 @@ class StoryWidget extends StatelessWidget {
           'Bedtime stories: \n\n $story',
     );
 
-    Widget homeWidget = HomeButton(
-      iconSize: 40,
-    );
-
-    List<Widget> iconButtons = [shareWidget, homeWidget, ...extra];
+    List<Widget> bottomWidgets = [
+      shareWidget,
+      theEndWidget,
+      ...extra,
+    ];
 
     Widget iconsRow = Padding(
       padding: const EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: iconButtons,
+        children: bottomWidgets,
       ),
     );
 
@@ -123,7 +126,6 @@ class StoryWidget extends StatelessWidget {
         titleWidget,
         imageWidget,
         textWidget,
-        theEndWidget,
         iconsRow,
       ],
     );
