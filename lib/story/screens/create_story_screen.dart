@@ -185,7 +185,11 @@ class _QuestionContent extends StatelessWidget {
       ),
     );
 
-    List<Widget> choiceButtons = question.choices
+    // Shuffles the choices for randomness
+    List<Choice<dynamic>> questionChoices = List.from(question.choices);
+    questionChoices.shuffle();
+
+    List<Widget> choiceButtons = questionChoices
         .take(maxNumChoices)
         .map((choice) => _ChoiceButton(choice: choice))
         .toList();
