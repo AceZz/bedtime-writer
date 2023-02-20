@@ -43,10 +43,11 @@ class CreateStoryScreen extends ConsumerWidget {
         image: StoryImage(url: payload.storyImage, width: 380, height: 380),
         extra: [
           Center(
-              child: _SaveButton(
-            payload: payload,
-            iconSize: 40,
-          ))
+            child: _SaveButton(
+              payload: payload,
+              iconSize: 40,
+            ),
+          )
         ],
       );
     }

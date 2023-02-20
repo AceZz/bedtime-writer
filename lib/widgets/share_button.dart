@@ -20,7 +20,6 @@ class ShareButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     // Check the OS to choose the corresponding icon
     IconData shareIcon;
     if (Platform.isAndroid) {
