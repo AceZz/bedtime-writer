@@ -22,7 +22,8 @@ import 'story_widget.dart';
 class CreateStoryScreen extends ConsumerWidget {
   const CreateStoryScreen({Key? key}) : super(key: key);
 
-  Widget _getContent(WidgetRef ref) {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     CreateStoryState state = ref.watch(createStoryStateProvider);
     var story = state.story;
     var storyImage = state.storyImage;
@@ -89,11 +90,6 @@ class CreateStoryScreen extends ConsumerWidget {
     // Displays the current question.
     return AppScaffold(
         child: _QuestionContent(question: state.currentQuestion));
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return _getContent(ref);
   }
 }
 
