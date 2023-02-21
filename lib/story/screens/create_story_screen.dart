@@ -37,18 +37,20 @@ class CreateStoryScreen extends ConsumerWidget {
         imagePrompt: state.storyParams.imagePrompt,
       );
 
-      return StoryWidget(
-        title: payload.title,
-        story: payload.story,
-        image: StoryImage(url: payload.storyImage, width: 380, height: 380),
-        extra: [
-          Center(
-            child: _SaveButton(
-              payload: payload,
-              iconSize: 40,
-            ),
-          )
-        ],
+      return AppScaffold(
+        child: StoryWidget(
+          title: payload.title,
+          story: payload.story,
+          image: StoryImage(url: payload.storyImage, width: 380, height: 380),
+          extra: [
+            Center(
+              child: _SaveButton(
+                payload: payload,
+                iconSize: 40,
+              ),
+            )
+          ],
+        ),
       );
     }
 
@@ -78,16 +80,20 @@ class CreateStoryScreen extends ConsumerWidget {
             .setStory(storyText, storyImage);
       });
 
-      return _LoadingContent();
+      return AppScaffold(
+        child: _LoadingContent(),
+        showNavigationBar: false,
+      );
     }
 
     // Displays the current question.
-    return _QuestionContent(question: state.currentQuestion);
+    return AppScaffold(
+        child: _QuestionContent(question: state.currentQuestion));
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return AppScaffold(child: _getContent(ref));
+    return _getContent(ref);
   }
 }
 
