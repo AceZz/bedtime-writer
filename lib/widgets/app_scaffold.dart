@@ -7,21 +7,32 @@ class AppScaffold extends StatelessWidget {
   final Widget child;
   final bool showAppBar;
 
-  const AppScaffold(
-      {Key? key, required this.child, this.showAppBar = true})
+  const AppScaffold({Key? key, required this.child, this.showAppBar = true})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Widget screenBody = SafeArea(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        child: child,
+      ),
+    );
+
+    Widget nestedScrollView = NestedScrollView(
+      floatHeaderSlivers: true,
+      headerSliverBuilder: (context, innerBoxIsScrolled) => [
+        SliverAppBar(
+          floating: true,
+          snap: true,
+        ),
+      ],
+      body: screenBody,
+    );
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: SafeArea(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          child: child,
-        ),
-      ),
-      appBar: showAppBar ? AppBar() : null,
+      body: showAppBar ? nestedScrollView : screenBody,
     );
   }
 }
