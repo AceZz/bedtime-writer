@@ -1,31 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/home_button.dart';
-
 /// Augmented [Scaffold] that comes with a full-width [Container].
 ///
 /// Unless exception, every screen will use this class as a base widget.
 class AppScaffold extends StatelessWidget {
   final Widget child;
-  final bool showNavigationBar;
+  final bool showAppBar;
 
   const AppScaffold(
-      {Key? key, required this.child, this.showNavigationBar = true})
+      {Key? key, required this.child, this.showAppBar = true})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final Widget bottomNavigationBar = Container(
-      child: Padding(
-        padding: const EdgeInsets.only(
-          bottom: 20,
-        ),
-        child: HomeButton(
-          iconSize: 40,
-        ),
-      ),
-    );
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
@@ -34,7 +21,7 @@ class AppScaffold extends StatelessWidget {
           child: child,
         ),
       ),
-      bottomNavigationBar: showNavigationBar ? bottomNavigationBar : null,
+      appBar: showAppBar ? AppBar() : null,
     );
   }
 }

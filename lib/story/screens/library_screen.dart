@@ -85,16 +85,22 @@ class LibraryScreen extends StatelessWidget {
               ),
             ),
           );
+          return AppScaffold(
+            child: ListView(
+              padding: const EdgeInsets.all(10.0),
+              children: children,
+            ),
+          );
         } else {
           children.add(lottieWidget);
+          return AppScaffold(
+            child: ListView(
+              padding: const EdgeInsets.all(10.0),
+              children: children,
+            ),
+            showAppBar: false,
+          );
         }
-
-        return AppScaffold(
-          child: ListView(
-            padding: const EdgeInsets.all(10.0),
-            children: children,
-          ),
-        );
       },
     );
   }

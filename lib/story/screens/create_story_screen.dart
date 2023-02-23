@@ -83,7 +83,7 @@ class CreateStoryScreen extends ConsumerWidget {
 
       return AppScaffold(
         child: _LoadingContent(),
-        showNavigationBar: false,
+        showAppBar: false,
       );
     }
 
