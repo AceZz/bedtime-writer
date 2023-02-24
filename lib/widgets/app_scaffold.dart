@@ -7,12 +7,14 @@ class AppScaffold extends StatelessWidget {
   final Widget child;
   final bool showAppBar;
   final String appBarTitle;
+  final bool scrollableAppBar;
 
   const AppScaffold({
     Key? key,
     required this.child,
     this.showAppBar = true,
     this.appBarTitle = '',
+    this.scrollableAppBar = false,
   }) : super(key: key);
 
   @override
@@ -27,21 +29,26 @@ class AppScaffold extends StatelessWidget {
       child: child,
     );
 
-    Widget nestedScrollViewWidget = NestedScrollView(
-      floatHeaderSlivers: true,
-      headerSliverBuilder: (context, innerBoxIsScrolled) => [
-        SliverAppBar(
-          floating: true,
-          snap: true,
-          title: titleWidget,
-        ),
-      ],
-      body: screenBodyWidget,
+    AppBar appBar = AppBar(
+      title: titleWidget,
     );
+
+    Widget nestedScrollViewWidget = NestedScrollView(
+        floatHeaderSlivers: true,
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              SliverAppBar(
+                floating: true,
+                snap: true,
+                title: titleWidget,
+              ),
+            ],
+        body: screenBodyWidget);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: showAppBar
+      // Must specify app bar only in the non-scrollable case
+      appBar: (showAppBar & !scrollableAppBar) ? appBar : null,
+      body: (showAppBar & scrollableAppBar)
           ? SafeArea(child: nestedScrollViewWidget)
           : SafeArea(child: screenBodyWidget),
     );

@@ -40,6 +40,7 @@ class CreateStoryScreen extends ConsumerWidget {
 
       return AppScaffold(
         appBarTitle: 'Story',
+        scrollableAppBar: true,
         child: StoryWidget(
           title: payload.title,
           story: payload.story,
