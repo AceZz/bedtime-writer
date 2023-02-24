@@ -32,6 +32,7 @@ class DisplayStoryScreen extends StatelessWidget {
 
         return AppScaffold(
           appBarTitle: 'Story',
+          scrollableAppBar: true,
           child: content,
         );
       },
