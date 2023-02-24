@@ -6,33 +6,44 @@ import 'package:flutter/material.dart';
 class AppScaffold extends StatelessWidget {
   final Widget child;
   final bool showAppBar;
+  final String appBarTitle;
 
-  const AppScaffold({Key? key, required this.child, this.showAppBar = true})
-      : super(key: key);
+  const AppScaffold({
+    Key? key,
+    required this.child,
+    this.showAppBar = true,
+    this.appBarTitle = '',
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Widget screenBody = SafeArea(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        child: child,
-      ),
+    Widget titleWidget = Text(
+      appBarTitle,
+      style: Theme.of(context).primaryTextTheme.headlineSmall,
     );
 
-    Widget nestedScrollView = NestedScrollView(
+    Widget screenBodyWidget = Container(
+      width: MediaQuery.of(context).size.width,
+      child: child,
+    );
+
+    Widget nestedScrollViewWidget = NestedScrollView(
       floatHeaderSlivers: true,
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(
           floating: true,
           snap: true,
+          title: titleWidget,
         ),
       ],
-      body: screenBody,
+      body: screenBodyWidget,
     );
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: showAppBar ? nestedScrollView : screenBody,
+      body: showAppBar
+          ? SafeArea(child: nestedScrollViewWidget)
+          : SafeArea(child: screenBodyWidget),
     );
   }
 }

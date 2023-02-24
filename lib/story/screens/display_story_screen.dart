@@ -30,7 +30,10 @@ class DisplayStoryScreen extends StatelessWidget {
           );
         }
 
-        return AppScaffold(child: content);
+        return AppScaffold(
+          appBarTitle: 'Story',
+          child: content,
+        );
       },
     );
   }

@@ -39,6 +39,7 @@ class CreateStoryScreen extends ConsumerWidget {
       );
 
       return AppScaffold(
+        appBarTitle: 'Story',
         child: StoryWidget(
           title: payload.title,
           story: payload.story,
@@ -89,6 +90,7 @@ class CreateStoryScreen extends ConsumerWidget {
 
     // Displays the current question.
     return AppScaffold(
+        appBarTitle: 'Story creation',
         child: _QuestionContent(question: state.currentQuestion));
   }
 }

@@ -55,12 +55,6 @@ class LibraryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleWidget = Text(
-      'Library',
-      textAlign: TextAlign.center,
-      style: Theme.of(context).primaryTextTheme.headlineMedium,
-    );
-
     final lottieWidget = LottieLoading();
 
     return FutureBuilder(
@@ -69,7 +63,7 @@ class LibraryScreen extends StatelessWidget {
         BuildContext context,
         AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
       ) {
-        List<Widget> children = [titleWidget];
+        List<Widget> children = [];
         final data = snapshot.data;
 
         if (data != null) {
@@ -86,6 +80,7 @@ class LibraryScreen extends StatelessWidget {
             ),
           );
           return AppScaffold(
+            appBarTitle: 'Library',
             child: ListView(
               padding: const EdgeInsets.all(10.0),
               children: children,
