@@ -1,8 +1,7 @@
+import 'package:bedtime_writer/widgets/home_screen_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../story/index.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/fade_in.dart';
 
@@ -24,45 +23,17 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
 
-    Widget newStoryButton = ElevatedButton(
-      onPressed: () {
-        ref.read(createStoryStateProvider.notifier).reset();
-        context.pushNamed('create_story');
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Text(
-          'New story',
-          style: Theme.of(context).primaryTextTheme.headlineSmall,
-        ),
-      ),
+    Widget newStoryButton = HomeScreenButton(
+      buttonText: 'New story',
+      destinationScreen: 'create_story',
+      resetStoryState: true,
     );
 
-    Widget libraryButton = ElevatedButton(
-      onPressed: () {
-        context.pushNamed('library');
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Text(
-          'Library',
-          style: Theme.of(context).primaryTextTheme.headlineSmall,
-        ),
-      ),
-    );
+    Widget libraryButton =
+        HomeScreenButton(buttonText: 'Library', destinationScreen: 'library');
 
-    Widget settingsButton = ElevatedButton(
-      onPressed: () {
-        context.pushNamed('settings');
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Text(
-          'Settings',
-          style: Theme.of(context).primaryTextTheme.headlineSmall,
-        ),
-      ),
-    );
+    Widget settingsButton =
+        HomeScreenButton(buttonText: 'Settings', destinationScreen: 'settings');
 
     Widget menuWidget = Padding(
       padding: const EdgeInsets.only(top: 50.0),
@@ -74,8 +45,8 @@ class HomeScreen extends ConsumerWidget {
               (i, button) => MapEntry(
                   i,
                   FadeIn(
-                    duration: const Duration(milliseconds: 1500),
-                    delay: Duration(milliseconds: 500 + 1000 * (i + 1)),
+                    duration: const Duration(milliseconds: 500),
+                    delay: Duration(milliseconds: 500 + 500 * (i + 1)),
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: button,
