@@ -91,7 +91,7 @@ class CreateStoryScreen extends ConsumerWidget {
 
     // Displays the current question.
     return AppScaffold(
-        appBarTitle: 'Story creation',
+        appBarTitle: 'New story',
         child: _QuestionContent(question: state.currentQuestion));
   }
 }
