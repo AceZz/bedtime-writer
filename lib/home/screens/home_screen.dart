@@ -95,6 +95,7 @@ class HomeScreen extends ConsumerWidget {
           menuWidget,
         ],
       ),
+      showAppBar: false,
     );
   }
 }

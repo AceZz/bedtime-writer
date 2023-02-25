@@ -22,7 +22,8 @@ import 'story_widget.dart';
 class CreateStoryScreen extends ConsumerWidget {
   const CreateStoryScreen({Key? key}) : super(key: key);
 
-  Widget _getContent(WidgetRef ref) {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     CreateStoryState state = ref.watch(createStoryStateProvider);
     var story = state.story;
     var storyImage = state.storyImage;
@@ -37,11 +38,22 @@ class CreateStoryScreen extends ConsumerWidget {
         imagePrompt: state.storyParams.imagePrompt,
       );
 
-      return StoryWidget(
-        title: payload.title,
-        story: payload.story,
-        image: StoryImage(url: payload.storyImage, width: 380, height: 380),
-        extra: [Center(child: _SaveButton(payload: payload))],
+      return AppScaffold(
+        appBarTitle: 'Story',
+        scrollableAppBar: true,
+        child: StoryWidget(
+          title: payload.title,
+          story: payload.story,
+          image: StoryImage(url: payload.storyImage, width: 380, height: 380),
+          extra: [
+            Center(
+              child: _SaveButton(
+                payload: payload,
+                iconSize: 40,
+              ),
+            )
+          ],
+        ),
       );
     }
 
@@ -71,16 +83,16 @@ class CreateStoryScreen extends ConsumerWidget {
             .setStory(storyText, storyImage);
       });
 
-      return _LoadingContent();
+      return AppScaffold(
+        child: _LoadingContent(),
+        showAppBar: false,
+      );
     }
 
     // Displays the current question.
-    return _QuestionContent(question: state.currentQuestion);
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return AppScaffold(child: _getContent(ref));
+    return AppScaffold(
+        appBarTitle: 'New story',
+        child: _QuestionContent(question: state.currentQuestion));
   }
 }
 
@@ -104,8 +116,10 @@ class _SavePayload {
 /// Saves the story.
 class _SaveButton extends StatelessWidget {
   final _SavePayload payload;
+  final double iconSize;
 
-  const _SaveButton({Key? key, required this.payload}) : super(key: key);
+  const _SaveButton({Key? key, required this.payload, required this.iconSize})
+      : super(key: key);
 
   Future _onSave(BuildContext context) async {
     return Future.wait([
@@ -131,6 +145,7 @@ class _SaveButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) => IconButton(
+        iconSize: iconSize,
         onPressed: () => _onSave(context),
         icon: Icon(
           Icons.favorite,
@@ -198,7 +213,10 @@ class _QuestionContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: [questionText] + choiceButtons,
+      children: [
+        questionText,
+        ...choiceButtons,
+      ],
     );
   }
 }
