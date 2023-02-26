@@ -63,6 +63,7 @@ class Character {
 /// the fields are not initialized, a consistent prompt should be produced.
 @immutable
 class StoryParams {
+  final String style;
   final Character? character;
 
   /// The age of the child.
@@ -73,6 +74,7 @@ class StoryParams {
   final String? moral;
 
   const StoryParams({
+    required this.style,
     this.character,
     this.age,
     this.duration,
@@ -81,14 +83,16 @@ class StoryParams {
     this.moral,
   });
 
-  StoryParams copyWith(
-      {Character? character,
-      int? age,
-      int? duration,
-      String? place,
-      String? object,
-      String? moral}) {
+  StoryParams copyWith({
+    Character? character,
+    int? age,
+    int? duration,
+    String? place,
+    String? object,
+    String? moral,
+  }) {
     return StoryParams(
+      style: this.style,
       character: character ?? this.character,
       age: age ?? this.age,
       duration: duration ?? this.duration,
@@ -97,6 +101,8 @@ class StoryParams {
       moral: moral ?? this.moral,
     );
   }
+
+  String get _promptStyle => ' in the style of $style.';
 
   String get _promptDuration =>
       duration == null ? '' : ' It should last about $duration minutes.';
@@ -107,13 +113,12 @@ class StoryParams {
       object == null ? '' : ' This object shall be important: $object.';
 
   String get _promptMoral => moral == null
-      ? ' The story shall end well.'
-      : ' The story shall end well and with this moral: $moral.';
+      ? ''
+      : ' The story shall end with this moral: $moral.';
 
   /// Returns a prompt for this story.
   String get prompt =>
-      'Act as a storyteller. Tell a bedtime story, with details, for a '
-      '${age ?? "5"}-year old.'
+      'Write a fairy tale,$_promptStyle'
       '$_promptDuration'
       '${character?.description ?? ""}'
       '$_promptPlace'

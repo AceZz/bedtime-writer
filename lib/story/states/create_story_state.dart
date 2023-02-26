@@ -9,6 +9,14 @@ import 'story_params.dart';
 
 final _random = new Random();
 
+//Define list of fairy tales writing styles
+List<String> _styles = [
+  'the Arabian Nights',
+  'Hans Christian Andersen',
+  'the Brothers Grimm',
+  'Charles Perrault',
+];
+
 /// State for the story creation feature.
 ///
 /// This object contains a [StoryParams] and a queue of [questions]. It can
@@ -123,29 +131,44 @@ class CreateStoryState {
 class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
   CreateStoryStateNotifier()
       : super(CreateStoryState(
-          storyParams: StoryParams(),
+          storyParams: StoryParams(style: ''),
           questions: [],
           numRandom: 0,
           story: null,
           storyImage: null,
         ));
 
+  String _getRandomStyle() {
+    final int randomIndex = Random().nextInt(_styles.length);
+    return _styles[randomIndex];
+  }
+
+  List<Question> _getSampleQuestions() {
+    List<Question> variableQuestions = [
+      placeQuestion,
+      objectQuestion,
+      powerQuestion,
+      flawQuestion,
+      challengeQuestion,
+      moralQuestion,
+    ];
+    variableQuestions.shuffle();
+    List<Question> sampleQuestions = variableQuestions.take(2).toList();
+    return [characterQuestion, ...sampleQuestions, durationQuestion];
+  }
+
   /// Reset the StoryState.
   void reset() async {
     final prefs = await SharedPreferences.getInstance();
+    final style = _getRandomStyle();
+    final sampleQuestions = _getSampleQuestions();
     state = CreateStoryState(
-      storyParams: StoryParams(age: prefs.getInt('age') ?? 5),
-      questions: [
-        characterQuestion,
-        placeQuestion,
-        objectQuestion,
-        powerQuestion,
-        flawQuestion,
-        challengeQuestion,
-        moralQuestion,
-        durationQuestion,
-      ],
-      numRandom: 4,
+      storyParams: StoryParams(
+        age: prefs.getInt('age') ?? 5,
+        style: style,
+      ),
+      questions: sampleQuestions,
+      numRandom: 0,
       story: null,
       storyImage: null,
     );
