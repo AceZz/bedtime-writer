@@ -50,7 +50,7 @@ class StoryWidget extends StatelessWidget {
     );
     final TextStyle _theEndStyle = GoogleFonts.amaticSc(
       fontWeight: FontWeight.bold,
-      fontSize: 42,
+      fontSize: 46,
     );
 
     Widget titleWidget = Padding(
@@ -92,16 +92,35 @@ class StoryWidget extends StatelessWidget {
 
     Widget theEndWidget = Padding(
       padding: const EdgeInsets.all(5),
-      child: Text('The End', textAlign: TextAlign.center, style: _theEndStyle),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+        ),
+        child:
+            Text('The End', textAlign: TextAlign.center, style: _theEndStyle),
+      ),
     );
 
-    Widget shareWidget = Center(
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: ShareButton(
-          text: 'Hey! Check out this amazing story I made with '
-              'Bedtime stories: \n\n $story',
-        ),
+    Widget shareWidget = ShareButton(
+      iconSize: 40,
+      text: 'Hey! Check out this amazing story I made with '
+          'Bedtime stories: \n\n $story',
+    );
+
+    List<Widget> bottomWidgets = [
+      shareWidget,
+      theEndWidget,
+      ...extra,
+    ];
+
+    Widget iconsRow = Padding(
+      padding: const EdgeInsets.only(
+        top: 10,
+        bottom: 50,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: bottomWidgets,
       ),
     );
 
@@ -110,9 +129,7 @@ class StoryWidget extends StatelessWidget {
         titleWidget,
         imageWidget,
         textWidget,
-        theEndWidget,
-        shareWidget,
-        ...extra,
+        iconsRow,
       ],
     );
   }

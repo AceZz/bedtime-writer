@@ -57,14 +57,6 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Widget title = Padding(
-      padding: const EdgeInsets.all(20),
-      child: Text(
-        'Settings',
-        style: Theme.of(context).primaryTextTheme.headlineMedium,
-      ),
-    );
-
     Widget age = Padding(
       padding: const EdgeInsets.only(left: 20.0),
       child: Row(
@@ -86,11 +78,11 @@ class SettingsScreen extends ConsumerWidget {
     );
 
     return AppScaffold(
+      appBarTitle: 'Settings',
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          title,
           age,
         ],
       ),
