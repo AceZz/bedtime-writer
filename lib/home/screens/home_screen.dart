@@ -1,9 +1,53 @@
-import 'package:bedtime_writer/widgets/home_screen_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/fade_in.dart';
+import '../../story/index.dart';
+
+class HomeScreenButton extends ConsumerWidget {
+  final String text;
+  final String destination;
+  final bool resetStoryState;
+
+  const HomeScreenButton({
+    Key? key,
+    required this.text,
+    required this.destination,
+    this.resetStoryState = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    Widget buttonTextWidget = Text(
+      text,
+      style: Theme.of(context).primaryTextTheme.headlineSmall,
+    );
+
+    return Container(
+      width: 0.7 * MediaQuery.of(context).size.width,
+      height: 60,
+      child: Material(
+        color: Theme.of(context).colorScheme.primary,
+        elevation: 10,
+        borderRadius: BorderRadius.circular(10),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        child: InkWell(
+          onTap: () {
+            if (resetStoryState) {
+              ref.read(createStoryStateProvider.notifier).reset();
+            }
+            context.pushNamed(destination);
+          },
+          child: Ink(
+            child: Center(child: buttonTextWidget),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -24,16 +68,16 @@ class HomeScreen extends ConsumerWidget {
     );
 
     Widget newStoryButton = HomeScreenButton(
-      buttonText: 'New story',
-      destinationScreen: 'create_story',
+      text: 'New story',
+      destination: 'create_story',
       resetStoryState: true,
     );
 
     Widget libraryButton =
-        HomeScreenButton(buttonText: 'Library', destinationScreen: 'library');
+        HomeScreenButton(text: 'Library', destination: 'library');
 
     Widget settingsButton =
-        HomeScreenButton(buttonText: 'Settings', destinationScreen: 'settings');
+        HomeScreenButton(text: 'Settings', destination: 'settings');
 
     Widget menuWidget = Padding(
       padding: const EdgeInsets.only(top: 50.0),
