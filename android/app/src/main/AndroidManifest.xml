@@ -7,7 +7,7 @@
     <application
         android:label="Bedtime writer"
         tools:replace="android:label"
-        android:icon="@mipmap/launcher_icon"
+        android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true">
 
         <activity
