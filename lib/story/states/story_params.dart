@@ -104,6 +104,7 @@ class StoryParams {
 
   String get _promptStyle => ' in the style of $style.';
 
+  //TODO: Convert to words
   String get _promptDuration =>
       duration == null ? '' : ' It should last about $duration minutes.';
 
@@ -117,6 +118,7 @@ class StoryParams {
       : ' The story shall end with this moral: $moral.';
 
   /// Returns a prompt for this story.
+  //TODO: Rewrite prompt
   String get prompt =>
       'Write a fairy tale,$_promptStyle'
       '$_promptDuration'
