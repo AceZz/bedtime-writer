@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../backend.dart';
 import '../../widgets/app_scaffold.dart';
-import '../backend/firebase.dart';
 import '../../widgets/lottie_loading.dart';
 import 'story_image.dart';
 

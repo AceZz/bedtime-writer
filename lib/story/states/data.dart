@@ -2,6 +2,17 @@ import 'package:flutter/material.dart';
 
 import 'story_params.dart';
 
+var allQuestions = [
+  characterQuestion,
+  placeQuestion,
+  objectQuestion,
+  powerQuestion,
+  flawQuestion,
+  challengeQuestion,
+  moralQuestion,
+  durationQuestion,
+];
+
 /// CHARACTERS
 
 final Choice characterBlaze = Choice<Character>(
