@@ -24,8 +24,6 @@ const List<String> _styles = [
 ///
 /// The maximum number of randomly answered questions is controlled by
 /// [numRandom].
-///
-/// When the story is generated, the result is stored in [story].
 @immutable
 class CreateStoryState {
   final StoryParams storyParams;
@@ -35,18 +33,10 @@ class CreateStoryState {
   /// Maximum number of questions which can be answered randomly.
   final int numRandom;
 
-  /// The content of the story.
-  final String? story;
-
-  /// The URL to the story image.
-  final String? storyImage;
-
   const CreateStoryState({
     required this.storyParams,
     required this.questions,
     required this.numRandom,
-    required this.story,
-    required this.storyImage,
   });
 
   bool get hasQuestions => this.questions.isNotEmpty;
@@ -57,19 +47,15 @@ class CreateStoryState {
     StoryParams? storyParams,
     List<Question>? questions,
     int? numRandom,
-    String? story,
-    String? storyImage,
   }) {
     return CreateStoryState(
       storyParams: storyParams ?? this.storyParams,
       questions: questions ?? this.questions,
       numRandom: numRandom ?? this.numRandom,
-      story: story ?? this.story,
-      storyImage: storyImage ?? this.storyImage,
     );
   }
 
-  /// Answers the [currentQuestion] question.
+  /// Answers the [currentQuestion].
   ///
   /// If [choice] is provided, answers the [currentQuestion] with it.
   /// Otherwise, answers randomly.
@@ -127,15 +113,14 @@ class CreateStoryState {
   }
 }
 
+var defaultCreateStoryState = CreateStoryState(
+  storyParams: StoryParams(),
+  questions: allQuestions,
+  numRandom: 0,
+);
+
 class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
-  CreateStoryStateNotifier()
-      : super(CreateStoryState(
-          storyParams: StoryParams(style: ''),
-          questions: [],
-          numRandom: 0,
-          story: null,
-          storyImage: null,
-        ));
+  CreateStoryStateNotifier() : super(defaultCreateStoryState);
 
   String _getRandomStyle() {
     final int randomIndex = Random().nextInt(_styles.length);
@@ -143,29 +128,23 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
   }
 
   List<Question> _getQuestions() {
-    List<Question> variableQuestions = [
-      placeQuestion,
-      objectQuestion,
-      powerQuestion,
-      flawQuestion,
-      challengeQuestion,
-      moralQuestion,
-    ];
-    variableQuestions.shuffle();
-    var sampleQuestions = variableQuestions.take(2);
-    return [characterQuestion, ...sampleQuestions, durationQuestion];
+    var questions = allQuestions
+        .where(
+          (Question question) => question.randomAllowed,
+        )
+        .toList();
+    questions.shuffle();
+    return [characterQuestion, ...questions.take(2), durationQuestion];
   }
 
-  /// Reset the StoryState.
-  void reset() async {
+  /// Resets the StoryState.
+  void reset() {
     state = CreateStoryState(
       storyParams: StoryParams(
         style: _getRandomStyle(),
       ),
       questions: _getQuestions(),
       numRandom: 0,
-      story: null,
-      storyImage: null,
     );
   }
 
@@ -173,13 +152,9 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
   void updateStoryParams([Choice? choice]) {
     state = state.update(choice);
   }
-
-  /// Sets the story and the story image.
-  void setStory(String story, String storyImage) {
-    state = state.copyWith(story: story, storyImage: storyImage);
-  }
 }
 
 final createStoryStateProvider =
     StateNotifierProvider<CreateStoryStateNotifier, CreateStoryState>(
-        (ref) => CreateStoryStateNotifier());
+  (ref) => CreateStoryStateNotifier(),
+);

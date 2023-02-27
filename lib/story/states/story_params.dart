@@ -37,19 +37,18 @@ class Character {
     );
   }
 
-  String get _descriptionFlaw => flaw == null ? '' : ' It $flaw.';
+  Map<String, dynamic> serialize() {
+    var map = {
+      'name': name,
+      'type': type,
+      'flaw': flaw,
+      'power': power,
+      'challenge': challenge,
+    };
+    map.removeWhere((key, value) => value == null);
 
-  String get _descriptionPower => power == null ? '' : ' It $power.';
-
-  String get _descriptionChallenge =>
-      challenge == null ? '' : ' It is challenged with $challenge.';
-
-  /// Returns a description of this character, suitable for insertion into a
-  /// prompt.
-  String get description => ' The protagonist is $name.'
-      '$_descriptionFlaw'
-      '$_descriptionPower'
-      '$_descriptionChallenge';
+    return map;
+  }
 }
 
 /// Parameters for generating a story.
@@ -61,7 +60,7 @@ class Character {
 /// the fields are not initialized, a consistent prompt should be produced.
 @immutable
 class StoryParams {
-  final String style;
+  final String? style;
   final Character? character;
 
   /// The age of the child.
@@ -71,7 +70,7 @@ class StoryParams {
   final String? moral;
 
   const StoryParams({
-    required this.style,
+    this.style,
     this.character,
     this.duration,
     this.place,
@@ -80,6 +79,7 @@ class StoryParams {
   });
 
   StoryParams copyWith({
+    String? style,
     Character? character,
     int? duration,
     String? place,
@@ -87,7 +87,7 @@ class StoryParams {
     String? moral,
   }) {
     return StoryParams(
-      style: this.style,
+      style: style ?? this.style,
       character: character ?? this.character,
       duration: duration ?? this.duration,
       place: place ?? this.place,
@@ -96,48 +96,19 @@ class StoryParams {
     );
   }
 
-  String get _promptStyle => ' in the style of $style.';
+  Map<String, dynamic> serialize() {
+    var map = {
+      'style': style,
+      'character': character?.serialize(),
+      'duration': duration,
+      'place': place,
+      'object': object,
+      'moral': moral,
+    };
+    map.removeWhere((key, value) => value == null);
 
-  int? get _numWords {
-    return duration == null ? null : 100 * duration!;
+    return map;
   }
-
-  String get _promptNumWords {
-    int? numWords = _numWords;
-    return numWords == null ? '' : ' The length is about $numWords words.';
-  }
-
-  String get _promptPlace => place == null ? '' : ' The story happens $place.';
-
-  String get _promptObject =>
-      object == null ? '' : ' The protagonist finds $object in the journey.';
-
-  String get _promptMoral => moral == null ? '' : ' The moral is $moral.';
-
-  /// Returns a prompt for this story.
-  String get prompt => 'Write a fairy tale,$_promptStyle'
-      '${character?.description ?? ""}'
-      '$_promptPlace'
-      '$_promptObject'
-      '$_promptMoral'
-      '$_promptNumWords';
-
-  /// Returns a title for this story.
-  String get title =>
-      character == null ? "Tonight's story" : "The story of ${character?.name}";
-
-  String get _imagePromptType {
-    var type = character?.type;
-    return type == null ? '.' : ' of a $type.';
-  }
-
-  String get _imagePromptPlace =>
-      place == null ? '' : ' It takes place $place.';
-
-  /// Returns an image prompt for this story.
-  String get imagePrompt => 'Dreamy and whimsical beautiful illustration'
-      '$_imagePromptType'
-      '$_imagePromptPlace';
 }
 
 void _defaultIsAvailable(StoryParams story) => true;

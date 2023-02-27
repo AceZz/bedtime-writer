@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../backend.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
-import '../../widgets/share_button.dart';
-import '../../widgets/favorite_button.dart';
-import '../backend/api_calls.dart';
 import '../states/create_story_state.dart';
 import '../states/story_params.dart';
-import 'story_image.dart';
-import 'story_widget.dart';
+import 'display_story_screen.dart';
 
 /// Entry point of the story creation.
 ///
@@ -24,78 +20,30 @@ class CreateStoryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     CreateStoryState state = ref.watch(createStoryStateProvider);
-    var story = state.story;
-    var storyImage = state.storyImage;
 
-    // Displays the story.
-    if (story != null && storyImage != null) {
-      var payload = SavePayload(
-        title: state.storyParams.title,
-        story: story,
-        storyImage: storyImage,
-        prompt: state.storyParams.prompt,
-        imagePrompt: state.storyParams.imagePrompt,
-      );
-
-      Widget saveButton = FavoriteButton(
-        payload: payload,
-        iconSize: 30,
-      );
-
-      Widget shareButton = ShareButton(
-        iconSize: 30,
-        text: 'Hey! Check out this amazing story I made with '
-            'Bedtime stories: \n\n $story',
-      );
-
+    if (state.hasQuestions) {
+      // Displays the current question.
       return AppScaffold(
-        appBarTitle: 'Story',
-        scrollableAppBar: true,
-        actions: [saveButton, shareButton],
-        child: StoryWidget(
-          title: payload.title,
-          story: payload.story,
-          image: StoryImage(url: payload.storyImage, width: 380, height: 380),
-        ),
-      );
-    }
-
-    // Displays a loading screen.
-    if (!state.hasQuestions) {
-      // On page load action.
-      SchedulerBinding.instance.addPostFrameCallback((_) async {
-        String storyText;
-        String storyImage;
-
-        try {
-          // Parallelization of API calls
-          var apiResults = await Future.wait([
-            callOpenAiTextGeneration(prompt: state.storyParams.prompt),
-            callOpenAiImageGeneration(prompt: state.storyParams.imagePrompt)
-          ]);
-
-          storyText = apiResults[0];
-          storyImage = apiResults[1];
-        } catch (e) {
-          storyText = 'Sorry, your story could not be generated';
-          storyImage = '';
-        }
-
-        ref
-            .read(createStoryStateProvider.notifier)
-            .setStory(storyText, storyImage);
-      });
-
-      return AppScaffold(
-        child: _LoadingContent(),
-        showAppBar: false,
-      );
-    }
-
-    // Displays the current question.
-    return AppScaffold(
         appBarTitle: 'New story',
-        child: _QuestionContent(question: state.currentQuestion));
+        child: _QuestionContent(question: state.currentQuestion),
+      );
+    }
+
+    // Adds the story and displays it.
+    return FutureBuilder(
+      future: addStory(state.storyParams),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        final generatedStoryId = snapshot.data;
+        return generatedStoryId == null
+            ? AppScaffold(
+                showAppBar: false,
+                child: _LoadingContent(),
+              )
+            : DisplayStoryScreen(
+                id: generatedStoryId,
+              );
+      },
+    );
   }
 }
 

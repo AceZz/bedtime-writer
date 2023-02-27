@@ -14,13 +14,13 @@ const fullCharacter = Character(
   challenge: 'having a challenge',
 );
 const partialStory = StoryParams(
-  style: 'Handersen',
+  style: 'Andersen',
   character: partialCharacter,
   duration: 3,
   place: 'at some place',
 );
 const fullStory = StoryParams(
-  style: 'Handersen',
+  style: 'Andersen',
   character: fullCharacter,
   duration: 3,
   place: 'at some place',
@@ -44,20 +44,22 @@ void main() {
       expect(copy.challenge, 'having a challenge');
     });
 
-    test('.description is the full description', () {
-      expect(
-        fullCharacter.description,
-        ' The protagonist is Someone. It has a flaw. '
-        'It has a power. '
-        'It is challenged with having a challenge.',
-      );
+    test('.serialize() returns a full serialization', () {
+      expect(fullCharacter.serialize(), {
+        'name': 'Someone',
+        'type': 'some type',
+        'flaw': 'has a flaw',
+        'power': 'has a power',
+        'challenge': 'having a challenge',
+      });
     });
 
-    test('.description is the partial description', () {
-      expect(
-        partialCharacter.description,
-        ' The protagonist is Someone. It has a flaw.',
-      );
+    test('.serialize() returns a partial serialization', () {
+      expect(partialCharacter.serialize(), {
+        'name': 'Someone',
+        'type': 'some type',
+        'flaw': 'has a flaw',
+      });
     });
   });
 
@@ -80,27 +82,24 @@ void main() {
       expect(copy.moral, 'another moral');
     });
 
-    test('.prompt is the full prompt', () {
-      expect(
-        fullStory.prompt,
-        'Write a fairy tale, in the style of Handersen. '
-        'The protagonist is Someone. It has a flaw. It has a power. '
-        'It is challenged with having a challenge. '
-        'The story happens at some place. '
-        'The protagonist finds some object in the journey. '
-        'The moral is some moral. '
-        'The length is about 300 words.',
-      );
+    test('.serialize() returns a full serialization', () {
+      expect(fullStory.serialize(), {
+        'style': 'Andersen',
+        'character': fullCharacter.serialize(),
+        'duration': 3,
+        'place': 'at some place',
+        'object': 'some object',
+        'moral': 'some moral',
+      });
     });
 
-    test('.prompt is the partial prompt', () {
-      expect(
-        partialStory.prompt,
-        'Write a fairy tale, in the style of Handersen. '
-        'The protagonist is Someone. It has a flaw. '
-        'The story happens at some place. '
-        'The length is about 300 words.',
-      );
+    test('.serialize() returns a partial serialization', () {
+      expect(partialStory.serialize(), {
+        'style': 'Andersen',
+        'character': partialCharacter.serialize(),
+        'duration': 3,
+        'place': 'at some place',
+      });
     });
   });
 
