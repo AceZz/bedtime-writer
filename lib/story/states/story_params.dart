@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 
 final _random = new Random();
 
+int? _durationToWords(int? duration) {
+  return duration == null ? null : 100 * duration;
+}
+
 /// The character of the story.
 ///
 /// This class is immutable. Use [copyWith] to return a new object with some of
@@ -37,18 +41,18 @@ class Character {
     );
   }
 
-  String get _descriptionFlaw => flaw == null ? '' : ' It has a flaw: $flaw.';
+  String get _descriptionFlaw => flaw == null ? '' : ' it $flaw.';
 
   String get _descriptionPower =>
-      power == null ? '' : ' It has a power: $power.';
+      power == null ? '' : ' it $power.';
 
   String get _descriptionChallenge =>
-      challenge == null ? '' : ' It will be challenged with $challenge.';
+      challenge == null ? '' : ' it is challenged with $challenge.';
 
   /// Returns a description of this character, suitable for insertion into a
   /// prompt.
   String get description =>
-      ' The main character of the story is $name, a $type.'
+      ' The main character of the story is $name,'
       '$_descriptionFlaw'
       '$_descriptionPower'
       '$_descriptionChallenge';
@@ -104,28 +108,28 @@ class StoryParams {
 
   String get _promptStyle => ' in the style of $style.';
 
-  //TODO: Convert to words
-  String get _promptDuration =>
-      duration == null ? '' : ' It should last about $duration minutes.';
+  String get _promptWords {
+    int? durationWords = _durationToWords(duration);
+    return durationWords == null
+        ? ''
+        : ' The length is about $durationWords words.';
+  }
 
   String get _promptPlace => place == null ? '' : ' The story happens $place.';
 
   String get _promptObject =>
-      object == null ? '' : ' This object shall be important: $object.';
+      object == null ? '' : ' This object is important: $object.';
 
-  String get _promptMoral => moral == null
-      ? ''
-      : ' The story shall end with this moral: $moral.';
+  String get _promptMoral =>
+      moral == null ? '' : ' The story ends with this moral: $moral.';
 
   /// Returns a prompt for this story.
-  //TODO: Rewrite prompt
-  String get prompt =>
-      'Write a fairy tale,$_promptStyle'
-      '$_promptDuration'
+  String get prompt => 'Write a fairy tale,$_promptStyle'
       '${character?.description ?? ""}'
       '$_promptPlace'
       '$_promptObject'
-      '$_promptMoral';
+      '$_promptMoral'
+      '$_promptWords';
 
   /// Returns a title for this story.
   String get title =>
