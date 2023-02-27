@@ -1,9 +1,10 @@
+import 'package:bedtime_writer/story/screens/favorite_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../../widgets/share_button.dart';
+import '../../backend.dart';
 import '../../widgets/app_scaffold.dart';
-import '../backend/firebase.dart';
+import '../../widgets/share_button.dart';
 import 'story_image.dart';
 import 'story_widget.dart';
 
@@ -37,11 +38,12 @@ class DisplayStoryScreen extends StatelessWidget {
           text: 'Hey! Check out this amazing story I made with '
               'Bedtime stories: \n\n $story',
         );
+        Widget favoriteButton = FavoriteButton(iconSize: 30);
 
         return AppScaffold(
           appBarTitle: 'Story',
           scrollableAppBar: true,
-          actions: [shareButton],
+          actions: [shareButton, favoriteButton],
           child: content,
         );
       },

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../backend/firebase.dart';
+import '../../backend.dart';
 
 /// Displays the image of the story [id], retrieved from Firebase Storage.
 class StorageStoryImage extends StatelessWidget {
