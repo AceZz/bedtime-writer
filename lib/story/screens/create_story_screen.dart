@@ -38,8 +38,6 @@ class CreateStoryScreen extends ConsumerWidget {
         imagePrompt: state.storyParams.imagePrompt,
       );
 
-      print(state.storyParams.prompt);
-
       return AppScaffold(
         appBarTitle: 'Story',
         scrollableAppBar: true,
