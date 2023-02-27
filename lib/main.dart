@@ -4,9 +4,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'backend.dart';
 import 'firebase_options.dart';
 import 'router.dart';
 import 'theme.dart';
+import 'utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +17,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  if (useFirebaseEmulators()) {
+    firestore.useFirestoreEmulator('localhost', 8080);
+    functions.useFunctionsEmulator('localhost', 5001);
+    storage.useStorageEmulator('localhost', 9199);
+  }
+
   runApp(ProviderScope(child: MyApp()));
 }
 
