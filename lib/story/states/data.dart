@@ -352,5 +352,6 @@ Question durationQuestion = Question(
   text: 'How long is the story?',
   choices: [durationShort, durationLong],
   randomAllowed: false,
+  shuffleChoices: false,
   answer: ((story, choice) => story.copyWith(duration: choice.value)),
 );

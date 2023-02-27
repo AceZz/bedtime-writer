@@ -185,6 +185,7 @@ class Question {
   final String text;
   final List<Choice> choices;
   final StoryParams Function(StoryParams story, Choice choice) answer;
+  final bool shuffleChoices;
 
   /// Whether this question can be answered randomly.
   ///
@@ -197,6 +198,7 @@ class Question {
     required this.choices,
     required this.answer,
     this.randomAllowed = true,
+    this.shuffleChoices = true,
   });
 
   List<Choice> availableChoices(StoryParams story) =>
