@@ -19,3 +19,10 @@ DocumentReference<Map<String, dynamic>> storyReference(String id) =>
 Reference storyImageReference(String id) {
   return storage.ref().child('stories/image/$id.png');
 }
+
+Future<String> addStory(StoryParams params) async {
+  return functions
+      .httpsCallable('addStory')
+      .call(params.serialize())
+      .then((result) => result.data);
+}
