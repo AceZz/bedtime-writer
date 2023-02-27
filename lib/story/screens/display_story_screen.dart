@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../widgets/share_button.dart';
 import '../../widgets/app_scaffold.dart';
 import '../backend/firebase.dart';
 import 'story_image.dart';
@@ -30,9 +31,18 @@ class DisplayStoryScreen extends StatelessWidget {
           );
         }
 
+        //TODO: add FavoriteButton with corresponding payload
+        String story = data == null ? '' : data['text'];
+        Widget shareButton = ShareButton(
+          iconSize: 30,
+          text: 'Hey! Check out this amazing story I made with '
+              'Bedtime stories: \n\n $story',
+        );
+
         return AppScaffold(
           appBarTitle: 'Story',
           scrollableAppBar: true,
+          actions: [shareButton],
           child: content,
         );
       },
