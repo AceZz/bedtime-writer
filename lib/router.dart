@@ -24,7 +24,8 @@ final GoRouter router = GoRouter(
     GoRoute(
       name: 'display_story',
       path: '/story/library/:id',
-      redirect: (state) => state.params['id'] == null ? '/story/library' : null,
+      redirect: (context, state) =>
+          state.params['id'] == null ? '/story/library' : null,
       builder: (context, state) =>
           DisplayStoryScreen(id: state.params['id'] ?? ''),
     ),
