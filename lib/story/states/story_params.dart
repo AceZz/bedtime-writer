@@ -52,7 +52,7 @@ class Character {
   /// Returns a description of this character, suitable for insertion into a
   /// prompt.
   String get description =>
-      ' The main character of the story is $name,'
+      ' The protagonist of the story is $name,'
       '$_descriptionFlaw'
       '$_descriptionPower'
       '$_descriptionChallenge';
@@ -118,10 +118,10 @@ class StoryParams {
   String get _promptPlace => place == null ? '' : ' The story happens $place.';
 
   String get _promptObject =>
-      object == null ? '' : ' This object is important: $object.';
+      object == null ? '' : ' The protagonist finds $object in the journey.';
 
   String get _promptMoral =>
-      moral == null ? '' : ' The story ends with this moral: $moral.';
+      moral == null ? '' : ' The moral of the story is $moral.';
 
   /// Returns a prompt for this story.
   String get prompt => 'Write a fairy tale,$_promptStyle'

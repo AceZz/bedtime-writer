@@ -272,7 +272,7 @@ final Choice objectDiamond = Choice<String>(
 );
 
 Question objectQuestion = Question(
-  text: 'What object will be important in the story?',
+  text: 'What object does the hero find?',
   choices: [
     objectRing,
     objectAmulet,
