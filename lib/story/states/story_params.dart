@@ -41,16 +41,16 @@ class Character {
     );
   }
 
-  String get _descriptionFlaw => flaw == null ? '' : ' it $flaw.';
+  String get _descriptionFlaw => flaw == null ? '' : ' It $flaw.';
 
-  String get _descriptionPower => power == null ? '' : ' it $power.';
+  String get _descriptionPower => power == null ? '' : ' It $power.';
 
   String get _descriptionChallenge =>
-      challenge == null ? '' : ' it is challenged with $challenge.';
+      challenge == null ? '' : ' It is challenged with $challenge.';
 
   /// Returns a description of this character, suitable for insertion into a
   /// prompt.
-  String get description => ' The protagonist is $name,'
+  String get description => ' The protagonist is $name.'
       '$_descriptionFlaw'
       '$_descriptionPower'
       '$_descriptionChallenge';
