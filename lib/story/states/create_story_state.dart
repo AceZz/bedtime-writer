@@ -143,7 +143,7 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
     return _styles[randomIndex];
   }
 
-  List<Question> _getSampleQuestions() {
+  List<Question> _getQuestions() {
     List<Question> variableQuestions = [
       placeQuestion,
       objectQuestion,
@@ -160,14 +160,12 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
   /// Reset the StoryState.
   void reset() async {
     final prefs = await SharedPreferences.getInstance();
-    final style = _getRandomStyle();
-    final sampleQuestions = _getSampleQuestions();
     state = CreateStoryState(
       storyParams: StoryParams(
         age: prefs.getInt('age') ?? 5,
-        style: style,
+        style: _getRandomStyle(),
       ),
-      questions: sampleQuestions,
+      questions: _getQuestions(),
       numRandom: 0,
       story: null,
       storyImage: null,
