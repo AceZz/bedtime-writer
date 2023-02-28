@@ -60,7 +60,7 @@ class HomeScreen extends ConsumerWidget {
         duration: const Duration(milliseconds: 1500),
         delay: const Duration(milliseconds: 500),
         child: Text(
-          'Bedtime Stories',
+          'Dreamy Tales',
           textAlign: TextAlign.center,
           style: Theme.of(context).primaryTextTheme.headlineLarge,
         ),
