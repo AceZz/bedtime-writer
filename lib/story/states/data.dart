@@ -7,7 +7,7 @@ import 'story_params.dart';
 final Choice characterBlaze = Choice<Character>(
   text: 'Blaze, the kind dragon',
   value: const Character(
-    name: 'Blaze the kind dragon',
+    name: 'Blaze, the kind dragon',
     type: 'dragon',
   ),
   image: Image.asset('assets/story/character/dragon.png'),
@@ -16,7 +16,7 @@ final Choice characterBlaze = Choice<Character>(
 final Choice characterSparkles = Choice<Character>(
   text: 'Sparkles, the magical horse',
   value: const Character(
-    name: 'Sparkles the magical horse',
+    name: 'Sparkles, the magical horse',
     type: 'horse',
   ),
   image: Image.asset('assets/story/character/horse.png'),
@@ -25,7 +25,7 @@ final Choice characterSparkles = Choice<Character>(
 final Choice characterPinguin = Choice<Character>(
   text: 'Frosty, the pinguin',
   value: const Character(
-    name: 'Frosty the pinguin',
+    name: 'Frosty, the pinguin',
     type: 'pinguin',
   ),
   image: Image.asset('assets/story/character/pinguin.png'),
