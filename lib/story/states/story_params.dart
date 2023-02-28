@@ -4,10 +4,6 @@ import 'package:flutter/material.dart';
 
 final _random = new Random();
 
-int? _durationToWords(int? duration) {
-  return duration == null ? null : 100 * duration;
-}
-
 /// The character of the story.
 ///
 /// This class is immutable. Use [copyWith] to return a new object with some of
@@ -106,11 +102,15 @@ class StoryParams {
 
   String get _promptStyle => ' in the style of $style.';
 
-  String get _promptWords {
-    int? durationWords = _durationToWords(duration);
-    return durationWords == null
+  int? get _numWords {
+    return duration == null ? null : 100 * duration!;
+  }
+
+  String get _promptNumWords {
+    int? numWords = _numWords;
+    return numWords == null
         ? ''
-        : ' The length is about $durationWords words.';
+        : ' The length is about $numWords words.';
   }
 
   String get _promptPlace => place == null ? '' : ' The story happens $place.';
@@ -126,7 +126,7 @@ class StoryParams {
       '$_promptPlace'
       '$_promptObject'
       '$_promptMoral'
-      '$_promptWords';
+      '$_promptNumWords';
 
   /// Returns a title for this story.
   String get title =>
