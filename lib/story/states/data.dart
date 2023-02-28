@@ -62,7 +62,7 @@ final Choice flawLazy = Choice<String>(
 
 final Choice flawGiveUp = Choice<String>(
   text: 'Giving up easily',
-  value: 'it gives up easily',
+  value: 'gives up easily',
   image: Image.asset('assets/story/flaw/give_up.png'),
 );
 
