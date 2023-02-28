@@ -153,7 +153,7 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
       moralQuestion,
     ];
     variableQuestions.shuffle();
-    List<Question> sampleQuestions = variableQuestions.take(2).toList();
+    var sampleQuestions = variableQuestions.take(2);
     return [characterQuestion, ...sampleQuestions, durationQuestion];
   }
 
