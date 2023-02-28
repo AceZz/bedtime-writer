@@ -9,8 +9,8 @@ import 'story_params.dart';
 
 final _random = new Random();
 
-//Define list of fairy tales writing styles
-List<String> _styles = [
+/// List of writing styles.
+const List<String> _styles = [
   'the Arabian Nights',
   'Hans Christian Andersen',
   'the Brothers Grimm',
@@ -153,7 +153,7 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
       moralQuestion,
     ];
     variableQuestions.shuffle();
-    List<Question> sampleQuestions = variableQuestions.take(2).toList();
+    var sampleQuestions = variableQuestions.take(2);
     return [characterQuestion, ...sampleQuestions, durationQuestion];
   }
 
