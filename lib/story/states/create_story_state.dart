@@ -9,8 +9,8 @@ import 'story_params.dart';
 
 final _random = new Random();
 
-//Define list of fairy tales writing styles
-List<String> _styles = [
+/// List of writing styles.
+const List<String> _styles = [
   'the Arabian Nights',
   'Hans Christian Andersen',
   'the Brothers Grimm',
