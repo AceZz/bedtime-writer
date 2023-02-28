@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data.dart';
 import 'story_params.dart';
@@ -159,10 +158,8 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
 
   /// Reset the StoryState.
   void reset() async {
-    final prefs = await SharedPreferences.getInstance();
     state = CreateStoryState(
       storyParams: StoryParams(
-        age: prefs.getInt('age') ?? 5,
         style: _getRandomStyle(),
       ),
       questions: _getQuestions(),

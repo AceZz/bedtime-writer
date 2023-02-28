@@ -16,14 +16,12 @@ const fullCharacter = Character(
 const partialStory = StoryParams(
   style: 'Handersen',
   character: partialCharacter,
-  age: 7,
   duration: 3,
   place: 'at some place',
 );
 const fullStory = StoryParams(
   style: 'Handersen',
   character: fullCharacter,
-  age: 7,
   duration: 3,
   place: 'at some place',
   object: 'some object',
@@ -67,7 +65,6 @@ void main() {
     test('.copyWith() updates the fields', () {
       var copy = partialStory.copyWith(
         character: partialStory.character?.copyWith(flaw: 'has another flaw'),
-        age: 3,
         duration: 10,
         place: 'at another place',
         object: 'another object',
@@ -77,7 +74,6 @@ void main() {
       expect(copy.character!.name, 'Someone');
       expect(copy.character!.type, 'some type');
       expect(copy.character!.flaw, 'has another flaw');
-      expect(copy.age, 3);
       expect(copy.duration, 10);
       expect(copy.place, 'at another place');
       expect(copy.object, 'another object');
@@ -155,7 +151,6 @@ void main() {
       var choice3 = Choice<String>(
         text: 'choice 3',
         value: 'moral 3',
-        isAvailable: (story) => story.age == 7,
       );
 
       var question = Question(
@@ -186,7 +181,6 @@ void main() {
     var choice3 = Choice<String>(
       text: 'choice 3',
       value: 'moral 3',
-      isAvailable: (story) => story.age == 7,
     );
 
     var question = Question(

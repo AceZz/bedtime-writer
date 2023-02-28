@@ -65,7 +65,6 @@ class StoryParams {
   final Character? character;
 
   /// The age of the child.
-  final int? age;
   final int? duration;
   final String? place;
   final String? object;
@@ -74,7 +73,6 @@ class StoryParams {
   const StoryParams({
     required this.style,
     this.character,
-    this.age,
     this.duration,
     this.place,
     this.object,
@@ -83,7 +81,6 @@ class StoryParams {
 
   StoryParams copyWith({
     Character? character,
-    int? age,
     int? duration,
     String? place,
     String? object,
@@ -92,7 +89,6 @@ class StoryParams {
     return StoryParams(
       style: this.style,
       character: character ?? this.character,
-      age: age ?? this.age,
       duration: duration ?? this.duration,
       place: place ?? this.place,
       object: object ?? this.object,
