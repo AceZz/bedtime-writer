@@ -35,8 +35,8 @@ jobs:
       - name: Flutter analyze
         run: flutter analyze
 
-      - name: Flutter format
-        run: flutter format --set-exit-if-changed --dry-run .
+      - name: Dart format
+        run: dart format --set-exit-if-changed --output none .
 
       - name: Run unit tests
         run: flutter test

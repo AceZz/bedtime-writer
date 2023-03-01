@@ -89,7 +89,7 @@ void main() {
         'The story happens at some place. '
         'The protagonist finds some object in the journey. '
         'The moral is some moral. '
-        'The length is about 300 words.'
+        'The length is about 300 words.',
       );
     });
 
@@ -99,7 +99,7 @@ void main() {
         'Write a fairy tale, in the style of Handersen. '
         'The protagonist is Someone. It has a flaw. '
         'The story happens at some place. '
-        'The length is about 300 words.'
+        'The length is about 300 words.',
       );
     });
   });
