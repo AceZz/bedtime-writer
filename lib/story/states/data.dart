@@ -44,31 +44,31 @@ Question characterQuestion = Question(
 
 final Choice flawFailure = Choice<String>(
   text: 'Being afraid of failure',
-  value: 'being afraid of failure',
+  value: 'is afraid of failure',
   image: Image.asset('assets/story/flaw/failure.png'),
 );
 
 final Choice flawSelfConfidence = Choice<String>(
   text: 'Lacking self-confidence',
-  value: 'lacking self-confidence',
+  value: 'lacks self-confidence',
   image: Image.asset('assets/story/flaw/self_confidence.png'),
 );
 
 final Choice flawLazy = Choice<String>(
   text: 'Being a bit lazy',
-  value: 'being a bit lazy',
+  value: 'is a bit lazy',
   image: Image.asset('assets/story/flaw/lazy.png'),
 );
 
 final Choice flawGiveUp = Choice<String>(
   text: 'Giving up easily',
-  value: 'being a bit lazy',
+  value: 'gives up easily',
   image: Image.asset('assets/story/flaw/give_up.png'),
 );
 
 final Choice flawNoAdvice = Choice<String>(
   text: 'Not listening to advice',
-  value: 'not listening to advice',
+  value: 'does not listen to advice',
   image: Image.asset('assets/story/flaw/no_advice.png'),
 );
 
@@ -189,14 +189,14 @@ Question challengeQuestion = Question(
 Choice powerFly = Choice<String>(
   text: 'Is able to fly',
   image: Image.asset('assets/story/power/fly.png'),
-  value: 'able to fly',
+  value: 'can fly',
   isAvailable: (story) => !['dove', 'dragon'].contains(story.character?.type),
 );
 
 final Choice powerAnimals = Choice<String>(
   text: 'Can communicate with animals',
   image: Image.asset('assets/story/power/animals.png'),
-  value: 'able to communicate with animals',
+  value: 'can communicate with animals',
   isAvailable: (story) =>
       !['dove', 'dragon', 'horse'].contains(story.character?.type),
 );
@@ -204,25 +204,25 @@ final Choice powerAnimals = Choice<String>(
 final Choice powerInvisible = Choice<String>(
   text: 'Can become invisible',
   image: Image.asset('assets/story/power/invisible.png'),
-  value: 'able to become invisible',
+  value: 'can become invisible',
 );
 
 final Choice powerWeather = Choice<String>(
   text: 'Can control the weather',
   image: Image.asset('assets/story/power/weather.png'),
-  value: 'able to control the weather',
+  value: 'can control the weather',
 );
 
 final Choice powerHeal = Choice<String>(
   text: 'Can heal the others',
   image: Image.asset('assets/story/power/heal.png'),
-  value: 'able to heal the others',
+  value: 'can heal others',
 );
 
 final Choice powerMinds = Choice<String>(
   text: 'Can read minds',
   image: Image.asset('assets/story/power/minds.png'),
-  value: 'able to read minds',
+  value: 'can read minds',
 );
 
 Question powerQuestion = Question(
@@ -272,7 +272,7 @@ final Choice objectDiamond = Choice<String>(
 );
 
 Question objectQuestion = Question(
-  text: 'What object will be important in the story?',
+  text: 'What object does the hero find?',
   choices: [
     objectRing,
     objectAmulet,
@@ -349,8 +349,9 @@ final Choice durationLong = Choice<int>(
 );
 
 Question durationQuestion = Question(
-  text: 'How long should the story be?',
+  text: 'How long is the story?',
   choices: [durationShort, durationLong],
   randomAllowed: false,
+  shuffleChoices: false,
   answer: ((story, choice) => story.copyWith(duration: choice.value)),
 );
