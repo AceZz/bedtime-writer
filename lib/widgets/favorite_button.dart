@@ -6,7 +6,7 @@ import '../story/backend/firebase.dart';
 
 /// Saves the story.
 class FavoriteButton extends StatelessWidget {
-  final savePayload payload;
+  final SavePayload payload;
   final double iconSize;
 
   const FavoriteButton({Key? key, required this.payload, required this.iconSize})
@@ -48,14 +48,14 @@ class FavoriteButton extends StatelessWidget {
 }
 
 /// Helper class that wraps a save payload.
-class savePayload {
+class SavePayload {
   final String title;
   final String story;
   final String storyImage;
   final String prompt;
   final String imagePrompt;
 
-  const savePayload({
+  const SavePayload({
     required this.title,
     required this.story,
     required this.storyImage,

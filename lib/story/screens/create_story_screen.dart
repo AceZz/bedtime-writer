@@ -29,7 +29,7 @@ class CreateStoryScreen extends ConsumerWidget {
 
     // Displays the story.
     if (story != null && storyImage != null) {
-      var payload = savePayload(
+      var payload = SavePayload(
         title: state.storyParams.title,
         story: story,
         storyImage: storyImage,

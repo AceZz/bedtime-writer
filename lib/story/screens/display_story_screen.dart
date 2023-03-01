@@ -31,8 +31,7 @@ class DisplayStoryScreen extends StatelessWidget {
           );
         }
 
-        //TODO: add FavoriteButton with corresponding payload
-        String story = data == null ? '' : data['text'];
+        String story = data?['text'] ?? '';
         Widget shareButton = ShareButton(
           iconSize: 30,
           text: 'Hey! Check out this amazing story I made with '
