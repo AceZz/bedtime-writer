@@ -31,6 +31,21 @@ class StoryWidget extends StatelessWidget {
         .toLowerCase()
         .endsWith('the end.')) {
       return trimmedText.substring(0, trimmedText.length - 9);
+    } else if (trimmedText
+        .substring(trimmedText.length - 8, trimmedText.length)
+        .toLowerCase()
+        .endsWith('the end!')) {
+      return trimmedText.substring(0, trimmedText.length - 9);
+    } else if (trimmedText
+        .substring(trimmedText.length - 8, trimmedText.length)
+        .toLowerCase()
+        .endsWith('the end...')) {
+      return trimmedText.substring(0, trimmedText.length - 9);
+    } else if (trimmedText
+        .substring(trimmedText.length - 7, trimmedText.length)
+        .toLowerCase()
+        .endsWith('the end')) {
+      return trimmedText.substring(0, trimmedText.length - 8);
     }
     return trimmedText;
   }
