@@ -9,7 +9,8 @@ class FavoriteButton extends StatelessWidget {
   final SavePayload payload;
   final double iconSize;
 
-  const FavoriteButton({Key? key, required this.payload, required this.iconSize})
+  const FavoriteButton(
+      {Key? key, required this.payload, required this.iconSize})
       : super(key: key);
 
   Future _onSave(BuildContext context) async {
