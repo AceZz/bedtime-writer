@@ -1,107 +1,105 @@
 import 'package:bedtime_writer/story/states/story_params.dart';
 import 'package:test/test.dart';
 
-const partialCharacter = Character(name: 'name', type: 'type', flaw: 'flaw');
+const partialCharacter = Character(
+  name: 'Someone',
+  type: 'some type',
+  flaw: 'has a flaw',
+);
 const fullCharacter = Character(
-  name: 'name',
-  type: 'type',
-  flaw: 'flaw',
-  power: 'power',
-  challenge: 'challenge',
+  name: 'Someone',
+  type: 'some type',
+  flaw: 'has a flaw',
+  power: 'has a power',
+  challenge: 'having a challenge',
 );
 const partialStory = StoryParams(
+  style: 'Handersen',
   character: partialCharacter,
-  age: 7,
   duration: 3,
-  place: 'place',
+  place: 'at some place',
 );
 const fullStory = StoryParams(
+  style: 'Handersen',
   character: fullCharacter,
-  age: 7,
   duration: 3,
-  place: 'at place',
-  object: 'object',
-  moral: 'moral',
+  place: 'at some place',
+  object: 'some object',
+  moral: 'some moral',
 );
 
 void main() {
   group('Character', () {
     test('.copyWith() updates the fields', () {
       var copy = partialCharacter.copyWith(
-          flaw: 'another flaw', power: 'power', challenge: 'challenge');
+        flaw: 'has another flaw',
+        power: 'has a power',
+        challenge: 'having a challenge',
+      );
 
-      expect(copy.name, 'name');
-      expect(copy.type, 'type');
-      expect(copy.flaw, 'another flaw');
-      expect(copy.power, 'power');
-      expect(copy.challenge, 'challenge');
+      expect(copy.name, 'Someone');
+      expect(copy.type, 'some type');
+      expect(copy.flaw, 'has another flaw');
+      expect(copy.power, 'has a power');
+      expect(copy.challenge, 'having a challenge');
     });
 
     test('.description is the full description', () {
       expect(
         fullCharacter.description,
-        ' The main character of the story is name, a type. '
-        'It has a flaw: flaw. '
-        'It has a power: power. '
-        'It will be challenged with challenge.',
+        ' The protagonist is Someone. It has a flaw. '
+        'It has a power. '
+        'It is challenged with having a challenge.',
       );
     });
 
     test('.description is the partial description', () {
       expect(
-          partialCharacter.description,
-          ' The main character of the story is name, a type. '
-          'It has a flaw: flaw.');
+        partialCharacter.description,
+        ' The protagonist is Someone. It has a flaw.',
+      );
     });
   });
 
   group('StoryParams', () {
     test('.copyWith() updates the fields', () {
       var copy = partialStory.copyWith(
-        character: partialStory.character?.copyWith(flaw: 'another flaw'),
-        age: 3,
+        character: partialStory.character?.copyWith(flaw: 'has another flaw'),
         duration: 10,
-        place: 'another place',
-        object: 'object',
-        moral: 'moral',
+        place: 'at another place',
+        object: 'another object',
+        moral: 'another moral',
       );
 
-      expect(copy.character!.name, 'name');
-      expect(copy.character!.type, 'type');
-      expect(copy.character!.flaw, 'another flaw');
-      expect(copy.age, 3);
+      expect(copy.character!.name, 'Someone');
+      expect(copy.character!.type, 'some type');
+      expect(copy.character!.flaw, 'has another flaw');
       expect(copy.duration, 10);
-      expect(copy.place, 'another place');
-      expect(copy.object, 'object');
-      expect(copy.moral, 'moral');
+      expect(copy.place, 'at another place');
+      expect(copy.object, 'another object');
+      expect(copy.moral, 'another moral');
     });
 
     test('.prompt is the full prompt', () {
       expect(
         fullStory.prompt,
-        'Act as a storyteller. '
-        'Tell a bedtime story, with details, for a 7-year old. '
-        'It should last about 3 minutes. '
-        'The main character of the story is name, a type. '
-        'It has a flaw: flaw. '
-        'It has a power: power. '
-        'It will be challenged with challenge. '
-        'The story happens at place. '
-        'This object shall be important: object. '
-        'The story shall end well and with this moral: moral.',
+        'Write a fairy tale, in the style of Handersen. '
+        'The protagonist is Someone. It has a flaw. It has a power. '
+        'It is challenged with having a challenge. '
+        'The story happens at some place. '
+        'The protagonist finds some object in the journey. '
+        'The moral is some moral. '
+        'The length is about 300 words.'
       );
     });
 
     test('.prompt is the partial prompt', () {
       expect(
         partialStory.prompt,
-        'Act as a storyteller. '
-        'Tell a bedtime story, with details, for a 7-year old. '
-        'It should last about 3 minutes. '
-        'The main character of the story is name, a type. '
-        'It has a flaw: flaw. '
-        'The story happens place. '
-        'The story shall end well.',
+        'Write a fairy tale, in the style of Handersen. '
+        'The protagonist is Someone. It has a flaw. '
+        'The story happens at some place. '
+        'The length is about 300 words.'
       );
     });
   });
@@ -153,7 +151,6 @@ void main() {
       var choice3 = Choice<String>(
         text: 'choice 3',
         value: 'moral 3',
-        isAvailable: (story) => story.age == 7,
       );
 
       var question = Question(
@@ -184,7 +181,6 @@ void main() {
     var choice3 = Choice<String>(
       text: 'choice 3',
       value: 'moral 3',
-      isAvailable: (story) => story.age == 7,
     );
 
     var question = Question(

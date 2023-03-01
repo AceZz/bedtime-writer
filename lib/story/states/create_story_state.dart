@@ -2,12 +2,19 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data.dart';
 import 'story_params.dart';
 
 final _random = new Random();
+
+/// List of writing styles.
+const List<String> _styles = [
+  'the Arabian Nights',
+  'Hans Christian Andersen',
+  'the Brothers Grimm',
+  'Charles Perrault',
+];
 
 /// State for the story creation feature.
 ///
@@ -123,29 +130,40 @@ class CreateStoryState {
 class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
   CreateStoryStateNotifier()
       : super(CreateStoryState(
-          storyParams: StoryParams(),
+          storyParams: StoryParams(style: ''),
           questions: [],
           numRandom: 0,
           story: null,
           storyImage: null,
         ));
 
+  String _getRandomStyle() {
+    final int randomIndex = Random().nextInt(_styles.length);
+    return _styles[randomIndex];
+  }
+
+  List<Question> _getQuestions() {
+    List<Question> variableQuestions = [
+      placeQuestion,
+      objectQuestion,
+      powerQuestion,
+      flawQuestion,
+      challengeQuestion,
+      moralQuestion,
+    ];
+    variableQuestions.shuffle();
+    var sampleQuestions = variableQuestions.take(2);
+    return [characterQuestion, ...sampleQuestions, durationQuestion];
+  }
+
   /// Reset the StoryState.
   void reset() async {
-    final prefs = await SharedPreferences.getInstance();
     state = CreateStoryState(
-      storyParams: StoryParams(age: prefs.getInt('age') ?? 5),
-      questions: [
-        characterQuestion,
-        placeQuestion,
-        objectQuestion,
-        powerQuestion,
-        flawQuestion,
-        challengeQuestion,
-        moralQuestion,
-        durationQuestion,
-      ],
-      numRandom: 4,
+      storyParams: StoryParams(
+        style: _getRandomStyle(),
+      ),
+      questions: _getQuestions(),
+      numRandom: 0,
       story: null,
       storyImage: null,
     );
