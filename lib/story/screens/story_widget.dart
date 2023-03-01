@@ -104,7 +104,7 @@ class StoryWidget extends StatelessWidget {
     Widget shareWidget = ShareButton(
       iconSize: 40,
       text: 'Hey! Check out this amazing story I made with '
-          'Bedtime stories: \n\n $story',
+          'Dreamy Tales: \n\n $story',
     );
 
     List<Widget> bottomWidgets = [
