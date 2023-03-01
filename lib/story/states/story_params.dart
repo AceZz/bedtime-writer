@@ -37,18 +37,16 @@ class Character {
     );
   }
 
-  String get _descriptionFlaw => flaw == null ? '' : ' It has a flaw: $flaw.';
+  String get _descriptionFlaw => flaw == null ? '' : ' It $flaw.';
 
-  String get _descriptionPower =>
-      power == null ? '' : ' It has a power: $power.';
+  String get _descriptionPower => power == null ? '' : ' It $power.';
 
   String get _descriptionChallenge =>
-      challenge == null ? '' : ' It will be challenged with $challenge.';
+      challenge == null ? '' : ' It is challenged with $challenge.';
 
   /// Returns a description of this character, suitable for insertion into a
   /// prompt.
-  String get description =>
-      ' The main character of the story is $name, a $type.'
+  String get description => ' The protagonist is $name.'
       '$_descriptionFlaw'
       '$_descriptionPower'
       '$_descriptionChallenge';
@@ -63,34 +61,34 @@ class Character {
 /// the fields are not initialized, a consistent prompt should be produced.
 @immutable
 class StoryParams {
+  final String style;
   final Character? character;
 
   /// The age of the child.
-  final int? age;
   final int? duration;
   final String? place;
   final String? object;
   final String? moral;
 
   const StoryParams({
+    required this.style,
     this.character,
-    this.age,
     this.duration,
     this.place,
     this.object,
     this.moral,
   });
 
-  StoryParams copyWith(
-      {Character? character,
-      int? age,
-      int? duration,
-      String? place,
-      String? object,
-      String? moral}) {
+  StoryParams copyWith({
+    Character? character,
+    int? duration,
+    String? place,
+    String? object,
+    String? moral,
+  }) {
     return StoryParams(
+      style: this.style,
       character: character ?? this.character,
-      age: age ?? this.age,
       duration: duration ?? this.duration,
       place: place ?? this.place,
       object: object ?? this.object,
@@ -98,27 +96,33 @@ class StoryParams {
     );
   }
 
-  String get _promptDuration =>
-      duration == null ? '' : ' It should last about $duration minutes.';
+  String get _promptStyle => ' in the style of $style.';
+
+  int? get _numWords {
+    return duration == null ? null : 100 * duration!;
+  }
+
+  String get _promptNumWords {
+    int? numWords = _numWords;
+    return numWords == null
+        ? ''
+        : ' The length is about $numWords words.';
+  }
 
   String get _promptPlace => place == null ? '' : ' The story happens $place.';
 
   String get _promptObject =>
-      object == null ? '' : ' This object shall be important: $object.';
+      object == null ? '' : ' The protagonist finds $object in the journey.';
 
-  String get _promptMoral => moral == null
-      ? ' The story shall end well.'
-      : ' The story shall end well and with this moral: $moral.';
+  String get _promptMoral => moral == null ? '' : ' The moral is $moral.';
 
   /// Returns a prompt for this story.
-  String get prompt =>
-      'Act as a storyteller. Tell a bedtime story, with details, for a '
-      '${age ?? "5"}-year old.'
-      '$_promptDuration'
+  String get prompt => 'Write a fairy tale,$_promptStyle'
       '${character?.description ?? ""}'
       '$_promptPlace'
       '$_promptObject'
-      '$_promptMoral';
+      '$_promptMoral'
+      '$_promptNumWords';
 
   /// Returns a title for this story.
   String get title =>
@@ -174,6 +178,7 @@ class Question {
   final String text;
   final List<Choice> choices;
   final StoryParams Function(StoryParams story, Choice choice) answer;
+  final bool shuffleChoices;
 
   /// Whether this question can be answered randomly.
   ///
@@ -186,6 +191,7 @@ class Question {
     required this.choices,
     required this.answer,
     this.randomAllowed = true,
+    this.shuffleChoices = true,
   });
 
   List<Choice> availableChoices(StoryParams story) =>
