@@ -1,11 +1,11 @@
 {
-    "name": "Bedtime writer",
-    "short_name": "Bedtime writer",
+    "name": "Dreamy Tales",
+    "short_name": "Dreamy Tales",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",
     "theme_color": "#hexcode",
-    "description": "A new Flutter project.",
+    "description": "Dreamy Tales",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
