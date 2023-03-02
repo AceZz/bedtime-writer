@@ -1,13 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
+import '../../widgets/share_button.dart';
+import '../../widgets/favorite_button.dart';
 import '../backend/api_calls.dart';
-import '../backend/firebase.dart';
 import '../states/create_story_state.dart';
 import '../states/story_params.dart';
 import 'story_image.dart';
@@ -30,7 +29,7 @@ class CreateStoryScreen extends ConsumerWidget {
 
     // Displays the story.
     if (story != null && storyImage != null) {
-      var payload = _SavePayload(
+      var payload = SavePayload(
         title: state.storyParams.title,
         story: story,
         storyImage: storyImage,
@@ -38,21 +37,25 @@ class CreateStoryScreen extends ConsumerWidget {
         imagePrompt: state.storyParams.imagePrompt,
       );
 
+      Widget saveButton = FavoriteButton(
+        payload: payload,
+        iconSize: 30,
+      );
+
+      Widget shareButton = ShareButton(
+        iconSize: 30,
+        text: 'Hey! Check out this amazing story I made with '
+            'Bedtime stories: \n\n $story',
+      );
+
       return AppScaffold(
         appBarTitle: 'Story',
         scrollableAppBar: true,
+        actions: [saveButton, shareButton],
         child: StoryWidget(
           title: payload.title,
           story: payload.story,
           image: StoryImage(url: payload.storyImage, width: 380, height: 380),
-          extra: [
-            Center(
-              child: _SaveButton(
-                payload: payload,
-                iconSize: 40,
-              ),
-            )
-          ],
         ),
       );
     }
@@ -93,66 +96,6 @@ class CreateStoryScreen extends ConsumerWidget {
     return AppScaffold(
         appBarTitle: 'New story',
         child: _QuestionContent(question: state.currentQuestion));
-  }
-}
-
-/// Helper class that wraps a save payload.
-class _SavePayload {
-  final String title;
-  final String story;
-  final String storyImage;
-  final String prompt;
-  final String imagePrompt;
-
-  const _SavePayload({
-    required this.title,
-    required this.story,
-    required this.storyImage,
-    required this.prompt,
-    required this.imagePrompt,
-  });
-}
-
-/// Saves the story.
-class _SaveButton extends StatelessWidget {
-  final _SavePayload payload;
-  final double iconSize;
-
-  const _SaveButton({Key? key, required this.payload, required this.iconSize})
-      : super(key: key);
-
-  Future _onSave(BuildContext context) async {
-    return Future.wait([
-      // Adds the story to Firestore.
-      storiesReference.add({
-        'date': Timestamp.now(),
-        'title': payload.title,
-        'text': payload.story,
-        'prompt': payload.prompt,
-        'imagePrompt': payload.imagePrompt,
-      }),
-      // Downloads the image.
-      http.get(Uri.parse(payload.storyImage))
-    ]).then((results) {
-      // Saves the image in Storage.
-      var story = results[0] as DocumentReference;
-      var image = results[1] as http.Response;
-      return storyImageReference(story.id).putData(image.bodyBytes);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Builder(
-      builder: (context) => IconButton(
-        iconSize: iconSize,
-        onPressed: () => _onSave(context),
-        icon: Icon(
-          Icons.favorite,
-          color: Theme.of(context).textTheme.bodyMedium?.color,
-        ),
-      ),
-    );
   }
 }
 

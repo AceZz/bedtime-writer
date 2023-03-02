@@ -1,4 +1,4 @@
-# Bedtime writer
+# Dreamy Tales
 
 ## License
 
