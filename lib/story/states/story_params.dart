@@ -104,9 +104,7 @@ class StoryParams {
 
   String get _promptNumWords {
     int? numWords = _numWords;
-    return numWords == null
-        ? ''
-        : ' The length is about $numWords words.';
+    return numWords == null ? '' : ' The length is about $numWords words.';
   }
 
   String get _promptPlace => place == null ? '' : ' The story happens $place.';
