@@ -8,6 +8,7 @@ class AppScaffold extends StatelessWidget {
   final bool showAppBar;
   final String appBarTitle;
   final bool scrollableAppBar;
+  final List<Widget>? actions;
 
   const AppScaffold({
     Key? key,
@@ -15,6 +16,7 @@ class AppScaffold extends StatelessWidget {
     this.showAppBar = true,
     this.appBarTitle = '',
     this.scrollableAppBar = false,
+    this.actions,
   }) : super(key: key);
 
   @override
@@ -40,6 +42,7 @@ class AppScaffold extends StatelessWidget {
                 floating: true,
                 snap: true,
                 title: titleWidget,
+                actions: actions,
               ),
             ],
         body: screenBodyWidget);
