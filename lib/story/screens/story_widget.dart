@@ -21,26 +21,20 @@ class StoryWidget extends StatelessWidget {
   // Removes "The End." within story if present to avoid duplicate
   String removeTheEnd(String text) {
     String trimmedText = text.trim();
-    if (trimmedText
-        .substring(trimmedText.length - 8, trimmedText.length)
-        .toLowerCase()
-        .endsWith('the end.')) {
-      return trimmedText.substring(0, trimmedText.length - 9);
-    } else if (trimmedText
-        .substring(trimmedText.length - 8, trimmedText.length)
-        .toLowerCase()
-        .endsWith('the end!')) {
-      return trimmedText.substring(0, trimmedText.length - 9);
-    } else if (trimmedText
-        .substring(trimmedText.length - 8, trimmedText.length)
-        .toLowerCase()
-        .endsWith('the end...')) {
-      return trimmedText.substring(0, trimmedText.length - 9);
-    } else if (trimmedText
-        .substring(trimmedText.length - 7, trimmedText.length)
-        .toLowerCase()
-        .endsWith('the end')) {
-      return trimmedText.substring(0, trimmedText.length - 8);
+    final endsToRemove = [
+      'the end.',
+      'the end!',
+      'the end...',
+      'the end',
+    ];
+
+    for (var end in endsToRemove) {
+      if (trimmedText
+          .substring(trimmedText.length - end.length)
+          .toLowerCase()
+          .endsWith(end)) {
+        return trimmedText.substring(0, trimmedText.length - end.length - 1);
+      }
     }
     return trimmedText;
   }
