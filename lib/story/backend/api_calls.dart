@@ -9,18 +9,24 @@ Future<String> callOpenAiTextGeneration({required String prompt}) async {
   // Parameters for API call
   final apiKey = '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';
   final promptJson = jsonEncode({
-    'prompt': prompt,
-    'model': 'text-davinci-003',
+    'messages': [
+      {
+        'role': 'system',
+        'content': 'Act as a professional storyteller for children.'
+      },
+      {'role': 'user', 'content': prompt},
+    ],
+    'model': 'gpt-3.5-turbo',
     'max_tokens': 3900,
-    'temperature': 0.9,
-    'frequency_penalty': 0,
-    'presence_penalty': 0,
+    'temperature': 1.0,
+    'presence_penalty': 0.7,
+    'frequency_penalty': 0.3,
   });
 
   // POST the API call
   try {
     final response = await http.post(
-      Uri.parse('https://api.openai.com/v1/completions'),
+      Uri.parse('https://api.openai.com/v1/chat/completions'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $apiKey',
@@ -32,7 +38,7 @@ Future<String> callOpenAiTextGeneration({required String prompt}) async {
     if (response.statusCode == 200) {
       final responseJson =
           jsonDecode(Utf8Decoder().convert(response.bodyBytes));
-      return responseJson['choices'][0]['text'];
+      return responseJson['choices'][0]['message']['content'];
     } else {
       throw Exception('Failed to generate text');
     }
