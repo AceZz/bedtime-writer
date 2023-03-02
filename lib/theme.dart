@@ -22,7 +22,7 @@ var theme = ThemeData(
     headlineLarge: GoogleFonts.handlee(
       color: onPrimary,
       fontWeight: FontWeight.w400,
-      fontSize: 90,
+      fontSize: 94,
     ),
     // Page title (question, story title, etc.)
     headlineMedium: GoogleFonts.outfit(
