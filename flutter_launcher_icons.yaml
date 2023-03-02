@@ -1,0 +1,11 @@
+# Please run the following command lines after making updates
+# flutter pub get
+# flutter pub run flutter_launcher_icons
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/icon/app_icon.png"

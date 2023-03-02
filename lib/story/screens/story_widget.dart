@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../widgets/index.dart';
 import 'story_image.dart';
 
 /// Displays a story: [title], [image], [story] and a Share button.
@@ -11,26 +10,31 @@ class StoryWidget extends StatelessWidget {
   final String title;
   final String story;
   final Widget image;
-  late final List<Widget> extra;
 
   StoryWidget({
     Key? key,
     required this.title,
     required this.story,
     required this.image,
-    List<Widget>? extra,
-  }) : super(key: key) {
-    this.extra = extra ?? [];
-  }
+  }) : super(key: key);
 
   // Removes "The End." within story if present to avoid duplicate
   String removeTheEnd(String text) {
     String trimmedText = text.trim();
-    if (trimmedText
-        .substring(trimmedText.length - 8, trimmedText.length)
-        .toLowerCase()
-        .endsWith('the end.')) {
-      return trimmedText.substring(0, trimmedText.length - 9);
+    final endsToRemove = [
+      'the end.',
+      'the end!',
+      'the end...',
+      'the end',
+    ];
+
+    for (var end in endsToRemove) {
+      if (trimmedText
+          .substring(trimmedText.length - end.length)
+          .toLowerCase()
+          .endsWith(end)) {
+        return trimmedText.substring(0, trimmedText.length - end.length - 1);
+      }
     }
     return trimmedText;
   }
@@ -101,16 +105,8 @@ class StoryWidget extends StatelessWidget {
       ),
     );
 
-    Widget shareWidget = ShareButton(
-      iconSize: 40,
-      text: 'Hey! Check out this amazing story I made with '
-          'Bedtime stories: \n\n $story',
-    );
-
     List<Widget> bottomWidgets = [
-      shareWidget,
       theEndWidget,
-      ...extra,
     ];
 
     Widget iconsRow = Padding(
