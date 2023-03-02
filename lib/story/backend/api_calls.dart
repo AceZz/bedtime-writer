@@ -14,7 +14,7 @@ Future<String> callOpenAiTextGeneration({required String prompt}) async {
         'role': 'system',
         'content': 'Act as a professional storyteller for children.'
       },
-      {'role': 'user', 'content': '$prompt'},
+      {'role': 'user', 'content': prompt},
     ],
     'model': 'gpt-3.5-turbo',
     'max_tokens': 3900,
