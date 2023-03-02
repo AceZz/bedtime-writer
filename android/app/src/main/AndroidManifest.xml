@@ -5,7 +5,7 @@
 
 
     <application
-        android:label="Bedtime writer"
+        android:label="Dreamy Tales"
         tools:replace="android:label"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true">
