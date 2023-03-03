@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -30,7 +32,7 @@ class StoryWidget extends StatelessWidget {
 
     for (var end in endsToRemove) {
       if (trimmedText
-          .substring(trimmedText.length - end.length)
+          .substring(max(0, trimmedText.length - end.length))
           .toLowerCase()
           .endsWith(end)) {
         return trimmedText.substring(0, trimmedText.length - end.length - 1);
