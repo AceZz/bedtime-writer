@@ -4,7 +4,17 @@
 
 All rights reserved to Tristan Stampfler and Pierre Wan-Fat
 
-## Code organization
+## Build
+
+Create a `.env` file in the same folder as the `pubspec.lock` file, with the following content:
+
+```
+USE_FIREBASE_EMULATORS=false
+```
+
+## Development
+
+### Code organization
 
 * `lib/`: contains the Flutter code
   * `feature_name/`: everything related to a specific feature
@@ -17,10 +27,13 @@ All rights reserved to Tristan Stampfler and Pierre Wan-Fat
   * `router.dart`: the routes of the application
   * `theme.dart`: the theme for the entire application
 
-## Environment file
+### Backend emulation
 
-To use the Firebase emulators, create a `.env` file with the following content:
+Before deploying your functions to Google Cloud, test them locally with the emulators. To use the
+Firebase emulators, give the `.env` file the following content:
 
 ```
 USE_FIREBASE_EMULATORS=true
 ```
+
+You can then launch them by going to the `functions` folder and run `npm run emulators`.
