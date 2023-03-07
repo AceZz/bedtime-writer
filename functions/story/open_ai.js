@@ -13,6 +13,10 @@ export function callOpenAiCompletions(prompt) {
       messages: [
         {
           role: "system",
+          content: "Act as a professional writer for children."
+        },
+        {
+          role: "user",
           content: prompt,
         },
       ],
@@ -20,7 +24,37 @@ export function callOpenAiCompletions(prompt) {
       max_tokens: 3900,
       temperature: 1.0,
       frequency_penalty: 0.7,
-      presence_penalty: 0.3,
+      presence_penalty: 0.2,
+    })
+    .then((response) => response.data.choices[0].message.content);
+}
+
+export function callOpenAiCompletionsForImagePrompt(prompt, story, promptForImagePrompt) {
+  return openai
+    .createChatCompletion({
+      messages: [
+        {
+          role: "system",
+          content: "Act as a professional illustrator for children."
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+        {
+          role: "assistant",
+          content: story,
+        },
+        {
+          role: "user",
+          content: promptForImagePrompt,
+        },
+      ],
+      model: "gpt-3.5-turbo",
+      max_tokens: 100,
+      temperature: 0.4,
+      frequency_penalty: 0,
+      presence_penalty: 0,
     })
     .then((response) => response.data.choices[0].message.content);
 }

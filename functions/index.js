@@ -11,10 +11,12 @@ import { getFirestore, Timestamp } from "firebase-admin/firestore";
 
 import {
   callOpenAiCompletions,
+  callOpenAiCompletionsForImagePrompt,
   callOpenAiImagesGeneration,
 } from "./story/open_ai.js";
 import {
   getStoryTitle,
+  getPromptForImagePrompt,
   getImagePrompt,
   getPrompt,
 } from "./story/story_params.js";
@@ -44,7 +46,7 @@ async function callOpenAi(storyParams) {
   var data = {
     title: getStoryTitle(storyParams),
     prompt: getPrompt(storyParams),
-    imagePrompt: getImagePrompt(storyParams),
+    promptForImagePrompt: getPromptForImagePrompt(storyParams),
   };
 
   if (process.env.DEBUG === "true") {
@@ -55,13 +57,15 @@ async function callOpenAi(storyParams) {
     };
   }
 
-  const [story, imageUrl] = await Promise.all([
-    callOpenAiCompletions(data.prompt),
-    callOpenAiImagesGeneration(data.imagePrompt, 512),
-  ]);
+// Call callOpenAiCompletions first, and then callOpenAiImagesGeneration with the result as an argument
+  const story = await callOpenAiCompletions(data.prompt);
+  const imagePrompt = await callOpenAiCompletionsForImagePrompt(data.prompt, story, data.promptForImagePrompt);
+  const imageUrl = await callOpenAiImagesGeneration(imagePrompt, 512);
+
   return {
     ...data,
     story: story,
+    imagePrompt: imagePrompt,
     imageUrl: imageUrl,
   };
 }
@@ -72,6 +76,7 @@ async function addToFirestore(result) {
     title: result.title,
     text: result.story.trim(),
     prompt: result.prompt,
+    promptForImagePrompt: result.promptForImagePrompt,
     imagePrompt: result.imagePrompt,
   };
   return await storiesRef.add(data).then((document) => document.id);
