@@ -21,7 +21,7 @@ export function callOpenAiCompletions(prompt) {
         },
       ],
       model: "gpt-3.5-turbo",
-      max_tokens: 3900,
+      max_tokens: 1200,
       temperature: 1.0,
       frequency_penalty: 0.7,
       presence_penalty: 0.2,
