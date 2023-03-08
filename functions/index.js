@@ -17,7 +17,6 @@ import {
 import {
   getStoryTitle,
   getPromptForImagePrompt,
-  getImagePrompt,
   getPrompt,
 } from "./story/story_params.js";
 
