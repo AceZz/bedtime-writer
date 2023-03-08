@@ -57,9 +57,13 @@ async function callOpenAi(storyParams) {
     };
   }
 
-// Call callOpenAiCompletions first, and then callOpenAiImagesGeneration with the result as an argument
+  // Call callOpenAiCompletions first, and then callOpenAiImagesGeneration with the result as an argument
   const story = await callOpenAiCompletions(data.prompt);
-  const imagePrompt = await callOpenAiCompletionsForImagePrompt(data.prompt, story, data.promptForImagePrompt);
+  const imagePrompt = await callOpenAiCompletionsForImagePrompt(
+    data.prompt,
+    story,
+    data.promptForImagePrompt
+  );
   const imageUrl = await callOpenAiImagesGeneration(imagePrompt, 512);
 
   return {
@@ -93,4 +97,3 @@ async function uploadToStorage(url, storyId) {
     }).on("error", () => reject);
   });
 }
-

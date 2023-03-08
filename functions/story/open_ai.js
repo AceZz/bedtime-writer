@@ -13,7 +13,7 @@ export function callOpenAiCompletions(prompt) {
       messages: [
         {
           role: "system",
-          content: "Act as a professional writer for children."
+          content: "Act as a professional writer for children.",
         },
         {
           role: "user",
@@ -29,13 +29,17 @@ export function callOpenAiCompletions(prompt) {
     .then((response) => response.data.choices[0].message.content);
 }
 
-export function callOpenAiCompletionsForImagePrompt(prompt, story, promptForImagePrompt) {
+export function callOpenAiCompletionsForImagePrompt(
+  prompt,
+  story,
+  promptForImagePrompt
+) {
   return openai
     .createChatCompletion({
       messages: [
         {
           role: "system",
-          content: "Act as a professional illustrator for children."
+          content: "Act as a professional illustrator for children.",
         },
         {
           role: "user",
