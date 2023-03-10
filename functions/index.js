@@ -10,9 +10,7 @@ import { getStorage } from "firebase-admin/storage";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 
 import {
-  callOpenAiCompletions,
-  callOpenAiCompletionsForImagePrompt,
-  callOpenAiImagesGeneration,
+  callOpenAi
 } from "./story/open_ai.js";
 import {
   getStoryTitle,
@@ -40,38 +38,6 @@ export const addStory = https.onCall(async (storyParams) => {
   await uploadToStorage(result.imageUrl, storyId);
   return storyId;
 });
-
-async function callOpenAi(storyParams) {
-  var data = {
-    title: getStoryTitle(storyParams),
-    prompt: getPrompt(storyParams),
-    promptForImagePrompt: getPromptForImagePrompt(storyParams),
-  };
-
-  if (process.env.DEBUG === "true") {
-    return {
-      ...data,
-      story: "test",
-      imageUrl: "https://avatars.githubusercontent.com/u/11032610?v=4",
-    };
-  }
-
-  // Call callOpenAiCompletions first, and then callOpenAiImagesGeneration with the result as an argument
-  const story = await callOpenAiCompletions(data.prompt);
-  const imagePrompt = await callOpenAiCompletionsForImagePrompt(
-    data.prompt,
-    story,
-    data.promptForImagePrompt
-  );
-  const imageUrl = await callOpenAiImagesGeneration(imagePrompt, 512);
-
-  return {
-    ...data,
-    story: story,
-    imagePrompt: imagePrompt,
-    imageUrl: imageUrl,
-  };
-}
 
 async function addToFirestore(result) {
   const data = {

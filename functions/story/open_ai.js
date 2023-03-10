@@ -1,5 +1,11 @@
 import { Configuration, OpenAIApi } from "openai";
 
+import {
+  getStoryTitle,
+  getPromptForImagePrompt,
+  getPrompt,
+} from "./story_params.js";
+
 import process from "node:process";
 
 const configuration = new Configuration({
@@ -7,7 +13,59 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-export function callOpenAiCompletions(prompt) {
+export async function callOpenAi(storyParams) {
+  var data = {
+    title: getStoryTitle(storyParams),
+    prompt: getPrompt(storyParams),
+    promptForImagePrompt: getPromptForImagePrompt(storyParams),
+  };
+
+  if (process.env.DEBUG === "true") {
+    return {
+      ...data,
+      story: "test",
+      imageUrl: "https://avatars.githubusercontent.com/u/11032610?v=4",
+    };
+  }
+
+  // Call callOpenAiCompletions first, and then callOpenAiImagesGeneration with the result as an argument
+  // Story call
+  const startStory = performance.now();
+  const story = await callOpenAiCompletions(data.prompt);
+  const endStory = performance.now();
+  console.log(`Story: ${endStory - startStory} milliseconds.`);
+
+  // ImagePrompt call
+  const startImagePrompt = performance.now();
+  const imagePrompt = await callOpenAiCompletionsForImagePrompt(
+    data.prompt,
+    story,
+    data.promptForImagePrompt
+  );
+  const endImagePrompt = performance.now();
+  console.log(
+    `Image prompt: ${endImagePrompt - startImagePrompt} milliseconds.`
+  );
+
+  // Image generation call
+  const startImageGeneration = performance.now();
+  const imageUrl = await callOpenAiImagesGeneration(imagePrompt, 512);
+  const endImageGeneration = performance.now();
+  console.log(
+    `Image generation: ${
+      endImageGeneration - startImageGeneration
+    } milliseconds.`
+  );
+
+  return {
+    ...data,
+    story: story,
+    imagePrompt: imagePrompt,
+    imageUrl: imageUrl,
+  };
+}
+
+function callOpenAiCompletions(prompt) {
   return openai
     .createChatCompletion({
       messages: [
@@ -29,7 +87,7 @@ export function callOpenAiCompletions(prompt) {
     .then((response) => response.data.choices[0].message.content);
 }
 
-export function callOpenAiCompletionsForImagePrompt(
+function callOpenAiCompletionsForImagePrompt(
   prompt,
   story,
   promptForImagePrompt
@@ -63,7 +121,7 @@ export function callOpenAiCompletionsForImagePrompt(
     .then((response) => response.data.choices[0].message.content);
 }
 
-export function callOpenAiImagesGeneration(imagePrompt, size = 512) {
+function callOpenAiImagesGeneration(imagePrompt, size = 512) {
   return openai
     .createImage({
       prompt: imagePrompt,
