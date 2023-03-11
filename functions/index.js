@@ -10,10 +10,7 @@ import { initializeApp } from "firebase-admin/app";
 import { getStorage } from "firebase-admin/storage";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 
-import {
-  callOpenAiCompletions,
-  callOpenAiImagesGeneration,
-} from "./story/open_ai.js";
+import { callOpenAi } from "./story/open_ai.js";
 import {
   getStoryTitle,
   getImagePrompt,
@@ -61,21 +58,6 @@ function getStoryTitleAndPrompt(storyParams) {
     title: getStoryTitle(storyParams),
     prompt: getPrompt(storyParams),
     imagePrompt: getImagePrompt(storyParams),
-  };
-}
-
-async function callOpenAi(storyParams) {
-  let story = getStoryTitleAndPrompt(storyParams);
-
-  const [storyText, imageUrl] = await Promise.all([
-    callOpenAiCompletions(story.prompt),
-    callOpenAiImagesGeneration(story.imagePrompt, 512),
-  ]);
-
-  return {
-    ...story,
-    story: storyText,
-    imageUrl: imageUrl,
   };
 }
 
@@ -143,4 +125,3 @@ async function setStoryImagePath(storyId, storyImagePath) {
     },
   });
 }
-

@@ -77,3 +77,24 @@ function getNumWordsPrompt(numWords) {
     ? ""
     : ` The length is about ${numWords} words.`;
 }
+
+// This is the basic way to get a prompt. OpenAi calls made by users should use GPT3.5 generated prompts for images.
+export function getImagePrompt(storyParams) {
+  return (
+    getIntroImagePrompt() +
+    getCharacterImagePrompt(storyParams.character) +
+    getPlaceImagePrompt(storyParams.place)
+  );
+}
+
+function getIntroImagePrompt() {
+  return "Dreamy and whimsical beautiful illustration";
+}
+
+function getCharacterImagePrompt(character) {
+  return character?.type !== undefined ? ` of a ${character.type}.` : ".";
+}
+
+function getPlaceImagePrompt(place) {
+  return place === undefined ? "" : ` It takes place ${place}.`;
+}
