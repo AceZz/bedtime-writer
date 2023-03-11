@@ -10,6 +10,7 @@ import { initializeApp } from "firebase-admin/app";
 import { getStorage } from "firebase-admin/storage";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 
+import { getUid } from "./auth.js";
 import {
   callOpenAiCompletions,
   callOpenAiImagesGeneration,
@@ -31,7 +32,9 @@ const storageBucket = getStorage().bucket();
  * This call expects story parameters.
  * It returns the ID of the created Firestore document.
  */
-export const addStory = https.onCall(async (storyParams) => {
+export const addStory = https.onCall(async (storyParams, context) => {
+  const uid = getUid(context);
+
   let story;
   if (process.env.FAKE_DATA === "true") {
     logger.info("Generate fake data");
@@ -42,7 +45,7 @@ export const addStory = https.onCall(async (storyParams) => {
     logger.info("Open AI data was generated");
   }
 
-  const storyId = await addToFirestore(story);
+  const storyId = await addToFirestore(story, uid);
   logger.info(`Story ${storyId} was added to Firestore`);
 
   return storyId;
@@ -79,14 +82,15 @@ async function callOpenAi(storyParams) {
   };
 }
 
-async function addToFirestore(result) {
-  const payload = getFirestoreStoryPayload(result);
+async function addToFirestore(result, uid) {
+  const payload = getFirestoreStoryPayload(result, uid);
   const document = await storiesRef.add(payload);
   return document.id;
 }
 
-function getFirestoreStoryPayload(result) {
+function getFirestoreStoryPayload(result, uid) {
   return {
+    author: uid,
     date: Timestamp.now(),
     title: result.title,
     text: result.story.trim(),
@@ -113,6 +117,9 @@ export const downloadStoryImage = firestore
     await saveStoryImageToStorage(data.image.providerUrl, storyImageFile);
     logger.info(`Image of story ${snapshot.id} was saved to Storage`);
 
+    await setStoryImageMetadata(data.author, storyImageFile);
+    logger.info(`Metadata of story image ${snapshot.id} was updated`);
+
     await setStoryImagePath(snapshot.id, storyImagePath);
     logger.info(`Storage cloud image path of story ${snapshot.id} was updated`);
   });
@@ -129,6 +136,12 @@ async function saveStoryImageToStorage(url, storyImageFile) {
       await pipeline(result, fileStream);
       resolve();
     }).on("error", reject);
+  });
+}
+
+async function setStoryImageMetadata(author, storyImageFile) {
+  return storyImageFile.setMetadata({
+    metadata: { author: author },
   });
 }
 
