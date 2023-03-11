@@ -65,6 +65,89 @@ export async function callOpenAi(storyParams) {
   };
 }
 
+function callOpenAiStream(prompt) {
+  const sseclient = require("sseclient");
+  const fetch = require("node-fetch");
+
+  const messages = [
+    { role: "system", content: "Act as a professional writer for children." },
+    { role: "user", content: `${prompt}` },
+  ];
+
+  let story = "";
+
+  openai
+    .createChatCompletion({
+      messages: [
+        {
+          role: "system",
+          content: "Act as a professional writer for children.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      model: "gpt-3.5-turbo",
+      max_tokens: 1200,
+      temperature: 1.0,
+      frequency_penalty: 0.7,
+      presence_penalty: 0.2,
+    })
+    .then((response) => response.data.choices[0].message.content);
+  
+  const reqUrl = "https://api.openai.com/v1/chat/completions";
+  const reqHeaders = {
+    Accept: "text/event-stream",
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + API_KEY,
+  };
+  const reqBody = {
+    model: "gpt-3.5-turbo",
+    messages: messages,
+    max_tokens: 1500,
+    temperature: 1.0,
+    presence_penalty: 0.7,
+    frequency_penalty: 0.2,
+    stream: true,
+  };
+  fetch(reqUrl, {
+    method: "POST",
+    headers: reqHeaders,
+    body: JSON.stringify(reqBody),
+  })
+    .then((res) => {
+      const client = new sseclient(res.body);
+      let token_counter = 0;
+      client.on("data", (event) => {
+        if (event !== "[DONE]") {
+          const data = JSON.parse(event);
+          if ("content" in data["choices"][0]["delta"].keys()) {
+            // Update the story
+            story += data["choices"][0]["delta"]["content"];
+            token_counter += 1;
+
+            // Launch prompt generation after 100 tokens
+            if (token_counter === 100) {
+              console.log("\n Started prompt generation\n");
+              generate_dalle_prompt(story, prompt);
+            }
+          }
+        }
+      });
+    })
+    .catch((err) => console.error(err));
+
+  // A dummy function to represent generate_dalle_prompt
+  function generate_dalle_prompt(story, prompt) {
+    console.log(`Generating prompt with story: ${story} and prompt: ${prompt}`);
+  }
+
+  // Wait for the thread to complete
+  // There's no equivalent to threading in JavaScript, so we don't need to do anything here
+  console.log(story);
+}
+
 function callOpenAiCompletions(prompt) {
   return openai
     .createChatCompletion({
