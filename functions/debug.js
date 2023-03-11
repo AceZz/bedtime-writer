@@ -3,6 +3,8 @@ dotenv.config();
 
 import { Configuration, OpenAIApi } from "openai";
 
+import { getPromptForImagePrompt } from "./story/story_params.js";
+
 // Configure OpenAI
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -38,11 +40,11 @@ async function callOpenAiCompletions(prompt) {
     { responseType: "stream" }
   );
 
-  // Initialize story
-  let story = "";
-
   return new Promise((resolve) => {
-    let result = "";
+    let story = "";
+    // Initialize story
+    let promptForImagePrompt =
+      "Write a short prompt for dalle to illustrate the story.";
     let tokenCounter = 0;
     completion.data.on("data", (data) => {
       const lines = data
@@ -52,20 +54,26 @@ async function callOpenAiCompletions(prompt) {
       for (const line of lines) {
         const message = line.replace(/^data: /, "");
         if (message == "[DONE]") {
-          resolve(result);
+          resolve(story);
         } else {
           let token;
           try {
             token = JSON.parse(message)?.choices?.[0]?.delta?.content;
             tokenCounter++;
-            console.log(token);
+            //console.log(token);
           } catch {
             console.log("ERROR", json);
           }
-          result += token;
+          story += token;
           if (tokenCounter == 100) {
             console.log("\n\n100 tokens\n\n");
-            callOpenAiCompletionsForImagePrompt()
+            let imagePrompt = callOpenAiCompletionsForImagePrompt(
+              prompt,
+              story,
+              promptForImagePrompt
+            );
+            console.log("\n\nimagePrompt call finished\n\n");
+            console.log(imagePrompt);
           }
         }
       }
@@ -104,5 +112,8 @@ function callOpenAiCompletionsForImagePrompt(
       frequency_penalty: 0,
       presence_penalty: 0,
     })
-    .then((response) => response.data.choices[0].message.content);
+    .then((response) => {
+      // TODO: understand why this returns undefined
+      return response.data.choices[0].message.content;
+    });
 }
