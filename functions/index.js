@@ -12,11 +12,6 @@ import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import {
   callOpenAi
 } from "./story/open_ai.js";
-import {
-  getStoryTitle,
-  getPromptForImagePrompt,
-  getPrompt,
-} from "./story/story_params.js";
 
 initializeApp();
 
