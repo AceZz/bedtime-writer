@@ -36,4 +36,5 @@ Firebase emulators, give the `.env` file the following content:
 USE_FIREBASE_EMULATORS=true
 ```
 
-You can then launch them by going to the `functions` folder and run `npm run emulators`.
+Then, go to the `functions` folder and follow the instructions of `functions/README.md`. When
+everything is set up, you can launch the emulators by running `npm run emulators`.

@@ -38,7 +38,7 @@ class _StoryTile extends StatelessWidget {
         width: 80,
         height: 80,
         child: Center(
-          child: StorageStoryImage(id: id, width: 80, height: 80),
+          child: StoryImage(id: id, width: 80, height: 80),
         ),
       ),
       title: Text(title),

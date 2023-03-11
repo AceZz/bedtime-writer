@@ -14,13 +14,13 @@ const fullCharacter = Character(
   challenge: 'having a challenge',
 );
 const partialStory = StoryParams(
-  style: 'Handersen',
+  style: 'Andersen',
   character: partialCharacter,
   duration: 3,
   place: 'at some place',
 );
 const fullStory = StoryParams(
-  style: 'Handersen',
+  style: 'Andersen',
   character: fullCharacter,
   duration: 3,
   place: 'at some place',
@@ -84,7 +84,7 @@ void main() {
 
     test('.serialize() returns a full serialization', () {
       expect(fullStory.serialize(), {
-        'style': 'Handersen',
+        'style': 'Andersen',
         'character': fullCharacter.serialize(),
         'duration': 3,
         'place': 'at some place',
@@ -95,7 +95,7 @@ void main() {
 
     test('.serialize() returns a partial serialization', () {
       expect(partialStory.serialize(), {
-        'style': 'Handersen',
+        'style': 'Andersen',
         'character': partialCharacter.serialize(),
         'duration': 3,
         'place': 'at some place',
