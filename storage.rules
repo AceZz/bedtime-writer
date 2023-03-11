@@ -1,8 +1,22 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if true;
+    match /stories/image/{image} {
+      function isAuthor() {
+        return isAuth() && resource.metadata.author == request.auth.uid;
+      }
+
+      function isAuth() {
+        return request.auth != null;
+      }
+
+      allow read: if isAuthor();
+
+      allow create: if isAuth();
+
+      allow update: if false;
+
+      allow delete: if false;
     }
   }
 }
