@@ -1,10 +1,12 @@
 import 'dart:developer';
+
 import 'package:bedtime_writer/story/states/story_params.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 
 final auth = FirebaseAuth.instance;
@@ -33,6 +35,10 @@ bool _useFirebaseEmulators() {
   final config = dotenv.get('USE_FIREBASE_EMULATORS', fallback: 'false');
   return config.toLowerCase() == 'true';
 }
+
+final userProvider = StreamProvider<User?>((ref) {
+  return auth.authStateChanges();
+});
 
 /// A [CollectionReference] to the stories.
 final CollectionReference<Map<String, dynamic>> storiesReference =

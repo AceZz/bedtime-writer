@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../backend.dart';
@@ -50,15 +51,17 @@ class _StoryTile extends StatelessWidget {
   }
 }
 
-class LibraryScreen extends StatelessWidget {
+class LibraryScreen extends ConsumerWidget {
   LibraryScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
+    final query = storiesReference.where('author', isEqualTo: user.value?.uid);
     final lottieWidget = LottieLoading();
 
     return FutureBuilder(
-      future: storiesReference.get(),
+      future: query.get(),
       builder: (
         BuildContext context,
         AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,

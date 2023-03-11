@@ -19,6 +19,10 @@ void main() async {
 
   configureFirebaseEmulators();
 
+  if (auth.currentUser == null) {
+    auth.signInAnonymously();
+  }
+
   runApp(ProviderScope(child: MyApp()));
 }
 
