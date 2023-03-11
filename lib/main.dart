@@ -8,7 +8,6 @@ import 'backend.dart';
 import 'firebase_options.dart';
 import 'router.dart';
 import 'theme.dart';
-import 'utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,11 +17,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  if (useFirebaseEmulators()) {
-    firestore.useFirestoreEmulator('localhost', 8080);
-    functions.useFunctionsEmulator('localhost', 5001);
-    storage.useStorageEmulator('localhost', 9199);
-  }
+  configureFirebaseEmulators();
 
   runApp(ProviderScope(child: MyApp()));
 }
