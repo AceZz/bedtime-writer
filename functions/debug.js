@@ -16,8 +16,9 @@ const numTokenStartImagePrompt = 100;
 
 // Main body
 const prompt = "Write a small fairytale about a dragon in a about 100 words.";
-const completion = await callOpenAiCompletions(prompt);
-console.log(completion);
+callOpenAiCompletions(prompt).then((result) => {
+  console.log(result);
+});
 
 async function callOpenAiCompletions(prompt) {
   // Initialize stream
@@ -48,8 +49,10 @@ async function callOpenAiCompletions(prompt) {
     // Initialize story
     let promptForImagePrompt =
       "Write a short prompt for dalle to illustrate the story.";
+    let imagePrompt;
+    let imageUrl;
     let tokenCounter = 0;
-    completion.data.on("data", async (data) => {
+    completion.data.on("data", (data) => {
       const lines = data
         ?.toString()
         ?.split("\n")
@@ -58,11 +61,9 @@ async function callOpenAiCompletions(prompt) {
         const message = line.replace(/^data: /, "");
         if (message == "[DONE]") {
           console.log("Message done received");
-          resolve(story);
         } else {
           let token;
           try {
-            console.log(JSON.parse(message)?.choices);
             token = JSON.parse(message)?.choices?.[0]?.delta?.content;
             // Test if token had a value for content field, ie is a piece of the story
             if (token != null) {
@@ -74,19 +75,27 @@ async function callOpenAiCompletions(prompt) {
           }
           if (tokenCounter == numTokenStartImagePrompt) {
             // TODO: make sure function waits for result here to complete
-            let imagePrompt = await callOpenAiCompletionsForImagePrompt(
+            imagePrompt = callOpenAiCompletionsForImagePrompt(
               prompt,
               story,
               promptForImagePrompt
             );
+            imageUrl = callOpenAiImagesGeneration(imagePrompt, 512);
           }
         }
       }
     });
+    console.log(story);
+    let result = {
+      story: story,
+      imagePrompt: imagePrompt,
+      imageUrl: imageUrl,
+    };
+    resolve(result);
   });
 }
 
-async function callOpenAiCompletionsForImagePrompt(
+function callOpenAiCompletionsForImagePrompt(
   prompt,
   story,
   promptForImagePrompt
@@ -121,4 +130,14 @@ async function callOpenAiCompletionsForImagePrompt(
       // TODO: understand why this returns undefined
       return response.data.choices[0].message.content;
     });
+}
+
+function callOpenAiImagesGeneration(imagePrompt, size = 512) {
+  return openai
+    .createImage({
+      prompt: imagePrompt,
+      n: 1,
+      size: `${size}x${size}`,
+    })
+    .then((response) => response.data.data[0].url);
 }
