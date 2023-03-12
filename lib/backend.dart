@@ -36,8 +36,23 @@ bool _useFirebaseEmulators() {
   return config.toLowerCase() == 'true';
 }
 
+/// Evaluates to true if the user is authenticated.
+bool isUserAuthenticated(User? user) => user != null;
+
+/// Evaluates to true if the user is authenticated but anonymous.
+bool isUserAnonymous(User? user) {
+  if (isUserAuthenticated(user)) return user?.providerData.isEmpty ?? false;
+  return false;
+}
+
 final userProvider = StreamProvider<User?>((ref) {
   return auth.authStateChanges();
+});
+
+/// Evaluates to true if the user is anonymous.
+final isUserAnonymousProvider = Provider<bool>((ref) {
+  final user = ref.watch(userProvider);
+  return isUserAnonymous(user.value);
 });
 
 /// A [CollectionReference] to the stories.
