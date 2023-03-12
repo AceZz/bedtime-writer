@@ -29,6 +29,8 @@ void main() async {
 class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+
     return MaterialApp.router(
       title: 'Dreamy Tales',
       localizationsDelegates: [
@@ -41,6 +43,7 @@ class MyApp extends ConsumerWidget {
       themeMode: ThemeMode.system,
       routerDelegate: router.routerDelegate,
       routeInformationParser: router.routeInformationParser,
+      routeInformationProvider: router.routeInformationProvider,
     );
   }
 }
