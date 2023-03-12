@@ -34,12 +34,20 @@ the production server, use the Google Cloud console.
   * `router.dart`: the routes of the application
   * `theme.dart`: the theme for the entire application
 
+### Debug mode
+
+Add this key to the `.env` file:
+
+```text
+DEBUG=true
+```
+
 ### Backend emulation
 
 Before deploying your functions to Google Cloud, test them locally with the emulators. To use the
-Firebase emulators, give the `.env` file the following content:
+Firebase emulators, add this key to the `.env` file:
 
-```
+```text
 USE_FIREBASE_EMULATORS=true
 ```
 
