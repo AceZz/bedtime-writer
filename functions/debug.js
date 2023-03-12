@@ -16,9 +16,8 @@ const numTokenStartImagePrompt = 100;
 
 // Main body
 const prompt = "Write a small fairytale about a dragon in a about 100 words.";
-callOpenAiCompletions(prompt).then((result) => {
-  console.log(result);
-});
+const result = await callOpenAiCompletions(prompt);
+console.log(result);
 
 async function callOpenAiCompletions(prompt) {
   // Initialize stream
@@ -44,7 +43,7 @@ async function callOpenAiCompletions(prompt) {
     { responseType: "stream" }
   );
 
-  return new Promise((resolve) => {
+  return new Promise(async (resolve) => {
     let story = "";
     // Initialize story
     let promptForImagePrompt =
@@ -75,18 +74,12 @@ async function callOpenAiCompletions(prompt) {
           }
           if (tokenCounter == numTokenStartImagePrompt) {
             // TODO: make sure function waits for result here to complete
-            imagePrompt = callOpenAiCompletionsForImagePrompt(
-              prompt,
-              story,
-              promptForImagePrompt
-            );
-            imageUrl = callOpenAiImagesGeneration(imagePrompt, 512);
+            imageUrl = startThread(prompt, story, promptForImagePrompt);
           }
         }
       }
     });
-    console.log(story);
-    let result = {
+    const result = {
       story: story,
       imagePrompt: imagePrompt,
       imageUrl: imageUrl,
@@ -95,49 +88,19 @@ async function callOpenAiCompletions(prompt) {
   });
 }
 
-function callOpenAiCompletionsForImagePrompt(
-  prompt,
-  story,
-  promptForImagePrompt
-) {
-  return openai
-    .createChatCompletion({
-      messages: [
-        {
-          role: "system",
-          content: "Act as a professional illustrator for children.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-        {
-          role: "assistant",
-          content: story,
-        },
-        {
-          role: "user",
-          content: promptForImagePrompt,
-        },
-      ],
-      model: "gpt-3.5-turbo",
-      max_tokens: 100,
-      temperature: 0.4,
-      frequency_penalty: 0,
-      presence_penalty: 0,
-    })
-    .then((response) => {
-      // TODO: understand why this returns undefined
-      return response.data.choices[0].message.content;
+function startThread(prompt, story, promptForImagePrompt) {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker('worker.js');
+    // Send any necessary data to the worker using worker.postMessage()
+    worker.postMessage({
+      prompt: prompt,
+      story: story,
+      promptForImagePrompt: promptForImagePrompt
     });
-}
-
-function callOpenAiImagesGeneration(imagePrompt, size = 512) {
-  return openai
-    .createImage({
-      prompt: imagePrompt,
-      n: 1,
-      size: `${size}x${size}`,
-    })
-    .then((response) => response.data.data[0].url);
+    // Listen for messages from the worker using worker.onmessage()
+    worker.onmessage = (event) => {
+      const imageUrl = event.data;
+      resolve(imageUrl);
+    };
+  });
 }
