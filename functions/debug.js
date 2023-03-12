@@ -11,6 +11,9 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
+// Parameters
+const numTokenStartImagePrompt = 100;
+
 // Main body
 const prompt = "Write a small fairytale about a dragon in a about 100 words.";
 const completion = await callOpenAiCompletions(prompt);
@@ -46,7 +49,7 @@ async function callOpenAiCompletions(prompt) {
     let promptForImagePrompt =
       "Write a short prompt for dalle to illustrate the story.";
     let tokenCounter = 0;
-    completion.data.on("data", (data) => {
+    completion.data.on("data", async (data) => {
       const lines = data
         ?.toString()
         ?.split("\n")
@@ -54,26 +57,28 @@ async function callOpenAiCompletions(prompt) {
       for (const line of lines) {
         const message = line.replace(/^data: /, "");
         if (message == "[DONE]") {
+          console.log("Message done received");
           resolve(story);
         } else {
           let token;
           try {
+            console.log(JSON.parse(message)?.choices);
             token = JSON.parse(message)?.choices?.[0]?.delta?.content;
+            // Test if token had a value for content field, ie is a piece of the story
+            if (token != null) {
+              story += token;
+            }
             tokenCounter++;
-            //console.log(token);
           } catch {
             console.log("ERROR", json);
           }
-          story += token;
-          if (tokenCounter == 100) {
-            console.log("\n\n100 tokens\n\n");
-            let imagePrompt = callOpenAiCompletionsForImagePrompt(
+          if (tokenCounter == numTokenStartImagePrompt) {
+            // TODO: make sure function waits for result here to complete
+            let imagePrompt = await callOpenAiCompletionsForImagePrompt(
               prompt,
               story,
               promptForImagePrompt
             );
-            console.log("\n\nimagePrompt call finished\n\n");
-            console.log(imagePrompt);
           }
         }
       }
@@ -81,7 +86,7 @@ async function callOpenAiCompletions(prompt) {
   });
 }
 
-function callOpenAiCompletionsForImagePrompt(
+async function callOpenAiCompletionsForImagePrompt(
   prompt,
   story,
   promptForImagePrompt
