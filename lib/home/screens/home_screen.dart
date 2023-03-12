@@ -6,12 +6,78 @@ import '../../widgets/app_scaffold.dart';
 import '../../widgets/fade_in.dart';
 import '../../story/index.dart';
 
-class HomeScreenButton extends ConsumerWidget {
+class HomeScreen extends ConsumerWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    Widget titleWidget = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 50.0),
+      child: FadeIn(
+        duration: const Duration(milliseconds: 1500),
+        delay: const Duration(milliseconds: 500),
+        child: Text(
+          'Dreamy Tales',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).primaryTextTheme.headlineLarge,
+        ),
+      ),
+    );
+
+    Widget newStoryButton = _HomeScreenButton(
+      text: 'New story',
+      destination: 'create_story',
+      resetStoryState: true,
+    );
+
+    Widget libraryButton =
+        _HomeScreenButton(text: 'Library', destination: 'library');
+
+    Widget settingsButton =
+        _HomeScreenButton(text: 'Settings', destination: 'settings');
+
+    Widget menuWidget = Padding(
+      padding: const EdgeInsets.only(top: 50.0),
+      child: Column(
+        children: [newStoryButton, libraryButton, settingsButton]
+            .asMap()
+            .map(
+              // The buttons will fade in one after the other
+              (i, button) => MapEntry(
+                  i,
+                  FadeIn(
+                    duration: const Duration(milliseconds: 500),
+                    delay: Duration(milliseconds: 500 + 500 * (i + 1)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 35.0),
+                      child: button,
+                    ),
+                  )),
+            )
+            .values
+            .toList(),
+      ),
+    );
+
+    return AppScaffold(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          titleWidget,
+          menuWidget,
+        ],
+      ),
+      showAppBar: false,
+    );
+  }
+}
+
+class _HomeScreenButton extends ConsumerWidget {
   final String text;
   final String destination;
   final bool resetStoryState;
 
-  const HomeScreenButton({
+  const _HomeScreenButton({
     Key? key,
     required this.text,
     required this.destination,
@@ -49,68 +115,3 @@ class HomeScreenButton extends ConsumerWidget {
   }
 }
 
-class HomeScreen extends ConsumerWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    Widget titleWidget = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 50.0),
-      child: FadeIn(
-        duration: const Duration(milliseconds: 1500),
-        delay: const Duration(milliseconds: 500),
-        child: Text(
-          'Dreamy Tales',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).primaryTextTheme.headlineLarge,
-        ),
-      ),
-    );
-
-    Widget newStoryButton = HomeScreenButton(
-      text: 'New story',
-      destination: 'create_story',
-      resetStoryState: true,
-    );
-
-    Widget libraryButton =
-        HomeScreenButton(text: 'Library', destination: 'library');
-
-    Widget settingsButton =
-        HomeScreenButton(text: 'Settings', destination: 'settings');
-
-    Widget menuWidget = Padding(
-      padding: const EdgeInsets.only(top: 50.0),
-      child: Column(
-        children: [newStoryButton, libraryButton, settingsButton]
-            .asMap()
-            .map(
-              // The buttons will fade in one after the other
-              (i, button) => MapEntry(
-                  i,
-                  FadeIn(
-                    duration: const Duration(milliseconds: 500),
-                    delay: Duration(milliseconds: 500 + 500 * (i + 1)),
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 35.0),
-                      child: button,
-                    ),
-                  )),
-            )
-            .values
-            .toList(),
-      ),
-    );
-
-    return AppScaffold(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          titleWidget,
-          menuWidget,
-        ],
-      ),
-      showAppBar: false,
-    );
-  }
-}
