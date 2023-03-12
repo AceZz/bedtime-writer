@@ -25,11 +25,12 @@ class FadeIn extends StatefulWidget {
 
 class FadeInState extends State<FadeIn> {
   double _opacity = 0.0;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    Timer(
+    _timer = Timer(
       widget.delay,
       () {
         setState(() {
@@ -37,6 +38,12 @@ class FadeInState extends State<FadeIn> {
         });
       },
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer?.cancel();
   }
 
   @override
