@@ -32,6 +32,7 @@ export async function callOpenAi(storyParams) {
     return {
       ...data,
       story: "test",
+      imagePrompt: "sample image prompt",
       imageUrl: "https://avatars.githubusercontent.com/u/11032610?v=4",
     };
   }
@@ -41,10 +42,14 @@ export async function callOpenAi(storyParams) {
 
   const prompt = getPrompt(storyParams);
   const promptForImagePrompt = getPromptForImagePrompt(storyParams);
+  console.log("Start stream call");
+
   const result = await callOpenAiStream(prompt, promptForImagePrompt);
 
   const end = performance.now();
   console.log(`Total time: ${end - start} milliseconds.`);
+
+  console.log(result);
 
   return {
     ...data,
