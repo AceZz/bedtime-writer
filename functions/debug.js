@@ -16,6 +16,7 @@ const numTokenStartImagePrompt = 100;
 
 // Main body
 const prompt = "Write a small fairytale about a dragon in a about 100 words.";
+const promptForImagePrompt = "Write a short prompt for dalle to illustrate the story.";
 const result = await callOpenAiCompletions(prompt);
 console.log(result);
 
@@ -42,33 +43,27 @@ async function callOpenAiCompletions(prompt) {
     },
     { responseType: "stream" }
   );
-  
 
-  //TODO: break in small pieces with functions
   return new Promise(async (resolve) => {
     let story = "";
     // Initialize story
-    let imagePrompt;
-    // TODO: Move it out
-    let promptForImagePrompt =
-      "Write a short prompt for dalle to illustrate the story.";
+    let imageData;
     let tokenCounter = 0;
     completion.data.on("data", async (data) => {
-      const lines = data
-        ?.toString()
-        ?.split("\n")
-        .filter((line) => line.trim() !== "");
+      const lines = extractLines(data);
       for (const line of lines) {
         const message = line.replace(/^data: /, "");
         // End the stream if message "[DONE]" is received
         if (message == "[DONE]") {
           console.log("Message done received");
-          imagePrompt = await imagePrompt;
+          imageData = await imageData;
           let result = {
             story: story,
-            imagePrompt: imagePrompt,
+            imagePrompt: imageData.imagePrompt,
+            imageUrl: imageData.imageUrl,
           };
           resolve(result);
+          // Else continue listening to the stream
         } else {
           let token;
           try {
@@ -82,9 +77,7 @@ async function callOpenAiCompletions(prompt) {
             console.log("ERROR", json);
           }
           if (tokenCounter == numTokenStartImagePrompt) {
-            // TODO: make sure function waits for result here to complete
-            console.log("Call to image prompt");
-            imagePrompt = callOpenAiCompletionsForImagePrompt(
+            imageData = callOpenAiPromptAndImage(
               prompt,
               story,
               promptForImagePrompt
@@ -94,6 +87,23 @@ async function callOpenAiCompletions(prompt) {
       }
     });
   });
+}
+
+function extractLines(data) {
+  return data
+  ?.toString()
+  ?.split("\n")
+  .filter((line) => line.trim() !== "");
+}
+
+async function callOpenAiPromptAndImage(prompt, story, promptForImagePrompt) {
+  const imagePrompt = await callOpenAiCompletionsForImagePrompt(
+    prompt,
+    story,
+    promptForImagePrompt
+  );
+  const imageUrl = await callOpenAiImagesGeneration(imagePrompt, 512);
+  return { imagePrompt: imagePrompt, imageUrl: imageUrl };
 }
 
 function callOpenAiCompletionsForImagePrompt(

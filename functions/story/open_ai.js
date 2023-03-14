@@ -1,5 +1,8 @@
 import { Configuration, OpenAIApi } from "openai";
 
+import * as dotenv from "dotenv";
+dotenv.config();
+
 import {
   getStoryTitle,
   getPromptForImagePrompt,
@@ -8,10 +11,15 @@ import {
 
 import process from "node:process";
 
+// Configure OpenAI API
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
+
+// Parameters
+const numTokenStartImagePrompt = 100;
+
 
 export async function callOpenAi(storyParams) {
   var data = {
@@ -28,56 +36,28 @@ export async function callOpenAi(storyParams) {
     };
   }
 
-  // Call callOpenAiCompletions first, and then callOpenAiImagesGeneration with the result as an argument
-  // Story call
-  const startStory = performance.now();
-  const story = await callOpenAiCompletions(data.prompt);
-  const endStory = performance.now();
-  console.log(`Story: ${endStory - startStory} milliseconds.`);
+  // Call OpenAi using stream data to parrallelize calls
+  const start = performance.now();
 
-  // ImagePrompt call
-  const startImagePrompt = performance.now();
-  const imagePrompt = await callOpenAiCompletionsForImagePrompt(
-    data.prompt,
-    story,
-    data.promptForImagePrompt
-  );
-  const endImagePrompt = performance.now();
-  console.log(
-    `Image prompt: ${endImagePrompt - startImagePrompt} milliseconds.`
-  );
+  const prompt = getPrompt(storyParams);
+  const promptForImagePrompt = getPromptForImagePrompt(storyParams);
+  const result = await callOpenAiStream(prompt, promptForImagePrompt);
 
-  // Image generation call
-  const startImageGeneration = performance.now();
-  const imageUrl = await callOpenAiImagesGeneration(imagePrompt, 512);
-  const endImageGeneration = performance.now();
-  console.log(
-    `Image generation: ${
-      endImageGeneration - startImageGeneration
-    } milliseconds.`
-  );
+  const end = performance.now();
+  console.log(`Total time: ${end - start} milliseconds.`);
 
   return {
     ...data,
-    story: story,
-    imagePrompt: imagePrompt,
-    imageUrl: imageUrl,
+    story: result.story,
+    imagePrompt: result.imagePrompt,
+    imageUrl: result.imageUrl,
   };
 }
 
-function callOpenAiStream(prompt) {
-  const sseclient = require("sseclient");
-  const fetch = require("node-fetch");
-
-  const messages = [
-    { role: "system", content: "Act as a professional writer for children." },
-    { role: "user", content: `${prompt}` },
-  ];
-
-  let story = "";
-
-  openai
-    .createChatCompletion({
+async function callOpenAiStream(prompt, promptForImagePrompt) {
+  // Initialize stream
+  const completion = await openai.createChatCompletion(
+    {
       messages: [
         {
           role: "system",
@@ -93,81 +73,71 @@ function callOpenAiStream(prompt) {
       temperature: 1.0,
       frequency_penalty: 0.7,
       presence_penalty: 0.2,
-    })
-    .then((response) => response.data.choices[0].message.content);
-  
-  const reqUrl = "https://api.openai.com/v1/chat/completions";
-  const reqHeaders = {
-    Accept: "text/event-stream",
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + API_KEY,
-  };
-  const reqBody = {
-    model: "gpt-3.5-turbo",
-    messages: messages,
-    max_tokens: 1500,
-    temperature: 1.0,
-    presence_penalty: 0.7,
-    frequency_penalty: 0.2,
-    stream: true,
-  };
-  fetch(reqUrl, {
-    method: "POST",
-    headers: reqHeaders,
-    body: JSON.stringify(reqBody),
-  })
-    .then((res) => {
-      const client = new sseclient(res.body);
-      let token_counter = 0;
-      client.on("data", (event) => {
-        if (event !== "[DONE]") {
-          const data = JSON.parse(event);
-          if ("content" in data["choices"][0]["delta"].keys()) {
-            // Update the story
-            story += data["choices"][0]["delta"]["content"];
-            token_counter += 1;
+      stream: true,
+    },
+    { responseType: "stream" }
+  );
 
-            // Launch prompt generation after 100 tokens
-            if (token_counter === 100) {
-              console.log("\n Started prompt generation\n");
-              generate_dalle_prompt(story, prompt);
+  return new Promise(async (resolve) => {
+    let story = "";
+    // Initialize story
+    let imageData;
+    let tokenCounter = 0;
+    completion.data.on("data", async (data) => {
+      const lines = extractLines(data);
+      for (const line of lines) {
+        const message = line.replace(/^data: /, "");
+        // End the stream if message "[DONE]" is received
+        if (message == "[DONE]") {
+          console.log("Message done received");
+          imageData = await imageData;
+          let result = {
+            story: story,
+            imagePrompt: imageData.imagePrompt,
+            imageUrl: imageData.imageUrl,
+          };
+          resolve(result);
+          // Else continue listening to the stream
+        } else {
+          let token;
+          try {
+            token = JSON.parse(message)?.choices?.[0]?.delta?.content;
+            // Test if token had a value for content field, ie is a piece of the story
+            if (token != null) {
+              story += token;
             }
+            tokenCounter++;
+          } catch {
+            console.log("ERROR", json);
+          }
+          if (tokenCounter == numTokenStartImagePrompt) {
+            imageData = callOpenAiPromptAndImage(
+              prompt,
+              story,
+              promptForImagePrompt
+            );
           }
         }
-      });
-    })
-    .catch((err) => console.error(err));
-
-  // A dummy function to represent generate_dalle_prompt
-  function generate_dalle_prompt(story, prompt) {
-    console.log(`Generating prompt with story: ${story} and prompt: ${prompt}`);
-  }
-
-  // Wait for the thread to complete
-  // There's no equivalent to threading in JavaScript, so we don't need to do anything here
-  console.log(story);
+      }
+    });
+  });
 }
 
-function callOpenAiCompletions(prompt) {
-  return openai
-    .createChatCompletion({
-      messages: [
-        {
-          role: "system",
-          content: "Act as a professional writer for children.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-      model: "gpt-3.5-turbo",
-      max_tokens: 1200,
-      temperature: 1.0,
-      frequency_penalty: 0.7,
-      presence_penalty: 0.2,
-    })
-    .then((response) => response.data.choices[0].message.content);
+function extractLines(data) {
+  return data
+    ?.toString()
+    ?.split("\n")
+    .filter((line) => line.trim() !== "");
+}
+
+async function callOpenAiPromptAndImage(prompt, story, promptForImagePrompt) {
+  const imagePrompt = await callOpenAiCompletionsForImagePrompt(
+    prompt,
+    story,
+    promptForImagePrompt
+  );
+  const imageUrl = await callOpenAiImagesGeneration(imagePrompt, 512);
+  return { imagePrompt: imagePrompt, imageUrl: imageUrl };
 }
 
 function callOpenAiCompletionsForImagePrompt(
@@ -201,7 +171,10 @@ function callOpenAiCompletionsForImagePrompt(
       frequency_penalty: 0,
       presence_penalty: 0,
     })
-    .then((response) => response.data.choices[0].message.content);
+    .then((response) => {
+      // TODO: understand why this returns undefined
+      return response.data.choices[0].message.content;
+    });
 }
 
 function callOpenAiImagesGeneration(imagePrompt, size = 512) {
