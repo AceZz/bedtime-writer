@@ -1,5 +1,7 @@
 import { Configuration, OpenAIApi } from "openai";
 
+import { logger } from "firebase-functions";
+
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -19,7 +21,6 @@ const openai = new OpenAIApi(configuration);
 
 // Parameters
 const numTokenStartImagePrompt = 100;
-
 
 export async function callOpenAi(storyParams) {
   var data = {
@@ -42,14 +43,12 @@ export async function callOpenAi(storyParams) {
 
   const prompt = getPrompt(storyParams);
   const promptForImagePrompt = getPromptForImagePrompt(storyParams);
-  console.log("Start stream call");
+  logger.info("Start OpenAI stream call");
 
   const result = await callOpenAiStream(prompt, promptForImagePrompt);
 
   const end = performance.now();
-  console.log(`Total time: ${end - start} milliseconds.`);
-
-  console.log(result);
+  logger.info(`Total time for OpenAI calls: ${end - start} milliseconds.`);
 
   return {
     ...data,
@@ -94,7 +93,7 @@ async function callOpenAiStream(prompt, promptForImagePrompt) {
         const message = line.replace(/^data: /, "");
         // End the stream if message "[DONE]" is received
         if (message == "[DONE]") {
-          console.log("Message done received");
+          logger.info("OpenAI stream message done received");
           imageData = await imageData;
           let result = {
             story: story,
@@ -113,7 +112,7 @@ async function callOpenAiStream(prompt, promptForImagePrompt) {
             }
             tokenCounter++;
           } catch {
-            console.log("ERROR", json);
+            logger.error("ERROR in token receiving from OpenAI stream", json);
           }
           if (tokenCounter == numTokenStartImagePrompt) {
             imageData = callOpenAiPromptAndImage(
