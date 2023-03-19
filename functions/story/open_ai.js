@@ -7,56 +7,108 @@ dotenv.config();
 
 import {
   getStoryTitle,
-  getPromptForImagePrompt,
+  getImagePromptPrompt,
   getPrompt,
 } from "./story_params.js";
 
 import process from "node:process";
+import { waitFor as waitUntil } from "../utils.js";
 
-// Configure OpenAI API
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+const NUM_TOKENS_SUMMARY = 100;
+const openai = new OpenAIApi(
+  new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  })
+);
 
-// Parameters
-const numTokenStartImagePrompt = 100;
+export async function generateOpenAiStory(prompt, imagePromptPrompt) {
+  let tokens = [];
+  let storyIsComplete = false;
+  const stream = await createStream(prompt);
 
-export async function callOpenAi(storyParams) {
-  var data = {
-    title: getStoryTitle(storyParams),
-    prompt: getPrompt(storyParams),
-    promptForImagePrompt: getPromptForImagePrompt(storyParams),
-  };
+  let imagePromise = null;
 
-  if (process.env.DEBUG === "true") {
+  stream.data.on("data", async (chunk) => {
+    for (const data of parseChunk(chunk)) {
+      if (data !== "[DONE]") {
+        try {
+          const token = JSON.parse(data)?.choices?.[0]?.delta?.content;
+          if (token !== null) {
+            tokens.push(token);
+          }
+        } catch {
+          logger.error("Error with data received from Open AI", data);
+        }
+
+        if (imagePromise == null && tokens.length == NUM_TOKENS_SUMMARY) {
+          const summary = tokens.join("");
+          imagePromise = createImage(prompt, summary, imagePromptPrompt);
+          logger.debug("imagePromise() started");
+        }
+      }
+    }
+  });
+
+  stream.data.on("close", () => {
+    logger.debug("Story generated");
+    storyIsComplete = true;
+  });
+
+  stream.data.on("error", (error) => {
+    // TODO: check
+    logger.error("Error with data received from Open AI", error);
+  });
+
+  waitUntil(() => imagePromise !== null);
+  logger.debug("createStoryImagePromise is not null");
+
+  return imagePromise.then(async ({ imagePrompt, imageUrl }) => {
+    waitUntil(() => storyIsComplete);
+    logger.debug("Story is complete inside createStoryImagePromise");
+
     return {
-      ...data,
-      story: "test",
-      imagePrompt: "sample image prompt",
-      imageUrl: "https://avatars.githubusercontent.com/u/11032610?v=4",
+      story: tokens.join(""),
+      imagePrompt: imagePrompt,
+      imageUrl: imageUrl,
     };
-  }
-
-  // Call OpenAi using stream data to parrallelize calls
-  const start = performance.now();
-
-  const prompt = getPrompt(storyParams);
-  const promptForImagePrompt = getPromptForImagePrompt(storyParams);
-  logger.info("Start OpenAI stream call");
-
-  const result = await callOpenAiStream(prompt, promptForImagePrompt);
-
-  const end = performance.now();
-  logger.info(`Total time for OpenAI calls: ${end - start} milliseconds.`);
-
-  return {
-    ...data,
-    story: result.story,
-    imagePrompt: result.imagePrompt,
-    imageUrl: result.imageUrl,
-  };
+  });
 }
+
+function createStream(prompt) {
+  return openai.createChatCompletion(
+    {
+      messages: [
+        {
+          role: "system",
+          content: "Act as a professional writer for children.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      model: "gpt-3.5-turbo",
+      max_tokens: 1200,
+      temperature: 1.0,
+      frequency_penalty: 0.7,
+      presence_penalty: 0.2,
+      stream: true,
+    },
+    { responseType: "stream" }
+  );
+}
+
+function parseChunk(data) {
+  return data
+    ?.toString()
+    ?.split("\n")
+    .filter((line) => line.trim() !== "")
+    .map((line) => line.replace(/^data: /, ""));
+}
+
+/***
+ * ...
+ */
 
 async function callOpenAiStream(prompt, promptForImagePrompt) {
   // Initialize stream

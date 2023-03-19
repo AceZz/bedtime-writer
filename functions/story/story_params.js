@@ -3,16 +3,6 @@ export function getStoryTitle(storyParams) {
   return `The story of ${storyParams.character.name}`;
 }
 
-export function getPromptForImagePrompt(storyParams) {
-  return (
-    "Generate now a very simple and concise prompt for dalle" +
-    ` to illustrate ${storyParams.character.name} of the story and its environment.` +
-    ` When mentioning ${storyParams.character.name}, provide a short but accurate appearance description.` +
-    ` ${storyParams.character.name} should be either beautiful or cute.` +
-    " You must mention a fairytale digital painting style."
-  );
-}
-
 export function getPrompt(storyParams) {
   return (
     getIntroPrompt(storyParams.style) +
@@ -78,23 +68,12 @@ function getNumWordsPrompt(numWords) {
     : ` The length is about ${numWords} words.`;
 }
 
-// This is the basic way to get a prompt. OpenAi calls made by users should use GPT3.5 generated prompts for images.
-export function getImagePrompt(storyParams) {
+export function getImagePromptPrompt(storyParams) {
   return (
-    getIntroImagePrompt() +
-    getCharacterImagePrompt(storyParams.character) +
-    getPlaceImagePrompt(storyParams.place)
+    "Generate now a very simple and concise prompt for dalle" +
+    ` to illustrate ${storyParams.character.name} of the story and its environment.` +
+    ` When mentioning ${storyParams.character.name}, provide a short but accurate appearance description.` +
+    ` ${storyParams.character.name} should be either beautiful or cute.` +
+    " You must mention a fairytale digital painting style."
   );
-}
-
-function getIntroImagePrompt() {
-  return "Dreamy and whimsical beautiful illustration";
-}
-
-function getCharacterImagePrompt(character) {
-  return character?.type !== undefined ? ` of a ${character.type}.` : ".";
-}
-
-function getPlaceImagePrompt(place) {
-  return place === undefined ? "" : ` It takes place ${place}.`;
 }

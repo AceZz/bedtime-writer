@@ -13,7 +13,7 @@ import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import { callOpenAi } from "./story/open_ai.js";
 import {
   getStoryTitle,
-  getImagePrompt,
+  getImagePromptPrompt,
   getPrompt,
 } from "./story/story_params.js";
 
@@ -32,7 +32,7 @@ export const addStory = https.onCall(async (storyParams) => {
   let story;
   if (process.env.FAKE_DATA === "true") {
     logger.info("Generate fake data");
-    story = getFakeStory(storyParams);
+    story = generateFakeStory(storyParams);
   } else {
     logger.info("Generate Open AI data");
     story = await callOpenAi(storyParams);
@@ -45,10 +45,11 @@ export const addStory = https.onCall(async (storyParams) => {
   return storyId;
 });
 
-function getFakeStory(storyParams) {
+function generateFakeStory(storyParams) {
   return {
     ...getStoryTitleAndPrompt(storyParams),
-    story: "test",
+    story: "sample story",
+    imagePrompt: "sample imagePrompt",
     imageUrl: "https://avatars.githubusercontent.com/u/11032610?v=4",
   };
 }
@@ -57,7 +58,7 @@ function getStoryTitleAndPrompt(storyParams) {
   return {
     title: getStoryTitle(storyParams),
     prompt: getPrompt(storyParams),
-    imagePrompt: getImagePrompt(storyParams),
+    imagePromptPrompt: getImagePromptPrompt(storyParams),
   };
 }
 
@@ -125,3 +126,4 @@ async function setStoryImagePath(storyId, storyImagePath) {
     },
   });
 }
+
