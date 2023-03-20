@@ -9,8 +9,10 @@ import { firestore, https, logger } from "firebase-functions";
 import { initializeApp } from "firebase-admin/app";
 import { getStorage } from "firebase-admin/storage";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
+import { Configuration, OpenAIApi } from "openai";
 
-import { callOpenAi } from "./story/open_ai.js";
+import { fakeOpenAi } from "./story/fake_open_ai.js";
+import { generateOpenAiStory } from "./story/open_ai.js";
 import {
   getStoryTitle,
   getImagePromptPrompt,
@@ -22,6 +24,12 @@ initializeApp();
 const storiesRef = getFirestore().collection("stories");
 const storageBucket = getStorage().bucket();
 
+const openAi = new OpenAIApi(
+  new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  })
+);
+
 /**
  * Add a story.
  *
@@ -29,30 +37,32 @@ const storageBucket = getStorage().bucket();
  * It returns the ID of the created Firestore document.
  */
 export const addStory = https.onCall(async (storyParams) => {
-  let story;
+  let payload = getStoryTitleAndPrompt(storyParams);
+
+  let api;
   if (process.env.FAKE_DATA === "true") {
-    logger.info("Generate fake data");
-    story = generateFakeStory(storyParams);
+    logger.info("addStory: using fake data");
+    api = fakeOpenAi;
   } else {
-    logger.info("Generate Open AI data");
-    story = await callOpenAi(storyParams);
-    logger.info("Open AI data was generated");
+    logger.info("addStory: using Open AI data");
+    api = openAi;
   }
 
-  const storyId = await addToFirestore(story);
-  logger.info(`Story ${storyId} was added to Firestore`);
+  payload = {
+    ...payload,
+    ...(await generateOpenAiStory(
+      api,
+      payload.prompt,
+      payload.imagePromptPrompt
+    )),
+  };
+  logger.info("addStory: story was generated");
+
+  const storyId = await addToFirestore(payload);
+  logger.info(`addStory: story ${storyId} was added to Firestore`);
 
   return storyId;
 });
-
-function generateFakeStory(storyParams) {
-  return {
-    ...getStoryTitleAndPrompt(storyParams),
-    story: "sample story",
-    imagePrompt: "sample imagePrompt",
-    imageUrl: "https://avatars.githubusercontent.com/u/11032610?v=4",
-  };
-}
 
 function getStoryTitleAndPrompt(storyParams) {
   return {
@@ -94,10 +104,14 @@ export const downloadStoryImage = firestore
     const data = snapshot.data();
     const storyImageFile = storageBucket.file(storyImagePath);
     await saveStoryImageToStorage(data.image.providerUrl, storyImageFile);
-    logger.info(`Image of story ${snapshot.id} was saved to Storage`);
+    logger.info(
+      `downloadStoryImage: image of story ${snapshot.id} was saved to Storage`
+    );
 
     await setStoryImagePath(snapshot.id, storyImagePath);
-    logger.info(`Storage cloud image path of story ${snapshot.id} was updated`);
+    logger.info(
+      `downloadStoryImage: storage cloud image path of story ${snapshot.id} was updated`
+    );
   });
 
 function getStoryImagePath(storyId) {
