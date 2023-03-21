@@ -11,6 +11,7 @@ import { getStorage } from "firebase-admin/storage";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import { Configuration, OpenAIApi } from "openai";
 
+import { getUid } from "./auth.js";
 import { fakeOpenAi } from "./story/fake_open_ai.js";
 import { generateOpenAiStory } from "./story/open_ai.js";
 import {
@@ -36,10 +37,10 @@ const openAi = new OpenAIApi(
  * This call expects story parameters.
  * It returns the ID of the created Firestore document.
  */
-export const addStory = https.onCall(async (storyParams) => {
-  let payload = getStoryTitleAndPrompt(storyParams);
-
+export const addStory = https.onCall(async (storyParams, context) => {
   let api;
+  const uid = getUid(context);
+
   if (process.env.FAKE_DATA === "true") {
     logger.info("addStory: using fake data");
     api = fakeOpenAi;
@@ -48,8 +49,8 @@ export const addStory = https.onCall(async (storyParams) => {
     api = openAi;
   }
 
-  payload = {
-    ...payload,
+  let payload = {
+    ...getStoryTitleAndPrompt(storyParams),
     ...(await generateOpenAiStory(
       api,
       payload.prompt,
@@ -58,7 +59,7 @@ export const addStory = https.onCall(async (storyParams) => {
   };
   logger.info("addStory: story was generated");
 
-  const storyId = await addToFirestore(payload);
+  const storyId = await addToFirestore(payload, uid);
   logger.info(`addStory: story ${storyId} was added to Firestore`);
 
   return storyId;
@@ -72,14 +73,15 @@ function getStoryTitleAndPrompt(storyParams) {
   };
 }
 
-async function addToFirestore(result) {
-  const payload = getFirestoreStoryPayload(result);
+async function addToFirestore(result, uid) {
+  const payload = getFirestoreStoryPayload(result, uid);
   const document = await storiesRef.add(payload);
   return document.id;
 }
 
-function getFirestoreStoryPayload(result) {
+function getFirestoreStoryPayload(result, uid) {
   return {
+    author: uid,
     date: Timestamp.now(),
     title: result.title,
     text: result.story.trim(),
@@ -108,6 +110,9 @@ export const downloadStoryImage = firestore
       `downloadStoryImage: image of story ${snapshot.id} was saved to Storage`
     );
 
+    await setStoryImageMetadata(data.author, storyImageFile);
+    logger.info(`Metadata of story image ${snapshot.id} was updated`);
+
     await setStoryImagePath(snapshot.id, storyImagePath);
     logger.info(
       `downloadStoryImage: storage cloud image path of story ${snapshot.id} was updated`
@@ -126,6 +131,12 @@ async function saveStoryImageToStorage(url, storyImageFile) {
       await pipeline(result, fileStream);
       resolve();
     }).on("error", reject);
+  });
+}
+
+async function setStoryImageMetadata(author, storyImageFile) {
+  return storyImageFile.setMetadata({
+    metadata: { author: author },
   });
 }
 

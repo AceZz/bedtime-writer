@@ -8,7 +8,6 @@ import 'backend.dart';
 import 'firebase_options.dart';
 import 'router.dart';
 import 'theme.dart';
-import 'utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,10 +17,10 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  if (useFirebaseEmulators()) {
-    firestore.useFirestoreEmulator('localhost', 8080);
-    functions.useFunctionsEmulator('localhost', 5001);
-    storage.useStorageEmulator('localhost', 9199);
+  configureFirebaseEmulators();
+
+  if (auth.currentUser == null) {
+    auth.signInAnonymously();
   }
 
   runApp(ProviderScope(child: MyApp()));
@@ -30,6 +29,8 @@ void main() async {
 class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+
     return MaterialApp.router(
       title: 'Dreamy Tales',
       localizationsDelegates: [
@@ -42,6 +43,7 @@ class MyApp extends ConsumerWidget {
       themeMode: ThemeMode.system,
       routerDelegate: router.routerDelegate,
       routeInformationParser: router.routeInformationParser,
+      routeInformationProvider: router.routeInformationProvider,
     );
   }
 }
