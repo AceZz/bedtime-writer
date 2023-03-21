@@ -7,6 +7,7 @@
   "scripts": {
     "lint": "npx prettier --write .",
     "test": "node -r dotenv/config --test",
+    "lint_check": "npx prettier --check .",
     "emulators": "firebase emulators:start",
     "deploy": "firebase deploy --only functions"
   },

@@ -1,0 +1,42 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions: read-all
+
+jobs:
+  ci:
+    name: CI on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./functions
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Clone Node v18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: functions/package-lock.json
+
+      - name: Run npm ci
+        run: |
+          npm ci
+
+      - name: Run linter
+        run: |
+          npm run lint_check
+
+      - name: Run tests
+        run: |
+          npm test
