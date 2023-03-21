@@ -49,8 +49,9 @@ export const addStory = https.onCall(async (storyParams, context) => {
     api = openAi;
   }
 
-  let payload = {
-    ...getStoryTitleAndPrompt(storyParams),
+  let payload = getStoryTitleAndPrompt(storyParams);
+  payload = {
+    ...payload,
     ...(await generateOpenAiStory(
       api,
       payload.prompt,
