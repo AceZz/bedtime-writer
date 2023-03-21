@@ -81,15 +81,18 @@ class StoryImageDecoration extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         // Wraps the image in a circle
-        Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: image,
-                fit: BoxFit.fill,
-              )),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            width: width,
+            height: height,
+            decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                image: DecorationImage(
+                  image: image,
+                  fit: BoxFit.fill,
+                )),
+          ),
         ),
         _LinearFadeWidget(width: width, height: height),
         _EdgesFadeWidget(width: width, height: height),
@@ -124,7 +127,7 @@ class _LinearFadeWidget extends StatelessWidget {
               Theme.of(context).colorScheme.background
             ],
           ),
-          shape: BoxShape.circle,
+          shape: BoxShape.rectangle,
         ),
       ),
     );
@@ -143,20 +146,52 @@ class _EdgesFadeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        gradient: RadialGradient(
-          stops: [0, 0.9, 1],
-          colors: [
-            Colors.transparent,
-            Colors.transparent,
-            Theme.of(context).colorScheme.background
-          ],
-        ),
-        shape: BoxShape.circle,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(0),
+      child: Stack(
+        children: [
+          Container(
+            width: width,
+            height: height,
+            color: Colors.transparent,
+          ),
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0, 0.1, 0.9, 1],
+                  colors: [
+                    Theme.of(context).colorScheme.background,
+                    Colors.transparent,
+                    Colors.transparent,
+                    Theme.of(context).colorScheme.background,
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  stops: [0, 0.1, 0.9, 1],
+                  colors: [
+                    Theme.of(context).colorScheme.background,
+                    Colors.transparent,
+                    Colors.transparent,
+                    Theme.of(context).colorScheme.background,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
+
