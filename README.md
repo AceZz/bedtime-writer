@@ -35,8 +35,8 @@ repository](https://docs.github.com/en/get-started/getting-started-with-git/conf
     * `screens/`: screens and related widgets
     * `states/`: states and logic attached to them
     * `index.start`: should reexport the screens
+  * `backend/`: contains calls to the backend (auth, database, etc.)
   * `widgets/`: contains widgets that are reused across screens
-  * `backend.dart`: calls to the Firebase backend
   * `main.dart`: entry point of the application
   * `router.dart`: the routes of the application
   * `theme.dart`: the theme for the entire application
