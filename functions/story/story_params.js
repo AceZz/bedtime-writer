@@ -3,26 +3,6 @@ export function getStoryTitle(storyParams) {
   return `The story of ${storyParams.character.name}`;
 }
 
-export function getImagePrompt(storyParams) {
-  return (
-    getIntroImagePrompt() +
-    getCharacterImagePrompt(storyParams.character) +
-    getPlaceImagePrompt(storyParams.place)
-  );
-}
-
-function getIntroImagePrompt() {
-  return "Dreamy and whimsical beautiful illustration";
-}
-
-function getCharacterImagePrompt(character) {
-  return character?.type !== undefined ? ` of a ${character.type}.` : ".";
-}
-
-function getPlaceImagePrompt(place) {
-  return place === undefined ? "" : ` It takes place ${place}.`;
-}
-
 export function getPrompt(storyParams) {
   return (
     getIntroPrompt(storyParams.style) +
@@ -86,4 +66,14 @@ function getNumWordsPrompt(numWords) {
   return numWords === undefined
     ? ""
     : ` The length is about ${numWords} words.`;
+}
+
+export function getImagePromptPrompt(storyParams) {
+  return (
+    "Generate now a very simple and concise prompt for dalle" +
+    ` to illustrate ${storyParams.character.name} of the story and its environment.` +
+    ` When mentioning ${storyParams.character.name}, provide a short but accurate appearance description.` +
+    ` ${storyParams.character.name} should be either beautiful or cute.` +
+    " You must mention a fairytale digital painting style."
+  );
 }

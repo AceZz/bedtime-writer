@@ -1,36 +1,175 @@
-import { Configuration, OpenAIApi } from "openai";
+import { logger } from "firebase-functions";
 
-import process from "node:process";
+import * as dotenv from "dotenv";
+dotenv.config();
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+const NUM_TOKENS_SUMMARY = 100;
 
-export function callOpenAiCompletions(prompt) {
-  return openai
-    .createChatCompletion({
+/**
+ * Generate and return a story, an imagePrompt and an imageUrl.
+ *
+ * `api` should have the same methods as `OpenAIApi`.
+ */
+export async function generateOpenAiStory(api, prompt, imagePromptPrompt) {
+  const response = await completeStory(api, prompt);
+  const stream = response.data;
+
+  const [{ imagePrompt, imageUrl }, story] = await Promise.all([
+    generateImage(api, prompt, stream, imagePromptPrompt),
+    generateStory(stream),
+  ]);
+
+  return { imagePrompt, imageUrl, story };
+}
+
+function completeStory(api, prompt) {
+  return api.createChatCompletion(
+    {
       messages: [
         {
           role: "system",
+          content: "Act as a professional writer for children.",
+        },
+        {
+          role: "user",
           content: prompt,
         },
       ],
       model: "gpt-3.5-turbo",
-      max_tokens: 3900,
+      max_tokens: 1200,
       temperature: 1.0,
       frequency_penalty: 0.7,
-      presence_penalty: 0.3,
-    })
-    .then((response) => response.data.choices[0].message.content);
+      presence_penalty: 0.2,
+      stream: true,
+    },
+    { responseType: "stream" }
+  );
 }
 
-export function callOpenAiImagesGeneration(imagePrompt, size = 512) {
-  return openai
-    .createImage({
-      prompt: imagePrompt,
-      n: 1,
-      size: `${size}x${size}`,
-    })
-    .then((response) => response.data.data[0].url);
+export async function generateImage(api, prompt, stream, imagePromptPrompt) {
+  logger.debug("generateImage: summary generation started");
+  const summary = await generateSummary(stream);
+  logger.debug("generateImage: summary generated");
+
+  logger.debug("generateImage: image prompt generation started");
+  const imagePrompt = await generateImagePrompt(
+    api,
+    prompt,
+    summary,
+    imagePromptPrompt
+  );
+  logger.debug("generateImage: image prompt generated");
+
+  logger.debug("generateImage: image generation started");
+  const imageUrl = await generateImageUrl(api, imagePromptPrompt);
+  logger.debug("generateImage: image generated");
+
+  return { imagePrompt, imageUrl };
+}
+
+export async function generateSummary(stream) {
+  // Note: only the first resolve is used in a Promise
+  return new Promise((resolve) => {
+    let tokens = [];
+
+    stream.on("data", (chunk) => {
+      for (const token of parseChunk(chunk)) {
+        tokens.push(token);
+      }
+
+      if (tokens.length === NUM_TOKENS_SUMMARY) {
+        resolve(tokens.join(""));
+      }
+    });
+
+    stream.on("end", () => {
+      resolve(tokens.join(""));
+    });
+  });
+}
+
+function parseChunk(chunk) {
+  const data = [];
+
+  for (const line of splitChunk(chunk)) {
+    try {
+      const token = JSON.parse(line)?.choices?.[0]?.delta?.content;
+      if (token !== null) {
+        data.push(token);
+      }
+    } catch {
+      logger.error("Error with data received from Open AI", line);
+    }
+  }
+
+  return data;
+}
+
+function splitChunk(chunk) {
+  return chunk
+    ?.toString()
+    ?.split("\n")
+    .filter((line) => line.trim() !== "")
+    .map((line) => line.replace(/^data: /, ""))
+    .filter((line) => line !== "[DONE]");
+}
+
+async function generateImagePrompt(api, prompt, summary, imagePromptPrompt) {
+  const response = await api.createChatCompletion({
+    messages: [
+      {
+        role: "system",
+        content: "Act as a professional illustrator for children.",
+      },
+      {
+        role: "user",
+        content: prompt,
+      },
+      {
+        role: "assistant",
+        content: summary,
+      },
+      {
+        role: "user",
+        content: imagePromptPrompt,
+      },
+    ],
+    model: "gpt-3.5-turbo",
+    max_tokens: 100,
+    temperature: 0.4,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+  });
+  return response.data.choices[0].message.content;
+}
+
+async function generateImageUrl(api, imagePrompt, size = 512) {
+  const response = await api.createImage({
+    prompt: imagePrompt,
+    n: 1,
+    size: `${size}x${size}`,
+  });
+  return response.data.data[0].url;
+}
+
+export async function generateStory(stream) {
+  logger.debug("generateStory: started");
+
+  let tokens = [];
+
+  stream.on("data", async (chunk) => {
+    for (const token of parseChunk(chunk)) {
+      tokens.push(token);
+    }
+  });
+
+  const storyIsComplete = new Promise((resolve) => {
+    stream.on("end", () => {
+      resolve();
+    });
+  });
+  await storyIsComplete;
+  logger.debug("generateStory: finished");
+
+  return tokens.join("");
 }
