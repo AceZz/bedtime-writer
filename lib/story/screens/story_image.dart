@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../backend.dart';
+import '../../backend/index.dart';
 import '../../widgets/cloud_storage_image.dart';
 
 /// Displays the image of the story [id].

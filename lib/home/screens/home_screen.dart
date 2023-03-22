@@ -1,10 +1,10 @@
-import 'package:bedtime_writer/backend.dart';
 import 'package:bedtime_writer/config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../backend/index.dart';
 import '../../story/index.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/fade_in.dart';

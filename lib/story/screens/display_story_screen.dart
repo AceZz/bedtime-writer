@@ -2,7 +2,7 @@ import 'package:bedtime_writer/story/screens/favorite_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../../backend.dart';
+import '../../backend/index.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/share_button.dart';
 import 'story_image.dart';

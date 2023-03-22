@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../backend.dart';
+import '../../backend/index.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
 import 'story_image.dart';

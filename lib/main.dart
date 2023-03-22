@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'backend.dart';
+import 'backend/index.dart';
 import 'firebase_options.dart';
 import 'router.dart';
 import 'theme.dart';
@@ -19,8 +19,8 @@ void main() async {
 
   configureFirebaseEmulators();
 
-  if (auth.currentUser == null) {
-    auth.signInAnonymously();
+  if (firebaseAuth.currentUser == null) {
+    firebaseAuth.signInAnonymously();
   }
 
   Paint.enableDithering = true; // Make smoother gradient
