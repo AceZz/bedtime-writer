@@ -74,7 +74,7 @@ class StoryWidget extends StatelessWidget {
 
     Widget textWidget = Padding(
         padding:
-            const EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 10),
+            const EdgeInsets.only(left: 30, right: 30, top: 30, bottom: 10),
         child: RichText(
           text: TextSpan(
             // Sets a big first letter

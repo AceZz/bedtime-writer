@@ -23,6 +23,7 @@ void main() async {
     auth.signInAnonymously();
   }
 
+  Paint.enableDithering = true; // Make smoother gradient
   runApp(ProviderScope(child: MyApp()));
 }
 
