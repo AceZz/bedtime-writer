@@ -1,15 +1,17 @@
 export 'firebase/database.dart'
     show
+        firebaseStorage,
         storiesReference,
         storyReference,
         storyImageReference,
-        addStory,
-        firebaseStorage;
-export 'firebase/emulators.dart' show configureFirebaseEmulators;
-export 'firebase/user.dart' show firebaseAuth;
+        addStory;
+export 'firebase/index.dart' show configureFirebaseEmulators;
+export 'providers.dart' show userProvider;
 export 'user.dart'
     show
-        isUserAuthenticated,
-        isUserAnonymous,
-        userProvider,
-        isUserAnonymousProvider;
+        User,
+        AuthUser,
+        AnonymousUser,
+        RegisteredUser,
+        UnauthUser,
+        GoogleAuthMixin;

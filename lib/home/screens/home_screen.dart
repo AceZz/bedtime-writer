@@ -1,5 +1,4 @@
 import 'package:bedtime_writer/config.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -82,21 +81,8 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Widget _debugAccountWidget(WidgetRef ref) {
-    final user = ref.watch(userProvider).value;
-    String text = 'Unauthenticated user';
-
-    if (isUserAuthenticated(user)) {
-      if (isUserAnonymous(user)) {
-        text = 'Authenticated user (anonymous, ${user!.uid})';
-      } else {
-        final providers = user!.providerData
-            .map((UserInfo provider) => provider.providerId)
-            .join(',');
-        text = 'Authenticated user (providers: $providers, ${user.uid})';
-      }
-    }
-
-    return Text(text);
+    final user = ref.watch(userProvider);
+    return Text(user.toString());
   }
 }
 

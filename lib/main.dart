@@ -19,11 +19,8 @@ void main() async {
 
   configureFirebaseEmulators();
 
-  if (firebaseAuth.currentUser == null) {
-    firebaseAuth.signInAnonymously();
-  }
-
   Paint.enableDithering = true; // Make smoother gradient
+
   runApp(ProviderScope(child: MyApp()));
 }
 
