@@ -9,15 +9,14 @@ import { firestore, https, logger } from "firebase-functions";
 import { initializeApp } from "firebase-admin/app";
 import { getStorage } from "firebase-admin/storage";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
+import { Configuration, OpenAIApi } from "openai";
 
 import { getUid } from "./auth.js";
-import {
-  callOpenAiCompletions,
-  callOpenAiImagesGeneration,
-} from "./story/open_ai.js";
+import { fakeOpenAi } from "./story/fake_open_ai.js";
+import { generateOpenAiStory } from "./story/open_ai.js";
 import {
   getStoryTitle,
-  getImagePrompt,
+  getImagePromptPrompt,
   getPrompt,
 } from "./story/story_params.js";
 
@@ -26,6 +25,12 @@ initializeApp();
 const storiesRef = getFirestore().collection("stories");
 const storageBucket = getStorage().bucket();
 
+const openAi = new OpenAIApi(
+  new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  })
+);
+
 /**
  * Add a story.
  *
@@ -33,52 +38,39 @@ const storageBucket = getStorage().bucket();
  * It returns the ID of the created Firestore document.
  */
 export const addStory = https.onCall(async (storyParams, context) => {
+  let api;
   const uid = getUid(context);
 
-  let story;
   if (process.env.FAKE_DATA === "true") {
-    logger.info("Generate fake data");
-    story = getFakeStory(storyParams);
+    logger.info("addStory: using fake data");
+    api = fakeOpenAi;
   } else {
-    logger.info("Generate Open AI data");
-    story = await callOpenAi(storyParams);
-    logger.info("Open AI data was generated");
+    logger.info("addStory: using Open AI data");
+    api = openAi;
   }
 
-  const storyId = await addToFirestore(story, uid);
-  logger.info(`Story ${storyId} was added to Firestore`);
+  let payload = getStoryTitleAndPrompt(storyParams);
+  payload = {
+    ...payload,
+    ...(await generateOpenAiStory(
+      api,
+      payload.prompt,
+      payload.imagePromptPrompt
+    )),
+  };
+  logger.info("addStory: story was generated");
+
+  const storyId = await addToFirestore(payload, uid);
+  logger.info(`addStory: story ${storyId} was added to Firestore`);
 
   return storyId;
 });
-
-function getFakeStory(storyParams) {
-  return {
-    ...getStoryTitleAndPrompt(storyParams),
-    story: "test",
-    imageUrl: "https://avatars.githubusercontent.com/u/11032610?v=4",
-  };
-}
 
 function getStoryTitleAndPrompt(storyParams) {
   return {
     title: getStoryTitle(storyParams),
     prompt: getPrompt(storyParams),
-    imagePrompt: getImagePrompt(storyParams),
-  };
-}
-
-async function callOpenAi(storyParams) {
-  let story = getStoryTitleAndPrompt(storyParams);
-
-  const [storyText, imageUrl] = await Promise.all([
-    callOpenAiCompletions(story.prompt),
-    callOpenAiImagesGeneration(story.imagePrompt, 512),
-  ]);
-
-  return {
-    ...story,
-    story: storyText,
-    imageUrl: imageUrl,
+    imagePromptPrompt: getImagePromptPrompt(storyParams),
   };
 }
 
@@ -115,13 +107,17 @@ export const downloadStoryImage = firestore
     const data = snapshot.data();
     const storyImageFile = storageBucket.file(storyImagePath);
     await saveStoryImageToStorage(data.image.providerUrl, storyImageFile);
-    logger.info(`Image of story ${snapshot.id} was saved to Storage`);
+    logger.info(
+      `downloadStoryImage: image of story ${snapshot.id} was saved to Storage`
+    );
 
     await setStoryImageMetadata(data.author, storyImageFile);
     logger.info(`Metadata of story image ${snapshot.id} was updated`);
 
     await setStoryImagePath(snapshot.id, storyImagePath);
-    logger.info(`Storage cloud image path of story ${snapshot.id} was updated`);
+    logger.info(
+      `downloadStoryImage: storage cloud image path of story ${snapshot.id} was updated`
+    );
   });
 
 function getStoryImagePath(storyId) {

@@ -1,11 +1,7 @@
 import assert from "node:assert";
 import test from "node:test";
 
-import {
-  getStoryTitle,
-  getImagePrompt,
-  getPrompt,
-} from "../../story/story_params.js";
+import { getPrompt, getStoryTitle } from "../../story/story_params.js";
 
 const partialCharacter = {
   name: "Someone",
@@ -42,22 +38,6 @@ test("getStoryTitle", async (t) => {
 
   await t.test("full title", () => {
     assert.strictEqual(getStoryTitle(fullParams), "The story of Someone");
-  });
-});
-
-test("getImagePrompt", async (t) => {
-  await t.test("no params", () => {
-    assert.strictEqual(
-      getImagePrompt({}),
-      "Dreamy and whimsical beautiful illustration."
-    );
-  });
-
-  await t.test("full params", () => {
-    assert.strictEqual(
-      getImagePrompt(fullParams),
-      "Dreamy and whimsical beautiful illustration of a type. It takes place at some place."
-    );
   });
 });
 
