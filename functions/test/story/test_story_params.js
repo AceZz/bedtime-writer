@@ -1,11 +1,7 @@
 import assert from "node:assert";
 import test from "node:test";
 
-import {
-  getImagePromptPrompt,
-  getPrompt,
-  getStoryTitle,
-} from "../../story/story_params.js";
+import { getPrompt, getStoryTitle } from "../../story/story_params.js";
 
 const partialCharacter = {
   name: "Someone",

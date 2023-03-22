@@ -19,7 +19,7 @@ export async function generateOpenAiStory(api, prompt, imagePromptPrompt) {
     generateStory(stream),
   ]);
 
-  return { story, imagePrompt, imageUrl };
+  return { imagePrompt, imageUrl, story };
 }
 
 function completeStory(api, prompt) {
@@ -47,22 +47,28 @@ function completeStory(api, prompt) {
 }
 
 export async function generateImage(api, prompt, stream, imagePromptPrompt) {
+  logger.debug("generateImage: summary generation started");
   const summary = await generateSummary(stream);
+  logger.debug("generateImage: summary generated");
+
+  logger.debug("generateImage: image prompt generation started");
   const imagePrompt = await generateImagePrompt(
     api,
     prompt,
     summary,
     imagePromptPrompt
   );
+  logger.debug("generateImage: image prompt generated");
+
+  logger.debug("generateImage: image generation started");
   const imageUrl = await generateImageUrl(api, imagePromptPrompt);
+  logger.debug("generateImage: image generated");
 
   return { imagePrompt, imageUrl };
 }
 
 export async function generateSummary(stream) {
   // Note: only the first resolve is used in a Promise
-  logger.debug("generateSummary: started");
-
   return new Promise((resolve) => {
     let tokens = [];
 
@@ -72,13 +78,11 @@ export async function generateSummary(stream) {
       }
 
       if (tokens.length === NUM_TOKENS_SUMMARY) {
-        logger.debug("generateSummary: summary generated");
         resolve(tokens.join(""));
       }
     });
 
     stream.on("end", () => {
-      logger.debug("generateSummary: stream ended");
       resolve(tokens.join(""));
     });
   });
