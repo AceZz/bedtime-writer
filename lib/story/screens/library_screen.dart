@@ -64,7 +64,10 @@ class LibraryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
-    final query = storiesReference.where('author', isEqualTo: user.value?.uid);
+    final query = storiesReference.where(
+      'author',
+      isEqualTo: user is AuthUser ? user.uid : null,
+    );
     final lottieWidget = LottieLoading();
 
     return FutureBuilder(
