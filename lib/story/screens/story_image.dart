@@ -54,6 +54,7 @@ class StoryImage extends StatelessWidget {
             image: image,
             width: width,
             height: height,
+            forLibrary: forLibrary,
           );
         } else if (snapshot.hasError) {
           return Icon(FontAwesomeIcons.triangleExclamation);
@@ -69,16 +70,22 @@ class StoryImageDecoration extends StatelessWidget {
   final ImageProvider image;
   final double width;
   final double height;
+  final bool forLibrary;
 
-  StoryImageDecoration({
-    Key? key,
-    required this.image,
-    required this.width,
-    required this.height,
-  }) : super(key: key);
+  StoryImageDecoration(
+      {Key? key,
+      required this.image,
+      required this.width,
+      required this.height,
+      this.forLibrary = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final Color fadeColor = forLibrary
+        ? Theme.of(context).colorScheme.primary
+        : Theme.of(context).colorScheme.background;
+
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -96,8 +103,16 @@ class StoryImageDecoration extends StatelessWidget {
                 )),
           ),
         ),
-        _LinearFadeWidget(width: width, height: height),
-        _EdgesFadeWidget(width: width, height: height),
+        _LinearFadeWidget(
+          width: width,
+          height: height,
+          fadeColor: fadeColor,
+        ),
+        _EdgesFadeWidget(
+          width: width,
+          height: height,
+          fadeColor: fadeColor,
+        ),
       ],
     );
   }
@@ -108,10 +123,12 @@ class _LinearFadeWidget extends StatelessWidget {
     Key? key,
     required this.width,
     required this.height,
+    required this.fadeColor,
   }) : super(key: key);
 
   final double width;
   final double height;
+  final Color fadeColor;
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +143,7 @@ class _LinearFadeWidget extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [
               Colors.transparent,
-              Theme.of(context).colorScheme.background
+              fadeColor,
             ],
           ),
           shape: BoxShape.rectangle,
@@ -141,10 +158,12 @@ class _EdgesFadeWidget extends StatelessWidget {
     Key? key,
     required this.width,
     required this.height,
+    required this.fadeColor,
   }) : super(key: key);
 
   final double width;
   final double height;
+  final Color fadeColor;
 
   @override
   Widget build(BuildContext context) {
@@ -165,10 +184,10 @@ class _EdgesFadeWidget extends StatelessWidget {
                   end: Alignment.bottomLeft,
                   stops: [0, 0.15, 0.85, 1],
                   colors: [
-                    Theme.of(context).colorScheme.background,
+                    fadeColor,
                     Colors.transparent,
                     Colors.transparent,
-                    Theme.of(context).colorScheme.background,
+                    fadeColor,
                   ],
                 ),
               ),
@@ -182,10 +201,10 @@ class _EdgesFadeWidget extends StatelessWidget {
                   end: Alignment.bottomRight,
                   stops: [0, 0.15, 0.85, 1],
                   colors: [
-                    Theme.of(context).colorScheme.background,
+                    fadeColor,
                     Colors.transparent,
                     Colors.transparent,
-                    Theme.of(context).colorScheme.background,
+                    fadeColor,
                   ],
                 ),
               ),
