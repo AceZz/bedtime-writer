@@ -28,7 +28,12 @@ class DisplayStoryScreen extends StatelessWidget {
           content = StoryWidget(
             title: data['title'],
             story: data['text'],
-            image: StoryImage(id: id, width: 360, height: 360),
+            image: StoryImage(
+              id: id,
+              width: 360,
+              height: 360,
+              fadeColor: Theme.of(context).colorScheme.background,
+            ),
           );
         }
 

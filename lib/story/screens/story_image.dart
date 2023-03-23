@@ -13,14 +13,14 @@ class StoryImage extends StatelessWidget {
   final String id;
   final double width;
   final double height;
-  final bool forLibrary;
+  final Color fadeColor;
 
   const StoryImage({
     Key? key,
     required this.id,
     required this.width,
     required this.height,
-    this.forLibrary = false,
+    required this.fadeColor,
   }) : super(key: key);
 
   Future<DocumentSnapshot<Map<String, dynamic>>> get story =>
@@ -54,7 +54,7 @@ class StoryImage extends StatelessWidget {
             image: image,
             width: width,
             height: height,
-            forLibrary: forLibrary,
+            fadeColor: fadeColor,
           );
         } else if (snapshot.hasError) {
           return Icon(FontAwesomeIcons.triangleExclamation);
@@ -70,26 +70,22 @@ class StoryImageDecoration extends StatelessWidget {
   final ImageProvider image;
   final double width;
   final double height;
-  final bool forLibrary;
+  final Color fadeColor;
 
-  StoryImageDecoration(
-      {Key? key,
-      required this.image,
-      required this.width,
-      required this.height,
-      this.forLibrary = false})
-      : super(key: key);
+  StoryImageDecoration({
+    Key? key,
+    required this.image,
+    required this.width,
+    required this.height,
+    required this.fadeColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final Color fadeColor = forLibrary
-        ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.background;
-
     return Stack(
       alignment: Alignment.center,
       children: [
-        // Wraps the image in a circle
+        // Wraps the image in a rectangle with rounded corners
         ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Container(

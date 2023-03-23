@@ -27,12 +27,13 @@ class _StoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime date = creationDate.toDate();
+    final Color tileColor = Theme.of(context).colorScheme.primary;
 
     return ListTile(
       // Has a preset non-modifiable height
       key: ValueKey(id),
       contentPadding: const EdgeInsets.all(8.0),
-      tileColor: Theme.of(context).colorScheme.primary,
+      tileColor: tileColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
@@ -44,7 +45,7 @@ class _StoryTile extends StatelessWidget {
             id: id,
             width: 55,
             height: 55,
-            forLibrary: true,
+            fadeColor: tileColor,
           ),
         ),
       ),
