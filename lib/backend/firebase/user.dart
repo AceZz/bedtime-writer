@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../user.dart';
@@ -56,6 +57,11 @@ class _FirebaseUnauthUser extends _FirebaseUser implements UnauthUser {
 
   @override
   Future signInWithGoogle() async {
+    if (kIsWeb) {
+      final provider = firebase_auth.GoogleAuthProvider();
+      return firebaseAuth.signInWithPopup(provider);
+    }
+
     final credential = await _getGoogleCredential();
     return firebaseAuth.signInWithCredential(credential);
   }
@@ -86,6 +92,11 @@ class _FirebaseAnonymousUser extends _FirebaseAuthUser
 
   @override
   Future linkToGoogle() async {
+    if (kIsWeb) {
+      final provider = firebase_auth.GoogleAuthProvider();
+      return firebaseAuth.signInWithPopup(provider);
+    }
+
     final credential = await _getGoogleCredential();
 
     try {
@@ -113,6 +124,11 @@ class _FirebaseRegisteredUser extends _FirebaseAuthUser
 
   @override
   Future linkToGoogle() async {
+    if (kIsWeb) {
+      final provider = firebase_auth.GoogleAuthProvider();
+      return firebaseAuth.signInWithPopup(provider);
+    }
+
     final credential = await _getGoogleCredential();
 
     try {

@@ -1,6 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import 'dart:io';
 
 Future<void> _onShare(BuildContext context, String text) async {
   final box = context.findRenderObject() as RenderBox?;
@@ -20,25 +22,28 @@ class ShareButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Check the OS to choose the corresponding icon
-    IconData shareIcon;
-    if (Platform.isAndroid) {
-      shareIcon = Icons.share;
-    } else if (Platform.isIOS) {
-      shareIcon = Icons.ios_share;
-    } else {
-      shareIcon = Icons.share;
-    }
-
     return Builder(
       builder: (context) => IconButton(
         iconSize: iconSize,
         onPressed: () => _onShare(context, text),
         icon: Icon(
-          shareIcon,
+          _shareIcon,
           color: Theme.of(context).textTheme.bodyMedium?.color,
         ),
       ),
     );
+  }
+
+  /// Returns the icon corresponding to the OS.
+  IconData get _shareIcon {
+    // The web case must be tackled first, as `Platform` is not available on it.
+    if (kIsWeb) return Icons.share;
+    if (Platform.isAndroid) {
+      return Icons.share;
+    }
+    if (Platform.isIOS) {
+      return Icons.ios_share;
+    }
+    return Icons.share;
   }
 }
