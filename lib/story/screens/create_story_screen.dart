@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
+
 import 'dart:core';
 import '../../backend.dart';
 import '../../widgets/app_scaffold.dart';
@@ -23,9 +25,11 @@ class CreateStoryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     CreateStoryState state = ref.watch(createStoryStateProvider);
 
-    final bool debugLoading =
-        bool.fromEnvironment('DEBUG_LOADING', defaultValue: false);
-    if (debugLoading) {
+    final debugLoading = dotenv.get('DEBUG_LOADING', fallback: 'false');
+
+    print(debugLoading);
+
+    if (debugLoading == 'true') {
       // Creates infinite loading for debug
       return AppScaffold(
         showAppBar: false,
@@ -71,10 +75,15 @@ class _LoadingContent extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         LottieLoading(),
-        Text(
-          'Your story is being created...',
-          style: Theme.of(context).primaryTextTheme.headlineSmall,
-        ),
+        SizedBox(
+          child: AnimatedTextKit(
+            animatedTexts: [
+              RotateAnimatedText('AWESOME'),
+              RotateAnimatedText('OPTIMISTIC'),
+              RotateAnimatedText('DIFFERENT'),
+            ],
+          ),
+        )
       ],
     );
   }
