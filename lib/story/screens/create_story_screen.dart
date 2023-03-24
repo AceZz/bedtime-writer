@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'dart:core';
 import '../../backend.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
@@ -20,6 +22,16 @@ class CreateStoryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     CreateStoryState state = ref.watch(createStoryStateProvider);
+
+    final bool debugLoading =
+        bool.fromEnvironment('DEBUG_LOADING', defaultValue: false);
+    if (debugLoading) {
+      // Creates infinite loading for debug
+      return AppScaffold(
+        showAppBar: false,
+        child: _LoadingContent(),
+      );
+    }
 
     if (state.hasQuestions) {
       // Displays the current question.
