@@ -58,10 +58,12 @@ class CredentialAlreadyUsedException extends AuthException
     implements Exception {}
 
 /// Contains code to use Google authentication.
+///
+/// The [clientId] is required on some platforms (such as iOS).
 mixin GoogleAuthMixin {
-  Future<GoogleSignInAuthentication?> getGoogleAuth() async {
+  Future<GoogleSignInAuthentication?> getGoogleAuth({String? clientId}) async {
     // See https://firebase.google.com/docs/auth/flutter/federated-auth.
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    var googleUser = await GoogleSignIn(clientId: clientId).signIn();
     return await googleUser?.authentication;
   }
 }
