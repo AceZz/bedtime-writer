@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../firebase_options.dart';
 import '../user.dart';
 
 final firebaseAuth = firebase_auth.FirebaseAuth.instance;
@@ -34,12 +35,19 @@ abstract class _FirebaseUser with GoogleAuthMixin implements User {
 
   /// Displays a Google sign in form, returns the Google credential.
   Future<firebase_auth.OAuthCredential> _getGoogleCredential() async {
-    final googleAuth = await getGoogleAuth();
+    final googleAuth = await getGoogleAuth(clientId: _clientId);
 
     return firebase_auth.GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
+  }
+
+  /// Only used for iOS for now.
+  String? get _clientId {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS)
+      return DefaultFirebaseOptions.currentPlatform.iosClientId;
+    return null;
   }
 }
 
