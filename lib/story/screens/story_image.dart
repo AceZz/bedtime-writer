@@ -13,12 +13,14 @@ class StoryImage extends StatelessWidget {
   final String id;
   final double width;
   final double height;
+  final Color fadeColor;
 
   const StoryImage({
     Key? key,
     required this.id,
     required this.width,
     required this.height,
+    required this.fadeColor,
   }) : super(key: key);
 
   Future<DocumentSnapshot<Map<String, dynamic>>> get story =>
@@ -52,6 +54,7 @@ class StoryImage extends StatelessWidget {
             image: image,
             width: width,
             height: height,
+            fadeColor: fadeColor,
           );
         } else if (snapshot.hasError) {
           return Icon(FontAwesomeIcons.triangleExclamation);
@@ -67,12 +70,14 @@ class StoryImageDecoration extends StatelessWidget {
   final ImageProvider image;
   final double width;
   final double height;
+  final Color fadeColor;
 
   StoryImageDecoration({
     Key? key,
     required this.image,
     required this.width,
     required this.height,
+    required this.fadeColor,
   }) : super(key: key);
 
   @override
@@ -80,19 +85,30 @@ class StoryImageDecoration extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        // Wraps the image in a circle
-        Container(
+        // Wraps the image in a rectangle with rounded corners
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            width: width,
+            height: height,
+            decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                image: DecorationImage(
+                  image: image,
+                  fit: BoxFit.fill,
+                )),
+          ),
+        ),
+        _LinearFadeWidget(
           width: width,
           height: height,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: image,
-                fit: BoxFit.fill,
-              )),
+          fadeColor: fadeColor,
         ),
-        _LinearFadeWidget(width: width, height: height),
-        _EdgesFadeWidget(width: width, height: height),
+        _EdgesFadeWidget(
+          width: width,
+          height: height,
+          fadeColor: fadeColor,
+        ),
       ],
     );
   }
@@ -103,10 +119,12 @@ class _LinearFadeWidget extends StatelessWidget {
     Key? key,
     required this.width,
     required this.height,
+    required this.fadeColor,
   }) : super(key: key);
 
   final double width;
   final double height;
+  final Color fadeColor;
 
   @override
   Widget build(BuildContext context) {
@@ -121,10 +139,10 @@ class _LinearFadeWidget extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [
               Colors.transparent,
-              Theme.of(context).colorScheme.background
+              fadeColor,
             ],
           ),
-          shape: BoxShape.circle,
+          shape: BoxShape.rectangle,
         ),
       ),
     );
@@ -136,26 +154,59 @@ class _EdgesFadeWidget extends StatelessWidget {
     Key? key,
     required this.width,
     required this.height,
+    required this.fadeColor,
   }) : super(key: key);
 
   final double width;
   final double height;
+  final Color fadeColor;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        gradient: RadialGradient(
-          stops: [0, 0.9, 1],
-          colors: [
-            Colors.transparent,
-            Colors.transparent,
-            Theme.of(context).colorScheme.background
-          ],
-        ),
-        shape: BoxShape.circle,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Stack(
+        children: [
+          Container(
+            width: width,
+            height: height,
+            color: Colors.transparent,
+          ),
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  stops: [0, 0.15, 0.85, 1],
+                  colors: [
+                    fadeColor,
+                    Colors.transparent,
+                    Colors.transparent,
+                    fadeColor,
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  stops: [0, 0.15, 0.85, 1],
+                  colors: [
+                    fadeColor,
+                    Colors.transparent,
+                    Colors.transparent,
+                    fadeColor,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
