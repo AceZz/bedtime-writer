@@ -123,7 +123,7 @@ class _LoadingTexts extends StatelessWidget {
             text,
             textAlign: TextAlign.center,
             textStyle: textStyle,
-            duration: const Duration(milliseconds: 4000),
+            duration: const Duration(milliseconds: 5000),
           ),
         )
         .toList();
