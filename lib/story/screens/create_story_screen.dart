@@ -12,10 +12,40 @@ import '../states/create_story_state.dart';
 import '../states/story_params.dart';
 import 'display_story_screen.dart';
 
-const List<String> animatedTextList = [
-  'The dragon goes back to sleep',
-  'Fairies are dancing around'
+const List<String> loadingTextList = [
+  'The dragon is sleeping soundly in his lair',
+  'The fairies are dancing and singing in the moonlight',
+  'A wish is being granted by a magical genie',
+  'The wicked witch is cackling with glee over her latest scheme',
+  'The seven dwarves are whistling while they work in the mines',
+  'The mermaid is splashing playfully in the waves',
+  'A majestic unicorn is galloping through a field of wildflowers',
+  'The giant is grumbling in his sleep, dreaming of his next meal',
+  'The goblin is hoarding his stolen treasure in a secret hideout',
+  'The wise wizard is studying ancient tomes of magic in his tower',
+  'A group of talking animals are planning a daring adventure',
+  'The enchanted forest is alive with whispers and secrets',
+  'An enchanted rose is slowly losing its petals in a lonely castle',
+  'A brave prince is fighting a fierce dragon to save his true love',
+  'A magical tea party is happening in a hidden grove, hosted by the fairies',
+  'In the mist and mystery, a castle looms in the distance',
+  'With a wave of her wand, the fairy godmother prepares to grant a lucky soul\'s wish',
+  'The future is glimpsed in the enchanted mirror',
+  'The kingdom is in darkness, and a hero sets out to save it',
+  'The wicked stepmother cackles as she plots her next move',
+  'A cursed prince searches for true love\'s kiss to break the spell',
+  'The magical beanstalk dares adventurers to climb high into the clouds',
+  'A brave knight battles a fierce dragon to save the princess',
+  'Mischievous pixies play pranks on unsuspecting travelers',
+  'A powerful sorcerer summons the elements to do his bidding',
+  'Eerie shadows and whispers fill the haunted woods',
+  'Mythical mermaids sing hauntingly beautiful songs',
+  'The fairy queen dances gracefully in a moonlit glade',
+  'Ancient creatures and untold secrets hide in the treacherous sea',
+  'A wise old wizard dispenses cryptic advice',
 ];
+
+const int numberLoadingText = 10;
 
 /// Entry point of the story creation.
 ///
@@ -100,32 +130,21 @@ class _AnimatedText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int numberAnimatedText = 2;
-    final List<String> animatedTextListCopy = List.from(animatedTextList);
-    animatedTextListCopy.shuffle();
-    final List<String> animatedTextRandomList =
-        animatedTextListCopy.take(numberAnimatedText).toList();
+    final List<String> loadingTextListCopy = List.from(loadingTextList);
+    loadingTextListCopy.shuffle();
+    final List<String> loadingTextRandomList =
+        loadingTextListCopy.take(numberLoadingText).toList();
+    final List<dynamic> rotateAnimatedTextList = loadingTextRandomList
+        .map((x) => _stringToRotateAnimatedText(x, context))
+        .toList();
 
     return AnimatedTextKit(
       animatedTexts: [
-        RotateAnimatedText(
+        _stringToRotateAnimatedText(
           'Your fairy tale will arrive in about 30 seconds',
-          textAlign: TextAlign.center,
-          textStyle: Theme.of(context).primaryTextTheme.bodyLarge,
-          duration: const Duration(milliseconds: 4000),
+          context,
         ),
-        RotateAnimatedText(
-          'Fairies are dancing around',
-          textAlign: TextAlign.center,
-          textStyle: Theme.of(context).primaryTextTheme.bodyLarge,
-          duration: const Duration(milliseconds: 4000),
-        ),
-        RotateAnimatedText(
-          'The dragon goes back to sleep',
-          textAlign: TextAlign.center,
-          textStyle: Theme.of(context).primaryTextTheme.bodyLarge,
-          duration: const Duration(milliseconds: 4000),
-        ),
+        ...rotateAnimatedTextList,
       ],
       pause: const Duration(milliseconds: 1000),
       repeatForever: true,
@@ -134,7 +153,6 @@ class _AnimatedText extends StatelessWidget {
 }
 
 /// Returns a rotate animate text from a string
-//TODO: use this in above custom widget
 RotateAnimatedText _stringToRotateAnimatedText(
     String text, BuildContext context) {
   return RotateAnimatedText(
