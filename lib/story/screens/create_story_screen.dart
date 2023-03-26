@@ -1,51 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:core';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'dart:core';
 import '../../backend.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
 import '../states/create_story_state.dart';
 import '../states/story_params.dart';
 import 'display_story_screen.dart';
-
-const List<String> loadingTextList = [
-  'The dragon is sleeping soundly in his lair',
-  'The fairies are dancing and singing in the moonlight',
-  'A wish is being granted by a magical genie',
-  'The wicked witch is cackling with glee over her latest scheme',
-  'The seven dwarves are whistling while they work in the mines',
-  'The mermaid is splashing playfully in the waves',
-  'A majestic unicorn is galloping through a field of wildflowers',
-  'The giant is grumbling in his sleep, dreaming of his next meal',
-  'The goblin is hoarding his stolen treasure in a secret hideout',
-  'The wise wizard is studying ancient tomes of magic in his tower',
-  'A group of talking animals are planning a daring adventure',
-  'The enchanted forest is alive with whispers and secrets',
-  'An enchanted rose is slowly losing its petals in a lonely castle',
-  'A brave prince is fighting a fierce dragon to save his true love',
-  'A magical tea party is happening in a hidden grove, hosted by the fairies',
-  'In the mist and mystery, a castle looms in the distance',
-  'With a wave of her wand, the fairy godmother prepares to grant a lucky soul\'s wish',
-  'The future is glimpsed in the enchanted mirror',
-  'The kingdom is in darkness, and a hero sets out to save it',
-  'The wicked stepmother cackles as she plots her next move',
-  'A cursed prince searches for true love\'s kiss to break the spell',
-  'The magical beanstalk dares adventurers to climb high into the clouds',
-  'A brave knight battles a fierce dragon to save the princess',
-  'Mischievous pixies play pranks on unsuspecting travelers',
-  'A powerful sorcerer summons the elements to do his bidding',
-  'Eerie shadows and whispers fill the haunted woods',
-  'Mythical mermaids sing hauntingly beautiful songs',
-  'The fairy queen dances gracefully in a moonlit glade',
-  'Ancient creatures and untold secrets hide in the treacherous sea',
-  'A wise old wizard dispenses cryptic advice',
-];
-
-const int numberLoadingText = 10;
 
 /// Entry point of the story creation.
 ///
@@ -59,18 +23,6 @@ class CreateStoryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     CreateStoryState state = ref.watch(createStoryStateProvider);
-
-    final debugLoading = dotenv.get('DEBUG_LOADING', fallback: 'false');
-
-    print(debugLoading);
-
-    if (debugLoading == 'true') {
-      // Creates infinite loading for debug
-      return AppScaffold(
-        showAppBar: false,
-        child: _LoadingContent(),
-      );
-    }
 
     if (state.hasQuestions) {
       // Displays the current question.
@@ -114,7 +66,7 @@ class _LoadingContent extends ConsumerWidget {
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: _AnimatedText(),
+                child: _LoadingTexts(),
               ),
             ),
           )
@@ -124,43 +76,64 @@ class _LoadingContent extends ConsumerWidget {
   }
 }
 
-/// Creates animated text for loading screen
-class _AnimatedText extends StatelessWidget {
-  const _AnimatedText({Key? key}) : super(key: key);
+/// Loads the loading texts from [assetFile] and displays a [maxNumLoadingTexts]
+/// of them.
+class _LoadingTexts extends StatelessWidget {
+  static const String assetFile = 'assets/story/loading.txt';
+
+  static const int maxNumLoadingTexts = 10;
+
+  /// The first text that is shown. To avoid duplicates, it should not appear in
+  /// `assetFile`,
+  static const String defaultText =
+      'Your fairy tale will appear in a few seconds';
+
+  const _LoadingTexts({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final List<String> loadingTextListCopy = List.from(loadingTextList);
-    loadingTextListCopy.shuffle();
-    final List<String> loadingTextRandomList =
-        loadingTextListCopy.take(numberLoadingText).toList();
-    final List<dynamic> rotateAnimatedTextList = loadingTextRandomList
-        .map((x) => _stringToRotateAnimatedText(x, context))
+    return FutureBuilder(
+      future: _texts(context),
+      initialData: [defaultText],
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<Iterable<String>> snapshot,
+      ) {
+        final texts = snapshot.data;
+        final textStyle = Theme.of(context).primaryTextTheme.bodyLarge;
+        return texts != null
+            ? _animatedTexts(texts, textStyle)
+            : SizedBox.shrink();
+      },
+    );
+  }
+
+  /// Returns the loading texts from the corresponding asset file.
+  Future<Iterable<String>> _texts(BuildContext context) async {
+    final data = await DefaultAssetBundle.of(context).loadString(assetFile);
+    var texts = data.split('\n');
+    texts.shuffle();
+    return [defaultText, ...texts.take(maxNumLoadingTexts)];
+  }
+
+  Widget _animatedTexts(Iterable<String> texts, TextStyle? textStyle) {
+    final animatedTexts = texts
+        .map(
+          (text) => RotateAnimatedText(
+            text,
+            textAlign: TextAlign.center,
+            textStyle: textStyle,
+            duration: const Duration(milliseconds: 4000),
+          ),
+        )
         .toList();
 
     return AnimatedTextKit(
-      animatedTexts: [
-        _stringToRotateAnimatedText(
-          'Your fairy tale will arrive in about 30 seconds',
-          context,
-        ),
-        ...rotateAnimatedTextList,
-      ],
+      animatedTexts: animatedTexts,
       pause: const Duration(milliseconds: 1000),
       repeatForever: true,
     );
   }
-}
-
-/// Returns a rotate animate text from a string
-RotateAnimatedText _stringToRotateAnimatedText(
-    String text, BuildContext context) {
-  return RotateAnimatedText(
-    text,
-    textAlign: TextAlign.center,
-    textStyle: Theme.of(context).primaryTextTheme.bodyLarge,
-    duration: const Duration(milliseconds: 4000),
-  );
 }
 
 /// Displays a question.

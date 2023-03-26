@@ -63,6 +63,7 @@ flutter:
   assets:
     - .env
     - assets/lottie/
+    - assets/story/loading.txt
     - assets/story/challenge/
     - assets/story/character/
     - assets/story/flaw/
