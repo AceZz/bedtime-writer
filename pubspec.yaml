@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  animated_text_kit: ^4.0.0
   auto_size_text: ^3.0.0
   cloud_firestore: ^4.0.0
   cloud_functions: ^4.0.0
@@ -64,6 +65,7 @@ flutter:
     - .env
     - assets/logos/
     - assets/lottie/
+    - assets/story/loading.txt
     - assets/story/challenge/
     - assets/story/character/
     - assets/story/flaw/
