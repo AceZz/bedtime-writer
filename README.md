@@ -47,7 +47,6 @@ Add this key to the `.env` file:
 
 ```text
 DEBUG=true
-DEBUG_LOADING=true
 ```
 
 ### Backend emulation

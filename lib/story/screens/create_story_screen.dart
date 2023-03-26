@@ -84,7 +84,7 @@ class _LoadingTexts extends StatelessWidget {
   static const int maxNumLoadingTexts = 10;
 
   /// The first text that is shown. To avoid duplicates, it should not appear in
-  /// `assetFile`,
+  /// [assetFile],
   static const String defaultText =
       'Your fairy tale will appear in a few seconds';
 
