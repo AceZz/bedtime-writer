@@ -2,7 +2,7 @@ import 'package:bedtime_writer/story/screens/favorite_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../../backend.dart';
+import '../../backend/index.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/share_button.dart';
 import 'story_image.dart';
@@ -28,7 +28,12 @@ class DisplayStoryScreen extends StatelessWidget {
           content = StoryWidget(
             title: data['title'],
             story: data['text'],
-            image: StoryImage(id: id, width: 380, height: 380),
+            image: StoryImage(
+              id: id,
+              width: 360,
+              height: 360,
+              fadeColor: Theme.of(context).colorScheme.background,
+            ),
           );
         }
 

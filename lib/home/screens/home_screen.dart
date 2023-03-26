@@ -1,13 +1,12 @@
-import 'package:bedtime_writer/backend.dart';
-import 'package:bedtime_writer/config.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../config.dart';
 import '../../story/index.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/fade_in.dart';
+import 'home_screen_debug.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -70,33 +69,16 @@ class HomeScreen extends ConsumerWidget {
           menuWidget,
           if (debugMode())
             Expanded(
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: _debugAccountWidget(ref),
+              child: Row(
+                children: [
+                  Flexible(child: HomeScreenDebug()),
+                ],
               ),
             ),
         ],
       ),
       showAppBar: false,
     );
-  }
-
-  Widget _debugAccountWidget(WidgetRef ref) {
-    final user = ref.watch(userProvider).value;
-    String text = 'Unauthenticated user';
-
-    if (isUserAuthenticated(user)) {
-      if (isUserAnonymous(user)) {
-        text = 'Authenticated user (anonymous, ${user!.uid})';
-      } else {
-        final providers = user!.providerData
-            .map((UserInfo provider) => provider.providerId)
-            .join(',');
-        text = 'Authenticated user (providers: $providers, ${user.uid})';
-      }
-    }
-
-    return Text(text);
   }
 }
 

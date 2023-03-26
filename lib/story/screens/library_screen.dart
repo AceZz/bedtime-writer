@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../backend.dart';
+import '../../backend/index.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
 import 'story_image.dart';
@@ -27,19 +27,26 @@ class _StoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime date = creationDate.toDate();
+    final Color tileColor = Theme.of(context).colorScheme.primary;
 
     return ListTile(
+      // Has a preset non-modifiable height
       key: ValueKey(id),
       contentPadding: const EdgeInsets.all(8.0),
-      tileColor: Theme.of(context).colorScheme.primary,
+      tileColor: tileColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
       leading: SizedBox(
-        width: 80,
-        height: 80,
+        height: 55,
+        width: 55,
         child: Center(
-          child: StoryImage(id: id, width: 80, height: 80),
+          child: StoryImage(
+            id: id,
+            width: 55,
+            height: 55,
+            fadeColor: tileColor,
+          ),
         ),
       ),
       title: Text(title),
@@ -57,7 +64,10 @@ class LibraryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
-    final query = storiesReference.where('author', isEqualTo: user.value?.uid);
+    final query = storiesReference.where(
+      'author',
+      isEqualTo: user is AuthUser ? user.uid : null,
+    );
     final lottieWidget = LottieLoading();
 
     return FutureBuilder(
