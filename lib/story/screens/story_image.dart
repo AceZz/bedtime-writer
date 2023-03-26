@@ -1,44 +1,27 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../backend/index.dart';
-import '../../widgets/cloud_storage_image.dart';
 
-/// Displays the image of the story [id].
-///
-/// The image is retrieved from Cloud Storage if it exists, otherwise from the
-/// providerUrl.
+/// Displays the image of [story].
 class StoryImage extends StatelessWidget {
-  final String id;
+  final Story story;
   final double width;
   final double height;
   final Color fadeColor;
 
   const StoryImage({
     Key? key,
-    required this.id,
+    required this.story,
     required this.width,
     required this.height,
     required this.fadeColor,
   }) : super(key: key);
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> get story =>
-      storyReference(id).get();
-
-  Future<ImageProvider> get storyImage => story.then((story) async {
-        final data = story.data();
-        if (data == null) throw FormatException('No data for story $id.');
-        if (!data.containsKey('image'))
-          throw FormatException('Story $id has no image.');
-
-        final imageData = data['image'] as Map<String, dynamic>;
-        if (imageData.containsKey('cloudStoragePath'))
-          return await getCloudStorageImage(story['image']['cloudStoragePath']);
-        else if (imageData.containsKey('providerUrl'))
-          return Image.network(imageData['providerUrl']).image;
-        throw FormatException('Story $id has no image.');
-      });
+  Future<ImageProvider> get storyImage async {
+    final bytes = await story.image;
+    return Image.memory(bytes).image;
+  }
 
   @override
   Widget build(BuildContext context) {
