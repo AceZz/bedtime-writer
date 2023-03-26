@@ -69,22 +69,25 @@ class _LoadingContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        LottieLoading(),
-        SizedBox(
-          child: AnimatedTextKit(
-            animatedTexts: [
-              RotateAnimatedText('AWESOME'),
-              RotateAnimatedText('OPTIMISTIC'),
-              RotateAnimatedText('DIFFERENT'),
-            ],
-          ),
-        )
-      ],
+    final double screenHeight = MediaQuery.of(context).size.height;
+    return Padding(
+      padding: EdgeInsets.only(top:0.3*screenHeight),
+      child: Column(
+        children: [
+          LottieLoading(),
+          SizedBox(
+            child: Center(
+              child: AnimatedTextKit(
+                animatedTexts: [
+                  RotateAnimatedText('Your fairy tale will arrive in about 30 seconds', textStyle: Theme.of(context).primaryTextTheme.bodyMedium,),
+                  RotateAnimatedText('Fairies are dancing around', textStyle: Theme.of(context).primaryTextTheme.bodyMedium,),
+                  RotateAnimatedText('The dragon goes back to sleep', textStyle: Theme.of(context).primaryTextTheme.bodyMedium,),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
