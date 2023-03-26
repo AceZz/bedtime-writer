@@ -134,7 +134,7 @@ class _AnimatedText extends StatelessWidget {
 }
 
 /// Returns a rotate animate text from a string
-//TODO: use this
+//TODO: use this in above custom widget
 RotateAnimatedText _stringToRotateAnimatedText(
     String text, BuildContext context) {
   return RotateAnimatedText(
