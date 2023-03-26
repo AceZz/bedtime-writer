@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,25 +7,23 @@ import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
 import 'story_image.dart';
 
-/// Displays the [title], the [creationDate] and the image of a story in a
-/// [ListTile].
+/// Displays the [title], the [date] and the image of a story in a [ListTile].
 ///
 /// On tap, redirects to `display_story`.
 class _StoryTile extends StatelessWidget {
   final String id;
   final String title;
-  final Timestamp creationDate;
+  final DateTime date;
 
   const _StoryTile({
     Key? key,
     required this.id,
     required this.title,
-    required this.creationDate,
+    required this.date,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    DateTime date = creationDate.toDate();
     final Color tileColor = Theme.of(context).colorScheme.primary;
 
     return ListTile(
@@ -63,53 +60,57 @@ class LibraryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider);
-    final query = storiesReference.where(
-      'author',
-      isEqualTo: user is AuthUser ? user.uid : null,
+    final storiesStream = ref.watch(userStoriesProvider);
+
+    return storiesStream.when(
+      data: _data,
+      error: _error,
+      loading: _loading,
     );
-    final lottieWidget = LottieLoading();
+  }
 
-    return FutureBuilder(
-      future: query.get(),
-      builder: (
-        BuildContext context,
-        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
-      ) {
-        List<Widget> children = [];
-        final data = snapshot.data;
+  Widget _data(List<Story> stories) {
+    List<Widget> children = [];
 
-        if (data != null) {
-          children.addAll(
-            data.docs.map(
-              (doc) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: _StoryTile(
-                  id: doc.id,
-                  title: doc['title'],
-                  creationDate: doc['date'],
-                ),
-              ),
-            ),
-          );
-          return AppScaffold(
-            appBarTitle: 'Library',
-            child: ListView(
-              padding: const EdgeInsets.all(10.0),
-              children: children,
-            ),
-          );
-        } else {
-          children.add(lottieWidget);
-          return AppScaffold(
-            child: ListView(
-              padding: const EdgeInsets.all(10.0),
-              children: children,
-            ),
-            showAppBar: false,
-          );
-        }
-      },
+    children.addAll(
+      stories.map(
+        (story) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: _StoryTile(
+            id: story.id,
+            title: story.title,
+            date: story.date,
+          ),
+        ),
+      ),
+    );
+
+    return AppScaffold(
+      appBarTitle: 'Library',
+      child: ListView(
+        padding: const EdgeInsets.all(10.0),
+        children: children,
+      ),
+    );
+  }
+
+  Widget _error(error, stackTrace) {
+    return AppScaffold(
+      child: Container(
+        padding: const EdgeInsets.all(10.0),
+        child: const Text('Something went wrong...'),
+      ),
+      showAppBar: false,
+    );
+  }
+
+  Widget _loading() {
+    return AppScaffold(
+      child: Container(
+        padding: const EdgeInsets.all(10.0),
+        child: const LottieLoading(),
+      ),
+      showAppBar: false,
     );
   }
 }
