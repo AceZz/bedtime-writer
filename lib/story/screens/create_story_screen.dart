@@ -12,6 +12,11 @@ import '../states/create_story_state.dart';
 import '../states/story_params.dart';
 import 'display_story_screen.dart';
 
+const List<String> animatedTextList = [
+  'The dragon goes back to sleep',
+  'Fairies are dancing around'
+];
+
 /// Entry point of the story creation.
 ///
 /// Depending on the current `CreateStoryState`, displays one among these:
@@ -71,18 +76,15 @@ class _LoadingContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final double screenHeight = MediaQuery.of(context).size.height;
     return Padding(
-      padding: EdgeInsets.only(top:0.3*screenHeight),
+      padding: EdgeInsets.only(top: 0.3 * screenHeight),
       child: Column(
         children: [
           LottieLoading(),
           SizedBox(
             child: Center(
-              child: AnimatedTextKit(
-                animatedTexts: [
-                  RotateAnimatedText('Your fairy tale will arrive in about 30 seconds', textStyle: Theme.of(context).primaryTextTheme.bodyMedium,),
-                  RotateAnimatedText('Fairies are dancing around', textStyle: Theme.of(context).primaryTextTheme.bodyMedium,),
-                  RotateAnimatedText('The dragon goes back to sleep', textStyle: Theme.of(context).primaryTextTheme.bodyMedium,),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: _AnimatedText(),
               ),
             ),
           )
@@ -90,6 +92,57 @@ class _LoadingContent extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Creates animated text for loading screen
+class _AnimatedText extends StatelessWidget {
+  const _AnimatedText({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final int numberAnimatedText = 2;
+    final List<String> animatedTextListCopy = List.from(animatedTextList);
+    animatedTextListCopy.shuffle();
+    final List<String> animatedTextRandomList =
+        animatedTextListCopy.take(numberAnimatedText).toList();
+
+    return AnimatedTextKit(
+      animatedTexts: [
+        RotateAnimatedText(
+          'Your fairy tale will arrive in about 30 seconds',
+          textAlign: TextAlign.center,
+          textStyle: Theme.of(context).primaryTextTheme.bodyLarge,
+          duration: const Duration(milliseconds: 4000),
+        ),
+        RotateAnimatedText(
+          'Fairies are dancing around',
+          textAlign: TextAlign.center,
+          textStyle: Theme.of(context).primaryTextTheme.bodyLarge,
+          duration: const Duration(milliseconds: 4000),
+        ),
+        RotateAnimatedText(
+          'The dragon goes back to sleep',
+          textAlign: TextAlign.center,
+          textStyle: Theme.of(context).primaryTextTheme.bodyLarge,
+          duration: const Duration(milliseconds: 4000),
+        ),
+      ],
+      pause: const Duration(milliseconds: 1000),
+      repeatForever: true,
+    );
+  }
+}
+
+/// Returns a rotate animate text from a string
+//TODO: use this
+RotateAnimatedText _stringToRotateAnimatedText(
+    String text, BuildContext context) {
+  return RotateAnimatedText(
+    text,
+    textAlign: TextAlign.center,
+    textStyle: Theme.of(context).primaryTextTheme.bodyLarge,
+    duration: const Duration(milliseconds: 4000),
+  );
 }
 
 /// Displays a question.

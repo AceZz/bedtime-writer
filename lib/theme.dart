@@ -43,6 +43,13 @@ var theme = ThemeData(
       fontSize: 20,
     ),
     // Story, settings text
+    bodyLarge: GoogleFonts.outfit(
+      color: onPrimary,
+      fontWeight: FontWeight.normal,
+      fontSize: 24,
+      letterSpacing: 1.2,
+    ),
+    // Story, settings text
     bodyMedium: GoogleFonts.outfit(
       color: onPrimary,
       fontWeight: FontWeight.normal,
