@@ -2,6 +2,7 @@ import 'dart:core';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../backend/index.dart';
@@ -23,6 +24,16 @@ class CreateStoryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     CreateStoryState state = ref.watch(createStoryStateProvider);
+
+    final debugLoading = dotenv.get('DEBUG_LOADING', fallback: 'false');
+
+    if (debugLoading == 'true') {
+      // Creates infinite loading for debug
+      return AppScaffold(
+        showAppBar: false,
+        child: _LoadingContent(),
+      );
+    }
 
     if (state.hasQuestions) {
       // Displays the current question.
