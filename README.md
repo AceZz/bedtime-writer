@@ -19,6 +19,16 @@ USE_FIREBASE_EMULATORS=false
 The `*.rules` files in the main folder are only used for the Firebase emulators. To deploy them on
 the production server, use the Google Cloud console.
 
+### For the Web
+
+1. Edit the `.env` file(s).
+2. Run `flutter build web --web-renderer canvaskit` (the web renderer is important for the Lottie
+   animations).
+3. Check with the Firebase Hosting Emulator (see below).
+4. Deploy with `firebase hosting:channel:deploy preview --expires 7d` (you can replace `preview`
+   with an identifier of your choice). **Never** use the live channel, because the link never
+   changes and is too easy to guess!
+
 ## Development
 
 ### Line separators
