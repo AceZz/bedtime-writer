@@ -5,7 +5,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import '../index.dart';
+import '../story_params.dart';
 import 'database.dart';
+
+/// Creates a story and returns its ID.
+Future<String> firebaseAddStory(StoryParams params) async {
+  return firebaseFunctions
+      .httpsCallable('addStory')
+      .call(params.serialize())
+      .then((result) => result.data);
+}
 
 /// Streams a specific [Story].
 final firebaseStoryProvider =

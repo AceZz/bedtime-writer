@@ -1,3 +1,4 @@
+import 'package:bedtime_writer/backend/story_params.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'firebase/index.dart';
@@ -17,3 +18,6 @@ final AutoDisposeStreamProvider<List<Story>> userStoriesProvider =
 /// Streams a specific [Story].
 final AutoDisposeStreamProviderFamily<Story, String> storyProvider =
     firebaseStoryProvider;
+
+/// Creates a story and return its [Story.id].
+Future<String> Function(StoryParams params) addStory = firebaseAddStory;
