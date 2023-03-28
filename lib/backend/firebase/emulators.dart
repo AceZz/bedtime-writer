@@ -3,8 +3,7 @@ import 'dart:developer';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logging/logging.dart';
 
-import 'database.dart';
-import 'user.dart';
+import 'firebase.dart';
 
 /// Inspects the environment and configure the Firebase emulators if they should
 /// be used.

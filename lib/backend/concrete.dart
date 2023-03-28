@@ -1,12 +1,12 @@
-import 'package:bedtime_writer/backend/story_params.dart';
+/// This file is where the concrete implementation of all abstract classes and
+/// generic functions are chosen.
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'firebase/index.dart';
 import 'story.dart';
+import 'story_params.dart';
 import 'user.dart';
-
-// Note: this file can be seen as where the concrete implementation of all
-// abstract classes are chosen.
 
 /// Provides the current [User].
 final userProvider = Provider<User>((ref) => getFirebaseUser(ref));

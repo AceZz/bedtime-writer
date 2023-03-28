@@ -4,8 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../firebase_options.dart';
 import '../user.dart';
-
-final firebaseAuth = firebase_auth.FirebaseAuth.instance;
+import 'firebase.dart';
 
 /// Instantiate a [User] managed by Firebase.
 User getFirebaseUser(ProviderRef<User> ref) {
