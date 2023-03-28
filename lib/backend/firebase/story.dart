@@ -4,9 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
-import '../index.dart';
+import '../concrete.dart';
+import '../story.dart';
 import '../story_params.dart';
-import 'database.dart';
+import '../user.dart';
+import 'firebase.dart';
 
 /// Creates a story and returns its ID.
 Future<String> firebaseAddStory(StoryParams params) async {
