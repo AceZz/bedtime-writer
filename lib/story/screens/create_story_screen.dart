@@ -8,7 +8,6 @@ import '../../backend/index.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
 import '../states/create_story_state.dart';
-import '../states/story_params.dart';
 import 'display_story_screen.dart';
 
 /// Entry point of the story creation.

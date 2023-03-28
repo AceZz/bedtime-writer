@@ -1,4 +1,4 @@
-import 'package:bedtime_writer/story/states/story_params.dart';
+import 'package:bedtime_writer/backend/story_params.dart';
 import 'package:test/test.dart';
 
 const partialCharacter = Character(

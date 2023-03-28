@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'data.dart';
-import 'story_params.dart';
+import '../../backend/story_params.dart';
 
 final _random = new Random();
 

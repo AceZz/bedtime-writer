@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'story_params.dart';
+import '../../backend/story_params.dart';
 
 var allQuestions = [
   characterQuestion,
