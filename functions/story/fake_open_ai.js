@@ -4,13 +4,13 @@
  * It is especially useful when testing code.
  */
 import { Buffer } from "node:buffer";
+import { readFileSync } from "node:fs";
 import { PassThrough } from "node:stream";
 
 export const fakeOpenAi = {};
 
 export const FAKE_TOKENS = getFakeTokens(500);
-export const FAKE_IMAGE_URL =
-  "https://avatars.githubusercontent.com/u/11032610?v=4";
+export const FAKE_IMAGE_BYTES = readFileSync("test/story/fake_image_bytes.jpg");
 
 function getFakeTokens(num) {
   return [...Array(num)].map((_, i) => `T${i} `);
@@ -31,7 +31,7 @@ fakeOpenAi.createChatCompletion = async (request, options = {}) => {
 fakeOpenAi.createImage = async () => {
   return {
     data: {
-      data: [{ url: FAKE_IMAGE_URL }],
+      data: [{ b64_json: FAKE_IMAGE_BYTES }],
     },
   };
 };

@@ -3,7 +3,7 @@ import test from "node:test";
 
 import {
   fakeOpenAi,
-  FAKE_IMAGE_URL,
+  FAKE_IMAGE_BYTES,
   FAKE_TOKENS,
 } from "../../story/fake_open_ai.js";
 
@@ -39,6 +39,6 @@ test("fakeOpenAi", async (t) => {
   await t.test("createImage", async () => {
     const request = await fakeOpenAi.createImage();
 
-    assert.equal(request.data.data[0].url, FAKE_IMAGE_URL);
+    assert(FAKE_IMAGE_BYTES.equals(request.data.data[0].b64_json));
   });
 });

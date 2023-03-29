@@ -2,21 +2,21 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /stories/{story} {
-      function isAuthor() {
-        return isAuth() && resource.data.author == request.auth.uid;
-      }
-
       function isAuth() {
         return request.auth != null;
       }
 
-      allow read: if isAuthor();
-
+      allow read: if isAuth() && resource.data.author == request.auth.uid;
       allow create: if isAuth();
-
       allow update: if false;
-
       allow delete: if false;
+
+      match /images/{image} {
+        allow read: if isAuth() && get(/databases/$(database)/documents/stories/$(story)).data.author == request.auth.uid;
+        allow create: if isAuth();
+        allow update: if false;
+        allow delete: if false;
+      }
     }
   }
 }

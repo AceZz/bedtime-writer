@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 import { logger } from "firebase-functions";
 
 import * as dotenv from "dotenv";
@@ -6,7 +7,7 @@ dotenv.config();
 const NUM_TOKENS_SUMMARY = 100;
 
 /**
- * Generate and return a story, an imagePrompt and an imageUrl.
+ * Generate and return a story, an imagePrompt and an imageBytes.
  *
  * `api` should have the same methods as `OpenAIApi`.
  */
@@ -14,12 +15,12 @@ export async function generateOpenAiStory(api, prompt, imagePromptPrompt) {
   const response = await completeStory(api, prompt);
   const stream = response.data;
 
-  const [{ imagePrompt, imageUrl }, story] = await Promise.all([
+  const [{ imagePrompt, imageBytes }, story] = await Promise.all([
     generateImage(api, prompt, stream, imagePromptPrompt),
     generateStory(stream),
   ]);
 
-  return { imagePrompt, imageUrl, story };
+  return { imagePrompt, imageBytes, story };
 }
 
 function completeStory(api, prompt) {
@@ -61,10 +62,10 @@ export async function generateImage(api, prompt, stream, imagePromptPrompt) {
   logger.debug("generateImage: image prompt generated");
 
   logger.debug("generateImage: image generation started");
-  const imageUrl = await generateImageUrl(api, imagePromptPrompt);
+  const imageBytes = await generateImageBytes(api, imagePromptPrompt, 512);
   logger.debug("generateImage: image generated");
 
-  return { imagePrompt, imageUrl };
+  return { imagePrompt, imageBytes };
 }
 
 export async function generateSummary(stream) {
@@ -143,13 +144,14 @@ async function generateImagePrompt(api, prompt, summary, imagePromptPrompt) {
   return response.data.choices[0].message.content;
 }
 
-async function generateImageUrl(api, imagePrompt, size = 512) {
+async function generateImageBytes(api, imagePrompt, size = 512) {
   const response = await api.createImage({
     prompt: imagePrompt,
     n: 1,
     size: `${size}x${size}`,
+    response_format: "b64_json",
   });
-  return response.data.data[0].url;
+  return Buffer.from(response.data.data[0].b64_json, "base64");
 }
 
 export async function generateStory(stream) {
