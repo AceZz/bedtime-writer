@@ -18,7 +18,6 @@ void configureFirebaseEmulators() {
     firebaseAuth.useAuthEmulator('localhost', 9099);
     firebaseFirestore.useFirestoreEmulator('localhost', 8080);
     firebaseFunctions.useFunctionsEmulator('localhost', 5001);
-    firebaseStorage.useStorageEmulator('localhost', 9199);
   }
 }
 
