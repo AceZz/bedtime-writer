@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 
 import '../concrete.dart';
 import '../story.dart';
@@ -69,26 +68,13 @@ class _FirebaseStory implements Story {
 
   @override
   Future<Uint8List> get image async {
-    final imageData = _data['image'] as Map<String, dynamic>;
-
-    if (imageData.containsKey('cloudStoragePath')) {
-      final bytes = await firebaseStorage
-          .ref()
-          .child(imageData['cloudStoragePath'])
-          .getData();
-      if (bytes == null) {
-        throw FormatException('Could not download storage image of story $id.');
-      }
-      return bytes;
-    }
-
-    if (imageData.containsKey('providerUrl')) {
-      http.Response response =
-          await http.get(Uri.parse(imageData['providerUrl']));
-      return response.bodyBytes;
-    }
-
-    throw FormatException('Story $id has no image.');
+    final image = await firebaseFirestore
+        .collection('stories')
+        .doc(id)
+        .collection('images')
+        .doc('512x512')
+        .get();
+    return image.data()!['data'].bytes;
   }
 
   @override

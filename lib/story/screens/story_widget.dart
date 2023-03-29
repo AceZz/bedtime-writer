@@ -7,7 +7,7 @@ import 'story_image.dart';
 
 /// Displays a story: [title], [image], [story] and a Share button.
 ///
-/// [image] will likely be a [StoryImageDecoration] or a [CloudStorageStoryImage].
+/// [image] will likely be a [StoryImageDecoration].
 class StoryWidget extends StatelessWidget {
   final String title;
   final String story;
