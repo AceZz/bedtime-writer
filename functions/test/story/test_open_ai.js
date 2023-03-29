@@ -9,16 +9,16 @@ import {
 } from "../../story/open_ai.js";
 import {
   fakeOpenAi,
-  FAKE_IMAGE_URL,
+  FAKE_IMAGE_BYTES,
   FAKE_TOKENS,
 } from "../../story/fake_open_ai.js";
 
 test("generateOpenAiStory", async () => {
   const expectedStory = FAKE_TOKENS.join("");
   const expectedImagePrompt = FAKE_TOKENS.join("");
-  const expectedImageUrl = FAKE_IMAGE_URL;
+  const expectedImageBytes = FAKE_IMAGE_BYTES;
 
-  const { story, imagePrompt, imageUrl } = await generateOpenAiStory(
+  const { story, imagePrompt, imageBytes } = await generateOpenAiStory(
     fakeOpenAi,
     "prompt",
     "imagePromptPrompt"
@@ -26,7 +26,7 @@ test("generateOpenAiStory", async () => {
 
   assert.equal(story, expectedStory);
   assert.equal(imagePrompt, expectedImagePrompt);
-  assert.equal(imageUrl, expectedImageUrl);
+  assert(expectedImageBytes.equals(imageBytes));
 });
 
 test("generateImage", async () => {
@@ -35,9 +35,9 @@ test("generateImage", async () => {
     { responseType: "stream" }
   );
   const expectedImagePrompt = FAKE_TOKENS.join("");
-  const expectedImageUrl = FAKE_IMAGE_URL;
+  const expectedImageBytes = FAKE_IMAGE_BYTES;
 
-  const { imagePrompt, imageUrl } = await generateImage(
+  const { imagePrompt, imageBytes } = await generateImage(
     fakeOpenAi,
     "prompt",
     response.data,
@@ -45,7 +45,7 @@ test("generateImage", async () => {
   );
 
   assert.equal(imagePrompt, expectedImagePrompt);
-  assert.equal(imageUrl, expectedImageUrl);
+  assert(expectedImageBytes.equals(imageBytes));
 });
 
 test("generateSummary", async () => {
