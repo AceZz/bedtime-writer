@@ -57,6 +57,9 @@ class _FirebaseStory implements Story {
 
   String toString() => '_FirebaseStory($title, $author, $date, $text)';
 
+  DocumentReference<Map<String, dynamic>> get _storyRef =>
+      firebaseFirestore.collection('stories').doc(id);
+
   @override
   String get title => _data['title'];
 
@@ -68,15 +71,20 @@ class _FirebaseStory implements Story {
 
   @override
   Future<Uint8List> get image async {
-    final image = await firebaseFirestore
-        .collection('stories')
-        .doc(id)
-        .collection('images')
-        .doc('512x512')
-        .get();
+    final image = await _storyRef.collection('images').doc('512x512').get();
     return image.data()!['data'].bytes;
   }
 
   @override
   String get text => _data['text'];
+
+  @override
+  bool get isFavorite => _data['isFavorite'];
+
+  @override
+  Future<bool> toggleIsFavorite() async {
+    final newIsFavorite = !isFavorite;
+    await _storyRef.update({'isFavorite': newIsFavorite});
+    return newIsFavorite;
+  }
 }

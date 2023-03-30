@@ -15,4 +15,11 @@ abstract class Story {
   Future<Uint8List> get image;
 
   String get text;
+
+  bool get isFavorite;
+
+  /// Toggle the [isFavorite] state the story.
+  ///
+  /// Returns the new [isFavorite] state.
+  Future<bool> toggleIsFavorite();
 }

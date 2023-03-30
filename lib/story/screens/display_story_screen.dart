@@ -25,7 +25,7 @@ class DisplayStoryScreen extends ConsumerWidget {
 
   Widget _data(BuildContext context, Story story) {
     return _scaffold(
-      shareText: story.text,
+      story: story,
       child: StoryWidget(
         title: story.title,
         story: story.text,
@@ -45,18 +45,26 @@ class DisplayStoryScreen extends ConsumerWidget {
 
   Widget _loading() => _scaffold(child: const CircularProgressIndicator());
 
-  Widget _scaffold({required Widget child, String? shareText}) {
-    Widget shareButton = ShareButton(
-      iconSize: 30,
-      text: 'Hey! Check out this amazing story I made with '
-          'Bedtime stories: \n\n $shareText',
-    );
-    Widget favoriteButton = FavoriteButton(iconSize: 30);
+  Widget _scaffold({required Widget child, Story? story}) {
+    List<Widget> actions = [];
+
+    if (story != null) {
+      actions.add(ShareButton(
+        iconSize: 30,
+        text: 'Hey! Check out this amazing story I made with '
+            'Bedtime stories: \n\n $story.text',
+      ));
+      actions.add(FavoriteButton(
+        isFavorite: story.isFavorite,
+        iconSize: 30,
+        onPressed: story.toggleIsFavorite,
+      ));
+    }
 
     return AppScaffold(
       appBarTitle: 'Story',
       scrollableAppBar: true,
-      actions: [shareButton, favoriteButton],
+      actions: actions,
       child: child,
     );
   }
