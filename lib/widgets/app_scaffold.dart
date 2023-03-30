@@ -37,26 +37,17 @@ class AppScaffold extends StatelessWidget {
     );
 
     Widget nestedScrollViewWidget = MyNestedScrollView(
-        title: titleWidget, actions: actions, body: screenBodyWidget);
-    /*
-    Widget nestedScrollViewWidget = NestedScrollView(
-        floatHeaderSlivers: true,
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-              SliverAppBar(
-                floating: true,
-                snap: true,
-                title: titleWidget,
-                actions: actions,
-              ),
-            ],
-        body: screenBodyWidget);*/
+      title: titleWidget,
+      actions: actions,
+      body: screenBodyWidget,
+    );
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       // Must specify app bar only in the non-scrollable case
       appBar: (showAppBar & !scrollableAppBar) ? appBar : null,
       body: (showAppBar & scrollableAppBar)
-          ? SafeArea(child: nestedScrollViewWidget)
+          ? SafeArea(child: nestedScrollViewWidget) //nestedScrollViewWidget)
           : SafeArea(child: screenBodyWidget),
     );
   }
@@ -74,82 +65,47 @@ class MyNestedScrollView extends StatefulWidget {
   });
 
   @override
-  _MyNestedScrollViewState createState() => _MyNestedScrollViewState();
+  State<MyNestedScrollView> createState() => _MyNestedScrollViewState();
 }
 
 class _MyNestedScrollViewState extends State<MyNestedScrollView> {
-  ScrollController _scrollController = ScrollController();
   bool _pinnedAppBar = false;
-  bool _atBottom = false;
 
   _MyNestedScrollViewState();
 
   @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_scrollListener);
-  }
+  Widget build(BuildContext context) {
+    print(_pinnedAppBar);
 
-  @override
-  void dispose() {
-    _scrollController.removeListener(_scrollListener);
-    _scrollController.dispose();
-    super.dispose();
-  }
+    final ScrollController _scrollController = ScrollController();
 
-  void _scrollListener() {}
-
-  bool _handleInnerScrollNotification(ScrollNotification notification) {
-    if (notification.depth == 0) {
-      // This checks if the notification comes from the inner scrollable widget
-      // Do something with the inner scroll
-      if (notification is ScrollEndNotification) {
-        // At the end of the inner scroll
-        setState(() {
-          _pinnedAppBar = true;
-          _atBottom = true;
-        });
-      } else if (notification is UserScrollNotification &&
-          notification.direction == ScrollDirection.forward) {
-        if (_atBottom) {
-          // User is scrolling up
+    void _onScroll() {
+      if (_scrollController.position.atEdge) {
+        if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
+          print('State is true');
           setState(() {
-            _pinnedAppBar = false;
-            _atBottom = false;
+            _pinnedAppBar = true;
           });
         }
       } else {
-        if (!_atBottom) {
-          setState(() {
-            _pinnedAppBar = false;
-          });
-        }
+        setState(() {
+          _pinnedAppBar = false;
+        });
       }
     }
-    return false; // Return false to allow the notification to be passed to other listeners
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return NestedScrollView(
-      floatHeaderSlivers: true,
-      controller: _scrollController,
-      physics: BouncingScrollPhysics(),
-      headerSliverBuilder: (context, innerBoxIsScrolled) => [
-        SliverAppBar(
-          floating: true,
-          snap: true,
-          pinned: _pinnedAppBar,
-          title: widget.title,
-          actions: widget.actions,
-        ),
-      ],
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification notification) {
-          return _handleInnerScrollNotification(notification);
-        },
-        child: widget.body,
+    _scrollController.addListener(_onScroll);
+
+    return CustomScrollView(controller: _scrollController, slivers: [
+      SliverAppBar(
+        floating: true,
+        snap: true,
+        pinned: _pinnedAppBar,
+        title: widget.title,
+        actions: widget.actions,
       ),
-    ); // Your NestedScrollView widget implementation
+      SliverToBoxAdapter(child: widget.body),
+    ]);
   }
 }
