@@ -61,6 +61,7 @@ AutoDisposeStreamProvider<List<Story>> _userStoriesProvider({
 Query<Map<String, dynamic>> _userStoriesQueryBuilder(AuthUser user) =>
     firebaseFirestore
         .collection('stories')
+        .orderBy('date', descending: true)
         .where('author', isEqualTo: user.uid);
 
 /// Firebase implementation of [Story].
