@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 /// Unless exception, every screen will use this class as a base widget.
 class AppScaffold extends StatelessWidget {
   final Widget child;
+  final PreferredSizeWidget? bottom;
   final bool showAppBar;
   final String appBarTitle;
   final bool scrollableAppBar;
@@ -13,6 +14,7 @@ class AppScaffold extends StatelessWidget {
   const AppScaffold({
     Key? key,
     required this.child,
+    this.bottom,
     this.showAppBar = true,
     this.appBarTitle = '',
     this.scrollableAppBar = false,
@@ -33,6 +35,7 @@ class AppScaffold extends StatelessWidget {
 
     AppBar appBar = AppBar(
       title: titleWidget,
+      bottom: bottom,
     );
 
     Widget nestedScrollViewWidget = NestedScrollView(

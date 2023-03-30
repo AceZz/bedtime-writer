@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../backend/index.dart';
 import '../../widgets/app_scaffold.dart';
-import '../../widgets/lottie_loading.dart';
 import 'story_image.dart';
 
 /// Displays the [title], the [date] and the image of a [Story] in a [ListTile].
@@ -54,12 +53,43 @@ class _StoryTile extends StatelessWidget {
       '${story.date.day}/${story.date.month}/${story.date.year}';
 }
 
-class LibraryScreen extends ConsumerWidget {
+class LibraryScreen extends StatelessWidget {
   LibraryScreen({Key? key}) : super(key: key);
 
   @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: AppScaffold(
+        appBarTitle: 'Library',
+        bottom: _libraryTabBar,
+        child: TabBarView(
+          children: [
+            _LibraryTab(provider: favoriteUserStoriesProvider),
+            _LibraryTab(provider: userStoriesProvider),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+const _libraryTabBar = const TabBar(tabs: [
+  const Text('Favorites'),
+  const Text('All'),
+]);
+
+class _LibraryTab extends ConsumerWidget {
+  final AutoDisposeStreamProvider<List<Story>> provider;
+
+  _LibraryTab({
+    Key? key,
+    required this.provider,
+  }) : super(key: key);
+
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storiesStream = ref.watch(userStoriesProvider);
+    final storiesStream = ref.watch(provider);
 
     return storiesStream.when(
       data: _data,
@@ -78,32 +108,23 @@ class LibraryScreen extends ConsumerWidget {
         )
         .toList();
 
-    return AppScaffold(
-      appBarTitle: 'Library',
-      child: ListView(
-        padding: const EdgeInsets.all(10.0),
-        children: children,
-      ),
+    return ListView(
+      padding: const EdgeInsets.all(10.0),
+      children: children,
     );
   }
 
   Widget _error(error, stackTrace) {
-    return AppScaffold(
-      child: Container(
-        padding: const EdgeInsets.all(10.0),
-        child: const Text('Something went wrong...'),
-      ),
-      showAppBar: false,
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      child: const Text('Something went wrong...'),
     );
   }
 
   Widget _loading() {
-    return AppScaffold(
-      child: Container(
-        padding: const EdgeInsets.all(10.0),
-        child: const LottieLoading(),
-      ),
-      showAppBar: false,
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      child: const CircularProgressIndicator(),
     );
   }
 }
