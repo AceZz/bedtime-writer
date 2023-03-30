@@ -25,23 +25,43 @@ final firebaseStoryProvider =
 });
 
 /// Streams the [Story]s authored by the current [User].
-final firebaseUserStoriesProvider =
-    StreamProvider.autoDispose<List<Story>>((ref) {
-  final user = ref.watch(userProvider);
+final firebaseUserStoriesProvider = _userStoriesProvider(
+  queryBuilder: _userStoriesQueryBuilder,
+);
 
-  if (user is AuthUser) {
-    final snapshots = firebaseFirestore
+/// Streams the favorite [Story]s authored by the current [User].
+final firebaseFavoriteUserStoriesProvider = _userStoriesProvider(
+  queryBuilder: (AuthUser user) =>
+      _userStoriesQueryBuilder(user).where('isFavorite', isEqualTo: true),
+);
+
+/// Helper to create providers that return lists of [Story].
+///
+/// The parameter [queryBuilder] transforms a [AuthUser] into a [Query]. It can
+/// be [_userStoriesQueryBuilder] for instance.
+AutoDisposeStreamProvider<List<Story>> _userStoriesProvider({
+  required Query<Map<String, dynamic>> Function(AuthUser) queryBuilder,
+}) {
+  return StreamProvider.autoDispose<List<Story>>((ref) {
+    final user = ref.watch(userProvider);
+
+    if (user is AuthUser) {
+      final snapshots = queryBuilder(user).snapshots();
+
+      return snapshots.map((stories) => stories.docs
+          .map((story) => _FirebaseStory.deserialize(story))
+          .toList());
+    }
+
+    return Stream.empty();
+  });
+}
+
+/// A query that only returns stories authored by [user].
+Query<Map<String, dynamic>> _userStoriesQueryBuilder(AuthUser user) =>
+    firebaseFirestore
         .collection('stories')
-        .where('author', isEqualTo: user.uid)
-        .snapshots();
-
-    return snapshots.map((stories) => stories.docs
-        .map((story) => _FirebaseStory.deserialize(story))
-        .toList());
-  }
-
-  return Stream.empty();
-});
+        .where('author', isEqualTo: user.uid);
 
 /// Firebase implementation of [Story].
 class _FirebaseStory implements Story {

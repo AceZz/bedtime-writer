@@ -15,6 +15,10 @@ final userProvider = Provider<User>((ref) => getFirebaseUser(ref));
 final AutoDisposeStreamProvider<List<Story>> userStoriesProvider =
     firebaseUserStoriesProvider;
 
+/// Streams the [Story]s authored by the current [User] and marked as favorite.
+final AutoDisposeStreamProvider<List<Story>> favoriteUserStoriesProvider =
+    firebaseFavoriteUserStoriesProvider;
+
 /// Streams a specific [Story].
 final AutoDisposeStreamProviderFamily<Story, String> storyProvider =
     firebaseStoryProvider;
