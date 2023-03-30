@@ -1,4 +1,8 @@
 export 'emulators.dart' show configureFirebaseEmulators;
 export 'story.dart'
-    show firebaseAddStory, firebaseStoryProvider, firebaseUserStoriesProvider;
+    show
+        firebaseAddStory,
+        firebaseStoryProvider,
+        firebaseFavoriteUserStoriesProvider,
+        firebaseUserStoriesProvider;
 export 'user.dart' show getFirebaseUser;
