@@ -8,7 +8,7 @@ service cloud.firestore {
 
       allow read: if isAuth() && resource.data.author == request.auth.uid;
       allow create: if isAuth();
-      allow update: if false;
+      allow update: if (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isFavorite']));
       allow delete: if false;
 
       match /images/{image} {

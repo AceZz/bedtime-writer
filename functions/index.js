@@ -41,6 +41,7 @@ const openAi = new OpenAIApi(
  *     date
  *     text
  *     title
+ *     isFavorite
  *     images/
  *       512x512
  *         data
@@ -103,6 +104,7 @@ async function addStoryDocumentToFirestore(story, uid) {
     date: Timestamp.now(),
     title: story.title,
     text: story.story.trim(),
+    isFavorite: false,
   };
   return await storiesRef.add(payload);
 }
