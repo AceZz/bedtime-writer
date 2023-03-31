@@ -61,7 +61,7 @@ AutoDisposeStreamProvider<List<Story>> _userStoriesProvider({
 Query<Map<String, dynamic>> _userStoriesQueryBuilder(AuthUser user) =>
     firebaseFirestore
         .collection('stories')
-        .orderBy('date', descending: true)
+        .orderBy('timestamp', descending: true)
         .where('author', isEqualTo: user.uid);
 
 /// Firebase implementation of [Story].
@@ -76,7 +76,7 @@ class _FirebaseStory implements Story {
 
   const _FirebaseStory(this.id, this._data) : super();
 
-  String toString() => '_FirebaseStory($title, $author, $date, $text)';
+  String toString() => '_FirebaseStory($title, $author, $dateTime, $text)';
 
   DocumentReference<Map<String, dynamic>> get _storyRef =>
       firebaseFirestore.collection('stories').doc(id);
@@ -88,7 +88,7 @@ class _FirebaseStory implements Story {
   String get author => _data['author'];
 
   @override
-  DateTime get date => (_data['date'] as Timestamp).toDate();
+  DateTime get dateTime => (_data['timestamp'] as Timestamp).toDate();
 
   @override
   Future<Uint8List> get image async {

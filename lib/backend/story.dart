@@ -10,7 +10,7 @@ abstract class Story {
 
   String get author;
 
-  DateTime get date;
+  DateTime get dateTime;
 
   Future<Uint8List> get image;
 
