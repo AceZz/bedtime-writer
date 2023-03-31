@@ -36,7 +36,7 @@ class AppScaffold extends StatelessWidget {
       title: titleWidget,
     );
 
-    Widget storyCustomScrollViewWidget = StoryCustomScrollView(
+    Widget _customScrollViewWidget = _CustomScrollView(
       title: titleWidget,
       actions: actions,
       body: screenBodyWidget,
@@ -47,32 +47,32 @@ class AppScaffold extends StatelessWidget {
       // Must specify app bar only in the non-scrollable case
       appBar: (showAppBar & !scrollableAppBar) ? appBar : null,
       body: (showAppBar & scrollableAppBar)
-          ? SafeArea(child: storyCustomScrollViewWidget)
+          ? SafeArea(child: _customScrollViewWidget)
           : SafeArea(child: screenBodyWidget),
     );
   }
 }
 
 /// Defines a CustomScrollView so the app bar is automatically displayed at bottom of page
-class StoryCustomScrollView extends StatefulWidget {
+class _CustomScrollView extends StatefulWidget {
   final Widget title;
   final List<Widget>? actions;
   final Widget body;
 
-  StoryCustomScrollView({
+  _CustomScrollView({
     required this.title,
     required this.actions,
     required this.body,
   });
 
   @override
-  State<StoryCustomScrollView> createState() => _StoryCustomScrollViewState();
+  State<_CustomScrollView> createState() => _CustomScrollViewState();
 }
 
-class _StoryCustomScrollViewState extends State<StoryCustomScrollView> {
+class _CustomScrollViewState extends State<_CustomScrollView> {
   bool _pinnedAppBar = false;
 
-  _StoryCustomScrollViewState();
+  _CustomScrollViewState();
 
   @override
   Widget build(BuildContext context) {
@@ -96,16 +96,19 @@ class _StoryCustomScrollViewState extends State<StoryCustomScrollView> {
 
     _scrollController.addListener(_onScroll);
 
-    return CustomScrollView(controller: _scrollController, slivers: [
-      SliverAppBar(
-        floating: true,
-        snap: true,
-        pinned: _pinnedAppBar,
-        centerTitle: true,
-        title: widget.title,
-        actions: widget.actions,
-      ),
-      SliverToBoxAdapter(child: widget.body),
-    ]);
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        SliverAppBar(
+          floating: true,
+          snap: true,
+          pinned: _pinnedAppBar,
+          centerTitle: true,
+          title: widget.title,
+          actions: widget.actions,
+        ),
+        SliverToBoxAdapter(child: widget.body),
+      ],
+    );
   }
 }
