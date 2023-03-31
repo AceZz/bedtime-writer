@@ -92,7 +92,8 @@ class _FirebaseStory implements Story {
 
   @override
   Future<Uint8List> get image async {
-    final image = await _storyRef.collection('images').doc('512x512').get();
+    final imageRef = _storyRef.collection('images').doc('512x512');
+    final image = await getCacheThenServer(imageRef);
     return image.data()!['data'].bytes;
   }
 
