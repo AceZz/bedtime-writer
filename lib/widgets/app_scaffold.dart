@@ -101,6 +101,7 @@ class _StoryCustomScrollViewState extends State<StoryCustomScrollView> {
         floating: true,
         snap: true,
         pinned: _pinnedAppBar,
+        centerTitle: true,
         title: widget.title,
         actions: widget.actions,
       ),
