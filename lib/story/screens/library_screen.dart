@@ -6,7 +6,8 @@ import '../../backend/index.dart';
 import '../../widgets/app_scaffold.dart';
 import 'story_image.dart';
 
-/// Displays the [title], the [date] and the image of a [Story] in a [ListTile].
+/// Displays the [title], the [dateTime] and the image of a [Story] in a
+/// [ListTile].
 ///
 /// On tap, redirects to `display_story`.
 class _StoryTile extends StatelessWidget {
@@ -42,15 +43,15 @@ class _StoryTile extends StatelessWidget {
         ),
       ),
       title: Text(story.title),
-      subtitle: Text('Created on $_formattedDate'),
+      subtitle: Text('Created on $_formattedDateTime'),
       onTap: () {
         context.pushNamed('display_story', params: {'id': story.id});
       },
     );
   }
 
-  String get _formattedDate =>
-      '${story.date.day}/${story.date.month}/${story.date.year}';
+  String get _formattedDateTime =>
+      '${story.dateTime.day}/${story.dateTime.month}/${story.dateTime.year}';
 }
 
 class LibraryScreen extends StatelessWidget {
