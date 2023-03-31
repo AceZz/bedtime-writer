@@ -36,7 +36,7 @@ class AppScaffold extends StatelessWidget {
       title: titleWidget,
     );
 
-    Widget nestedScrollViewWidget = MyNestedScrollView(
+    Widget nestedScrollViewWidget = StoryCustomScrollView(
       title: titleWidget,
       actions: actions,
       body: screenBodyWidget,
@@ -53,42 +53,41 @@ class AppScaffold extends StatelessWidget {
   }
 }
 
-class MyNestedScrollView extends StatefulWidget {
+/// Defines a CustomScrollView so the app bar is automatically displayed at bottom of page
+class StoryCustomScrollView extends StatefulWidget {
   final Widget title;
   final List<Widget>? actions;
   final Widget body;
 
-  MyNestedScrollView({
+  StoryCustomScrollView({
     required this.title,
     required this.actions,
     required this.body,
   });
 
   @override
-  State<MyNestedScrollView> createState() => _MyNestedScrollViewState();
+  State<StoryCustomScrollView> createState() => _StoryCustomScrollViewState();
 }
 
-class _MyNestedScrollViewState extends State<MyNestedScrollView> {
+class _StoryCustomScrollViewState extends State<StoryCustomScrollView> {
   bool _pinnedAppBar = false;
 
-  _MyNestedScrollViewState();
+  _StoryCustomScrollViewState();
 
   @override
   Widget build(BuildContext context) {
-    print(_pinnedAppBar);
-
     final ScrollController _scrollController = ScrollController();
 
     void _onScroll() {
       if (_scrollController.position.atEdge) {
         if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent) {
-          print('State is true');
           setState(() {
             _pinnedAppBar = true;
           });
         }
-      } else {
+      } else if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
         setState(() {
           _pinnedAppBar = false;
         });
