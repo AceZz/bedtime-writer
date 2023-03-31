@@ -63,11 +63,10 @@ class _LoadingContent extends ConsumerWidget {
         children: [
           LottieLoading(),
           SizedBox(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: _LoadingTexts(),
-              ),
+            height: 200,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: _LoadingTexts(),
             ),
           )
         ],
@@ -119,7 +118,7 @@ class _LoadingTexts extends StatelessWidget {
   Widget _animatedTexts(Iterable<String> texts, TextStyle? textStyle) {
     final animatedTexts = texts
         .map(
-          (text) => RotateAnimatedText(
+          (text) => FadeAnimatedText(
             text,
             textAlign: TextAlign.center,
             textStyle: textStyle,

@@ -48,7 +48,7 @@ class StoryWidget extends StatelessWidget {
 
     // Define additional styles here as they need context
     final TextStyle _storyTitleStyle =
-        GoogleFonts.amaticSc(fontWeight: FontWeight.bold, fontSize: 56);
+        GoogleFonts.amaticSc(fontWeight: FontWeight.bold, fontSize: 52);
     final TextStyle _firstLetterStyle = GoogleFonts.croissantOne(
       fontWeight: FontWeight.bold,
       fontSize: 42,
@@ -64,7 +64,6 @@ class StoryWidget extends StatelessWidget {
       child: Text(
         title,
         textAlign: TextAlign.center,
-        maxLines: 2,
         style: _storyTitleStyle,
       ),
     );
