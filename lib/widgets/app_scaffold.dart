@@ -36,7 +36,7 @@ class AppScaffold extends StatelessWidget {
       title: titleWidget,
     );
 
-    Widget nestedScrollViewWidget = StoryCustomScrollView(
+    Widget storyCustomScrollViewWidget = StoryCustomScrollView(
       title: titleWidget,
       actions: actions,
       body: screenBodyWidget,
@@ -47,7 +47,7 @@ class AppScaffold extends StatelessWidget {
       // Must specify app bar only in the non-scrollable case
       appBar: (showAppBar & !scrollableAppBar) ? appBar : null,
       body: (showAppBar & scrollableAppBar)
-          ? SafeArea(child: nestedScrollViewWidget) //nestedScrollViewWidget)
+          ? SafeArea(child: storyCustomScrollViewWidget)
           : SafeArea(child: screenBodyWidget),
     );
   }
