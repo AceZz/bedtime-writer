@@ -38,8 +38,8 @@ const openAi = new OpenAIApi(
  * stories/
  *   <story_id>
  *     author
- *     date
  *     text
+ *     timestamp
  *     title
  *     isFavorite
  *     images/
@@ -101,7 +101,7 @@ async function addStoryToFirestore(story, uid) {
 async function addStoryDocumentToFirestore(story, uid) {
   const payload = {
     author: uid,
-    date: Timestamp.now(),
+    timestamp: Timestamp.now(),
     title: story.title,
     text: story.story.trim(),
     isFavorite: false,
