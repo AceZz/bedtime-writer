@@ -21,12 +21,6 @@ initializeApp();
 
 const storiesRef = getFirestore().collection("stories");
 
-const openAi = new OpenAIApi(
-  new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-  })
-);
-
 /**
  * Add a story.
  *
@@ -51,18 +45,11 @@ const openAi = new OpenAIApi(
  *       image
  *         prompt
  */
-export const addStory = region("europe-west1").https.onCall(
-  async (storyParams, context) => {
-    let api;
+export const addStory = region("europe-west1")
+  .runWith({ secrets: ["OPENAI_API_KEY"] })
+  .https.onCall(async (storyParams, context) => {
+    const api = getApi(process.env.OPENAI_API_KEY);
     const uid = getUid(context);
-
-    if (process.env.FAKE_DATA === "true") {
-      logger.info("addStory: using fake data");
-      api = fakeOpenAi;
-    } else {
-      logger.info("addStory: using Open AI data");
-      api = openAi;
-    }
 
     let story = getStoryTitleAndPrompt(storyParams);
     story = {
@@ -79,8 +66,22 @@ export const addStory = region("europe-west1").https.onCall(
     logger.info(`addStory: story ${storyId} was added to Firestore`);
 
     return storyId;
+  });
+
+function getApi(openAiApiKey) {
+  if (process.env.FAKE_DATA === "true") {
+    logger.info("using fake data");
+    return fakeOpenAi;
   }
-);
+
+  const k = `${openAiApiKey.slice(0, 3)}...${openAiApiKey.slice(-4)}`;
+  logger.info(`using Open AI data, with API key ${k}`);
+  return new OpenAIApi(
+    new Configuration({
+      apiKey: openAiApiKey,
+    })
+  );
+}
 
 function getStoryTitleAndPrompt(storyParams) {
   return {
