@@ -67,7 +67,7 @@ class HomeScreen extends ConsumerWidget {
         children: [
           titleWidget,
           menuWidget,
-          if (debugMode())
+          if (debugAuth())
             Expanded(
               child: Row(
                 children: [

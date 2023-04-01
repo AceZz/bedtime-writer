@@ -22,6 +22,6 @@ void configureFirebaseEmulators() {
 }
 
 bool _useFirebaseEmulators() {
-  final config = dotenv.get('USE_FIREBASE_EMULATORS', fallback: 'false');
-  return config.toLowerCase() == 'true';
+  final config = dotenv.get('BACKEND', fallback: 'server');
+  return config.toLowerCase() == 'local';
 }
