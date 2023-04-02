@@ -36,7 +36,7 @@ class AppScaffold extends StatelessWidget {
       title: titleWidget,
     );
 
-    Widget _customScrollViewWidget = _CustomScrollView(
+    Widget _scrollView = _ScrollView(
       title: titleWidget,
       actions: actions,
       body: screenBodyWidget,
@@ -47,32 +47,32 @@ class AppScaffold extends StatelessWidget {
       // Must specify app bar only in the non-scrollable case
       appBar: (showAppBar & !scrollableAppBar) ? appBar : null,
       body: (showAppBar & scrollableAppBar)
-          ? SafeArea(child: _customScrollViewWidget)
+          ? SafeArea(child: _scrollView)
           : SafeArea(child: screenBodyWidget),
     );
   }
 }
 
 /// Defines a CustomScrollView so the app bar is automatically displayed at bottom of page
-class _CustomScrollView extends StatefulWidget {
+class _ScrollView extends StatefulWidget {
   final Widget title;
   final List<Widget>? actions;
   final Widget body;
 
-  _CustomScrollView({
+  _ScrollView({
     required this.title,
     required this.actions,
     required this.body,
   });
 
   @override
-  State<_CustomScrollView> createState() => _CustomScrollViewState();
+  State<_ScrollView> createState() => _ScrollViewState();
 }
 
-class _CustomScrollViewState extends State<_CustomScrollView> {
+class _ScrollViewState extends State<_ScrollView> {
   bool _pinnedAppBar = false;
 
-  _CustomScrollViewState();
+  _ScrollViewState();
 
   @override
   Widget build(BuildContext context) {
