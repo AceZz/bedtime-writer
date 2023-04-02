@@ -121,7 +121,7 @@ class StoryWidget extends StatelessWidget {
       ),
     );
 
-    return ListView(
+    return Column(
       children: [
         titleWidget,
         imageWidget,
