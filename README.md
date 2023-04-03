@@ -102,18 +102,20 @@ not `.env.local`.
 
 **This frontend should only be used for testing campaigns.**
 
-1. Edit the `.env` file as you like.
-2. Run `flutter build web --web-renderer canvaskit` (using this specific Web renderer is important
+1. Deploy the rules and the backend if needed (see above).
+2. Edit `bedtime-writer/.env` if needed (you most certainly want to disable the `DEBUG_` keys and 
+   set `BACKEND=remote`).
+3. Run `flutter build web --web-renderer canvaskit` (using this specific Web renderer is important
    for the Lottie animations). If the Firebase emulators are running, visit <http://localhost:5000>
    to preview what you are about to deploy.
-3. Deploy with `npm run deploy_hosting` in the `functions` folder. This deploys the app to
-   [Firebase Hosting](https://console.firebase.google.com/project/bedtime-writer/hosting/sites). You
-   can retrieve the link in the console. Be aware that the link expires after 7 days by default
-   (this can be changed in the console).
+4. Deploy with `npm run deploy_hosting` in the `functions` folder. This deploys the app with
+   Firebase Hosting. You can retrieve the link in
+   [the console](https://console.firebase.google.com/project/bedtime-writer/hosting/sites). Be aware
+   that the link expires after 7 days by default (this can be changed in the console).
 
 **Never publish anything to the "real", live channel.** Our goal is not to publish to the Web, we
 only use it as a convenient way to share a test version of our app. Publishing to the live channel
-is dangerous, as it has a very easy to guess URL, and no expiration time, so we cannot control its
+is dangerous, as it has a very easy to guess URL and no expiration time, so we cannot control its
 access.
 
 If you ever publish to the live channel, delete everything inside the `bedtime-writer/build/web`
