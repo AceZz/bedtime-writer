@@ -8,15 +8,20 @@ import '../../widgets/index.dart';
 /// Asks the user to sign in and redirects to [redirect].
 class SignInScreen extends ConsumerWidget {
   final String redirect;
+  final String signInText;
 
-  const SignInScreen({required this.redirect, Key? key}) : super(key: key);
+  const SignInScreen({
+    required this.redirect,
+    required this.signInText,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Widget text = Padding(
       padding: const EdgeInsets.all(20.0),
       child: Text(
-        'Sign in to access this feature',
+        signInText,
         textAlign: TextAlign.center,
         style: Theme.of(context).primaryTextTheme.headlineSmall,
       ),

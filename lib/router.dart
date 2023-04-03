@@ -10,8 +10,15 @@ import 'story/index.dart';
 
 final _key = GlobalKey<NavigatorState>();
 
+const Map<String, String> signInTexts = {
+  'library': 'Sign in to access saved stories:',
+  'display_story': 'Sign in to access saved stories:',
+  'settings': 'Sign in to access the settings:',
+};
+const String defaultSignInText = 'Choose how to sign in:';
+
 /// Returns the redirection to the sign-in page if the user is not registered.
-String? _unregisteredRedirect(Ref ref, {String? redirect}) {
+String? _unregisteredRedirect(Ref ref, GoRouterState state) {
   final user = ref.read(userProvider);
 
   if (user is RegisteredUser) {
@@ -20,7 +27,7 @@ String? _unregisteredRedirect(Ref ref, {String? redirect}) {
 
   return Uri(
     path: '/account/sign-in',
-    queryParameters: {'redirect': redirect},
+    queryParameters: {'redirectName': state.name, 'redirectPath': state.path},
   ).toString();
 }
 
@@ -41,8 +48,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'sign_in',
         path: '/account/sign-in',
         builder: (context, state) {
-          final redirect = state.queryParams['redirect'] ?? 'home';
-          return SignInScreen(redirect: redirect);
+          final redirectPath = state.queryParams['redirectPath'] ?? '/';
+          final signInText = signInTexts[state.queryParams['redirectName']] ??
+              defaultSignInText;
+          return SignInScreen(
+            redirect: redirectPath,
+            signInText: signInText,
+          );
         },
       ),
       GoRoute(
@@ -63,14 +75,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'library',
         path: '/story/library',
         builder: (context, state) => LibraryScreen(),
-        redirect: (context, state) =>
-            _unregisteredRedirect(ref, redirect: state.path),
+        redirect: (context, state) => _unregisteredRedirect(ref, state),
       ),
       GoRoute(
         name: 'display_story',
         path: '/story/library/:id',
         redirect: (context, state) {
-          final redirect = _unregisteredRedirect(ref, redirect: state.path);
+          final redirect = _unregisteredRedirect(ref, state);
           final library = state.params['id'] == null ? '/story/library' : null;
           return redirect ?? library;
         },
@@ -81,8 +92,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'settings',
         path: '/settings',
         builder: (context, state) => SettingsScreen(),
-        redirect: (context, state) =>
-            _unregisteredRedirect(ref, redirect: state.path),
+        redirect: (context, state) => _unregisteredRedirect(ref, state),
       ),
     ],
   );

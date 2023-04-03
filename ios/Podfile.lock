@@ -25,19 +25,12 @@ PODS:
   - Firebase/Functions (10.3.0):
     - Firebase/CoreOnly
     - FirebaseFunctions (~> 10.3.0)
-  - Firebase/Storage (10.3.0):
-    - Firebase/CoreOnly
-    - FirebaseStorage (~> 10.3.0)
   - firebase_auth (4.2.10):
     - Firebase/Auth (= 10.3.0)
     - firebase_core
     - Flutter
   - firebase_core (2.7.1):
     - Firebase/CoreOnly (= 10.3.0)
-    - Flutter
-  - firebase_storage (11.0.14):
-    - Firebase/Storage (= 10.3.0)
-    - firebase_core
     - Flutter
   - FirebaseAppCheckInterop (10.6.0)
   - FirebaseAuth (10.3.0):
@@ -72,12 +65,6 @@ PODS:
     - GTMSessionFetcher/Core (< 4.0, >= 2.1)
   - FirebaseMessagingInterop (10.6.0)
   - FirebaseSharedSwift (10.6.0)
-  - FirebaseStorage (10.3.0):
-    - FirebaseAppCheckInterop (~> 10.0)
-    - FirebaseAuthInterop (~> 10.0)
-    - FirebaseCore (~> 10.0)
-    - FirebaseCoreExtension (~> 10.0)
-    - GTMSessionFetcher/Core (< 4.0, >= 2.1)
   - Flutter (1.0.0)
   - flutter_native_splash (0.0.1):
     - Flutter
@@ -124,7 +111,6 @@ DEPENDENCIES:
   - cloud_functions (from `.symlinks/plugins/cloud_functions/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
-  - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - FirebaseFirestore (from `https://github.com/invertase/firestore-ios-sdk-frameworks.git`, tag `10.3.0`)
   - Flutter (from `Flutter`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
@@ -145,7 +131,6 @@ SPEC REPOS:
     - FirebaseFunctions
     - FirebaseMessagingInterop
     - FirebaseSharedSwift
-    - FirebaseStorage
     - GoogleSignIn
     - GoogleUtilities
     - GTMAppAuth
@@ -162,8 +147,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
-  firebase_storage:
-    :path: ".symlinks/plugins/firebase_storage/ios"
   FirebaseFirestore:
     :git: https://github.com/invertase/firestore-ios-sdk-frameworks.git
     :tag: 10.3.0
@@ -190,7 +173,6 @@ SPEC CHECKSUMS:
   Firebase: f92fc551ead69c94168d36c2b26188263860acd9
   firebase_auth: e94093901bee37bdba241fd8647c1d3ea6f55c8b
   firebase_core: 1ae9f9aa76e6e1edc14fb181637ad466fd6c6fa4
-  firebase_storage: bdbef04ce485eb426152016c735736bc3615b8c0
   FirebaseAppCheckInterop: 13e5394346a811e7158cc136c01f10e3302a3514
   FirebaseAuth: 0e415d29d846c1dce2fb641e46f35e9888d9bec6
   FirebaseAuthInterop: e407335bca1938d65c58db8f4ad14b3c1f862a82
@@ -201,7 +183,6 @@ SPEC CHECKSUMS:
   FirebaseFunctions: d8415d2237cc807d05fa0a921d645f50a0d9d803
   FirebaseMessagingInterop: 9607c116534fc11e11925a312da989a5dd8e6827
   FirebaseSharedSwift: 103ae5bacb5468cd7727ae141f338fa94d7ee1f2
-  FirebaseStorage: 0efbff0ac978981866d89804191688ae50d64033
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
   google_sign_in_ios: 1256ff9d941db546373826966720b0c24804bcdd
