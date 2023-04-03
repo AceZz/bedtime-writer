@@ -9,6 +9,7 @@ import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import { Configuration, OpenAIApi } from "openai";
 
 import { getUid } from "./auth.js";
+import { compressPNG } from "./utils.js";
 import { fakeOpenAi } from "./story/fake_open_ai.js";
 import { generateOpenAiStory } from "./story/open_ai.js";
 import {
@@ -18,6 +19,12 @@ import {
 } from "./story/story_params.js";
 
 initializeApp();
+
+// These parameters were found with a benchmark on OpenAI data.
+const IMAGE_COMPRESSION_PARAMETERS = {
+  effort: 3,
+  compressionLevel: 6,
+};
 
 const storiesRef = getFirestore().collection("stories");
 
@@ -111,8 +118,30 @@ async function addStoryDocumentToFirestore(story, uid) {
 }
 
 async function addStoryImageToFirestore(document, story) {
-  const payload = { data: story.imageBytes };
+  const payload = { data: await compressImage(story.imageBytes) };
   await document.collection("images").doc("512x512").set(payload);
+}
+
+async function compressImage(image) {
+  const compressedImage = await compressPNG(
+    image,
+    IMAGE_COMPRESSION_PARAMETERS
+  );
+
+  const originalSize = Math.round(image.length / 1000);
+  const compressedSize = Math.round(compressedImage.length / 1000);
+
+  if (originalSize < compressedSize) {
+    logger.log(
+      `compressImage: original = ${originalSize} kB, compressed = ${compressedSize} kB, use original.`
+    );
+    return image;
+  }
+
+  logger.log(
+    `compressImage: original = ${originalSize} kB, compressed = ${compressedSize} kB, use compressed.`
+  );
+  return compressedImage;
 }
 
 async function addStoryPromptsToFirestore(document, story) {
