@@ -14,7 +14,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Widget titleWidget = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 50.0),
+      padding: const EdgeInsets.only(top: 80, bottom: 20),
       child: FadeIn(
         duration: const Duration(milliseconds: 1500),
         delay: const Duration(milliseconds: 500),
@@ -39,7 +39,7 @@ class HomeScreen extends ConsumerWidget {
         _HomeScreenButton(text: 'Settings', destination: 'settings');
 
     Widget menuWidget = Padding(
-      padding: const EdgeInsets.only(top: 50.0),
+      padding: const EdgeInsets.only(top: 40),
       child: Column(
         children: [newStoryButton, libraryButton, settingsButton]
             .asMap()
@@ -78,6 +78,7 @@ class HomeScreen extends ConsumerWidget {
         ],
       ),
       showAppBar: false,
+      showAccountButton: true,
     );
   }
 }
