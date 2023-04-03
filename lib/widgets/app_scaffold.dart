@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import 'account_button.dart';
+
 /// Augmented [Scaffold] that comes with a full-width [Container].
 ///
 /// Unless exception, every screen will use this class as a base widget.
@@ -11,6 +13,7 @@ class AppScaffold extends StatelessWidget {
   final String appBarTitle;
   final bool scrollableAppBar;
   final List<Widget>? actions;
+  final bool showAccountButton;
 
   const AppScaffold({
     Key? key,
@@ -20,6 +23,7 @@ class AppScaffold extends StatelessWidget {
     this.appBarTitle = '',
     this.scrollableAppBar = false,
     this.actions,
+    this.showAccountButton = false,
   }) : super(key: key);
 
   @override
@@ -52,6 +56,11 @@ class AppScaffold extends StatelessWidget {
       body: (showAppBar & scrollableAppBar)
           ? SafeArea(child: _scrollView)
           : SafeArea(child: screenBodyWidget),
+      //TODO: make this conditional on Scaffold call
+      floatingActionButton:
+          showAccountButton ? const FloatingAccountButton() : null,
+      floatingActionButtonLocation:
+          showAccountButton ? FloatingActionButtonLocation.endTop : null,
     );
   }
 }
