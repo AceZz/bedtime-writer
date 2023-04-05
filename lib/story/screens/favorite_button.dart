@@ -22,17 +22,17 @@ class FavoriteButton extends StatelessWidget {
         color: Theme.of(context).textTheme.bodyMedium?.color,
       ),
       onPressed: () {
-        _favoriteMessage(context, isFavorite);
+        _showSnackBar(context, isFavorite);
         onPressed?.call();
       },
     );
   }
 }
 
-void _favoriteMessage(BuildContext context, bool isFavorite) {
+void _showSnackBar(BuildContext context, bool isFavorite) {
   final String text =
-      isFavorite ? 'Removed from favorites' : 'Added to favorites';
-  SnackBar snackBar = SnackBar(
+      isFavorite ? 'Removed from Favorites' : 'Added to Favorites';
+  final snackBar = SnackBar(
     content: Center(
         child: Text(text, style: Theme.of(context).textTheme.bodyMedium)),
     backgroundColor: Theme.of(context).colorScheme.primary,
