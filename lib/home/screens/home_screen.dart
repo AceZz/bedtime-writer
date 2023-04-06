@@ -39,7 +39,7 @@ class HomeScreen extends ConsumerWidget {
         _HomeScreenButton(text: 'Settings', destination: 'settings');
 
     Widget menuWidget = Padding(
-      padding: const EdgeInsets.only(top: 40),
+      padding: const EdgeInsets.only(top: 30),
       child: Column(
         children: [newStoryButton, libraryButton, settingsButton]
             .asMap()
@@ -51,7 +51,7 @@ class HomeScreen extends ConsumerWidget {
                     duration: const Duration(milliseconds: 500),
                     delay: Duration(milliseconds: 500 + 500 * (i + 1)),
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 35.0),
+                      padding: const EdgeInsets.only(bottom: 20),
                       child: button,
                     ),
                   )),
@@ -65,10 +65,16 @@ class HomeScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          titleWidget,
-          menuWidget,
+          Flexible(
+            flex: 0,
+            child: titleWidget,
+          ),
+          Flexible(
+            flex: 0,
+            child: menuWidget,
+          ),
           if (debugAuth())
-            Expanded(
+            Flexible(
               child: Row(
                 children: [
                   Flexible(child: HomeScreenDebug()),
