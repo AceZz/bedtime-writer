@@ -22,8 +22,8 @@ class FavoriteButton extends StatelessWidget {
         color: Theme.of(context).textTheme.bodyMedium?.color,
       ),
       onPressed: () {
-        _showSnackBar(context, isFavorite);
         onPressed?.call();
+        _showSnackBar(context, isFavorite);
       },
     );
   }
