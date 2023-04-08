@@ -63,11 +63,9 @@ class StoryParams {
   final String? style;
   final Character? character;
 
-  /// The age of the child.
   final int? duration;
   final String? place;
   final String? object;
-  final String? moral;
 
   const StoryParams({
     this.style,
@@ -75,7 +73,6 @@ class StoryParams {
     this.duration,
     this.place,
     this.object,
-    this.moral,
   });
 
   StoryParams copyWith({
@@ -84,7 +81,6 @@ class StoryParams {
     int? duration,
     String? place,
     String? object,
-    String? moral,
   }) {
     return StoryParams(
       style: style ?? this.style,
@@ -92,7 +88,6 @@ class StoryParams {
       duration: duration ?? this.duration,
       place: place ?? this.place,
       object: object ?? this.object,
-      moral: moral ?? this.moral,
     );
   }
 
@@ -103,7 +98,6 @@ class StoryParams {
       'duration': duration,
       'place': place,
       'object': object,
-      'moral': moral,
     };
     map.removeWhere((key, value) => value == null);
 

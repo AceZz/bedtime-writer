@@ -6,7 +6,6 @@ export interface StoryParams {
   style?: string;
   place?: string;
   object?: string;
-  moral?: string;
   numWords?: number;
 }
 

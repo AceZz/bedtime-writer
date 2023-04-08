@@ -11,7 +11,6 @@ export function getPrompt(storyParams: StoryParams): string {
     getCharacterPrompt(storyParams.character) +
     getPlacePrompt(storyParams.place) +
     getObjectPrompt(storyParams.object) +
-    getMoralPrompt(storyParams.moral) +
     getNumWordsPrompt(storyParams.numWords)
   );
 }
@@ -58,10 +57,6 @@ function getObjectPrompt(object?: string): string {
   return object === undefined
     ? ""
     : ` The protagonist finds ${object} in the journey.`;
-}
-
-function getMoralPrompt(moral?: string): string {
-  return moral === undefined ? "" : ` The moral is ${moral}.`;
 }
 
 function getNumWordsPrompt(numWords?: number): string {

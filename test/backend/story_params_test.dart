@@ -25,7 +25,6 @@ const fullStory = StoryParams(
   duration: 3,
   place: 'at some place',
   object: 'some object',
-  moral: 'some moral',
 );
 
 void main() {
@@ -70,7 +69,6 @@ void main() {
         duration: 10,
         place: 'at another place',
         object: 'another object',
-        moral: 'another moral',
       );
 
       expect(copy.character!.name, 'Someone');
@@ -79,7 +77,6 @@ void main() {
       expect(copy.duration, 10);
       expect(copy.place, 'at another place');
       expect(copy.object, 'another object');
-      expect(copy.moral, 'another moral');
     });
 
     test('.serialize() returns a full serialization', () {
@@ -89,7 +86,6 @@ void main() {
         'duration': 3,
         'place': 'at some place',
         'object': 'some object',
-        'moral': 'some moral',
       });
     });
 
@@ -120,42 +116,42 @@ void main() {
     test('answer() works', () {
       var choice = Choice<String>(
         text: 'choice',
-        value: 'a new moral',
+        value: 'a new object',
         isAvailable: (story) => story.duration == 3,
       );
 
       var question = Question(
         text: 'question text',
         choices: [choice],
-        answer: (story, choice) => story.copyWith(moral: choice.value),
+        answer: (story, choice) => story.copyWith(object: choice.value),
       );
 
       expect(
-        question.answer(partialStory, choice).moral,
-        'a new moral',
+        question.answer(partialStory, choice).object,
+        'a new object',
       );
     });
 
     test('availableChoices() returns the correct choices', () {
       var choice1 = Choice<String>(
         text: 'choice 1',
-        value: 'moral 1',
+        value: 'object 1',
         isAvailable: (story) => story.duration == 3,
       );
       var choice2 = Choice<String>(
         text: 'choice 2',
-        value: 'moral 2',
+        value: 'object 2',
         isAvailable: (story) => story.duration == 5,
       );
       var choice3 = Choice<String>(
         text: 'choice 3',
-        value: 'moral 3',
+        value: 'object 3',
       );
 
       var question = Question(
         text: 'question text',
         choices: [choice1, choice2, choice3],
-        answer: (story, choice) => story.copyWith(moral: choice.value),
+        answer: (story, choice) => story.copyWith(object: choice.value),
       );
 
       expect(question.availableChoices(partialStory), [choice1, choice3]);
@@ -169,30 +165,30 @@ void main() {
   test('answerRandom() uses one of the expected choices', () {
     var choice1 = Choice<String>(
       text: 'choice 1',
-      value: 'moral 1',
+      value: 'object 1',
       isAvailable: (story) => story.duration == 3,
     );
     var choice2 = Choice<String>(
       text: 'choice 2',
-      value: 'moral 2',
+      value: 'object 2',
       isAvailable: (story) => story.duration == 5,
     );
     var choice3 = Choice<String>(
       text: 'choice 3',
-      value: 'moral 3',
+      value: 'object 3',
     );
 
     var question = Question(
       text: 'question text',
       choices: [choice1, choice2, choice3],
-      answer: (story, choice) => story.copyWith(moral: choice.value),
+      answer: (story, choice) => story.copyWith(object: choice.value),
     );
 
     // Hack until Random is mocked.
     for (var i = 0; i < 10; i++) {
       expect(
-        ['moral 1', 'moral 3']
-            .contains(question.answerRandom(partialStory).moral),
+        ['object 1', 'object 3']
+            .contains(question.answerRandom(partialStory).object),
         true,
       );
     }

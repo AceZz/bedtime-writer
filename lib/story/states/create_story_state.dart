@@ -134,7 +134,7 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
         )
         .toList();
     questions.shuffle();
-    return [characterQuestion, ...questions.take(2), durationQuestion];
+    return [characterQuestion, ...questions.take(2)];
   }
 
   /// Resets the StoryState.
