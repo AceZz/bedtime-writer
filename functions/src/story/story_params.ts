@@ -6,7 +6,7 @@ export interface StoryParams {
   style?: string;
   place?: string;
   object?: string;
-  numWords?: number;
+  duration?: number;
 }
 
 export interface Character {
