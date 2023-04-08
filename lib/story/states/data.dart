@@ -9,8 +9,6 @@ var allQuestions = [
   powerQuestion,
   flawQuestion,
   challengeQuestion,
-  moralQuestion,
-  durationQuestion,
 ];
 
 /// CHARACTERS
@@ -292,77 +290,4 @@ Question objectQuestion = Question(
     objectDiamond,
   ],
   answer: ((story, choice) => story.copyWith(object: choice.value)),
-);
-
-/// MORAL
-
-final Choice moralBelieve = Choice<String>(
-  text: 'Always believe in yourself',
-  image: Image.asset('assets/story/moral/believe.png'),
-  value: 'Always believe in yourself',
-);
-
-final Choice moralNoGiveUp = Choice<String>(
-  text: 'Never, ever, give up',
-  image: Image.asset('assets/story/moral/no_give_up.png'),
-  value: 'Never, ever, give up',
-);
-
-final Choice moralHonesty = Choice<String>(
-  text: 'Honesty is the best policy',
-  image: Image.asset('assets/story/moral/honesty.png'),
-  value: 'Honesty is the best policy',
-);
-
-final Choice moralKindToOthers = Choice<String>(
-  text: 'Treat others kindly',
-  image: Image.asset('assets/story/moral/kind_to_others.png'),
-  value: 'Treat others kindly',
-);
-
-final Choice moralBeauty = Choice<String>(
-  text: 'True beauty comes from within',
-  image: Image.asset('assets/story/moral/beauty.png'),
-  value: 'True beauty comes from within',
-);
-
-final Choice moralRight = Choice<String>(
-  text: 'Do what is right, not what is easy',
-  image: Image.asset('assets/story/moral/right.png'),
-  value: 'Do what is right, not what is easy',
-);
-
-Question moralQuestion = Question(
-  text: 'What will be the moral of the story?',
-  choices: [
-    moralBelieve,
-    moralNoGiveUp,
-    moralHonesty,
-    moralKindToOthers,
-    moralBeauty,
-    moralRight,
-  ],
-  answer: ((story, choice) => story.copyWith(moral: choice.value)),
-);
-
-/// DURATION
-
-final Choice durationShort = Choice<int>(
-  text: 'Short (2 mins)',
-  image: Image.asset('assets/story/duration/short.png'),
-  value: 2,
-);
-
-final Choice durationLong = Choice<int>(
-  text: 'Long (5 mins)',
-  image: Image.asset('assets/story/duration/long.png'),
-  value: 5,
-);
-
-Question durationQuestion = Question(
-  text: 'How long is the story?',
-  choices: [durationShort, durationLong],
-  randomAllowed: false,
-  shuffleChoices: false,
-  answer: ((story, choice) => story.copyWith(duration: choice.value)),
 );

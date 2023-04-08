@@ -29,7 +29,6 @@ test("getPrompt with full params", () => {
       "It is challenged with being challenged. " +
       "The story happens at some place. " +
       "The protagonist finds some object in the journey. " +
-      "The moral is some moral. " +
       "The length is about 300 words."
   );
 });
