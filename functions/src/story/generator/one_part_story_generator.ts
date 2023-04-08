@@ -21,6 +21,7 @@ export class OnePartStoryGenerator implements StoryGenerator {
   imageApi: ImageApi;
 
   constructor(params: StoryParams, textApi: TextApi, imageApi: ImageApi) {
+    console.log(params);
     this.params = params;
     this.textApi = textApi;
     this.imageApi = imageApi;

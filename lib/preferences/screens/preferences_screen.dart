@@ -1,13 +1,14 @@
+import 'package:bedtime_writer/backend/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../widgets/app_scaffold.dart';
 
-class PreferencesScreen extends ConsumerWidget {
+class PreferencesScreen extends StatelessWidget {
   const PreferencesScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return AppScaffold(
       appBarTitle: 'Preferences',
       child: Column(
@@ -85,20 +86,19 @@ class _PreferenceOption extends StatelessWidget {
   }
 }
 
-class _DurationDropdown extends StatefulWidget {
+class _DurationDropdown extends ConsumerStatefulWidget {
   @override
-  _DurationDropdownState createState() => _DurationDropdownState();
+  ConsumerState<_DurationDropdown> createState() => _DurationDropdownState();
 }
 
-class _DurationDropdownState extends State<_DurationDropdown> {
-  static const List<int> durations = [2, 5];
-
+class _DurationDropdownState extends ConsumerState<_DurationDropdown> {
   int? _selectedDuration;
 
   @override
   void initState() {
     super.initState();
-    _selectedDuration = durations[0];
+    final Preferences preferences = ref.read(preferencesProvider);
+    _selectedDuration = preferences.duration;
   }
 
   @override
@@ -115,9 +115,15 @@ class _DurationDropdownState extends State<_DurationDropdown> {
           onChanged: (int? newDuration) {
             setState(() {
               _selectedDuration = newDuration;
+              if (newDuration != null) {
+                ref
+                    .read(preferencesProvider.notifier)
+                    .updateDuration(newDuration);
+              }
             });
           },
-          items: durations.map<DropdownMenuItem<int>>((int duration) {
+          items: Preferences.allowedDurations
+              .map<DropdownMenuItem<int>>((int duration) {
             return DropdownMenuItem<int>(
               value: duration,
               child: Padding(

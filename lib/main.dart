@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'backend/index.dart';
 import 'firebase_options.dart';
@@ -21,7 +22,16 @@ void main() async {
 
   Paint.enableDithering = true; // Make smoother gradient
 
-  runApp(ProviderScope(child: MyApp()));
+  // Load the [SharedPreferences].
+  final sharedPreferences = await SharedPreferences.getInstance();
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesBaseProvider.overrideWithValue(sharedPreferences)
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends ConsumerWidget {
