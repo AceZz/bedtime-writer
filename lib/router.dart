@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'account/index.dart';
 import 'backend/index.dart';
 import 'home/index.dart';
-import 'settings/index.dart';
+import 'preferences/index.dart';
 import 'story/index.dart';
 
 final _key = GlobalKey<NavigatorState>();
@@ -13,7 +13,7 @@ final _key = GlobalKey<NavigatorState>();
 const Map<String, String> signInTexts = {
   'library': 'Sign in to access saved stories:',
   'display_story': 'Sign in to access saved stories:',
-  'settings': 'Sign in to access the settings:',
+  'preferences': 'Sign in to access your preferences:',
 };
 const String defaultSignInText = 'Choose how to sign in:';
 
@@ -89,9 +89,9 @@ final routerProvider = Provider<GoRouter>((ref) {
             DisplayStoryScreen(id: state.params['id'] ?? ''),
       ),
       GoRoute(
-        name: 'settings',
-        path: '/settings',
-        builder: (context, state) => SettingsScreen(),
+        name: 'preferences',
+        path: '/preferences',
+        builder: (context, state) => PreferencesScreen(),
         redirect: (context, state) => _unregisteredRedirect(ref, state),
       ),
     ],

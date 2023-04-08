@@ -49,7 +49,7 @@ var theme = ThemeData(
       fontSize: 24,
       letterSpacing: 1.2,
     ),
-    // Story, settings text
+    // Story, preferences text
     bodyMedium: GoogleFonts.outfit(
       color: onPrimary,
       fontWeight: FontWeight.normal,
