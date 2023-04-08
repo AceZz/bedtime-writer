@@ -22,5 +22,5 @@ export const FULL_PARAMS = {
   character: FULL_CHARACTER,
   place: "at some place",
   object: "some object",
-  numWords: 300,
+  duration: 3,
 };

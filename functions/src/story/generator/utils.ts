@@ -11,7 +11,7 @@ export function getPrompt(storyParams: StoryParams): string {
     getCharacterPrompt(storyParams.character) +
     getPlacePrompt(storyParams.place) +
     getObjectPrompt(storyParams.object) +
-    getNumWordsPrompt(storyParams.numWords)
+    getNumWordsPrompt(storyParams.duration)
   );
 }
 
@@ -59,10 +59,11 @@ function getObjectPrompt(object?: string): string {
     : ` The protagonist finds ${object} in the journey.`;
 }
 
-function getNumWordsPrompt(numWords?: number): string {
-  return numWords === undefined
+function getNumWordsPrompt(duration?: number): string {
+  // One minute is about 100 words.
+  return duration === undefined
     ? ""
-    : ` The length is about ${numWords} words.`;
+    : ` The length is about ${100 * duration} words.`;
 }
 
 export function getImagePromptPrompt(storyParams: StoryParams): string {
