@@ -35,13 +35,13 @@ class HomeScreen extends ConsumerWidget {
     Widget libraryButton =
         _HomeScreenButton(text: 'Library', destination: 'library');
 
-    Widget settingsButton =
-        _HomeScreenButton(text: 'Settings', destination: 'settings');
+    Widget preferencesButton =
+        _HomeScreenButton(text: 'Preferences', destination: 'preferences');
 
     Widget menuWidget = Padding(
       padding: const EdgeInsets.only(top: 30),
       child: Column(
-        children: [newStoryButton, libraryButton, settingsButton]
+        children: [newStoryButton, libraryButton, preferencesButton]
             .asMap()
             .map(
               // The buttons will fade in one after the other
