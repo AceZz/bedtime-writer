@@ -17,6 +17,13 @@ service cloud.firestore {
         allow update: if false;
         allow delete: if false;
       }
+
+      match /parts/{part} {
+        allow read: if isAuth() && get(/databases/$(database)/documents/stories/$(story)).data.author == request.auth.uid;
+        allow create: if isAuth();
+        allow update: if false;
+        allow delete: if false;
+      }
     }
   }
 }
