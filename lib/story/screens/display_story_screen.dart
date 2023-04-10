@@ -24,18 +24,28 @@ class DisplayStoryScreen extends ConsumerWidget {
   }
 
   Widget _data(BuildContext context, Story story) {
-    return _Scaffold(
-      story: story,
-      child: StoryWidget(
-        title: story.title,
-        story: story.text,
-        image: StoryImage(
-          story: story,
-          width: 360,
-          height: 360,
-          fadeColor: Theme.of(context).colorScheme.background,
-        ),
-      ),
+    return FutureBuilder<StoryPart>(
+      future: story.getPart(0),
+      builder: (context, snapshot) {
+        final StoryPart? part = snapshot.data;
+        if (part != null) {
+          return _Scaffold(
+            story: story,
+            shareText: part.text,
+            child: StoryWidget(
+              title: story.title,
+              story: part.text,
+              image: StoryImage(
+                image: part.image,
+                width: 360,
+                height: 360,
+                fadeColor: Theme.of(context).colorScheme.background,
+              ),
+            ),
+          );
+        }
+        return CircularProgressIndicator();
+      },
     );
   }
 
@@ -48,10 +58,15 @@ class DisplayStoryScreen extends ConsumerWidget {
 
 class _Scaffold extends StatelessWidget {
   final Story? story;
+  final String? shareText;
   final Widget child;
 
-  const _Scaffold({Key? key, required this.child, this.story})
-      : super(key: key);
+  const _Scaffold({
+    Key? key,
+    this.story,
+    this.shareText,
+    required this.child,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,13 +74,17 @@ class _Scaffold extends StatelessWidget {
     List<Widget> actions = [];
 
     if (_story != null) {
-      actions.add(
-        ShareButton(
-          iconSize: 30,
-          text: 'Hey! Check out this amazing story I made with '
-              'Bedtime stories: \n\n ${_story.text}',
-        ),
-      );
+      final _shareText = shareText;
+      if (_shareText != null) {
+        actions.add(
+          ShareButton(
+            iconSize: 30,
+            text: 'Hey! Check out this amazing story I made with '
+                'Bedtime stories: \n\n $shareText',
+          ),
+        );
+      }
+
       actions.add(
         FavoriteButton(
           isFavorite: _story.isFavorite,

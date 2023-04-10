@@ -35,7 +35,7 @@ class _StoryTile extends StatelessWidget {
         width: 55,
         child: Center(
           child: StoryImage(
-            story: story,
+            image: story.thumbnail,
             width: 55,
             height: 55,
             fadeColor: tileColor,
