@@ -21,23 +21,7 @@ class FavoriteButton extends StatelessWidget {
         isFavorite ? Icons.favorite : Icons.favorite_border,
         color: Theme.of(context).textTheme.bodyMedium?.color,
       ),
-      onPressed: () {
-        onPressed?.call();
-        _showSnackBar(context, isFavorite);
-      },
+      onPressed: onPressed,
     );
   }
-}
-
-void _showSnackBar(BuildContext context, bool isFavorite) {
-  final String text =
-      isFavorite ? 'Removed from Favorites' : 'Added to Favorites';
-  final snackBar = SnackBar(
-    content: Center(
-        child: Text(text, style: Theme.of(context).textTheme.bodyMedium)),
-    backgroundColor: Theme.of(context).colorScheme.primary,
-    behavior: SnackBarBehavior.floating,
-    duration: Duration(seconds: 3),
-  );
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
