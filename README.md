@@ -48,6 +48,8 @@ You should be able to launch Prettier with the `npx prettier` command.
 
 The Firebase emulator should have been already installed in the previous step.
 
+Run `npm install` to install all the needed packages.
+
 #### Configuration
 
 The repository already contains a `.env` file. This file contains the environment variables used
@@ -72,7 +74,12 @@ Run the unit tests with `npm test`.
 
 ### Launch the app locally
 
-Launch the backend emulators with `npm run local_backend` (in the `functions` folder.)
+In one terminal, in the `functions` folder, run `npm run build:watch`. The TypeScript will be built
+in the background every time you edit a file. Check the output of this command soon, as any build
+error will appear there.
+
+In another terminal, still in `functions`, launch the backend emulators with
+`npm run local_backend`.
 
 Run the Flutter app with `flutter run --debug` (in the `bedtime-stories` folder). Your app should
 use the local backend and fake data.
