@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../concrete.dart';
 import '../story.dart';
 import '../story_params.dart';
+import '../story_part.dart';
 import '../user.dart';
 import 'firebase.dart';
 
@@ -64,19 +65,51 @@ Query<Map<String, dynamic>> _userStoriesQueryBuilder(AuthUser user) =>
         .orderBy('timestamp', descending: true)
         .where('author', isEqualTo: user.uid);
 
+/// Firebase implementation of [StoryPart].
+class _FirebaseStoryPart implements StoryPart {
+  final String id;
+  final CollectionReference<Map<String, dynamic>> _imagesRef;
+  final Map<String, dynamic> _data;
+
+  factory _FirebaseStoryPart.deserialize(
+    CollectionReference<Map<String, dynamic>> imagesRef,
+    DocumentSnapshot<Map<String, dynamic>> part,
+  ) {
+    return _FirebaseStoryPart(part.id, imagesRef, part.data()!);
+  }
+
+  const _FirebaseStoryPart(this.id, this._imagesRef, this._data) : super();
+
+  String toString() => '_FirebaseStoryPart(${text.substring(0, 20)}...)';
+
+  @override
+  Future<Uint8List> get image async {
+    final image = await getCacheThenServer(_imageRef);
+    return image.data()!['data'].bytes;
+  }
+
+  DocumentReference<Map<String, dynamic>> get _imageRef {
+    final imageId = _data['image'];
+    return _imagesRef.doc(imageId);
+  }
+
+  String get text => _data['text'];
+}
+
 /// Firebase implementation of [Story].
 class _FirebaseStory implements Story {
   final String id;
   final Map<String, dynamic> _data;
 
   factory _FirebaseStory.deserialize(
-      DocumentSnapshot<Map<String, dynamic>> story) {
+    DocumentSnapshot<Map<String, dynamic>> story,
+  ) {
     return _FirebaseStory(story.id, story.data()!);
   }
 
   const _FirebaseStory(this.id, this._data) : super();
 
-  String toString() => '_FirebaseStory($title, $author, $dateTime, $text)';
+  String toString() => '_FirebaseStory($title, $author, $dateTime, $numParts)';
 
   DocumentReference<Map<String, dynamic>> get _storyRef =>
       firebaseFirestore.collection('stories').doc(id);
@@ -91,16 +124,6 @@ class _FirebaseStory implements Story {
   DateTime get dateTime => (_data['timestamp'] as Timestamp).toDate();
 
   @override
-  Future<Uint8List> get image async {
-    final imageRef = _storyRef.collection('images').doc('512x512');
-    final image = await getCacheThenServer(imageRef);
-    return image.data()!['data'].bytes;
-  }
-
-  @override
-  String get text => _data['text'];
-
-  @override
   bool get isFavorite => _data['isFavorite'];
 
   @override
@@ -108,5 +131,29 @@ class _FirebaseStory implements Story {
     final newIsFavorite = !isFavorite;
     await _storyRef.update({'isFavorite': newIsFavorite});
     return newIsFavorite;
+  }
+
+  @override
+  int get numParts => parts.length;
+
+  @override
+  Future<StoryPart> getPart(int index) async {
+    final partRef = _storyRef.collection('parts').doc(parts[index]);
+    final data = await partRef.get();
+    return _FirebaseStoryPart.deserialize(_imagesRef, data);
+  }
+
+  List<dynamic> get parts => _data['parts'];
+
+  CollectionReference<Map<String, dynamic>> get _imagesRef =>
+      _storyRef.collection('images');
+
+  @override
+  Future<Uint8List?> get thumbnail async {
+    if (numParts > 0) {
+      final part = await getPart(0);
+      return part.image;
+    }
+    return null;
   }
 }

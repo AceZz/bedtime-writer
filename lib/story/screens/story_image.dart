@@ -1,26 +1,26 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../backend/index.dart';
-
-/// Displays the image of [story].
+/// Displays the [image] of a story.
 class StoryImage extends StatelessWidget {
-  final Story story;
+  final Future<Uint8List?> image;
   final double width;
   final double height;
   final Color fadeColor;
 
   const StoryImage({
     Key? key,
-    required this.story,
+    required this.image,
     required this.width,
     required this.height,
     required this.fadeColor,
   }) : super(key: key);
 
   Future<ImageProvider> get storyImage async {
-    final bytes = await story.image;
-    return Image.memory(bytes).image;
+    final bytes = await image;
+    return Image.memory(bytes!).image;
   }
 
   @override

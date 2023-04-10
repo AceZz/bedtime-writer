@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'story_part.dart';
+
 /// Represents a generated story.
 abstract class Story {
   const Story();
@@ -12,14 +14,16 @@ abstract class Story {
 
   DateTime get dateTime;
 
-  Future<Uint8List> get image;
-
-  String get text;
-
   bool get isFavorite;
 
   /// Toggle the [isFavorite] state the story.
   ///
   /// Returns the new [isFavorite] state.
   Future<bool> toggleIsFavorite();
+
+  int get numParts;
+
+  Future<StoryPart> getPart(int index);
+
+  Future<Uint8List?> get thumbnail;
 }
