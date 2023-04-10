@@ -60,7 +60,7 @@ var theme = ThemeData(
     bodySmall: GoogleFonts.outfit(
       color: onPrimary,
       fontWeight: FontWeight.normal,
-      fontSize: 14,
+      fontSize: 16,
     ),
   ),
 );
