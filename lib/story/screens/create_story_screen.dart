@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -150,7 +151,7 @@ class _QuestionContent extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget questionText = Padding(
       padding: const EdgeInsets.all(20),
-      child: Text(
+      child: AutoSizeText(
         question.text,
         textAlign: TextAlign.center,
         style: Theme.of(context).primaryTextTheme.headlineMedium,
@@ -174,8 +175,8 @@ class _QuestionContent extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        questionText,
-        ...choiceButtons,
+        Flexible(flex: 1, child: questionText),
+        Flexible(flex: 3, child: Column(children: choiceButtons)),
       ],
     );
   }
@@ -209,7 +210,7 @@ class _ChoiceButton extends ConsumerWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(15),
       child: Container(
         width: buttonWidth + textWidth,
         child: Material(
