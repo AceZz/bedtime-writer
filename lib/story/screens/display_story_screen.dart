@@ -24,7 +24,7 @@ class DisplayStoryScreen extends ConsumerWidget {
   }
 
   Widget _data(BuildContext context, Story story) {
-    return _scaffold(
+    return _Scaffold(
       story: story,
       child: StoryWidget(
         title: story.title,
@@ -40,25 +40,44 @@ class DisplayStoryScreen extends ConsumerWidget {
   }
 
   Widget _error(error, stackTrace) {
-    return _scaffold(child: const Text('Something went wrong...'));
+    return _Scaffold(child: const Text('Something went wrong...'));
   }
 
-  Widget _loading() => _scaffold(child: const CircularProgressIndicator());
+  Widget _loading() => _Scaffold(child: const CircularProgressIndicator());
+}
 
-  Widget _scaffold({required Widget child, Story? story}) {
+class _Scaffold extends StatelessWidget {
+  final Story? story;
+  final Widget child;
+
+  const _Scaffold({Key? key, required this.child, this.story})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final _story = story;
     List<Widget> actions = [];
 
-    if (story != null) {
-      actions.add(ShareButton(
-        iconSize: 30,
-        text: 'Hey! Check out this amazing story I made with '
-            'Bedtime stories: \n\n $story.text',
-      ));
-      actions.add(FavoriteButton(
-        isFavorite: story.isFavorite,
-        iconSize: 30,
-        onPressed: story.toggleIsFavorite,
-      ));
+    if (_story != null) {
+      actions.add(
+        ShareButton(
+          iconSize: 30,
+          text: 'Hey! Check out this amazing story I made with '
+              'Bedtime stories: \n\n ${_story.text}',
+        ),
+      );
+      actions.add(
+        FavoriteButton(
+          isFavorite: _story.isFavorite,
+          iconSize: 30,
+          onPressed: () async {
+            final isFavorite = await _story.toggleIsFavorite();
+            ScaffoldMessenger.of(context).showSnackBar(
+              _favoriteSnackBar(context, isFavorite),
+            );
+          },
+        ),
+      );
     }
 
     return AppScaffold(
@@ -68,4 +87,18 @@ class DisplayStoryScreen extends ConsumerWidget {
       child: child,
     );
   }
+}
+
+SnackBar _favoriteSnackBar(BuildContext context, bool isFavorite) {
+  final text =
+      isFavorite ? "Story added to favorites" : "Story removed from favorites";
+
+  return SnackBar(
+    content: Center(
+      child: Text(text, style: Theme.of(context).textTheme.bodyMedium),
+    ),
+    backgroundColor: Theme.of(context).colorScheme.primary,
+    behavior: SnackBarBehavior.floating,
+    duration: Duration(seconds: 3),
+  );
 }
