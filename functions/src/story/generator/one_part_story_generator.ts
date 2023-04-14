@@ -5,7 +5,7 @@ import {
   SystemTextPrompt,
   TextApi,
   UserTextPrompt,
-} from "../../api/";
+} from "./text_api";
 import { logger } from "../../logger";
 import { StoryParams } from "../story_params";
 import { StoryPart } from "../story_part";

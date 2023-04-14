@@ -1,5 +1,5 @@
 import { PassThrough, Stream } from "stream";
-import { TextApi } from "./text_api";
+import { TextApi } from "../../story/generator";
 
 export const FAKE_TOKENS = getFakeTokens(500);
 
