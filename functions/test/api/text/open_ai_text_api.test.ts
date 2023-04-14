@@ -9,7 +9,7 @@ import { describe, expect, test } from "@jest/globals";
 
 import { getOpenAiApi } from "../../../src/api/open_ai";
 import { OpenAiTextApi } from "../../../src/api/text/open_ai_text_api";
-import { SystemTextPrompt } from "../../../src/api/text/text_api";
+import { SystemTextPrompt } from "../../../src/story/generator/text_api";
 
 describe.skip("OpenAiTextApi", () => {
   const KEY = "...";

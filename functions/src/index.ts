@@ -9,8 +9,6 @@ import {
   OpenAiImageApi,
   FakeTextApi,
   FakeImageApi,
-  ImageApi,
-  TextApi,
 } from "./api";
 import { getUid } from "./auth";
 import { logger } from "./logger";
@@ -18,6 +16,8 @@ import {
   FirebaseStorySaver,
   OnePartStoryGenerator,
   StoryMetadata,
+  ImageApi,
+  TextApi,
 } from "./story/";
 
 initializeApp();
