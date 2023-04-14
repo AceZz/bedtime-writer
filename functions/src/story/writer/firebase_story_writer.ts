@@ -6,8 +6,8 @@ import {
   Timestamp,
 } from "firebase-admin/firestore";
 import { StoryMetadata } from "../story_metadata";
-import { StorySaver } from "./story_saver";
 import { StoryPart } from "../story_part";
+import { StoryWriter } from "./story_writer";
 
 /**
  * The Firestore document has the following schema:
@@ -32,7 +32,7 @@ import { StoryPart } from "../story_part";
  *         imagePrompt
  *         imagePromptPrompt
  */
-export class FirebaseStorySaver implements StorySaver {
+export class FirebaseStoryWriter implements StoryWriter {
   metadata: StoryMetadata;
 
   private firestore: Firestore;
@@ -45,7 +45,7 @@ export class FirebaseStorySaver implements StorySaver {
     this.parts = [];
   }
 
-  async createStory(): Promise<string> {
+  async writeMetadata(): Promise<string> {
     const payload = {
       author: this.metadata.author,
       isFavorite: this.metadata.isFavorite,
@@ -59,20 +59,20 @@ export class FirebaseStorySaver implements StorySaver {
     return this.id;
   }
 
-  async savePart(part: StoryPart): Promise<string> {
-    const imageId = await this.savePartImage(part.image);
-    const partId = await this.savePartData(part, imageId);
+  async writePart(part: StoryPart): Promise<string> {
+    const imageId = await this.writePartImage(part.image);
+    const partId = await this.writePartData(part, imageId);
     this.parts.push(partId);
 
     await Promise.all([
       this.updateStoryParts(),
-      this.savePartPrompts(part, partId),
+      this.writePartPrompts(part, partId),
     ]);
 
     return partId;
   }
 
-  private async savePartImage(image?: Buffer): Promise<string> {
+  private async writePartImage(image?: Buffer): Promise<string> {
     const payload = {
       data: image,
     };
@@ -81,7 +81,7 @@ export class FirebaseStorySaver implements StorySaver {
     return document.id;
   }
 
-  private async savePartData(
+  private async writePartData(
     part: StoryPart,
     imageId: string
   ): Promise<string> {
@@ -98,7 +98,7 @@ export class FirebaseStorySaver implements StorySaver {
     await this.storyRef.update({ parts: this.parts });
   }
 
-  private async savePartPrompts(
+  private async writePartPrompts(
     part: StoryPart,
     partId: string
   ): Promise<string> {
