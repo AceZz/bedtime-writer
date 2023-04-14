@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 
-import { ImageApi } from "./image_api";
+import { ImageApi } from "../../story/generator";
 
 export const FAKE_IMAGE_BYTES = readFileSync(
   "src/api/image/fake_image_bytes.jpg"
