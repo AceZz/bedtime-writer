@@ -2,7 +2,6 @@ import 'package:bedtime_writer/backend/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../widgets/index.dart';
 
@@ -52,16 +51,8 @@ void _onPressed(BuildContext context, WidgetRef ref, String redirect) async {
   } else if (user is AnonymousUser) {
     throw Exception('User should be signed in to see this sign out button');
   } else if (user is AuthUser) {
-    await _signOut();
+    await user.signOut();
   }
 
   context.pushReplacement(redirect);
-}
-
-Future<void> _signOut() async {
-  try {
-    await FirebaseAuth.instance.signOut();
-  } catch (e) {
-    print('Error signing out: $e');
-  }
 }

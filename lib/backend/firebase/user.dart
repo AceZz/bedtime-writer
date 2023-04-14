@@ -146,4 +146,6 @@ class _FirebaseRegisteredUser extends _FirebaseAuthUser
       if (!_credentialAlreadyUsed(e)) throw e;
     }
   }
+
+
 }
