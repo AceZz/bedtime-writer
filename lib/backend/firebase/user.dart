@@ -84,6 +84,9 @@ abstract class _FirebaseAuthUser extends _FirebaseUser implements AuthUser {
   String get uid => user.uid;
 
   @override
+  String? get displayName => user.displayName;
+
+  @override
   Future signOut() {
     return firebaseAuth.signOut();
   }
@@ -121,6 +124,8 @@ class _FirebaseAnonymousUser extends _FirebaseAuthUser
 class _FirebaseRegisteredUser extends _FirebaseAuthUser
     implements RegisteredUser {
   const _FirebaseRegisteredUser(firebase_auth.User user) : super(user);
+
+  get displayName => user.displayName;
 
   @override
   String toString() => 'Registered Firebase user ($uid, $providers)';
