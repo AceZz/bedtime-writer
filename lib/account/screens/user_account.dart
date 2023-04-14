@@ -8,31 +8,20 @@ import '../../widgets/index.dart';
 /// Asks the user to sign in and redirects to [redirect].
 class UserAccountScreen extends ConsumerWidget {
   final String redirect;
-  final String signOutText;
 
   const UserAccountScreen({
     required this.redirect,
-    required this.signOutText,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Widget text = Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Text(
-        signOutText,
-        textAlign: TextAlign.center,
-        style: Theme.of(context).primaryTextTheme.headlineSmall,
-      ),
-    );
 
     return AppScaffold(
       appBarTitle: 'Account',
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          text,
           SignOutButton(
             text: 'Sign out',
             onPressed: () => _onPressed(context, ref, redirect),
