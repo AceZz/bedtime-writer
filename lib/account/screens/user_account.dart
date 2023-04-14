@@ -1,4 +1,5 @@
 import 'package:bedtime_writer/backend/index.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -16,12 +17,41 @@ class UserAccountScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    //TODO: refactor this without FirebaseAuth
+    String? displayName = FirebaseAuth.instance.currentUser?.displayName;
+
+    String logInText;
+    if (displayName == null) {
+      logInText = 'You\'re logged in';
+    } else {
+      logInText = 'You\'re logged in as $displayName';
+    }
+
+    Widget text = Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Text(
+        logInText,
+        textAlign: TextAlign.center,
+        style: Theme.of(context).primaryTextTheme.headlineSmall,
+      ),
+    );
+
+    Widget icon = Padding(
+      padding: const EdgeInsets.all(20),
+      child: Icon(
+        Icons.account_circle,
+        size: 60,
+        color: Theme.of(context).primaryTextTheme.bodyMedium?.color,
+      ),
+    );
 
     return AppScaffold(
       appBarTitle: 'Account',
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          icon,
+          text,
           SignOutButton(
             text: 'Sign out',
             onPressed: () => _onPressed(context, ref, redirect),
