@@ -54,7 +54,9 @@ class _AccountButton extends StatelessWidget {
         Icons.account_circle,
         color: Theme.of(context).primaryTextTheme.bodyMedium?.color,
       ),
-      onPressed: () => {},
+      onPressed: () {
+        context.pushNamed('account');
+      },
     );
   }
 }
