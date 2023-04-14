@@ -5,11 +5,11 @@ import {
   SystemTextPrompt,
   TextApi,
   UserTextPrompt,
-  ImageApi,
 } from "../../api/";
 import { logger } from "../../logger";
 import { StoryParams } from "../story_params";
 import { StoryPart } from "../story_part";
+import { ImageApi } from "./image_api";
 import { StoryGenerator } from "./story_generator";
 import { getImagePromptPrompt, getPrompt, getStoryTitle } from "./utils";
 
