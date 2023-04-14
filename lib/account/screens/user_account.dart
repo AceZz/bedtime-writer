@@ -1,5 +1,4 @@
 import 'package:bedtime_writer/backend/index.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,8 +16,12 @@ class UserAccountScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //TODO: refactor this without FirebaseAuth
-    String? displayName = FirebaseAuth.instance.currentUser?.displayName;
+    final user = ref.read(userProvider);
+
+    String? displayName;
+    if (user is AuthUser) {
+      displayName = user.displayName;
+    }
 
     String logInText;
     if (displayName == null) {
@@ -37,7 +40,7 @@ class UserAccountScreen extends ConsumerWidget {
     );
 
     Widget icon = Padding(
-      padding: const EdgeInsets.only(top:20),
+      padding: const EdgeInsets.only(top: 20),
       child: Icon(
         Icons.account_circle,
         size: 60,
