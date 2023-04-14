@@ -41,8 +41,8 @@ export const addStory = region("europe-west1")
     const part = await generator.nextStoryPart();
     logger.info("addStory: story was generated");
 
-    const id = await saver.createStory();
-    await saver.savePart(part);
+    const id = await saver.writeMetadata();
+    await saver.writePart(part);
     logger.info(`addStory: story ${id} was added to Firestore`);
 
     return id;
