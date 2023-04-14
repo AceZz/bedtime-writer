@@ -37,7 +37,7 @@ class UserAccountScreen extends ConsumerWidget {
     );
 
     Widget icon = Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(top:20),
       child: Icon(
         Icons.account_circle,
         size: 60,
