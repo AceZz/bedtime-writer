@@ -7,11 +7,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../widgets/index.dart';
 
 /// Asks the user to sign in and redirects to [redirect].
-class UserProfileScreen extends ConsumerWidget {
+class UserAccountScreen extends ConsumerWidget {
   final String redirect;
   final String signOutText;
 
-  const UserProfileScreen({
+  const UserAccountScreen({
     required this.redirect,
     required this.signOutText,
     Key? key,
@@ -29,7 +29,7 @@ class UserProfileScreen extends ConsumerWidget {
     );
 
     return AppScaffold(
-      appBarTitle: 'Profile',
+      appBarTitle: 'Account',
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
