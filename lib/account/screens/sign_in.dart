@@ -1,6 +1,7 @@
 import 'package:bedtime_writer/backend/index.dart';
 import 'package:bedtime_writer/widgets/sign_in.dart';
 import 'package:bedtime_writer/widgets/textField.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,7 +10,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../widgets/index.dart';
 
 /// Asks the user to sign in and redirects to [redirect].
-class SignInScreen extends ConsumerWidget {
+
+class SignInScreen extends ConsumerStatefulWidget {
   final String redirect;
   final String signInText;
 
@@ -19,15 +21,25 @@ class SignInScreen extends ConsumerWidget {
     Key? key,
   }) : super(key: key);
 
-  final usernameController = TextEditingController();
+  @override
+  ConsumerState<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends ConsumerState<SignInScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     Widget text = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Text(
-        signInText,
+        widget.signInText,
         textAlign: TextAlign.center,
         style: Theme.of(context).primaryTextTheme.headlineSmall,
       ),
@@ -38,11 +50,11 @@ class SignInScreen extends ConsumerWidget {
       width: 240,
     );
 
-    Widget userTextField = Padding(
+    Widget emailTextField = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: MyTextField(
-        controller: usernameController,
-        hintText: 'Username',
+        controller: emailController,
+        hintText: 'Email',
         obscureText: false,
       ),
     );
@@ -76,7 +88,14 @@ class SignInScreen extends ConsumerWidget {
 
     Widget signInButton = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: SignInButton(text: 'Sign In', onTap: () => {}),
+      child: SignInButton(
+          text: 'Sign In',
+          onTap: () => _emailOnTap(
+              context: context,
+              ref: ref,
+              email: emailController.text,
+              password: passwordController.text,
+              redirect: widget.redirect)),
     );
 
     Widget divider = Padding(
@@ -116,7 +135,8 @@ class SignInScreen extends ConsumerWidget {
             flex: 1,
             child: GoogleSignInButton(
               text: 'Google Sign in',
-              onPressed: () => _onPressed(context, ref, redirect),
+              onPressed: () => _googleOnPressed(
+                  context: context, ref: ref, redirect: widget.redirect),
             ),
           ),
         ],
@@ -133,7 +153,7 @@ class SignInScreen extends ConsumerWidget {
           SizedBox(height: 20),
           text,
           SizedBox(height: 50),
-          userTextField,
+          emailTextField,
           SizedBox(height: 10),
           passwordTextField,
           SizedBox(height: 5),
@@ -150,7 +170,18 @@ class SignInScreen extends ConsumerWidget {
   }
 }
 
-void _onPressed(BuildContext context, WidgetRef ref, String redirect) async {
+void _googleOnPressed(
+    {required BuildContext context,
+    required WidgetRef ref,
+    required String redirect}) async {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      });
+
   final user = ref.read(userProvider);
 
   if (user is UnauthUser) {
@@ -159,6 +190,34 @@ void _onPressed(BuildContext context, WidgetRef ref, String redirect) async {
     await user.linkToGoogle();
   } else if (user is AuthUser) {
     await user.linkToGoogle();
+  }
+
+  context.pushReplacement(redirect);
+}
+
+void _emailOnTap(
+    {required BuildContext context,
+    required WidgetRef ref,
+    required String email,
+    required String password,
+    required String redirect}) async {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      });
+
+  final user = ref.read(userProvider);
+
+  if (user is UnauthUser) {
+    await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+  } else if (user is AnonymousUser) {
+    //TODO: change with email sign in
+  } else if (user is AuthUser) {
+    //TODO: throw error
   }
 
   context.pushReplacement(redirect);
