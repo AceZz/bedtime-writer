@@ -2,8 +2,8 @@ import { Readable } from "node:stream";
 
 import { CreateChatCompletionRequest, OpenAIApi } from "openai";
 
-import { logger } from "../../logger";
-import { TextApiConfig, TextPrompt, TextApi } from "../../story/generator";
+import { TextApiConfig, TextPrompt, TextApi } from "./text_api";
+import { logger } from "../../../logger";
 
 /**
  * Read an OpenAI stream and yield token per token.

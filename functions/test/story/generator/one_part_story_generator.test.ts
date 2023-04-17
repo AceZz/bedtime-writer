@@ -5,14 +5,16 @@ import { beforeAll, describe, expect, test } from "@jest/globals";
 import { OnePartStoryGenerator } from "../../../src/story/generator/one_part_story_generator";
 import { FULL_CLASSIC_STORY_LOGIC } from "../logic/data";
 import {
-  getOpenAiApi,
   OpenAiTextApi,
-  OpenAiImageApi,
   FakeTextApi,
-  FakeImageApi,
   FAKE_TOKENS,
+} from "../../../src/story/generator/text_api";
+import {
   FAKE_IMAGE_BYTES,
-} from "../../../src/api";
+  FakeImageApi,
+  OpenAiImageApi,
+} from "../../../src/story/generator/image_api";
+import { getOpenAiApi } from "../../../src/open_ai";
 
 describe("with fake APIs", () => {
   function initGenerator() {

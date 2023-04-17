@@ -1,5 +1,5 @@
 import { CreateImageRequest, OpenAIApi } from "openai";
-import { ImageApi, ImageApiConfig } from "../../story/generator";
+import { ImageApi, ImageApiConfig } from "./image_api";
 import { compressToPng } from "./utils";
 
 // These parameters were found with a benchmark on OpenAI data.

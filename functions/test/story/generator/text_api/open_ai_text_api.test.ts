@@ -6,10 +6,9 @@
  */
 
 import { describe, expect, test } from "@jest/globals";
-
-import { getOpenAiApi } from "../../../src/api/open_ai";
-import { OpenAiTextApi } from "../../../src/api/text/open_ai_text_api";
-import { SystemTextPrompt } from "../../../src/story/generator/text_api";
+import { getOpenAiApi } from "../../../../src/open_ai";
+import { OpenAiTextApi } from "../../../../src/story/generator/text_api";
+import { SystemTextPrompt } from "../../../../src/story/generator/text_api/text_api";
 
 describe.skip("OpenAiTextApi", () => {
   const KEY = "...";
