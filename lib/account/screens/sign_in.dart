@@ -13,11 +13,14 @@ class SignInScreen extends ConsumerWidget {
   final String redirect;
   final String signInText;
 
-  const SignInScreen({
+  SignInScreen({
     required this.redirect,
     required this.signInText,
     Key? key,
   }) : super(key: key);
+
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,9 +37,6 @@ class SignInScreen extends ConsumerWidget {
       'decoration/feather.png',
       width: 240,
     );
-
-    final usernameController = TextEditingController();
-    final passwordController = TextEditingController();
 
     Widget userTextField = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
