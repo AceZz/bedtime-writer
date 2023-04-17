@@ -3,7 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { beforeAll, describe, expect, test } from "@jest/globals";
 
 import { OnePartStoryGenerator } from "../../../src/story/generator/one_part_story_generator";
-import { FULL_PARAMS } from "./data";
+import { FULL_CLASSIC_STORY_LOGIC } from "../logic/data";
 import {
   getOpenAiApi,
   OpenAiTextApi,
@@ -17,7 +17,7 @@ import {
 describe("with fake APIs", () => {
   function initGenerator() {
     return new OnePartStoryGenerator(
-      FULL_PARAMS,
+      FULL_CLASSIC_STORY_LOGIC,
       new FakeTextApi(),
       new FakeImageApi()
     );
@@ -59,7 +59,7 @@ describe.skip("with OpenAI APIs", () => {
 
   function initGenerator() {
     return new OnePartStoryGenerator(
-      FULL_PARAMS,
+      FULL_CLASSIC_STORY_LOGIC,
       new OpenAiTextApi(API, "gpt-3.5-turbo"),
       new OpenAiImageApi(API)
     );

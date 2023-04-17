@@ -7,32 +7,27 @@ import {
   UserTextPrompt,
 } from "./text_api";
 import { logger } from "../../logger";
-import { StoryParams } from "../story_params";
+import { StoryLogic } from "../logic/";
 import { StoryPart } from "../story_part";
 import { ImageApi } from "./image_api";
 import { StoryGenerator } from "./story_generator";
-import { getImagePromptPrompt, getPrompt, getStoryTitle } from "./utils";
 
 const NUM_TOKENS_SUMMARY = 100;
 
 export class OnePartStoryGenerator implements StoryGenerator {
-  params: StoryParams;
-  textApi: TextApi;
-  imageApi: ImageApi;
-
-  constructor(params: StoryParams, textApi: TextApi, imageApi: ImageApi) {
-    this.params = params;
-    this.textApi = textApi;
-    this.imageApi = imageApi;
-  }
+  constructor(
+    readonly logic: StoryLogic,
+    readonly textApi: TextApi,
+    readonly imageApi: ImageApi
+  ) {}
 
   title(): string {
-    return getStoryTitle(this.params);
+    return this.logic.title();
   }
 
   async nextStoryPart(): Promise<StoryPart> {
-    const textPrompt = getPrompt(this.params);
-    const imagePromptPrompt = getImagePromptPrompt(this.params);
+    const textPrompt = this.logic.prompt();
+    const imagePromptPrompt = this.logic.imagePromptPrompt();
 
     const stream = await this.getTextStream(textPrompt);
     logger.debug("OnePartStoryGenerator: story stream created");
