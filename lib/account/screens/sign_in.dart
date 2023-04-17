@@ -212,13 +212,34 @@ void _emailOnTap(
   final user = ref.read(userProvider);
 
   if (user is UnauthUser) {
-    await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email, password: password);
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      context.pushReplacement(redirect);
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
+      context.pop();
+      if (e.code == 'user-not-found') {
+        _showAlertDialog(context: context, text:'User does not exist');
+      } else if (e.code == 'wrong-password') {
+        _showAlertDialog(context: context, text:'Incorrect password');
+      } else if (e.code == 'invalid-email') {
+        _showAlertDialog(context: context, text:'The email format is not valid');
+      }
+    }
   } else if (user is AnonymousUser) {
     //TODO: change with email sign in
   } else if (user is AuthUser) {
     //TODO: throw error
   }
+}
 
-  context.pushReplacement(redirect);
+void _showAlertDialog({required BuildContext context, required String text}) {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(text),
+        );
+      });
 }
