@@ -1,11 +1,17 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /stories/{story} {
-      function isAuth() {
-        return request.auth != null;
-      }
+    function isAuth() {
+      return request.auth != null;
+    }
 
+    match /requests_v1/{r} {
+      allow get: if isAuth() && resource.data.author == request.auth.uid;
+      allow list: if false;
+      allow write: if false;
+    }
+
+    match /stories/{story} {
       allow read: if isAuth() && resource.data.author == request.auth.uid;
       allow create: if isAuth();
       allow update: if (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isFavorite']));

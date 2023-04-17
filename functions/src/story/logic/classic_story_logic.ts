@@ -1,7 +1,7 @@
 import { StoryLogic } from "./story_logic";
 
-const MAX_DURATION = 10;
-const MAX_STRING_LENGTH = 50;
+export const MAX_DURATION = 10;
+export const MAX_STRING_LENGTH = 50;
 
 /**
  * A story logic with prompts adapted to a classic story (no interactivity).
