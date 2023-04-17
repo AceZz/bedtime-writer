@@ -63,6 +63,7 @@ flutter:
 
   assets:
     - .env
+    - assets/decoration/
     - assets/logos/
     - assets/lottie/
     - assets/story/loading.txt
