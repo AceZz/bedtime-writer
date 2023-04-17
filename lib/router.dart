@@ -47,8 +47,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'account',
         path: '/account',
-        builder: (context, state) =>
-            UserAccountScreen(redirect: '/'),
+        builder: (context, state) => UserAccountScreen(redirect: '/'),
       ),
       GoRoute(
         name: 'sign_in',
