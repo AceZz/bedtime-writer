@@ -3,8 +3,7 @@
  */
 
 import { Configuration, OpenAIApi } from "openai";
-
-import { logger } from "../logger";
+import { logger } from "./logger";
 
 export function getOpenAiApi(key?: string): OpenAIApi {
   if (key === undefined) {

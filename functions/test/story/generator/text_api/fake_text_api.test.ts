@@ -1,6 +1,8 @@
 import { expect, test } from "@jest/globals";
-
-import { FakeTextApi, FAKE_TOKENS } from "../../../src/api/text/fake_text_api";
+import {
+  FAKE_TOKENS,
+  FakeTextApi,
+} from "../../../../src/story/generator/text_api/fake_text_api";
 
 test("getText", async () => {
   const api = new FakeTextApi();

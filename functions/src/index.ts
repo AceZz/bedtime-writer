@@ -3,22 +3,20 @@ import process from "node:process";
 import { region } from "firebase-functions";
 import { initializeApp } from "firebase-admin/app";
 
+import { getUid } from "./auth";
+import { logger } from "./logger";
 import {
-  getOpenAiApi,
   OpenAiTextApi,
   OpenAiImageApi,
   FakeTextApi,
   FakeImageApi,
-} from "./api";
-import { getUid } from "./auth";
-import { logger } from "./logger";
-import {
   FirebaseStorySaver,
   OnePartStoryGenerator,
   StoryMetadata,
   ImageApi,
   TextApi,
 } from "./story/";
+import { getOpenAiApi } from "./open_ai";
 
 initializeApp();
 
