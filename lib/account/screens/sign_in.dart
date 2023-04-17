@@ -46,7 +46,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     );
 
     Widget image = Image.asset(
-      'decoration/feather.png',
+      'assets/decoration/feather.png',
       width: 240,
     );
 
@@ -68,10 +68,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       ),
     );
 
-    TextStyle smallTextStyle = GoogleFonts.outfit(
+    TextStyle forgotPasswordTextStyle = GoogleFonts.outfit(
       color: Theme.of(context).textTheme.bodySmall?.color!,
       fontWeight: FontWeight.normal,
-      fontSize: 12,
+      fontSize: 14,
     );
 
     Widget forgotPasswordText = Row(
@@ -81,7 +81,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Text(
               'Forgot Password?',
-              style: smallTextStyle,
+              style: forgotPasswordTextStyle,
             )),
       ],
     );
@@ -145,26 +145,28 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     return AppScaffold(
       appBarTitle: 'Sign in',
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(height: 50),
-          image,
-          SizedBox(height: 20),
-          text,
-          SizedBox(height: 50),
-          emailTextField,
-          SizedBox(height: 10),
-          passwordTextField,
-          SizedBox(height: 5),
-          forgotPasswordText,
-          SizedBox(height: 20),
-          signInButton,
-          SizedBox(height: 20),
-          divider,
-          SizedBox(height: 20),
-          googleSignInButton,
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(height: 50),
+            image,
+            SizedBox(height: 20),
+            text,
+            SizedBox(height: 50),
+            emailTextField,
+            SizedBox(height: 10),
+            passwordTextField,
+            SizedBox(height: 5),
+            forgotPasswordText,
+            SizedBox(height: 20),
+            signInButton,
+            SizedBox(height: 20),
+            divider,
+            SizedBox(height: 20),
+            googleSignInButton,
+          ],
+        ),
       ),
     );
   }
@@ -220,11 +222,12 @@ void _emailOnTap(
       print(e.code);
       context.pop();
       if (e.code == 'user-not-found') {
-        _showAlertDialog(context: context, text:'User does not exist');
+        _showAlertDialog(context: context, text: 'User does not exist');
       } else if (e.code == 'wrong-password') {
-        _showAlertDialog(context: context, text:'Incorrect password');
+        _showAlertDialog(context: context, text: 'Incorrect password');
       } else if (e.code == 'invalid-email') {
-        _showAlertDialog(context: context, text:'The email format is not valid');
+        _showAlertDialog(
+            context: context, text: 'The email format is not valid');
       }
     }
   } else if (user is AnonymousUser) {
@@ -239,7 +242,12 @@ void _showAlertDialog({required BuildContext context, required String text}) {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(text),
+          backgroundColor: Colors.grey.shade700,
+          title: Text(
+            text,
+            style: Theme.of(context).primaryTextTheme.bodySmall,
+            textAlign: TextAlign.center,
+          ),
         );
       });
 }
