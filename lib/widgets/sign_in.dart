@@ -26,3 +26,33 @@ class GoogleSignInButton extends StatelessWidget {
     );
   }
 }
+
+class SignInButton extends StatelessWidget {
+  final String text;
+  final void Function() onTap;
+
+  const SignInButton(
+      {Key? key, required this.text, required this.onTap})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: Theme.of(context).primaryTextTheme.bodyMedium,
+          )
+        )
+      ),
+    );
+  }
+}
