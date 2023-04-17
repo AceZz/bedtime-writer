@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class GoogleSignInButton extends StatelessWidget {
   final String text;
@@ -12,13 +13,21 @@ class GoogleSignInButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final logo = Image(
       image: AssetImage('assets/logos/google_light.png'),
-      height: 36.0,
+      height: 42,
     );
+
+    TextStyle textStyle = GoogleFonts.outfit(
+    color: Colors.black87,
+    fontWeight: FontWeight.normal,
+    fontSize: 16,
+    );
+
+    Widget textWidget = Text(text, style: textStyle);
 
     return FilledButton.icon(
       onPressed: onPressed,
       icon: logo,
-      label: Text(text),
+      label: textWidget,
       style: FilledButton.styleFrom(
         foregroundColor: Colors.black,
         backgroundColor: Colors.white,
