@@ -92,6 +92,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: SignInScreenButton(
           text: 'Sign In',
+          color: Theme.of(context).colorScheme.primary,
           onTap: () => _emailOnTap(
               context: context,
               ref: ref,
@@ -100,12 +101,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               redirect: widget.redirect)),
     );
 
-    // Widget createAccountToggleButton = Padding(
-    //   padding: const EdgeInsets.symmetric(horizontal: 30),
-    //   child: SignInScreenButton(
-    //       text: 'Create an account',
-    //       onTap: () => widget.createAccountToggleOnTap),
-    // );
+    Widget createAccountToggleButton = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: SignInScreenButton(
+          text: 'Create an account',
+          color: Colors.grey.shade500,
+          onTap: widget.createAccountToggleOnTap),
+    );
 
     Widget divider = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -158,11 +160,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 50),
+            SizedBox(height: 40),
             image,
             SizedBox(height: 20),
             text,
-            SizedBox(height: 50),
+            SizedBox(height: 40),
             emailTextField,
             SizedBox(height: 10),
             passwordTextField,
@@ -170,6 +172,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             forgotPasswordText,
             SizedBox(height: 20),
             signInButton,
+            SizedBox(height: 10),
+            createAccountToggleButton,
             SizedBox(height: 20),
             divider,
             SizedBox(height: 20),
@@ -228,7 +232,6 @@ void _emailOnTap(
           .signInWithEmailAndPassword(email: email, password: password);
       context.pushReplacement(redirect);
     } on FirebaseAuthException catch (e) {
-      print(e.code);
       context.pop();
       if (e.code == 'user-not-found') {
         _showAlertDialog(context: context, text: 'User does not exist');

@@ -17,9 +17,9 @@ class GoogleSignInButton extends StatelessWidget {
     );
 
     TextStyle textStyle = GoogleFonts.outfit(
-    color: Colors.black87,
-    fontWeight: FontWeight.normal,
-    fontSize: 16,
+      color: Colors.black87,
+      fontWeight: FontWeight.normal,
+      fontSize: 16,
     );
 
     Widget textWidget = Text(text, style: textStyle);
@@ -38,30 +38,31 @@ class GoogleSignInButton extends StatelessWidget {
 
 class SignInScreenButton extends StatelessWidget {
   final String text;
+  final Color color;
   final void Function() onTap;
 
-  const SignInScreenButton(
-      {Key? key, required this.text, required this.onTap})
-      : super(key: key);
+  const SignInScreenButton({
+    Key? key,
+    required this.text,
+    required this.onTap,
+    required this.color,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary,
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Center(
-          child: Text(
+          padding: EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Center(
+              child: Text(
             text,
             style: Theme.of(context).primaryTextTheme.bodyMedium,
-          )
-        )
-      ),
+          ))),
     );
   }
 }
