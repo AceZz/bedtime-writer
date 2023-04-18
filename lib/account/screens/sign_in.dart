@@ -14,10 +14,12 @@ import '../../widgets/index.dart';
 class SignInScreen extends ConsumerStatefulWidget {
   final String redirect;
   final String signInText;
+  final void Function() createAccountToggleOnTap;
 
   SignInScreen({
     required this.redirect,
     required this.signInText,
+    required this.createAccountToggleOnTap,
     Key? key,
   }) : super(key: key);
 
@@ -88,7 +90,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     Widget signInButton = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: SignInButton(
+      child: SignInScreenButton(
           text: 'Sign In',
           onTap: () => _emailOnTap(
               context: context,
@@ -97,6 +99,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               password: passwordController.text,
               redirect: widget.redirect)),
     );
+
+    // Widget createAccountToggleButton = Padding(
+    //   padding: const EdgeInsets.symmetric(horizontal: 30),
+    //   child: SignInScreenButton(
+    //       text: 'Create an account',
+    //       onTap: () => widget.createAccountToggleOnTap),
+    // );
 
     Widget divider = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),

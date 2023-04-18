@@ -56,7 +56,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           final redirectPath = state.queryParams['redirectPath'] ?? '/';
           final signInText = signInTexts[state.queryParams['redirectName']] ??
               defaultSignInText;
-          return SignInScreen(
+          return SignInOrRegisterScreen(
             redirect: redirectPath,
             signInText: signInText,
           );
