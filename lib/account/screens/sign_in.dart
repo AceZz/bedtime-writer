@@ -14,12 +14,10 @@ import '../../widgets/index.dart';
 class SignInScreen extends ConsumerStatefulWidget {
   final String redirect;
   final String signInText;
-  final void Function() createAccountToggleOnTap;
 
   SignInScreen({
     required this.redirect,
     required this.signInText,
-    required this.createAccountToggleOnTap,
     Key? key,
   }) : super(key: key);
 
@@ -101,12 +99,12 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               redirect: widget.redirect)),
     );
 
-    Widget createAccountToggleButton = Padding(
+    Widget createAccountButton = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: SignInScreenButton(
-          text: 'Create an account',
+          text: 'Create account',
           color: Colors.grey.shade500,
-          onTap: widget.createAccountToggleOnTap),
+          onTap: () => {}),
     );
 
     Widget divider = Padding(
@@ -173,7 +171,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             SizedBox(height: 20),
             signInButton,
             SizedBox(height: 10),
-            createAccountToggleButton,
+            createAccountButton,
             SizedBox(height: 20),
             divider,
             SizedBox(height: 20),
@@ -216,6 +214,45 @@ void _emailOnTap(
     required String email,
     required String password,
     required String redirect}) async {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      });
+
+  final user = ref.read(userProvider);
+
+  if (user is UnauthUser) {
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      context.pushReplacement(redirect);
+    } on FirebaseAuthException catch (e) {
+      context.pop();
+      if (e.code == 'user-not-found') {
+        _showAlertDialog(context: context, text: 'User does not exist');
+      } else if (e.code == 'wrong-password') {
+        _showAlertDialog(context: context, text: 'Incorrect password');
+      } else if (e.code == 'invalid-email') {
+        _showAlertDialog(
+            context: context, text: 'The email format is not valid');
+      }
+    }
+  } else if (user is AnonymousUser) {
+    //TODO: change with email sign in
+  } else if (user is AuthUser) {
+    //TODO: throw error
+  }
+}
+
+void _createAccountOnTap(
+    {required BuildContext context,
+      required WidgetRef ref,
+      required String email,
+      required String password,
+      required String redirect}) async {
   showDialog(
       context: context,
       builder: (context) {

@@ -36,12 +36,12 @@ class GoogleSignInButton extends StatelessWidget {
   }
 }
 
-class SignInOrRegisterScreenButton extends StatelessWidget {
+class SignInScreenButton extends StatelessWidget {
   final String text;
   final Color color;
   final void Function() onTap;
 
-  const SignInOrRegisterScreenButton({
+  const SignInScreenButton({
     Key? key,
     required this.text,
     required this.onTap,
