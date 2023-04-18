@@ -15,36 +15,75 @@ import {
   StoryMetadata,
   ImageApi,
   TextApi,
+  CLASSIC_LOGIC,
 } from "./story/";
 import { getOpenAiApi } from "./open_ai";
+import { StoryRequestStatus, StoryRequestV1Manager } from "./story/request";
 
 initializeApp();
 
 /**
- * Add a story.
+ * Request a story. See `StoryRequestV1` for the expected fields (except
+ * `author`).
  *
- * This call expects story parameters.
- * It returns the ID of the created document.
+ * Return the ID of the story (which will likely not be available until a few
+ * seconds).
  */
-export const addStory = region("europe-west1")
-  .runWith({ secrets: ["OPENAI_API_KEY"] })
-  .https.onCall(async (storyParams, context) => {
-    const uid = getUid(context);
-    const { textApi, imageApi } = getApis();
+export const createClassicStoryRequest = region("europe-west1").https.onCall(
+  async (data, context) => {
+    data.author = getUid(context);
 
-    const generator = new OnePartStoryGenerator(storyParams, textApi, imageApi);
-    const metadata = new StoryMetadata(uid, generator.title());
-    const saver = new FirebaseStorySaver(metadata);
-
-    const part = await generator.nextStoryPart();
-    logger.info("addStory: story was generated");
-
-    const id = await saver.writeMetadata();
-    await saver.writePart(part);
-    logger.info(`addStory: story ${id} was added to Firestore`);
+    const requestManager = new StoryRequestV1Manager();
+    const id = await requestManager.create(CLASSIC_LOGIC, data);
 
     return id;
+  }
+);
+
+/**
+ * Listen to the requests collection in Firestore and create the appropriate
+ * story.
+ */
+export const createStory = region("europe-west1")
+  .runWith({ secrets: ["OPENAI_API_KEY"] })
+  .firestore.document("requests_v1/{request_id}")
+  .onCreate(async (snapshot) => {
+    const logic = snapshot.data().logic;
+
+    if (logic == CLASSIC_LOGIC) {
+      createClassicStory(snapshot.id);
+    } else {
+      throw new Error(`Unrecognized logic ${logic}.`);
+    }
   });
+
+/**
+ * Generate a classic story and add it to Firestore.
+ *
+ * The ID of the generated story is the same as the request ID.
+ */
+async function createClassicStory(requestId: string) {
+  // Retrieve the `StoryRequest`.
+  const requestManager = new StoryRequestV1Manager();
+  const request = await requestManager.get(requestId);
+
+  // Transform it into a `ClassicStoryLogic`.
+  const logic = request.toClassicStoryLogic();
+  const { textApi, imageApi } = getApis();
+
+  // Generate the story.
+  const generator = new OnePartStoryGenerator(logic, textApi, imageApi);
+  const metadata = new StoryMetadata(request.author, generator.title());
+  const part = await generator.nextStoryPart();
+  logger.info("createClassicStory: story was generated");
+
+  // Save the story.
+  const saver = new FirebaseStorySaver(metadata, requestId);
+  await saver.writeMetadata();
+  await saver.writePart(part);
+  requestManager.updateStatus(requestId, StoryRequestStatus.CREATED);
+  logger.info(`createClassicStory: story ${requestId} was added to Firestore`);
+}
 
 function getApis(): { textApi: TextApi; imageApi: ImageApi } {
   if (process.env.FAKE_DATA === "true") {
