@@ -33,14 +33,14 @@ import { StoryWriter } from "./story_writer";
  *         imagePromptPrompt
  */
 export class FirebaseStoryWriter implements StoryWriter {
-  metadata: StoryMetadata;
-
   private firestore: Firestore;
-  private id?: string;
   private parts: string[];
 
-  constructor(metadata: StoryMetadata, firestore?: Firestore) {
-    this.metadata = metadata;
+  constructor(
+    readonly metadata: StoryMetadata,
+    private readonly id: string,
+    firestore?: Firestore
+  ) {
     this.firestore = firestore ?? getFirestore();
     this.parts = [];
   }
@@ -53,9 +53,7 @@ export class FirebaseStoryWriter implements StoryWriter {
       title: this.metadata.title,
       parts: [],
     };
-    const document = await this.storiesRef.add(payload);
-
-    this.id = document.id;
+    await this.storyRef.set(payload);
     return this.id;
   }
 
@@ -112,15 +110,8 @@ export class FirebaseStoryWriter implements StoryWriter {
     return partId;
   }
 
-  private get storiesRef(): CollectionReference {
-    return this.firestore.collection("stories");
-  }
-
   private get storyRef(): DocumentReference {
-    if (this.id === undefined) {
-      throw TypeError("FirebaseStorySaver: `createStory` was not called");
-    }
-    return this.storiesRef.doc(this.id);
+    return this.firestore.collection("stories").doc(this.id);
   }
 
   private get imagesRef(): CollectionReference {
