@@ -30,6 +30,8 @@ backend.
 
 The `DEBUG_*` keys can be set to `true` to display some debug helpers in the app.
 
+See the dedicated section below for more details on the frontend configuration.
+
 #### Tests
 
 Run the unit tests with `flutter test`.
@@ -68,6 +70,8 @@ OPENAI_API_KEY=...
 
 If you do not create such a file, it will use the production API key by default (retrieved from
 Google Cloud), which is not a good practice.
+
+See the dedicated section below for more details on the backend configuration.
 
 #### Tests
 
@@ -151,3 +155,38 @@ repository](https://docs.github.com/en/get-started/getting-started-with-git/conf
   * `main.dart`: entry point of the application
   * `router.dart`: the routes of the application
   * `theme.dart`: the theme for the entire application
+
+## Configuration
+
+If a configuration value is not recognized, it falls back to the default.
+
+The values are case-insensitive.
+
+### Frontend
+
+In `bedtime-writer/.env`:
+
+* `BACKEND`
+  * `remote` (default): use the Cloud Function backend.
+  * `local`: use the local backend.
+* `DEBUG_AUTH`
+  * `false` (default)
+  * `true`: display helpful info about the user ID on the home screen, and a button to
+    log in / log out easily.
+
+### Backend
+
+`functions/.env` is always read. Then, **only if using the Firebase emulators**,
+`functions/.env.local` is read and overrides all previously set values.
+
+In other words, when developing locally, edit `functions/.env.local`. If you wish to modify the
+production settings, edit `functions/.env` (and redeploy).
+
+* `TEXT_API`
+  * `openai` (default): use OpenAI's text generation API. Use the Google Cloud Secret as a key,
+    which can be read from `.secret.local` when using the Firebase emulators.
+  * `fake`: use the fake text API.
+* `IMAGE_API`
+    * `openai` (default): use OpenAI's image generation API. Use the Google Cloud Secret as a key,
+      which can be read from `.secret.local` when using the Firebase emulators.
+    * `fake`: use the fake image API.
