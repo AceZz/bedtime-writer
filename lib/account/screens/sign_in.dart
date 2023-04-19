@@ -1,7 +1,9 @@
 import 'package:bedtime_writer/backend/index.dart';
 import 'package:bedtime_writer/widgets/sign_in.dart';
 import 'package:bedtime_writer/widgets/textField.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -91,7 +93,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       child: SignInScreenButton(
           text: 'Sign In',
           color: Theme.of(context).colorScheme.primary,
-          onTap: () => _emailOnTap(
+          onTap: () => _signInOnTap(
               context: context,
               ref: ref,
               email: emailController.text,
@@ -104,7 +106,12 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       child: SignInScreenButton(
           text: 'Create account',
           color: Colors.grey.shade500,
-          onTap: () => {}),
+          onTap: () => _createAccountOnTap(
+              context: context,
+              ref: ref,
+              email: emailController.text,
+              password: passwordController.text,
+              redirect: widget.redirect)),
     );
 
     Widget divider = Padding(
@@ -204,11 +211,10 @@ void _googleOnPressed(
   } else if (user is AuthUser) {
     await user.linkToGoogle();
   }
-
   context.pushReplacement(redirect);
 }
 
-void _emailOnTap(
+void _signInOnTap(
     {required BuildContext context,
     required WidgetRef ref,
     required String email,
@@ -225,34 +231,45 @@ void _emailOnTap(
   final user = ref.read(userProvider);
 
   if (user is UnauthUser) {
-    try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      context.pushReplacement(redirect);
-    } on FirebaseAuthException catch (e) {
-      context.pop();
-      if (e.code == 'user-not-found') {
-        _showAlertDialog(context: context, text: 'User does not exist');
-      } else if (e.code == 'wrong-password') {
-        _showAlertDialog(context: context, text: 'Incorrect password');
-      } else if (e.code == 'invalid-email') {
-        _showAlertDialog(
-            context: context, text: 'The email format is not valid');
-      }
-    }
+    _signInWithEmailAndPassword(
+        context: context, email: email, password: password, redirect: redirect);
   } else if (user is AnonymousUser) {
     //TODO: change with email sign in
+    //TODO: understand when user is Unauth or Anonymous
   } else if (user is AuthUser) {
     //TODO: throw error
   }
 }
 
-void _createAccountOnTap(
-    {required BuildContext context,
-      required WidgetRef ref,
-      required String email,
-      required String password,
-      required String redirect}) async {
+void _signInWithEmailAndPassword({
+  required BuildContext context,
+  required String email,
+  required String password,
+  required String redirect,
+}) async {
+  try {
+    await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+    context.pushReplacement(redirect);
+  } on FirebaseAuthException catch (e) {
+    context.pop();
+    if (e.code == 'user-not-found') {
+      _showAlertDialog(context: context, text: 'User does not exist');
+    } else if (e.code == 'wrong-password') {
+      _showAlertDialog(context: context, text: 'Incorrect password');
+    } else if (e.code == 'invalid-email') {
+      _showAlertDialog(context: context, text: 'The email format is not valid');
+    }
+  }
+}
+
+void _createAccountOnTap({
+  required BuildContext context,
+  required WidgetRef ref,
+  required String email,
+  required String password,
+  required String redirect,
+}) async {
   showDialog(
       context: context,
       builder: (context) {
@@ -264,25 +281,90 @@ void _createAccountOnTap(
   final user = ref.read(userProvider);
 
   if (user is UnauthUser) {
-    try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      context.pushReplacement(redirect);
-    } on FirebaseAuthException catch (e) {
-      context.pop();
-      if (e.code == 'user-not-found') {
-        _showAlertDialog(context: context, text: 'User does not exist');
-      } else if (e.code == 'wrong-password') {
-        _showAlertDialog(context: context, text: 'Incorrect password');
-      } else if (e.code == 'invalid-email') {
-        _showAlertDialog(
-            context: context, text: 'The email format is not valid');
-      }
-    }
+    _createUserWithEmailAndPassword(
+        context: context,
+        ref: ref,
+        email: email,
+        password: password,
+        redirect: redirect,
+        link: false);
   } else if (user is AnonymousUser) {
     //TODO: change with email sign in
   } else if (user is AuthUser) {
     //TODO: throw error
+  }
+}
+
+void _createUserWithEmailAndPassword({
+  required BuildContext context,
+  required WidgetRef ref,
+  required String email,
+  required String password,
+  required String redirect,
+  required bool link,
+}) async {
+  try {
+    _validateEmail(email);
+    _validatePassword(password);
+    if (link) {
+      /// Case where account should be linked
+      // if (kIsWeb) {
+      //   AuthCredential credential = firebase_auth.EmailAuthProvider.credential(
+      //       email: email, password: password);
+      //
+      //   //TODO: Continue below for link case
+      //   final user = ref.read(userProvider);
+      //   AuthResult result = await user.linkWithCredential(credential);
+      //   FirebaseUser linkedUser = result.user;
+      //
+      //   final provider = FirebaseAuth.GoogleAuthProvider();
+      //   return firebaseAuth.signInWithPopup(provider);
+      // }
+      //
+      // final credential = await _getGoogleCredential();
+      //
+      // try {
+      //   return await user.linkWithCredential(credential);
+      // } on firebase_auth.FirebaseAuthException catch (e) {
+      //   if (_credentialAlreadyUsed(e)) {
+      //     return firebaseAuth.signInWithCredential(credential);
+      //   }
+      //   throw e;
+      // }
+    } else {
+      /// Case where account should be created
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+    }
+    context.pushReplacement(redirect);
+  } on FirebaseAuthException catch (e) {
+    print(e.code);
+    context.pop();
+    if (e.code == 'user-not-found') {
+      _showAlertDialog(context: context, text: 'User does not exist');
+    } else if (e.code == 'wrong-password') {
+      _showAlertDialog(context: context, text: 'Incorrect password');
+    } else if (e.code == 'invalid-email') {
+      _showAlertDialog(context: context, text: 'The email format is not valid');
+    } else if (e.code == 'internal-error') {
+      _showAlertDialog(context: context, text: 'Internal error');
+    } else if (e.code == 'weak-password') {
+      _showAlertDialog(
+          context: context, text: 'Please choose a stronger password');
+    } else if (e.code == 'email-already-in-use') {
+      _showAlertDialog(
+          context: context, text: 'An account already exists with this email');
+    }
+  } on FormatException catch (e) {
+    context.pop();
+    if (e.code == 'invalid-email-format') {
+      _showAlertDialog(context: context, text: 'The email format is not valid');
+    } else if (e.code == 'invalid-password-format') {
+      _showAlertDialog(
+          context: context,
+          text:
+              'Choose a stronger password, with at least 8 characters, and at least one letter and one digit');
+    }
   }
 }
 
@@ -299,4 +381,28 @@ void _showAlertDialog({required BuildContext context, required String text}) {
           ),
         );
       });
+}
+
+class FormatException implements Exception {
+  String code;
+  FormatException({required this.code});
+}
+
+void _validateEmail(String email) {
+  // Email validation regular expression
+  final RegExp emailRegex = RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
+
+  if (!emailRegex.hasMatch(email)) {
+    throw FormatException(code: 'invalid-email-format');
+  }
+}
+
+void _validatePassword(String password) {
+  // Password validation regular expression: 8 characters, letters and digits
+  final RegExp passwordRegex =
+      RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
+
+  if (!passwordRegex.hasMatch(password)) {
+    throw FormatException(code: 'invalid-password-format');
+  }
 }
