@@ -56,7 +56,8 @@ The repository already contains a `.env` file. This file contains the environmen
 when deploying the code on Google Cloud. **This file should not be edited unless you have a good
 reason.**
 
-Copy-paste the `.env` file to a `.env.local` file and change the `FAKE_DATA` key to `true`.
+Copy-paste the `.env` file to a `.env.local` file and change both `TEXT_API` and `IMAGE_API` to
+`fake`.
 
 Finally, [get an OpenAI API key](https://platform.openai.com/overview), create a `.secret.local`
 file, and fill it with:
