@@ -28,15 +28,9 @@ describe.skip("OpenAiTextApi", () => {
     );
 
     const tokens: string[] = [];
-    stream.on("data", (token) => {
+    for await (const token of stream) {
       tokens.push(token);
-    });
-    const isComplete = new Promise<void>((resolve) => {
-      stream.on("end", () => {
-        resolve();
-      });
-    });
-    await isComplete;
+    }
 
     console.log(`OpenAiTextApi.getStream: ${tokens.join("")}`);
   }, 20_000);
