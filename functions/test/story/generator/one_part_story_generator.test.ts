@@ -7,7 +7,6 @@ import { FULL_CLASSIC_STORY_LOGIC } from "../logic/data";
 import {
   OpenAiTextApi,
   FakeTextApi,
-  FAKE_TOKENS,
 } from "../../../src/story/generator/text_api";
 import {
   FAKE_IMAGE_BYTES,
@@ -18,30 +17,39 @@ import { getOpenAiApi } from "../../../src/open_ai";
 
 describe("with fake APIs", () => {
   function initGenerator() {
-    return new OnePartStoryGenerator(
+    const textApi = new FakeTextApi();
+    const imageApi = new FakeImageApi();
+    const generator = new OnePartStoryGenerator(
       FULL_CLASSIC_STORY_LOGIC,
-      new FakeTextApi(),
-      new FakeImageApi()
+      textApi,
+      imageApi
     );
+
+    return {
+      textApi,
+      imageApi,
+      generator,
+    };
   }
 
   test("title", () => {
-    const generator = initGenerator();
+    const { generator } = initGenerator();
     expect(generator.title()).toBe("The story of Someone");
   });
 
   test("nextStoryPart", async () => {
-    const generator = initGenerator();
+    const { textApi, generator } = initGenerator();
     const storyPart = await generator.nextStoryPart();
+    const expectedTokens = Array.from(textApi.getTokens()).join("");
 
-    expect(storyPart.text).toBe(FAKE_TOKENS.join(""));
+    expect(storyPart.text).toBe(expectedTokens);
     expect(
       storyPart.textPrompt.startsWith(
         "Write a fairy tale in the style of some style."
       )
     );
     expect(storyPart.image).toBe(FAKE_IMAGE_BYTES);
-    expect(storyPart.imagePrompt).toBe(FAKE_TOKENS.join(""));
+    expect(storyPart.imagePrompt).toBe(expectedTokens);
     expect(
       storyPart.imagePromptPrompt?.startsWith(
         "Generate now a very simple and concise prompt for dalle"

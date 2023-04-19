@@ -1,4 +1,4 @@
-import { Stream } from "node:stream";
+import { Readable } from "node:stream";
 
 /**
  * Generic interface to generate text.
@@ -18,7 +18,7 @@ export interface TextApi {
    * @param prompts The prompts of the text generation.
    * @param config Specific configuration for the text generation.
    */
-  getStream(prompts: TextPrompt[], config: TextApiConfig): Promise<Stream>;
+  getStream(prompts: TextPrompt[], config: TextApiConfig): Promise<Readable>;
 }
 
 type TextPromptRole = "system" | "user" | "assistant";

@@ -115,7 +115,7 @@ not `.env.local`.
 **This frontend should only be used for testing campaigns.**
 
 1. Deploy the rules and the backend if needed (see above).
-2. Edit `bedtime-writer/.env` if needed (you most certainly want to disable the `DEBUG_` keys and 
+2. Edit `bedtime-writer/.env` if needed (you most certainly want to disable the `DEBUG_` keys and
    set `BACKEND=remote`).
 3. Run `flutter build web --web-renderer canvaskit` (using this specific Web renderer is important
    for the Lottie animations). If the Firebase emulators are running, visit <http://localhost:5000>
@@ -186,6 +186,13 @@ production settings, edit `functions/.env` (and redeploy).
   * `openai` (default): use OpenAI's text generation API. Use the Google Cloud Secret as a key,
     which can be read from `.secret.local` when using the Firebase emulators.
   * `fake`: use the fake text API.
+* `FAKE_TEXT_API_NUM_PARTS`
+  * between `1` and `10` (default)
+  * The number of parts provided by the fake text API. A part is ended by two consecutive
+    end-of-lines.
+* `FAKE_TEXT_API_NUM_TOKENS_PER_PART`
+  * between `1` and `200` (default)
+  * The number of tokens per part.
 * `IMAGE_API`
     * `openai` (default): use OpenAI's image generation API. Use the Google Cloud Secret as a key,
       which can be read from `.secret.local` when using the Firebase emulators.
