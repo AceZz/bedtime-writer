@@ -5,7 +5,7 @@ import {
   DocumentReference,
   Timestamp,
 } from "firebase-admin/firestore";
-import { StoryRequestV1 } from "./story_request_v1";
+import { StoryRequestV1, StoryRequestV1Data } from "./story_request_v1";
 import { StoryRequestFirestoreConverter } from "../story_request_firestore_converter";
 import { StoryRequestStatus } from "../story_request_status";
 
@@ -13,11 +13,14 @@ import { StoryRequestStatus } from "../story_request_status";
  * Schema:
  *
  * requests_v1/
- *   <request_id>
+ *   <request_id>:
+ *     private/
+ *       data:
+ *         logic
+ *         [StoryRequest fields]
  *     author
- *     logic
  *     timestamp
- *     data = [StoryRequest fields]
+ *     status
  */
 export class StoryRequestV1FirestoreConverter
   implements StoryRequestFirestoreConverter<StoryRequestV1>
@@ -29,10 +32,20 @@ export class StoryRequestV1FirestoreConverter
   }
 
   async get(id: string): Promise<StoryRequestV1> {
-    const raw = await this.requestRef(id).get();
+    const dataDocument = await this.requestDataRef(id).get();
 
-    const logic = raw.get("logic");
-    const data = raw.get("data");
+    const logic = dataDocument.get("logic");
+    const data: StoryRequestV1Data = {
+      author: dataDocument.get("author"),
+      duration: dataDocument.get("duration"),
+      style: dataDocument.get("style"),
+      characterName: dataDocument.get("characterName"),
+      place: dataDocument.get("place"),
+      object: dataDocument.get("object"),
+      characterFlaw: dataDocument.get("characterFlaw"),
+      characterPower: dataDocument.get("characterPower"),
+      characterChallenge: dataDocument.get("characterChallenge"),
+    };
 
     return new StoryRequestV1(logic, data);
   }
@@ -40,13 +53,18 @@ export class StoryRequestV1FirestoreConverter
   async write(request: StoryRequestV1): Promise<string> {
     const payload = {
       author: request.author,
-      logic: request.logic,
       timestamp: Timestamp.now(),
-      data: request.data,
       status: StoryRequestStatus.PENDING,
     };
-
     const document = await this.requestsRef.add(payload);
+    const documentId = document.id;
+
+    const dataPayload = {
+      ...request.data,
+      logic: request.logic,
+    };
+    await this.requestDataRef(documentId).set(dataPayload);
+
     return document.id;
   }
 
@@ -60,5 +78,9 @@ export class StoryRequestV1FirestoreConverter
 
   private requestRef(id: string): DocumentReference {
     return this.requestsRef.doc(id);
+  }
+
+  private requestDataRef(id: string): DocumentReference {
+    return this.requestRef(id).collection("private").doc("data");
   }
 }

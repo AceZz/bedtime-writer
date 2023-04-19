@@ -18,7 +18,11 @@ import {
   CLASSIC_LOGIC,
 } from "./story/";
 import { getOpenAiApi } from "./open_ai";
-import { StoryRequestStatus, StoryRequestV1Manager } from "./story/request";
+import {
+  StoryRequestStatus,
+  StoryRequestV1Manager,
+  StoryRequestV1,
+} from "./story/request";
 
 initializeApp();
 
@@ -48,12 +52,15 @@ export const createStory = region("europe-west1")
   .runWith({ secrets: ["OPENAI_API_KEY"] })
   .firestore.document("requests_v1/{request_id}")
   .onCreate(async (snapshot) => {
-    const logic = snapshot.data().logic;
+    const requestId = snapshot.id;
 
-    if (logic == CLASSIC_LOGIC) {
-      createClassicStory(snapshot.id);
+    const requestManager = new StoryRequestV1Manager();
+    const request = await requestManager.get(requestId);
+
+    if (request.logic == CLASSIC_LOGIC) {
+      createClassicStory(requestId, request);
     } else {
-      throw new Error(`Unrecognized logic ${logic}.`);
+      throw new Error(`Unrecognized logic ${request.logic}.`);
     }
   });
 
@@ -62,12 +69,8 @@ export const createStory = region("europe-west1")
  *
  * The ID of the generated story is the same as the request ID.
  */
-async function createClassicStory(requestId: string) {
-  // Retrieve the `StoryRequest`.
-  const requestManager = new StoryRequestV1Manager();
-  const request = await requestManager.get(requestId);
-
-  // Transform it into a `ClassicStoryLogic`.
+async function createClassicStory(requestId: string, request: StoryRequestV1) {
+  // Transform the request into a `ClassicStoryLogic`.
   const logic = request.toClassicStoryLogic();
   const { textApi, imageApi } = getApis();
 
@@ -81,7 +84,10 @@ async function createClassicStory(requestId: string) {
   const saver = new FirebaseStorySaver(metadata, requestId);
   await saver.writeMetadata();
   await saver.writePart(part);
+
+  const requestManager = new StoryRequestV1Manager();
   requestManager.updateStatus(requestId, StoryRequestStatus.CREATED);
+
   logger.info(`createClassicStory: story ${requestId} was added to Firestore`);
 }
 
