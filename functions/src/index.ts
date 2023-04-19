@@ -72,7 +72,8 @@ export const createStory = region("europe-west1")
 async function createClassicStory(requestId: string, request: StoryRequestV1) {
   // Transform the request into a `ClassicStoryLogic`.
   const logic = request.toClassicStoryLogic();
-  const { textApi, imageApi } = getApis();
+  const textApi = getTextApi();
+  const imageApi = getImageApi();
 
   // Generate the story.
   const generator = new OnePartStoryGenerator(logic, textApi, imageApi);
@@ -91,18 +92,25 @@ async function createClassicStory(requestId: string, request: StoryRequestV1) {
   logger.info(`createClassicStory: story ${requestId} was added to Firestore`);
 }
 
-function getApis(): { textApi: TextApi; imageApi: ImageApi } {
-  if (process.env.FAKE_DATA === "true") {
-    logger.info("using fake data");
-    return {
-      textApi: new FakeTextApi(),
-      imageApi: new FakeImageApi(),
-    };
+function getTextApi(): TextApi {
+  if (process.env.TEXT_API?.toLowerCase() === "fake") {
+    logger.info("using FakeTextApi");
+    return new FakeTextApi();
   }
 
-  const openAiApi = getOpenAiApi(process.env.OPENAI_API_KEY);
-  return {
-    textApi: new OpenAiTextApi(openAiApi, "gpt-3.5-turbo"),
-    imageApi: new OpenAiImageApi(openAiApi),
-  };
+  logger.info("using OpenAiTextApi");
+  return new OpenAiTextApi(
+    getOpenAiApi(process.env.OPENAI_API_KEY),
+    "gpt-3.5-turbo"
+  );
+}
+
+function getImageApi(): ImageApi {
+  if (process.env.IMAGE_API?.toLowerCase() === "fake") {
+    logger.info("using FakeImageApi");
+    return new FakeImageApi();
+  }
+
+  logger.info("using OpenAiImageApi");
+  return new OpenAiImageApi(getOpenAiApi(process.env.OPENAI_API_KEY));
 }
