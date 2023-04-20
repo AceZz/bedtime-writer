@@ -190,6 +190,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   }
 }
 
+//TODO: Refactor to make non Firebase dependent in this file
 void _googleOnPressed(
     {required BuildContext context,
     required WidgetRef ref,
