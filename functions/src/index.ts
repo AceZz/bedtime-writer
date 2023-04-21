@@ -75,21 +75,23 @@ async function createClassicStory(requestId: string, request: StoryRequestV1) {
   const textApi = getTextApi();
   const imageApi = getImageApi();
 
-  // Generate the story.
+  // Generate and save the story.
   const generator = new OnePartStoryGenerator(logic, textApi, imageApi);
   const metadata = new StoryMetadata(request.author, generator.title());
-  const part = await generator.nextStoryPart();
-  logger.info("createClassicStory: story was generated");
-
-  // Save the story.
   const saver = new FirebaseStorySaver(metadata, requestId);
+
   await saver.writeMetadata();
-  await saver.writePart(part);
+
+  for await (const part of generator.storyParts()) {
+    await saver.writePart(part);
+  }
+
+  logger.info(
+    `createClassicStory: story ${requestId} was generated and added to Firestore`
+  );
 
   const requestManager = new StoryRequestV1Manager();
   requestManager.updateStatus(requestId, StoryRequestStatus.CREATED);
-
-  logger.info(`createClassicStory: story ${requestId} was added to Firestore`);
 }
 
 function getTextApi(): TextApi {
