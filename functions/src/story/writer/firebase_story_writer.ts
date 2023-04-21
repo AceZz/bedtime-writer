@@ -36,6 +36,11 @@ import { StoryStatus } from "../story_status";
 export class FirebaseStoryWriter implements StoryWriter {
   private firestore: Firestore;
   private parts: string[];
+  /**
+   * Cache the document IDs of already inserted images. This way, an image can
+   * be written once, but referenced multiple times.
+   */
+  private imageIds: Map<Buffer, string> = new Map();
 
   constructor(
     readonly metadata: StoryMetadata,
@@ -73,18 +78,30 @@ export class FirebaseStoryWriter implements StoryWriter {
     await this.storyRef.update({ status: StoryStatus.COMPLETE });
   }
 
-  private async writePartImage(image?: Buffer): Promise<string> {
+  private async writePartImage(image?: Buffer): Promise<string | undefined> {
+    if (image === undefined) {
+      return undefined;
+    }
+
     const payload = {
       data: image,
     };
-    const document = await this.imagesRef.add(payload);
+    const imageId = this.imageIds.get(image);
 
+    // Already existing image: return it.
+    if (imageId !== undefined) {
+      return imageId;
+    }
+
+    // New image: insert it first.
+    const document = await this.imagesRef.add(payload);
+    this.imageIds.set(image, document.id);
     return document.id;
   }
 
   private async writePartData(
     part: StoryPart,
-    imageId: string
+    imageId: string | undefined
   ): Promise<string> {
     const payload = {
       text: part.text,
