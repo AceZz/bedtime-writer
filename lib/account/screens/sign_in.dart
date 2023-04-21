@@ -28,6 +28,8 @@ class SignInScreen extends ConsumerStatefulWidget {
 }
 
 class _SignInScreenState extends ConsumerState<SignInScreen> {
+  String infoText = '';
+
   @override
   void initState() {
     super.initState();
@@ -50,6 +52,16 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     Widget image = Image.asset(
       'assets/decoration/feather.png',
       width: 240,
+    );
+
+    Widget textInfo = Text(
+      infoText,
+      textAlign: TextAlign.center,
+      style: GoogleFonts.outfit(
+        color: Colors.red,
+        fontWeight: FontWeight.normal,
+        fontSize: 16,
+      ),
     );
 
     Widget emailTextField = Padding(
@@ -169,7 +181,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             image,
             SizedBox(height: 20),
             text,
-            SizedBox(height: 40),
+            SizedBox(height: 30),
+            textInfo,
+            SizedBox(height: 10),
             emailTextField,
             SizedBox(height: 10),
             passwordTextField,
@@ -210,11 +224,13 @@ void _googleOnPressed(
   } else if (user is AnonymousUser) {
     await user.linkToGoogle();
   } else if (user is AuthUser) {
-    await user.linkToGoogle();
+    throw Exception(
+        'User is already signed in and should not be able to sign in with Google');
   }
   context.pushReplacement(redirect);
 }
 
+//TODO: move this inside Widget state to be able to set state for exceptions
 void _signInOnTap(
     {required BuildContext context,
     required WidgetRef ref,
@@ -239,10 +255,12 @@ void _signInOnTap(
     _signInWithEmailAndPassword(
         context: context, email: email, password: password, redirect: redirect);
   } else if (user is AuthUser) {
-    throw Exception('User is signed-in and should not see this screen');
+    throw Exception(
+        'User is already signed-in and should be able to re sign in');
   }
 }
 
+// TODO: remove exception handling from here and use set state
 void _signInWithEmailAndPassword({
   required BuildContext context,
   required String email,
@@ -299,6 +317,7 @@ void _createAccountOnTap({
   }
 }
 
+// TODO: remove exception handling from here and use set state
 Future _createUserWithEmailAndPassword({
   required BuildContext context,
   required WidgetRef ref,
