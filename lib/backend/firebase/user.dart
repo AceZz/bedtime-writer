@@ -125,8 +125,6 @@ class _FirebaseRegisteredUser extends _FirebaseAuthUser
     implements RegisteredUser {
   const _FirebaseRegisteredUser(firebase_auth.User user) : super(user);
 
-  get displayName => user.displayName;
-
   @override
   String toString() => 'Registered Firebase user ($uid, $providers)';
 
