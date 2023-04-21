@@ -4,6 +4,8 @@ import 'dart:typed_data';
 abstract class StoryPart {
   const StoryPart();
 
+  bool get hasImage;
+
   Future<Uint8List> get image;
 
   String get text;

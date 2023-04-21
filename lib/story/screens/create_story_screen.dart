@@ -59,21 +59,25 @@ class _StoryScreen extends ConsumerWidget {
       return loadingScreen;
     }
 
-    final storyRequest = ref.watch(storyStatusProvider(_requestId));
-    return storyRequest.when(
-      data: (StoryStatus status) {
-        switch (status) {
-          case StoryStatus.generating:
-          case StoryStatus.complete:
-            return DisplayStoryScreen(id: _requestId);
-          case StoryStatus.pending:
-            return loadingScreen;
-          case StoryStatus.error:
-            return const Text('Something went wrong...');
-        }
-      },
-      error: (error, stackTrace) => const CircularProgressIndicator(),
-      loading: () => loadingScreen,
+    return ref.watch(
+      storyStatusProvider(_requestId).select(
+        (status) => status.when(
+          data: (StoryStatus status) {
+            switch (status) {
+              case StoryStatus.generating:
+              case StoryStatus.complete:
+                return DisplayStoryScreen(id: _requestId);
+              case StoryStatus.pending:
+                return loadingScreen;
+              case StoryStatus.error:
+                return const Text('Something went wrong...');
+            }
+          },
+          error: (error, stackTrace) => const Text('Something went wrong...'),
+          loading: () => loadingScreen,
+          skipLoadingOnReload: true,
+        ),
+      ),
     );
   }
 }
