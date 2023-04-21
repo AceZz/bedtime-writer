@@ -8,6 +8,7 @@ import { StoryMetadata } from "../story_metadata";
 import { StoryPart } from "../story_part";
 import { StoryWriter } from "./story_writer";
 import { StoryStatus } from "../story_status";
+import { valueOrNull } from "./utils";
 
 /**
  * The Firestore document has the following schema:
@@ -105,7 +106,7 @@ export class FirebaseStoryWriter implements StoryWriter {
   ): Promise<string> {
     const payload = {
       text: part.text,
-      image: imageId,
+      image: valueOrNull(imageId),
     };
     const document = await this.partsRef.add(payload);
 
@@ -125,8 +126,8 @@ export class FirebaseStoryWriter implements StoryWriter {
   ): Promise<string> {
     const payload = {
       textPrompt: part.textPrompt,
-      imagePrompt: part.imagePrompt,
-      imagePromptPrompt: part.imagePromptPrompt,
+      imagePrompt: valueOrNull(part.imagePrompt),
+      imagePromptPrompt: valueOrNull(part.imagePromptPrompt),
     };
     await this.promptsRef.doc(partId).set(payload);
 

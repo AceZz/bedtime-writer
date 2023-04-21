@@ -6,4 +6,5 @@ export 'story.dart'
         firebaseFavoriteUserStoriesProvider,
         firebaseUserStoriesProvider,
         firebaseStoryStatusProvider;
+export 'story_part.dart' show firebaseStoryPartProvider;
 export 'user.dart' show getFirebaseUser;

@@ -11,7 +11,7 @@ import {
   FakeTextApi,
   FakeImageApi,
   FirebaseStoryWriter,
-  OnePartStoryGenerator,
+  NPartStoryGenerator,
   StoryMetadata,
   ImageApi,
   TextApi,
@@ -55,7 +55,9 @@ export const createStory = region("europe-west1")
     if (request.logic == CLASSIC_LOGIC) {
       createClassicStory(storyId, request);
     } else {
-      throw new Error(`Unrecognized logic ${request.logic}.`);
+      throw new Error(
+        `Story id ${storyId}: unrecognized logic ${request.logic}.`
+      );
     }
   });
 
@@ -69,7 +71,7 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
   const imageApi = getImageApi();
 
   // Generate and save the story.
-  const generator = new OnePartStoryGenerator(logic, textApi, imageApi);
+  const generator = new NPartStoryGenerator(logic, textApi, imageApi);
   const metadata = new StoryMetadata(request.author, generator.title());
   const writer = new FirebaseStoryWriter(metadata, storyId);
 
@@ -79,7 +81,8 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
     await writer.writePart(part);
   }
 
-  writer.writeComplete();
+  await writer.writeComplete();
+
   logger.info(
     `createClassicStory: story ${storyId} was generated and added to Firestore`
   );
