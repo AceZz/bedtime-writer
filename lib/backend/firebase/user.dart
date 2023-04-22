@@ -78,7 +78,7 @@ class _FirebaseUnauthUser extends _FirebaseUser implements UnauthUser {
     required String email,
     required String password,
   }) async {
-    _signInWithEmailAndPassword(email: email, password: password);
+    await _signInWithEmailAndPassword(email: email, password: password);
   }
 
   @override
@@ -86,7 +86,7 @@ class _FirebaseUnauthUser extends _FirebaseUser implements UnauthUser {
     required String email,
     required String password,
   }) async {
-    _createUserWithEmailAndPassword(
+    await _createUserWithEmailAndPassword(
         email: email, password: password, link: false);
   }
 }
@@ -141,7 +141,7 @@ class _FirebaseAnonymousUser extends _FirebaseAuthUser
     required String email,
     required String password,
   }) async {
-    _signInWithEmailAndPassword(email: email, password: password);
+    await _signInWithEmailAndPassword(email: email, password: password);
   }
 
   @override
@@ -149,7 +149,7 @@ class _FirebaseAnonymousUser extends _FirebaseAuthUser
     required String email,
     required String password,
   }) async {
-    _createUserWithEmailAndPassword(
+    await _createUserWithEmailAndPassword(
         email: email, password: password, link: true);
   }
 }

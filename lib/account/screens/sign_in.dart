@@ -36,6 +36,177 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  void _googleOnPressed(
+      {required BuildContext context,
+        required WidgetRef ref,
+        required String redirect}) async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
+    final user = ref.read(userProvider);
+
+    if (user is UnauthUser) {
+      await user.signInWithGoogle();
+    } else if (user is AnonymousUser) {
+      await user.linkToGoogle();
+    } else if (user is AuthUser) {
+      throw Exception(
+          'User is already signed in and should not be able to sign in with Google');
+    }
+    context.pushReplacement(redirect);
+  }
+
+  void _signInOnTap(
+      {required BuildContext context,
+        required WidgetRef ref,
+        required String email,
+        required String password,
+        required String redirect}) async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
+    final user = ref.watch(userProvider);
+    print(user);
+
+    if (user is UnauthUser) {
+      try {
+        await user.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        context.pushReplacement(redirect);
+      } on Exception catch (e) {
+        context.pop();
+        _showAlertDialog(context: context, e: e);
+      }
+    } else if (user is AnonymousUser) {
+      try {
+        await user.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        context.pushReplacement(redirect);
+      } on Exception catch (e) {
+        context.pop();
+        _showAlertDialog(context: context, e: e);
+      }
+    } else if (user is AuthUser) {
+      throw Exception(
+          'User is already signed-in and should be able to re sign in');
+    }
+  }
+
+  void _createAccountOnTap({
+    required BuildContext context,
+    required WidgetRef ref,
+    required String email,
+    required String password,
+    required String redirect,
+  }) async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+
+    final user = ref.watch(userProvider);
+    print(user);
+
+    if (user is UnauthUser) {
+      try {
+        await user.createUserWithEmailAndPassword(
+            email: email, password: password);
+        context.pushReplacement(redirect);
+      } on Exception catch (e) {
+        context.pop();
+        _showAlertDialog(context: context, e: e);
+      }
+    } else if (user is AnonymousUser) {
+      try {
+        await user.createUserWithEmailAndPassword(
+            email: email, password: password);
+        context.pushReplacement(redirect);
+      } on Exception catch (e) {
+        context.pop();
+        _showAlertDialog(context: context, e: e);
+      }
+      context.pushReplacement(redirect);
+    } else if (user is AuthUser) {
+      throw Exception('User is signed-in and should not see this screen');
+    }
+  }
+
+  void _showAlertDialog({required BuildContext context, required Exception e}) {
+    String? text;
+
+    if (e is AuthException) {
+      switch (e.code) {
+        case 'user-not-found':
+          text = 'The user does not exist. Please create an account.';
+          break;
+        case 'wrong-password':
+          text = 'Incorrect password';
+          break;
+        case 'invalid-email':
+          text = 'The email format is not valid';
+          break;
+        case 'network-request-failed':
+          text = 'Network request failed';
+          break;
+        case 'internal-error':
+          text = 'Internal error';
+          break;
+        case 'weak-password':
+          text = 'Please choose a stronger password';
+          break;
+        case 'email-already-in-use':
+          text = 'An account already exists with this email. Please sign in.';
+          break;
+        case 'credential-already-in-use':
+          text = 'Account already exists. Please sign in.';
+          break;
+      }
+    } else if (e is FormatException) {
+      switch (e.code) {
+        case 'invalid-email-format':
+          text = 'The email format is not valid';
+          break;
+        case 'invalid-password-format':
+          text =
+          'Passwords must be at least 8 characters, with one letter and one digit';
+          break;
+        case 'empty-password':
+          text = 'Please enter a password';
+          break;
+      }
+    }
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.grey.shade700,
+            title: Text(
+              text ?? 'An unknown error occurred',
+              style: Theme.of(context).primaryTextTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget text = Padding(
@@ -200,178 +371,4 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       ),
     );
   }
-}
-
-//TODO: Refactor to make non Firebase dependent in this file
-void _googleOnPressed(
-    {required BuildContext context,
-    required WidgetRef ref,
-    required String redirect}) async {
-  showDialog(
-      context: context,
-      builder: (context) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      });
-
-  final user = ref.read(userProvider);
-
-  if (user is UnauthUser) {
-    await user.signInWithGoogle();
-  } else if (user is AnonymousUser) {
-    await user.linkToGoogle();
-  } else if (user is AuthUser) {
-    throw Exception(
-        'User is already signed in and should not be able to sign in with Google');
-  }
-  context.pushReplacement(redirect);
-}
-
-//TODO: move this inside Widget state to be able to set state for exceptions
-void _signInOnTap(
-    {required BuildContext context,
-    required WidgetRef ref,
-    required String email,
-    required String password,
-    required String redirect}) async {
-  showDialog(
-      context: context,
-      builder: (context) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      });
-
-  final user = ref.watch(userProvider);
-  print(user);
-
-  if (user is UnauthUser) {
-    //TODO: Debug this, exception thrown is not caught
-    try {
-      print('coucou');
-      await user.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      print('awaited');
-    } on Exception catch (e) {
-      print('error');
-      context.pop();
-      _showAlertDialog(context: context, e: e);
-    }
-  } else if (user is AnonymousUser) {
-    try {
-      await user.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on Exception catch (e) {
-      context.pop();
-      _showAlertDialog(context: context, e: e);
-    }
-  } else if (user is AuthUser) {
-    throw Exception(
-        'User is already signed-in and should be able to re sign in');
-  }
-  context.pushReplacement(redirect);
-}
-
-void _createAccountOnTap({
-  required BuildContext context,
-  required WidgetRef ref,
-  required String email,
-  required String password,
-  required String redirect,
-}) async {
-  showDialog(
-      context: context,
-      builder: (context) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      });
-
-  final user = ref.watch(userProvider);
-  print(user);
-
-  if (user is UnauthUser) {
-    try {
-      await user.createUserWithEmailAndPassword(email: email, password: password);
-      context.pushReplacement(redirect);
-    } on Exception catch (e) {
-      context.pop();
-      _showAlertDialog(context: context, e: e);
-    }
-  } else if (user is AnonymousUser) {
-    try {
-      await user.createUserWithEmailAndPassword(email: email, password: password);
-      context.pushReplacement(redirect);
-    } on Exception catch (e) {
-      context.pop();
-      _showAlertDialog(context: context, e: e);
-    }
-    context.pushReplacement(redirect);
-  } else if (user is AuthUser) {
-    throw Exception('User is signed-in and should not see this screen');
-  }
-}
-
-void _showAlertDialog({required BuildContext context, required Exception e}) {
-  String? text;
-
-  if (e is AuthException) {
-    switch (e.code) {
-      case 'user-not-found':
-        text = 'The user does not exist. Please create an account.';
-        break;
-      case 'wrong-password':
-        text = 'Incorrect password';
-        break;
-      case 'invalid-email':
-        text = 'The email format is not valid';
-        break;
-      case 'network-request-failed':
-        text = 'Network request failed';
-        break;
-      case 'internal-error':
-        text = 'Internal error';
-        break;
-      case 'weak-password':
-        text = 'Please choose a stronger password';
-        break;
-      case 'email-already-in-use':
-        text = 'An account already exists with this email. Please sign in.';
-        break;
-      case 'credential-already-in-use':
-        text = 'Account already exists. Please sign in.';
-        break;
-    }
-  } else if (e is FormatException) {
-    switch (e.code) {
-      case 'invalid-email-format':
-        text = 'The email format is not valid';
-        break;
-      case 'invalid-password-format':
-        text =
-            'Passwords must be at least 8 characters, with one letter and one digit';
-        break;
-      case 'empty-password':
-        text = 'Please enter a password';
-        break;
-    }
-  }
-
-  showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.grey.shade700,
-          title: Text(
-            text ?? 'An unknown error occurred',
-            style: Theme.of(context).primaryTextTheme.bodySmall,
-            textAlign: TextAlign.center,
-          ),
-        );
-      });
 }
