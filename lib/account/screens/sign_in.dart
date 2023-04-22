@@ -1,7 +1,6 @@
 import 'package:bedtime_writer/backend/index.dart';
 import 'package:bedtime_writer/widgets/sign_in.dart';
 import 'package:bedtime_writer/widgets/textField.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -244,27 +243,29 @@ void _signInOnTap(
         );
       });
 
-  final user = ref.read(userProvider);
+  final user = ref.watch(userProvider);
   print(user);
 
   if (user is UnauthUser) {
+    //TODO: Debug this, exception thrown is not caught
     try {
-      user.signInWithEmailAndPassword(
+      print('coucou');
+      await user.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      context.pushReplacement(redirect);
+      print('awaited');
     } on Exception catch (e) {
+      print('error');
       context.pop();
       _showAlertDialog(context: context, e: e);
     }
   } else if (user is AnonymousUser) {
     try {
-      user.signInWithEmailAndPassword(
+      await user.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      context.pushReplacement(redirect);
     } on Exception catch (e) {
       context.pop();
       _showAlertDialog(context: context, e: e);
@@ -273,6 +274,7 @@ void _signInOnTap(
     throw Exception(
         'User is already signed-in and should be able to re sign in');
   }
+  context.pushReplacement(redirect);
 }
 
 void _createAccountOnTap({
@@ -290,12 +292,12 @@ void _createAccountOnTap({
         );
       });
 
-  final user = ref.read(userProvider);
+  final user = ref.watch(userProvider);
   print(user);
 
   if (user is UnauthUser) {
     try {
-      user.createUserWithEmailAndPassword(email: email, password: password);
+      await user.createUserWithEmailAndPassword(email: email, password: password);
       context.pushReplacement(redirect);
     } on Exception catch (e) {
       context.pop();
@@ -303,7 +305,7 @@ void _createAccountOnTap({
     }
   } else if (user is AnonymousUser) {
     try {
-      user.createUserWithEmailAndPassword(email: email, password: password);
+      await user.createUserWithEmailAndPassword(email: email, password: password);
       context.pushReplacement(redirect);
     } on Exception catch (e) {
       context.pop();
@@ -318,7 +320,7 @@ void _createAccountOnTap({
 void _showAlertDialog({required BuildContext context, required Exception e}) {
   String? text;
 
-  if (e is FirebaseAuthException) {
+  if (e is AuthException) {
     switch (e.code) {
       case 'user-not-found':
         text = 'The user does not exist. Please create an account.';

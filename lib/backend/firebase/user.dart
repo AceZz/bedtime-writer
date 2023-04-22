@@ -187,7 +187,6 @@ class _FirebaseRegisteredUser extends _FirebaseAuthUser
   }
 }
 
-@override
 Future _signInWithEmailAndPassword({
   required String email,
   required String password,
@@ -200,6 +199,7 @@ Future _signInWithEmailAndPassword({
   } on firebase_auth.FirebaseAuthException catch (e) {
     throw AuthException(code: e.code);
   } on FormatException catch (e) {
+    print('throwing error');
     throw FormatException(code: e.code);
   }
 }
