@@ -1,7 +1,6 @@
 import 'package:bedtime_writer/backend/index.dart';
 import 'package:bedtime_writer/widgets/sign_in.dart';
 import 'package:bedtime_writer/widgets/textField.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -249,32 +248,32 @@ void _signInOnTap(
   print(user);
 
   if (user is UnauthUser) {
-    _signInWithEmailAndPassword(
-        context: context, email: email, password: password, redirect: redirect);
+    try {
+      _validateNonEmptyPassword(password);
+      user.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      context.pushReplacement(redirect);
+    } on Exception catch (e) {
+      context.pop();
+      _showAlertDialog(context: context, e: e);
+    }
   } else if (user is AnonymousUser) {
-    _signInWithEmailAndPassword(
-        context: context, email: email, password: password, redirect: redirect);
+    try {
+      _validateNonEmptyPassword(password);
+      user.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      context.pushReplacement(redirect);
+    } on Exception catch (e) {
+      context.pop();
+      _showAlertDialog(context: context, e: e);
+    }
   } else if (user is AuthUser) {
     throw Exception(
         'User is already signed-in and should be able to re sign in');
-  }
-}
-
-// TODO: remove exception handling from here and use set state
-void _signInWithEmailAndPassword({
-  required BuildContext context,
-  required String email,
-  required String password,
-  required String redirect,
-}) async {
-  try {
-    _validateNonEmptyPassword(password);
-    await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email, password: password);
-    context.pushReplacement(redirect);
-  } on Exception catch (e) {
-    context.pop();
-    _showAlertDialog(context: context, e: e);
   }
 }
 
@@ -297,60 +296,32 @@ void _createAccountOnTap({
   print(user);
 
   if (user is UnauthUser) {
-    _createUserWithEmailAndPassword(
-        context: context,
-        ref: ref,
-        email: email,
-        password: password,
-        redirect: redirect,
-        link: false);
+    try {
+      _validateEmail(email);
+      _validateNonEmptyPassword(password);
+      _validatePassword(password);
+      user.createUserWithEmailAndPassword(
+          email: email, password: password, link: false);
+      context.pushReplacement(redirect);
+    } on Exception catch (e) {
+      context.pop();
+      _showAlertDialog(context: context, e: e);
+    }
   } else if (user is AnonymousUser) {
-    _createUserWithEmailAndPassword(
-        context: context,
-        ref: ref,
-        email: email,
-        password: password,
-        redirect: redirect,
-        link: true);
-  } else if (user is AuthUser) {
-    throw Exception('User is signed-in and should not see this screen');
-  }
-}
-
-// TODO: remove exception handling from here and use set state
-Future _createUserWithEmailAndPassword({
-  required BuildContext context,
-  required WidgetRef ref,
-  required String email,
-  required String password,
-  required String redirect,
-  required bool link,
-}) async {
-  try {
-    _validateEmail(email);
-    _validateNonEmptyPassword(password);
-    _validatePassword(password);
-    if (link) {
-      /// Case where account should be linked
-      if (kIsWeb) {
-        return await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email, password: password);
-      }
-
-      AuthCredential credential = firebase_auth.EmailAuthProvider.credential(
-          email: email, password: password);
-
-      return await FirebaseAuth.instance.currentUser
-          ?.linkWithCredential(credential);
-    } else {
-      /// Case where account should be created
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+    try {
+      _validateEmail(email);
+      _validateNonEmptyPassword(password);
+      _validatePassword(password);
+      user.createUserWithEmailAndPassword(
+          email: email, password: password, link: true);
+      context.pushReplacement(redirect);
+    } on Exception catch (e) {
+      context.pop();
+      _showAlertDialog(context: context, e: e);
     }
     context.pushReplacement(redirect);
-  } on Exception catch (e) {
-    context.pop();
-    _showAlertDialog(context: context, e: e);
+  } else if (user is AuthUser) {
+    throw Exception('User is signed-in and should not see this screen');
   }
 }
 

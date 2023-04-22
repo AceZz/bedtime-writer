@@ -13,9 +13,11 @@ abstract class UnauthUser extends User {
 
   Future signInWithGoogle();
 
-  Future signInWithEmailAndPassword();
+  Future signInWithEmailAndPassword(
+      {required String email, required String password});
 
-  Future createUserWithEmailAndPassword();
+  Future createUserWithEmailAndPassword(
+      {required String email, required String password, required bool link});
 }
 
 /// An authenticated [User].
@@ -38,9 +40,11 @@ abstract class AnonymousUser extends AuthUser {
   /// current account.
   Future linkToGoogle();
 
-  Future signInWithEmailAndPassword();
+  Future signInWithEmailAndPassword(
+      {required String email, required String password});
 
-  Future createUserWithEmailAndPassword();
+  Future createUserWithEmailAndPassword(
+      {required String email, required String password, required bool link});
 }
 
 /// An [AuthUser] with a permanent account.

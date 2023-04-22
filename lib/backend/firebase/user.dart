@@ -72,6 +72,40 @@ class _FirebaseUnauthUser extends _FirebaseUser implements UnauthUser {
     final credential = await _getGoogleCredential();
     return firebaseAuth.signInWithCredential(credential);
   }
+
+  @override
+  Future signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    return await firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
+  }
+
+  @override
+  Future createUserWithEmailAndPassword({
+    required String email,
+    required String password,
+    required bool link,
+  }) async {
+    if (link) {
+      /// Case where account should be linked
+      if (kIsWeb) {
+        return await firebaseAuth.createUserWithEmailAndPassword(
+            email: email, password: password);
+      }
+
+      firebase_auth.AuthCredential credential =
+          firebase_auth.EmailAuthProvider.credential(
+              email: email, password: password);
+
+      return await firebaseAuth.currentUser?.linkWithCredential(credential);
+    } else {
+      /// Case where account should be created
+      return await firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+    }
+  }
 }
 
 /// An [AuthUser] managed by Firebase.
@@ -116,6 +150,40 @@ class _FirebaseAnonymousUser extends _FirebaseAuthUser
         return firebaseAuth.signInWithCredential(credential);
       }
       throw e;
+    }
+  }
+
+  @override
+  Future signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    return await firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
+  }
+
+  @override
+  Future createUserWithEmailAndPassword({
+    required String email,
+    required String password,
+    required bool link,
+  }) async {
+    if (link) {
+      /// Case where account should be linked
+      if (kIsWeb) {
+        return await firebaseAuth.createUserWithEmailAndPassword(
+            email: email, password: password);
+      }
+
+      firebase_auth.AuthCredential credential =
+          firebase_auth.EmailAuthProvider.credential(
+              email: email, password: password);
+
+      return await firebaseAuth.currentUser?.linkWithCredential(credential);
+    } else {
+      /// Case where account should be created
+      return await firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
     }
   }
 }
