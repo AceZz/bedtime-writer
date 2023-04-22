@@ -26,7 +26,7 @@ class SignInScreen extends ConsumerStatefulWidget {
 }
 
 class _SignInScreenState extends ConsumerState<SignInScreen> {
-  String infoText = '';
+  String _alertText = '';
 
   @override
   void initState() {
@@ -38,8 +38,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
   void _googleOnPressed(
       {required BuildContext context,
-        required WidgetRef ref,
-        required String redirect}) async {
+      required WidgetRef ref,
+      required String redirect}) async {
     showDialog(
         context: context,
         builder: (context) {
@@ -63,10 +63,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
   void _signInOnTap(
       {required BuildContext context,
-        required WidgetRef ref,
-        required String email,
-        required String password,
-        required String redirect}) async {
+      required WidgetRef ref,
+      required String email,
+      required String password,
+      required String redirect}) async {
     showDialog(
         context: context,
         builder: (context) {
@@ -149,7 +149,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   }
 
   void _showAlertDialog({required BuildContext context, required Exception e}) {
-    String? text;
+    String text = 'An error occurred';
 
     if (e is AuthException) {
       switch (e.code) {
@@ -185,7 +185,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           break;
         case 'invalid-password-format':
           text =
-          'Passwords must be at least 8 characters, with one letter and one digit';
+              'Passwords must be at least 8 characters, with one letter and one digit';
           break;
         case 'empty-password':
           text = 'Please enter a password';
@@ -193,18 +193,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       }
     }
 
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: Colors.grey.shade700,
-            title: Text(
-              text ?? 'An unknown error occurred',
-              style: Theme.of(context).primaryTextTheme.bodySmall,
-              textAlign: TextAlign.center,
-            ),
-          );
-        });
+    setState(() {
+      _alertText = text;
+    });
   }
 
   @override
@@ -223,8 +214,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       width: 240,
     );
 
-    Widget textInfo = Text(
-      infoText,
+    Widget alertTextWidget = Text(
+      _alertText,
       textAlign: TextAlign.center,
       style: GoogleFonts.outfit(
         color: Colors.red,
@@ -351,7 +342,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             SizedBox(height: 20),
             text,
             SizedBox(height: 30),
-            textInfo,
+            alertTextWidget,
             SizedBox(height: 10),
             emailTextField,
             SizedBox(height: 10),
