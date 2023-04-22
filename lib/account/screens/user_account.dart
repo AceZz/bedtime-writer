@@ -16,17 +16,15 @@ class UserAccountScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.read(userProvider);
+    final user = ref.watch(userProvider);
 
     String? displayName;
     if (user is AuthUser) {
       displayName = user.displayName;
     }
 
-    String logInText;
-    if (displayName == null) {
-      logInText = 'You\'re logged in';
-    } else {
+    String logInText = 'You\'re logged in';
+    if (displayName != null) {
       logInText = 'You\'re logged in as $displayName';
     }
 
