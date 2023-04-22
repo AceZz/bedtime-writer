@@ -76,7 +76,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         });
 
     final user = ref.watch(userProvider);
-    print(user);
 
     if (user is UnauthUser) {
       try {
@@ -122,7 +121,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         });
 
     final user = ref.watch(userProvider);
-    print(user);
 
     if (user is UnauthUser) {
       try {
