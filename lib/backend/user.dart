@@ -17,7 +17,7 @@ abstract class UnauthUser extends User {
       {required String email, required String password});
 
   Future createUserWithEmailAndPassword(
-      {required String email, required String password, required bool link});
+      {required String email, required String password});
 }
 
 /// An authenticated [User].
@@ -44,7 +44,7 @@ abstract class AnonymousUser extends AuthUser {
       {required String email, required String password});
 
   Future createUserWithEmailAndPassword(
-      {required String email, required String password, required bool link});
+      {required String email, required String password});
 }
 
 /// An [AuthUser] with a permanent account.
@@ -60,15 +60,10 @@ abstract class RegisteredUser extends AuthUser {
 }
 
 /// Generic authentication exception.
-class AuthException implements Exception {}
-
-/// Thrown when sign-in fails.
-class InvalidCredentialException extends AuthException implements Exception {}
-
-/// Thrown when another account is already linked with the authentication
-/// provider's credential.
-class CredentialAlreadyUsedException extends AuthException
-    implements Exception {}
+class AuthException implements Exception {
+  String code;
+  AuthException({required this.code});
+}
 
 /// Contains code to use Google authentication.
 ///
@@ -79,4 +74,10 @@ mixin GoogleAuthMixin {
     var googleUser = await GoogleSignIn(clientId: clientId).signIn();
     return await googleUser?.authentication;
   }
+}
+
+/// Generic format exception for credentials.
+class FormatException implements Exception {
+  String code;
+  FormatException({required this.code});
 }

@@ -2,12 +2,12 @@ import 'package:bedtime_writer/backend/index.dart';
 import 'package:bedtime_writer/widgets/sign_in.dart';
 import 'package:bedtime_writer/widgets/textField.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../backend/user.dart';
 import '../../widgets/index.dart';
 
 /// Asks the user to sign in and redirects to [redirect].
@@ -249,7 +249,6 @@ void _signInOnTap(
 
   if (user is UnauthUser) {
     try {
-      _validateNonEmptyPassword(password);
       user.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -261,7 +260,6 @@ void _signInOnTap(
     }
   } else if (user is AnonymousUser) {
     try {
-      _validateNonEmptyPassword(password);
       user.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -297,11 +295,7 @@ void _createAccountOnTap({
 
   if (user is UnauthUser) {
     try {
-      _validateEmail(email);
-      _validateNonEmptyPassword(password);
-      _validatePassword(password);
-      user.createUserWithEmailAndPassword(
-          email: email, password: password, link: false);
+      user.createUserWithEmailAndPassword(email: email, password: password);
       context.pushReplacement(redirect);
     } on Exception catch (e) {
       context.pop();
@@ -309,11 +303,7 @@ void _createAccountOnTap({
     }
   } else if (user is AnonymousUser) {
     try {
-      _validateEmail(email);
-      _validateNonEmptyPassword(password);
-      _validatePassword(password);
-      user.createUserWithEmailAndPassword(
-          email: email, password: password, link: true);
+      user.createUserWithEmailAndPassword(email: email, password: password);
       context.pushReplacement(redirect);
     } on Exception catch (e) {
       context.pop();
@@ -382,35 +372,4 @@ void _showAlertDialog({required BuildContext context, required Exception e}) {
           ),
         );
       });
-}
-
-class FormatException implements Exception {
-  String code;
-  FormatException({required this.code});
-}
-
-void _validateEmail(String email) {
-  // Email validation regular expression
-  final RegExp emailRegex = RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
-
-  if (!emailRegex.hasMatch(email)) {
-    throw FormatException(code: 'invalid-email-format');
-  }
-}
-
-void _validatePassword(String password) {
-  // Password validation regular expression: 8 characters, letters and digits
-  final RegExp passwordRegex =
-      RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
-
-  if (!passwordRegex.hasMatch(password)) {
-    throw FormatException(code: 'invalid-password-format');
-  }
-}
-
-void _validateNonEmptyPassword(String? password) {
-  // Password validation regular expression: 8 characters, letters and digits
-  if (password == null || password == '') {
-    throw FormatException(code: 'empty-password');
-  }
 }

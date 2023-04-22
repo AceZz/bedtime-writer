@@ -78,33 +78,16 @@ class _FirebaseUnauthUser extends _FirebaseUser implements UnauthUser {
     required String email,
     required String password,
   }) async {
-    return await firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
+    _signInWithEmailAndPassword(email: email, password: password);
   }
 
   @override
   Future createUserWithEmailAndPassword({
     required String email,
     required String password,
-    required bool link,
   }) async {
-    if (link) {
-      /// Case where account should be linked
-      if (kIsWeb) {
-        return await firebaseAuth.createUserWithEmailAndPassword(
-            email: email, password: password);
-      }
-
-      firebase_auth.AuthCredential credential =
-          firebase_auth.EmailAuthProvider.credential(
-              email: email, password: password);
-
-      return await firebaseAuth.currentUser?.linkWithCredential(credential);
-    } else {
-      /// Case where account should be created
-      return await firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
-    }
+    _createUserWithEmailAndPassword(
+        email: email, password: password, link: false);
   }
 }
 
@@ -158,33 +141,16 @@ class _FirebaseAnonymousUser extends _FirebaseAuthUser
     required String email,
     required String password,
   }) async {
-    return await firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
+    _signInWithEmailAndPassword(email: email, password: password);
   }
 
   @override
   Future createUserWithEmailAndPassword({
     required String email,
     required String password,
-    required bool link,
   }) async {
-    if (link) {
-      /// Case where account should be linked
-      if (kIsWeb) {
-        return await firebaseAuth.createUserWithEmailAndPassword(
-            email: email, password: password);
-      }
-
-      firebase_auth.AuthCredential credential =
-          firebase_auth.EmailAuthProvider.credential(
-              email: email, password: password);
-
-      return await firebaseAuth.currentUser?.linkWithCredential(credential);
-    } else {
-      /// Case where account should be created
-      return await firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
-    }
+    _createUserWithEmailAndPassword(
+        email: email, password: password, link: true);
   }
 }
 
@@ -218,5 +184,81 @@ class _FirebaseRegisteredUser extends _FirebaseAuthUser
       // account.
       if (!_credentialAlreadyUsed(e)) throw e;
     }
+  }
+}
+
+@override
+Future _signInWithEmailAndPassword({
+  required String email,
+  required String password,
+}) async {
+  try {
+    _validateEmail(email);
+    _validateNonEmptyPassword(password);
+    return await firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
+  } on firebase_auth.FirebaseAuthException catch (e) {
+    throw AuthException(code: e.code);
+  } on FormatException catch (e) {
+    throw FormatException(code: e.code);
+  }
+}
+
+Future _createUserWithEmailAndPassword({
+  required String email,
+  required String password,
+  required bool link,
+}) async {
+  try {
+    _validateEmail(email);
+    _validateNonEmptyPassword(password);
+    _validatePassword(password);
+    if (link) {
+      /// Case where account should be linked
+      if (kIsWeb) {
+        return await firebaseAuth.createUserWithEmailAndPassword(
+            email: email, password: password);
+      }
+
+      firebase_auth.AuthCredential credential =
+          firebase_auth.EmailAuthProvider.credential(
+              email: email, password: password);
+
+      return await firebaseAuth.currentUser?.linkWithCredential(credential);
+    } else {
+      /// Case where account should be created
+      return await firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+    }
+  } on firebase_auth.FirebaseAuthException catch (e) {
+    throw AuthException(code: e.code);
+  } on FormatException catch (e) {
+    throw FormatException(code: e.code);
+  }
+}
+
+void _validateEmail(String email) {
+  // Email validation regular expression
+  final RegExp emailRegex = RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
+
+  if (!emailRegex.hasMatch(email)) {
+    throw FormatException(code: 'invalid-email-format');
+  }
+}
+
+void _validatePassword(String password) {
+  // Password validation regular expression: 8 characters, letters and digits
+  final RegExp passwordRegex =
+      RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
+
+  if (!passwordRegex.hasMatch(password)) {
+    throw FormatException(code: 'invalid-password-format');
+  }
+}
+
+void _validateNonEmptyPassword(String? password) {
+  // Password validation regular expression: 8 characters, letters and digits
+  if (password == null || password == '') {
+    throw FormatException(code: 'empty-password');
   }
 }
