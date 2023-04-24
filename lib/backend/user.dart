@@ -19,6 +19,7 @@ abstract class AuthUser extends User {
   const AuthUser() : super();
 
   String get uid;
+
   String? get displayName;
 
   Future linkToGoogle();

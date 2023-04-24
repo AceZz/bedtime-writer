@@ -1,8 +1,8 @@
-import 'package:bedtime_writer/backend/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../backend/index.dart';
 import '../../widgets/index.dart';
 
 /// Asks the user to sign in and redirects to [redirect].
@@ -28,7 +28,7 @@ class UserAccountScreen extends ConsumerWidget {
       logInText = 'You\'re logged in as $displayName';
     }
 
-    Widget text = Padding(
+    final Widget text = Padding(
       padding: const EdgeInsets.all(20.0),
       child: Text(
         logInText,
@@ -37,7 +37,7 @@ class UserAccountScreen extends ConsumerWidget {
       ),
     );
 
-    Widget icon = Padding(
+    final Widget icon = Padding(
       padding: const EdgeInsets.only(top: 20),
       child: Icon(
         Icons.account_circle,
@@ -66,12 +66,10 @@ class UserAccountScreen extends ConsumerWidget {
 void _onPressed(BuildContext context, WidgetRef ref, String redirect) async {
   final user = ref.read(userProvider);
 
-  if (user is UnauthUser) {
-    throw Exception('User should be signed in to see this sign out button');
-  } else if (user is AnonymousUser) {
-    throw Exception('User should be signed in to see this sign out button');
-  } else if (user is AuthUser) {
+  if (user is AuthUser) {
     await user.signOut();
+  } else {
+    throw Exception('User should be signed in to see this sign out button');
   }
 
   context.pushReplacement(redirect);
