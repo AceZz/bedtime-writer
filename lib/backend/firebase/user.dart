@@ -84,6 +84,9 @@ abstract class _FirebaseAuthUser extends _FirebaseUser implements AuthUser {
   String get uid => user.uid;
 
   @override
+  String? get displayName => user.displayName;
+
+  @override
   Future signOut() {
     return firebaseAuth.signOut();
   }
