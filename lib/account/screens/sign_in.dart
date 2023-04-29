@@ -1,6 +1,3 @@
-import 'package:bedtime_writer/backend/index.dart';
-import 'package:bedtime_writer/widgets/sign_in.dart';
-import 'package:bedtime_writer/widgets/textField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../backend/user.dart';
 import '../../widgets/index.dart';
+import '../../backend/index.dart';
+import '../../widgets/sign_in.dart';
+import '../../widgets/textField.dart';
 
 /// Asks the user to sign in and redirects to [redirect].
 

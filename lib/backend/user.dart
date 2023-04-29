@@ -27,8 +27,6 @@ abstract class AuthUser extends User {
   String get uid;
   String? get displayName;
 
-  String? get displayName;
-
   Future linkToGoogle();
 
   Future signOut();
@@ -81,5 +79,6 @@ mixin GoogleAuthMixin {
 /// Generic format exception for credentials.
 class FormatException implements Exception {
   String code;
+
   FormatException({required this.code});
 }

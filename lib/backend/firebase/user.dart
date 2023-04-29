@@ -87,7 +87,9 @@ class _FirebaseUnauthUser extends _FirebaseUser implements UnauthUser {
     required String password,
   }) async {
     await _createUserWithEmailAndPassword(
-        email: email, password: password, link: false);
+      email: email,
+      password: password,
+    );
   }
 }
 
@@ -149,8 +151,10 @@ class _FirebaseAnonymousUser extends _FirebaseAuthUser
     required String email,
     required String password,
   }) async {
-    await _createUserWithEmailAndPassword(
-        email: email, password: password, link: true);
+    await _linkUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
   }
 }
 
@@ -193,11 +197,12 @@ Future _signInWithEmailAndPassword({
     _validateEmail(email);
     _validateNonEmptyPassword(password);
     return await firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
+      email: email,
+      password: password,
+    );
   } on firebase_auth.FirebaseAuthException catch (e) {
     throw AuthException(code: e.code);
   } on FormatException catch (e) {
-    print('throwing error');
     throw FormatException(code: e.code);
   }
 }
@@ -205,29 +210,36 @@ Future _signInWithEmailAndPassword({
 Future _createUserWithEmailAndPassword({
   required String email,
   required String password,
-  required bool link,
 }) async {
   try {
     _validateEmail(email);
     _validateNonEmptyPassword(password);
     _validatePassword(password);
-    if (link) {
-      /// Case where account should be linked
-      if (kIsWeb) {
-        return await firebaseAuth.createUserWithEmailAndPassword(
-            email: email, password: password);
-      }
+    return await firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  } on firebase_auth.FirebaseAuthException catch (e) {
+    throw AuthException(code: e.code);
+  } on FormatException catch (e) {
+    throw FormatException(code: e.code);
+  }
+}
 
-      firebase_auth.AuthCredential credential =
-          firebase_auth.EmailAuthProvider.credential(
-              email: email, password: password);
-
-      return await firebaseAuth.currentUser?.linkWithCredential(credential);
-    } else {
-      /// Case where account should be created
-      return await firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
-    }
+Future _linkUserWithEmailAndPassword({
+  required String email,
+  required String password,
+}) async {
+  try {
+    _validateEmail(email);
+    _validateNonEmptyPassword(password);
+    _validatePassword(password);
+    firebase_auth.AuthCredential credential =
+        firebase_auth.EmailAuthProvider.credential(
+      email: email,
+      password: password,
+    );
+    return await firebaseAuth.currentUser?.linkWithCredential(credential);
   } on firebase_auth.FirebaseAuthException catch (e) {
     throw AuthException(code: e.code);
   } on FormatException catch (e) {
@@ -255,7 +267,7 @@ void _validatePassword(String password) {
 }
 
 void _validateNonEmptyPassword(String? password) {
-  // Password validation regular expression: 8 characters, letters and digits
+  // Non empty password validation
   if (password == null || password == '') {
     throw FormatException(code: 'empty-password');
   }
