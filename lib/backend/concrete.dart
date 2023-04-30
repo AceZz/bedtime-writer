@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'firebase/index.dart';
 import 'preferences.dart';
 import 'shared_preferences/index.dart';
+import 'stats.dart';
 import 'story.dart';
 import 'story_params.dart';
 import 'user.dart';
@@ -29,6 +30,10 @@ final AutoDisposeStreamProviderFamily<Story, String> storyProvider =
 /// with it.
 final NotifierProvider<PreferencesNotifier, Preferences> preferencesProvider =
     sharedPreferencesProvider;
+
+/// Provides a [Stats] object and a [StatsNotifier] to interact
+/// with it.
+final FutureProvider<Stats> statsProvider = firebaseStatsProvider;
 
 /// Creates a story and return its [Story.id].
 Future<String> Function(StoryParams params) addStory = firebaseAddStory;
