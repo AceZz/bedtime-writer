@@ -7,25 +7,8 @@ import 'firebase.dart';
 import '../concrete.dart';
 
 /// Provides user stats based on Firebase.
-///
-/// TODO: maybe change below
-/// This [Provider] must be initialized in main.dart with something like:
-///
-/// ```
-/// TODO: change below
-/// final sharedPreferences = await SharedPreferences.getInstance();
-/// runApp(
-///   ProviderScope(
-///     overrides: [
-///       sharedPreferencesBaseProvider.overrideWithValue(sharedPreferences)
-///     ],
-///     child: MyApp(),
-///   ),
-/// );
-/// ```
 
 /// Implementation of [StatsProvider] for Firebase.
-//TODO: this should be rebuilt when the query would give a different result. Get inspiration from other sotry library queries / stream.
 final firebaseStatsProvider = StreamProvider<Stats>((ref) {
   User user = ref.watch(userProvider);
 
