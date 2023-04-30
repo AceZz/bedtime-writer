@@ -111,6 +111,7 @@ class _LoadingTexts extends StatelessWidget {
   Future<Iterable<String>> _texts(BuildContext context) async {
     final data = await DefaultAssetBundle.of(context).loadString(assetFile);
     var texts = data.split('\n');
+    texts = texts.where((string) => string.isNotEmpty).toList();
     texts.shuffle();
     return [defaultText, ...texts.take(maxNumLoadingTexts)];
   }
