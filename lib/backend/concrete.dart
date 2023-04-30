@@ -33,7 +33,7 @@ final NotifierProvider<PreferencesNotifier, Preferences> preferencesProvider =
 
 /// Provides a [Stats] object and a [StatsNotifier] to interact
 /// with it.
-final FutureProvider<Stats> statsProvider = firebaseStatsProvider;
+final StreamProvider<Stats> statsProvider = firebaseStatsProvider;
 
 /// Creates a story and return its [Story.id].
 Future<String> Function(StoryParams params) addStory = firebaseAddStory;

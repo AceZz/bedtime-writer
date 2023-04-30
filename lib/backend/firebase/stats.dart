@@ -26,21 +26,20 @@ import '../concrete.dart';
 
 /// Implementation of [StatsProvider] for Firebase.
 //TODO: this should be rebuilt when the query would give a different result. Get inspiration from other sotry library queries / stream.
-final firebaseStatsProvider = FutureProvider<Stats>((ref) async {
+final firebaseStatsProvider = StreamProvider<Stats>((ref) {
   User user = ref.watch(userProvider);
 
   if (user is AuthUser) {
-    AggregateQuerySnapshot numStoriesSnapshot =
-        await _userNumStoriesQueryBuilder(user).get();
-    int numStories = numStoriesSnapshot.count;
-    return Stats(numStories: numStories);
+    Stream<QuerySnapshot> storiesSnapshots =
+        _userStoriesQueryBuilder(user).snapshots();
+    return storiesSnapshots
+        .map((querySnapshot) => Stats(numStories: querySnapshot.docs.length));
   } else {
-    return Stats(numStories: 0);
+    return Stream.value(Stats(numStories: 0));
   }
 });
 
 /// A query that only returns stories authored by [user].
-AggregateQuery _userNumStoriesQueryBuilder(AuthUser user) => firebaseFirestore
+Query _userStoriesQueryBuilder(AuthUser user) => firebaseFirestore
     .collection('stories')
-    .where('author', isEqualTo: user.uid)
-    .count();
+    .where('author', isEqualTo: user.uid);
