@@ -70,7 +70,7 @@ class StoryParams {
   const StoryParams({
     this.style,
     this.character,
-    this.duration = 5,
+    this.duration,
     this.place,
     this.object,
   });
