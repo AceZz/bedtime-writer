@@ -25,6 +25,7 @@ import '../concrete.dart';
 /// ```
 
 /// Implementation of [StatsProvider] for Firebase.
+//TODO: this should be rebuilt when the query would give a different result. Get inspiration from other sotry library queries / stream.
 final firebaseStatsProvider = FutureProvider<Stats>((ref) async {
   User user = ref.watch(userProvider);
 
