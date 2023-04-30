@@ -5,7 +5,8 @@ export 'concrete.dart'
         preferencesProvider,
         storyProvider,
         userProvider,
-        userStoriesProvider;
+        userStoriesProvider,
+        statsProvider;
 export 'firebase/index.dart' show configureFirebaseEmulators;
 export 'preferences.dart' show Preferences, PreferencesNotifier;
 export 'shared_preferences/index.dart' show sharedPreferencesBaseProvider;
