@@ -138,10 +138,11 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
   }
 
   /// Resets the StoryState.
-  void reset() {
+  void reset({required int duration}) {
     state = CreateStoryState(
       storyParams: StoryParams(
         style: _getRandomStyle(),
+        duration: duration,
       ),
       questions: _getQuestions(),
       numRandom: 0,

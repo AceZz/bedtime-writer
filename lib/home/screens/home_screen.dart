@@ -1,3 +1,4 @@
+import 'package:bedtime_writer/backend/concrete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +7,7 @@ import '../../config.dart';
 import '../../story/index.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/fade_in.dart';
+import '../../backend/index.dart';
 import 'home_screen_debug.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -119,7 +121,10 @@ class _HomeScreenButton extends ConsumerWidget {
         child: InkWell(
           onTap: () {
             if (resetStoryState) {
-              ref.read(createStoryStateProvider.notifier).reset();
+              final Preferences preferences = ref.read(preferencesProvider);
+              ref
+                  .read(createStoryStateProvider.notifier)
+                  .reset(duration: preferences.duration);
             }
             context.pushNamed(destination);
           },
