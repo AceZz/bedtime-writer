@@ -81,6 +81,14 @@ class HomeScreen extends ConsumerWidget {
                 ],
               ),
             ),
+          if (debugStats())
+            Flexible(
+              child: Row(
+                children: [
+                  Flexible(child: HomeScreenDebug()),
+                ],
+              ),
+            ),
         ],
       ),
       showAppBar: false,

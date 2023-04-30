@@ -11,7 +11,18 @@ class HomeScreenDebug extends ConsumerWidget {
     final user = ref.watch(userProvider);
     final _button = button(user);
 
+    AsyncValue<Stats> stats = ref.watch(statsProvider);
+
+    Widget statsWidget = stats.when(
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => Text('Error: $err'),
+      data: (stats) {
+        return Text('numStories ${stats.numStories}');
+      },
+    );
+
     List<Widget> children = [
+      statsWidget,
       Text(user.toString()),
       if (_button != null) _button,
     ];
