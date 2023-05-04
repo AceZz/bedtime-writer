@@ -47,7 +47,19 @@ android {
         checkReleaseBuilds false
     }
 
-    defaultConfig {
+    flavorDimensions "env"
+    productFlavors {
+        dev {
+            dimension "env"
+            applicationId "com.tap.bedtimewriter.dev"
+        }
+        prod {
+            dimension "env"
+            applicationId "com.tap.bedtimewriter.prod"
+        }
+    }
+
+    defaultConfig { //Overridden by productFlavors if they are specified
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.tap.bedtimewriter"
         minSdkVersion 21
