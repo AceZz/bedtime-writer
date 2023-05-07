@@ -50,6 +50,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "856886395260-h58le8gjk6j42enfanj0sf6a2qnp3mlc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tap.bedtimewriter.prod",
+            "certificate_hash": "424ebb2a2357ea2ac0abbdab90ee9f39c677672b"
+          }
+        },
+        {
           "client_id": "856886395260-i84dkab9jheq8r20q9jln2b3ttig4ces.apps.googleusercontent.com",
           "client_type": 3
         }
