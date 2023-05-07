@@ -7,6 +7,7 @@ import '../concrete.dart';
 import '../story.dart';
 import '../story_params.dart';
 import '../story_part.dart';
+import '../story_status.dart';
 import '../user.dart';
 import 'firebase.dart';
 
@@ -34,6 +35,13 @@ final firebaseFavoriteUserStoriesProvider = _userStoriesProvider(
   queryBuilder: (AuthUser user) =>
       _userStoriesQueryBuilder(user).where('isFavorite', isEqualTo: true),
 );
+
+/// Streams a specific [StoryStatus].
+final firebaseStoryStatusProvider =
+    FutureProvider.autoDispose.family<StoryStatus, String>((ref, id) {
+  return ref
+      .watch(firebaseStoryProvider(id).selectAsync((story) => story.status));
+});
 
 /// Helper to create providers that return lists of [Story].
 ///
@@ -121,6 +129,9 @@ class _FirebaseStory implements Story {
 
   @override
   DateTime get dateTime => (_data['timestamp'] as Timestamp).toDate();
+
+  @override
+  StoryStatus get status => tryParseStoryRequestStatus(_data['status']);
 
   @override
   bool get isFavorite => _data['isFavorite'];
