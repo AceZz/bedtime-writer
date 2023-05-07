@@ -102,7 +102,7 @@ We use Google Cloud Secret Manager to store secrets such as the Open AI API key.
 
 ### Deploy the backend
 
-Run `npm run deploy_functions` in the `functions` folder. Reminder: it will use the `.env` file,
+Build the functions `npm run build:watch` and then deploy `npm run deploy_functions` in the `functions` folder. Reminder: it will use the `.env` file,
 not `.env.local`.
 
 ### Deploy the Web frontend
