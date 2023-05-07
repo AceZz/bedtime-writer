@@ -7,15 +7,16 @@ const FAKE_TOKENS = readFileSync("src/story/generator/text_api/fake_text.txt");
 
 /**
  * Parse `value` to an int and clamp it between a minimum and maximum.
- * If `value` is undefined, return the maximum.
+ * If `value` is undefined, return `defaultValue`.
  */
 function parseIntAndClamp(
   value: string | undefined,
   min: number,
-  max: number
+  max: number,
+  defaultValue: number
 ): number {
   if (value === undefined) {
-    return max;
+    return defaultValue;
   }
   return Math.max(min, Math.min(parseInt(value), max));
 }
@@ -33,20 +34,41 @@ function wait(ms: number): Promise<void> {
 export class FakeTextApi implements TextApi {
   constructor(
     private readonly _numParts?: number,
-    private readonly _numTokensPerPart?: number
+    private readonly _numTokensPerPart?: number,
+    private readonly _startWait?: number,
+    private readonly _partWait?: number
   ) {}
 
   get numParts(): number {
     return (
       this._numParts ??
-      parseIntAndClamp(process.env.FAKE_TEXT_API_NUM_PARTS, 1, 10)
+      parseIntAndClamp(process.env.FAKE_TEXT_API_NUM_PARTS, 1, 10, 10)
     );
   }
 
   get numTokensPerPart(): number {
     return (
       this._numTokensPerPart ??
-      parseIntAndClamp(process.env.FAKE_TEXT_API_NUM_TOKENS_PER_PART, 1, 200)
+      parseIntAndClamp(
+        process.env.FAKE_TEXT_API_NUM_TOKENS_PER_PART,
+        1,
+        200,
+        200
+      )
+    );
+  }
+
+  get startWait(): number {
+    return (
+      this._startWait ??
+      parseIntAndClamp(process.env.FAKE_TEXT_API_START_WAIT, 0, 10000, 1500)
+    );
+  }
+
+  get partWait(): number {
+    return (
+      this._partWait ??
+      parseIntAndClamp(process.env.FAKE_TEXT_API_PART_WAIT, 0, 10000, 1500)
     );
   }
 
@@ -55,7 +77,7 @@ export class FakeTextApi implements TextApi {
   }
 
   async getStream(): Promise<Readable> {
-    return Readable.from(this.getTokensWithWait(100));
+    return Readable.from(this.getTokensWithWait());
   }
 
   /**
@@ -71,14 +93,16 @@ export class FakeTextApi implements TextApi {
     }
   }
 
-  async *getTokensWithWait(waitTime: number): AsyncGenerator<string> {
+  async *getTokensWithWait(): AsyncGenerator<string> {
+    await wait(this.startWait);
+
     for (const part of this.getParts()) {
       for (const token of part) {
         yield token;
       }
 
       yield "\n\n";
-      await wait(waitTime);
+      await wait(this.partWait);
     }
   }
 

@@ -17,7 +17,7 @@ import { getOpenAiApi } from "../../../src/open_ai";
 
 describe("with fake APIs", () => {
   function initGenerator() {
-    const textApi = new FakeTextApi();
+    const textApi = new FakeTextApi(10, 150, 500, 100);
     const imageApi = new FakeImageApi();
     const generator = new OnePartStoryGenerator(
       FULL_CLASSIC_STORY_LOGIC,
