@@ -81,7 +81,7 @@ error will appear there.
 In another terminal, still in `functions`, launch the backend emulators with
 `npm run local_backend`.
 
-Run the Flutter app with `flutter run --debug` (in the `bedtime-stories` folder). Your app should
+Run the Flutter app with `flutter run --debug` (in the `bedtime-writer` folder). Your app should
 use the local backend and fake data.
 
 Afterwards, you can start developing. If you wish to use the real Cloud functions, set
