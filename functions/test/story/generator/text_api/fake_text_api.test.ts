@@ -2,7 +2,7 @@ import { expect, test } from "@jest/globals";
 import { FakeTextApi } from "../../../../src/story/generator/text_api/fake_text_api";
 
 test("getTokens", () => {
-  const api = new FakeTextApi(2, 10);
+  const api = new FakeTextApi(2, 10, 500, 100);
   const tokens = Array.from(api.getTokens());
 
   expect(tokens.join("").trim()).toBe(
@@ -11,7 +11,7 @@ test("getTokens", () => {
 });
 
 test("getText", async () => {
-  const api = new FakeTextApi(10, 150);
+  const api = new FakeTextApi(10, 150, 500, 100);
   const text = await api.getText();
   const tokens = Array.from(api.getTokens());
 
@@ -19,7 +19,7 @@ test("getText", async () => {
 });
 
 test("getStream", async () => {
-  const api = new FakeTextApi(10, 150);
+  const api = new FakeTextApi(10, 150, 500, 100);
   const stream = await api.getStream();
   const expectedTokens = Array.from(api.getTokens());
 
@@ -33,5 +33,5 @@ test("getStream", async () => {
   const elapsed = Date.now() - start;
 
   expect(tokens.join("").trim()).toStrictEqual(expectedTokens.join("").trim());
-  expect(Math.abs(elapsed - 10 * 100)).toBeLessThan(150);
+  expect(Math.abs(elapsed - (500 + 10 * 100))).toBeLessThan(150);
 });
