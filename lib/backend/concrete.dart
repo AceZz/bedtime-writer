@@ -8,7 +8,7 @@ import 'preferences.dart';
 import 'shared_preferences/index.dart';
 import 'story.dart';
 import 'story_params.dart';
-import 'story_request.dart';
+import 'story_status.dart';
 import 'user.dart';
 
 /// Provides the current [User].
@@ -35,6 +35,6 @@ final NotifierProvider<PreferencesNotifier, Preferences> preferencesProvider =
 Future<String> Function(StoryParams params) createClassicStory =
     firebaseCreateClassicStory;
 
-/// Streams a specific [StoryRequest].
-final AutoDisposeStreamProviderFamily<StoryRequest, String>
-    storyRequestProvider = firebaseStoryRequestProvider;
+/// Streams the [StoryStatus] of a specific story.
+final AutoDisposeFutureProviderFamily<StoryStatus, String> storyStatusProvider =
+    firebaseStoryStatusProvider;

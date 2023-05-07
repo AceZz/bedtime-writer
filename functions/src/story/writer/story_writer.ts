@@ -13,4 +13,12 @@ export interface StoryWriter {
    * Write a part of the story and return its id.
    */
   writePart(part: StoryPart): Promise<string>;
+
+  /**
+   * Mark the story as complete.
+   *
+   * Note: calling `writePart` after `writeComplete` is undefined behaviour
+   * and should be avoided.
+   */
+  writeComplete(): Promise<void>;
 }

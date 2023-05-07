@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'story_part.dart';
+import 'story_status.dart';
 
 /// Represents a generated story.
 abstract class Story {
@@ -13,6 +14,8 @@ abstract class Story {
   String get author;
 
   DateTime get dateTime;
+
+  StoryStatus get status;
 
   bool get isFavorite;
 

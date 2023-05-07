@@ -3,20 +3,21 @@ import {
   Firestore,
   CollectionReference,
   DocumentReference,
-  Timestamp,
 } from "firebase-admin/firestore";
 import { StoryMetadata } from "../story_metadata";
 import { StoryPart } from "../story_part";
 import { StoryWriter } from "./story_writer";
+import { StoryStatus } from "../story_status";
 
 /**
  * The Firestore document has the following schema:
  *
  * stories/
  *   <story_id>
- *     author
+ *     author (already set)
  *     isFavorite
- *     timestamp
+ *     status
+ *     timestamp (already set)
  *     title
  *     parts = [part1_id, part2_id]
  *     images/
@@ -47,13 +48,11 @@ export class FirebaseStoryWriter implements StoryWriter {
 
   async writeMetadata(): Promise<string> {
     const payload = {
-      author: this.metadata.author,
       isFavorite: this.metadata.isFavorite,
-      timestamp: Timestamp.now(),
       title: this.metadata.title,
       parts: [],
     };
-    await this.storyRef.set(payload);
+    await this.storyRef.update(payload);
     return this.id;
   }
 
@@ -63,11 +62,15 @@ export class FirebaseStoryWriter implements StoryWriter {
     this.parts.push(partId);
 
     await Promise.all([
-      this.updateStoryParts(),
+      this.updateStory(),
       this.writePartPrompts(part, partId),
     ]);
 
     return partId;
+  }
+
+  async writeComplete(): Promise<void> {
+    await this.storyRef.update({ status: StoryStatus.COMPLETE });
   }
 
   private async writePartImage(image?: Buffer): Promise<string> {
@@ -92,8 +95,11 @@ export class FirebaseStoryWriter implements StoryWriter {
     return document.id;
   }
 
-  private async updateStoryParts() {
-    await this.storyRef.update({ parts: this.parts });
+  private async updateStory() {
+    await this.storyRef.update({
+      parts: this.parts,
+      status: StoryStatus.GENERATING,
+    });
   }
 
   private async writePartPrompts(

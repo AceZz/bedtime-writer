@@ -59,12 +59,19 @@ class _StoryScreen extends ConsumerWidget {
       return loadingScreen;
     }
 
-    final storyRequest = ref.watch(storyRequestProvider(_requestId));
+    final storyRequest = ref.watch(storyStatusProvider(_requestId));
     return storyRequest.when(
-      data: (StoryRequest request) =>
-          request.status == StoryRequestStatus.created
-              ? DisplayStoryScreen(id: _requestId)
-              : loadingScreen,
+      data: (StoryStatus status) {
+        switch (status) {
+          case StoryStatus.generating:
+          case StoryStatus.complete:
+            return DisplayStoryScreen(id: _requestId);
+          case StoryStatus.pending:
+            return loadingScreen;
+          case StoryStatus.error:
+            return const Text('Something went wrong...');
+        }
+      },
       error: (error, stackTrace) => const CircularProgressIndicator(),
       loading: () => loadingScreen,
     );

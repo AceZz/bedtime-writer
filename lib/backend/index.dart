@@ -12,8 +12,7 @@ export 'shared_preferences/index.dart' show sharedPreferencesBaseProvider;
 export 'story.dart' show Story;
 export 'story_params.dart' show Character, Choice, Question, StoryParams;
 export 'story_part.dart' show StoryPart;
-export 'story_request.dart'
-    show StoryRequest, StoryRequestStatus, tryParseStoryRequestStatus;
+export 'story_status.dart' show StoryStatus, tryParseStoryRequestStatus;
 export 'user.dart'
     show
         User,

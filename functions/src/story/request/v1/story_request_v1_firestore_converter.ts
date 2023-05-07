@@ -7,15 +7,15 @@ import {
 } from "firebase-admin/firestore";
 import { StoryRequestV1, StoryRequestV1Data } from "./story_request_v1";
 import { StoryRequestFirestoreConverter } from "../story_request_firestore_converter";
-import { StoryRequestStatus } from "../story_request_status";
+import { StoryStatus } from "../../story_status";
 
 /**
  * Schema:
  *
- * requests_v1/
- *   <request_id>:
- *     private/
- *       data:
+ * stories/
+ *   <story_id>:
+ *     request/
+ *       v1:
  *         logic
  *         [StoryRequest fields]
  *     author
@@ -32,7 +32,7 @@ export class StoryRequestV1FirestoreConverter
   }
 
   async get(id: string): Promise<StoryRequestV1> {
-    const dataDocument = await this.requestDataRef(id).get();
+    const dataDocument = await this.storyRequestRef(id).get();
 
     const logic = dataDocument.get("logic");
     const data: StoryRequestV1Data = {
@@ -54,33 +54,29 @@ export class StoryRequestV1FirestoreConverter
     const payload = {
       author: request.author,
       timestamp: Timestamp.now(),
-      status: StoryRequestStatus.PENDING,
+      status: StoryStatus.PENDING,
     };
-    const document = await this.requestsRef.add(payload);
+    const document = await this.storiesRef.add(payload);
     const documentId = document.id;
 
     const dataPayload = {
       ...request.data,
       logic: request.logic,
     };
-    await this.requestDataRef(documentId).set(dataPayload);
+    await this.storyRequestRef(documentId).set(dataPayload);
 
     return document.id;
   }
 
-  async updateStatus(id: string, status: StoryRequestStatus): Promise<void> {
-    await this.requestRef(id).update({ status: status });
+  private storyRequestRef(id: string): DocumentReference {
+    return this.storyRef(id).collection("request").doc("v1");
   }
 
-  private get requestsRef(): CollectionReference {
-    return this.firestore.collection("requests_v1");
+  private storyRef(id: string): DocumentReference {
+    return this.storiesRef.doc(id);
   }
 
-  private requestRef(id: string): DocumentReference {
-    return this.requestsRef.doc(id);
-  }
-
-  private requestDataRef(id: string): DocumentReference {
-    return this.requestRef(id).collection("private").doc("data");
+  private get storiesRef(): CollectionReference {
+    return this.firestore.collection("stories");
   }
 }
