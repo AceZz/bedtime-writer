@@ -1,5 +1,11 @@
 # Deployment
 
+## Deployment to production checklist
+
+Check the following items before deploying to production:
+1. Create the right indexes for Firestore in the prod Firebase project if applicable.
+2. Make sure the rules are up-to-date both locally and in Firestore in the prod Firebase project.
+
 ## Firebase rules
 
 The `*.rules` files in the main folder are only used for the Firebase emulators. To deploy them on
