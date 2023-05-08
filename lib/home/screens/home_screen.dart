@@ -6,7 +6,6 @@ import '../../config.dart';
 import '../../story/index.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/fade_in.dart';
-import '../../backend/index.dart';
 import 'home_screen_debug.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -120,12 +119,8 @@ class _HomeScreenButton extends ConsumerWidget {
         child: InkWell(
           onTap: () {
             if (resetStoryState) {
-              // Reads preferences
-              final Preferences preferences = ref.read(preferencesProvider);
               // Resets story state while considering preferences
-              ref
-                  .read(createStoryStateProvider.notifier)
-                  .reset(duration: preferences.duration);
+              ref.read(createStoryStateProvider.notifier).reset();
             }
             context.pushNamed(destination);
           },
