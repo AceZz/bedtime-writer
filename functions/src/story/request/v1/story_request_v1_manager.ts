@@ -1,0 +1,45 @@
+import { CLASSIC_LOGIC } from "../../logic";
+import { StoryRequestManager } from "../story_request_manager";
+import { StoryRequestStatus } from "../story_request_status";
+import { StoryRequestV1 } from "./story_request_v1";
+import { StoryRequestV1FirestoreConverter } from "./story_request_v1_firestore_converter";
+import { StoryRequestV1JsonConverter } from "./story_request_v1_json_converter";
+
+export class StoryRequestV1Manager
+  implements StoryRequestManager<StoryRequestV1>
+{
+  private firestoreConverter: StoryRequestV1FirestoreConverter;
+  private jsonConverter: StoryRequestV1JsonConverter;
+
+  constructor() {
+    this.firestoreConverter = new StoryRequestV1FirestoreConverter();
+    this.jsonConverter = new StoryRequestV1JsonConverter();
+  }
+
+  async get(id: string): Promise<StoryRequestV1> {
+    return this.firestoreConverter.get(id);
+  }
+
+  create(logic: string, data: object): Promise<string> {
+    const request = this.jsonConverter.fromJson(logic, data);
+    this.validate(request);
+
+    return this.firestoreConverter.write(request);
+  }
+
+  private validate(request: StoryRequestV1) {
+    if (request.logic == CLASSIC_LOGIC) {
+      const logic = request.toClassicStoryLogic();
+
+      if (!logic.isValid()) {
+        throw Error("StoryRequestV1Manager: request is invalid");
+      }
+    } else {
+      throw Error(`StoryRequestV1Manager: unsupported logic ${request.logic}.`);
+    }
+  }
+
+  async updateStatus(id: string, status: StoryRequestStatus): Promise<void> {
+    return this.firestoreConverter.updateStatus(id, status);
+  }
+}

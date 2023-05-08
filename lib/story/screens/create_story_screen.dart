@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../backend/concrete.dart';
 import '../../backend/index.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
@@ -24,52 +25,75 @@ class CreateStoryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     CreateStoryState state = ref.watch(createStoryStateProvider);
 
+    // Displays the current question.
     if (state.hasQuestions) {
-      // Displays the current question.
-      return AppScaffold(
-        appBarTitle: 'New story',
-        child: _QuestionContent(question: state.currentQuestion),
-      );
+      return _QuestionScreen(question: state.currentQuestion);
     }
 
-    // Adds the story and displays it.
+    // Creates the story and displays it.
     return FutureBuilder(
-      future: addStory(state.storyParams),
+      future: createClassicStory(state.storyParams),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-        final generatedStoryId = snapshot.data;
-        return generatedStoryId == null
-            ? AppScaffold(
-                showAppBar: false,
-                child: _LoadingContent(),
-              )
-            : DisplayStoryScreen(
-                id: generatedStoryId,
-              );
+        final requestId = snapshot.data;
+        return _StoryScreen(requestId: requestId);
       },
     );
   }
 }
 
-/// Displays a loading screen.
-class _LoadingContent extends ConsumerWidget {
-  const _LoadingContent({Key? key}) : super(key: key);
+/// Displays the story screen.
+class _StoryScreen extends ConsumerWidget {
+  // We use a temporary widget instead of inlining the content of the build
+  // method into `CreateStoryScreen.build`. That's because of a weird behaviour
+  // with ref.watch, which triggers the future of `FutureBuilder` many times.
+  final String? requestId;
+
+  const _StoryScreen({Key? key, required this.requestId}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final _requestId = requestId;
+    const loadingScreen = const _LoadingScreen();
+
+    if (_requestId == null) {
+      return loadingScreen;
+    }
+
+    final storyRequest = ref.watch(storyRequestProvider(_requestId));
+    return storyRequest.when(
+      data: (StoryRequest request) =>
+          request.status == StoryRequestStatus.created
+              ? DisplayStoryScreen(id: _requestId)
+              : loadingScreen,
+      error: (error, stackTrace) => const CircularProgressIndicator(),
+      loading: () => loadingScreen,
+    );
+  }
+}
+
+/// Displays a loading screen.
+class _LoadingScreen extends StatelessWidget {
+  const _LoadingScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
-    return Padding(
-      padding: EdgeInsets.only(top: 0.3 * screenHeight),
-      child: Column(
-        children: [
-          LottieLoading(),
-          SizedBox(
-            height: 200,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: _LoadingTexts(),
-            ),
-          )
-        ],
+    return AppScaffold(
+      showAppBar: false,
+      child: Padding(
+        padding: EdgeInsets.only(top: 0.3 * screenHeight),
+        child: Column(
+          children: [
+            const LottieLoading(),
+            SizedBox(
+              height: 200,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: const _LoadingTexts(),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -111,6 +135,7 @@ class _LoadingTexts extends StatelessWidget {
   Future<Iterable<String>> _texts(BuildContext context) async {
     final data = await DefaultAssetBundle.of(context).loadString(assetFile);
     var texts = data.split('\n');
+    texts = texts.where((string) => string.isNotEmpty).toList();
     texts.shuffle();
     return [defaultText, ...texts.take(maxNumLoadingTexts)];
   }
@@ -136,13 +161,13 @@ class _LoadingTexts extends StatelessWidget {
 }
 
 /// Displays a question.
-class _QuestionContent extends StatelessWidget {
+class _QuestionScreen extends StatelessWidget {
   /// The maximum number of choices that can be displayed.
   static const maxNumChoices = 3;
 
   final Question question;
 
-  const _QuestionContent({
+  const _QuestionScreen({
     Key? key,
     required this.question,
   }) : super(key: key);
@@ -170,14 +195,17 @@ class _QuestionContent extends StatelessWidget {
         .map((choice) => _ChoiceButton(choice: choice))
         .toList();
 
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Flexible(flex: 1, child: questionText),
-        Flexible(flex: 3, child: Column(children: choiceButtons)),
-      ],
+    return AppScaffold(
+      appBarTitle: 'New story',
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Flexible(flex: 1, child: questionText),
+          Flexible(flex: 3, child: Column(children: choiceButtons)),
+        ],
+      ),
     );
   }
 }

@@ -10,10 +10,9 @@ import '../story_part.dart';
 import '../user.dart';
 import 'firebase.dart';
 
-/// Creates a story and returns its ID.
-Future<String> firebaseAddStory(StoryParams params) async {
+Future<String> firebaseCreateClassicStory(StoryParams params) async {
   return firebaseFunctions
-      .httpsCallable('addStory')
+      .httpsCallable('createClassicStoryRequest')
       .call(params.serialize())
       .then((result) => result.data);
 }

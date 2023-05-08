@@ -1,8 +1,8 @@
-import 'package:bedtime_writer/backend/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../widgets/app_scaffold.dart';
+import '../../backend/index.dart';
 
 class PreferencesScreen extends StatelessWidget {
   const PreferencesScreen({Key? key}) : super(key: key);
