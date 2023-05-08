@@ -119,6 +119,7 @@ class _HomeScreenButton extends ConsumerWidget {
         child: InkWell(
           onTap: () {
             if (resetStoryState) {
+              // Resets story state while considering preferences
               ref.read(createStoryStateProvider.notifier).reset();
             }
             context.pushNamed(destination);
