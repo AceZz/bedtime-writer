@@ -92,7 +92,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         );
         context.pushReplacement(redirect);
       } else if (user is AnonymousUser) {
-        print('coucou');
         await user.signInWithEmailAndPassword(
           email: email,
           password: password,

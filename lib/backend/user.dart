@@ -62,6 +62,7 @@ abstract class RegisteredUser extends AuthUser {
 /// Generic authentication exception.
 class AuthException implements Exception {
   String code;
+
   AuthException({required this.code});
 }
 
