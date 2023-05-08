@@ -203,7 +203,7 @@ Future _signInWithEmailAndPassword({
   } on firebase_auth.FirebaseAuthException catch (e) {
     throw AuthException(code: e.code);
   } on FormatException catch (e) {
-    throw FormatException(code: e.code);
+    throw e;
   }
 }
 
@@ -222,7 +222,7 @@ Future _createUserWithEmailAndPassword({
   } on firebase_auth.FirebaseAuthException catch (e) {
     throw AuthException(code: e.code);
   } on FormatException catch (e) {
-    throw FormatException(code: e.code);
+    throw e;
   }
 }
 
@@ -243,7 +243,7 @@ Future _linkUserWithEmailAndPassword({
   } on firebase_auth.FirebaseAuthException catch (e) {
     throw AuthException(code: e.code);
   } on FormatException catch (e) {
-    throw FormatException(code: e.code);
+    throw e;
   }
 }
 

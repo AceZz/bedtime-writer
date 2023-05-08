@@ -41,12 +41,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       required WidgetRef ref,
       required String redirect}) async {
     showDialog(
-        context: context,
-        builder: (context) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        });
+      context: context,
+      builder: (context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
 
     final user = ref.read(userProvider);
 
@@ -68,12 +69,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       required String password,
       required String redirect}) async {
     showDialog(
-        context: context,
-        builder: (context) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        });
+      context: context,
+      builder: (context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
 
     final user = ref.watch(userProvider);
 
@@ -113,12 +115,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     required String redirect,
   }) async {
     showDialog(
-        context: context,
-        builder: (context) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        });
+      context: context,
+      builder: (context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
 
     final user = ref.watch(userProvider);
 
