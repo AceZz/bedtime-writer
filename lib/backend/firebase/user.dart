@@ -72,6 +72,25 @@ class _FirebaseUnauthUser extends _FirebaseUser implements UnauthUser {
     final credential = await _getGoogleCredential();
     return firebaseAuth.signInWithCredential(credential);
   }
+
+  @override
+  Future signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    await _signInWithEmailAndPassword(email: email, password: password);
+  }
+
+  @override
+  Future createUserWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    await _createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
 }
 
 /// An [AuthUser] managed by Firebase.
@@ -118,6 +137,25 @@ class _FirebaseAnonymousUser extends _FirebaseAuthUser
       throw e;
     }
   }
+
+  @override
+  Future signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    await _signInWithEmailAndPassword(email: email, password: password);
+  }
+
+  @override
+  Future createUserWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    await _linkUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
 }
 
 /// A [RegisteredUser] managed by Firebase.
@@ -148,5 +186,90 @@ class _FirebaseRegisteredUser extends _FirebaseAuthUser
       // account.
       if (!_credentialAlreadyUsed(e)) throw e;
     }
+  }
+}
+
+Future _signInWithEmailAndPassword({
+  required String email,
+  required String password,
+}) async {
+  try {
+    _validateEmail(email);
+    _validateNonEmptyPassword(password);
+    return await firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  } on firebase_auth.FirebaseAuthException catch (e) {
+    throw AuthException(code: e.code);
+  } on FormatException catch (e) {
+    throw e;
+  }
+}
+
+Future _createUserWithEmailAndPassword({
+  required String email,
+  required String password,
+}) async {
+  try {
+    _validateEmail(email);
+    _validateNonEmptyPassword(password);
+    _validatePassword(password);
+    return await firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  } on firebase_auth.FirebaseAuthException catch (e) {
+    throw AuthException(code: e.code);
+  } on FormatException catch (e) {
+    throw e;
+  }
+}
+
+Future _linkUserWithEmailAndPassword({
+  required String email,
+  required String password,
+}) async {
+  try {
+    _validateEmail(email);
+    _validateNonEmptyPassword(password);
+    _validatePassword(password);
+    firebase_auth.AuthCredential credential =
+        firebase_auth.EmailAuthProvider.credential(
+      email: email,
+      password: password,
+    );
+    return await firebaseAuth.currentUser?.linkWithCredential(credential);
+  } on firebase_auth.FirebaseAuthException catch (e) {
+    throw AuthException(code: e.code);
+  } on FormatException catch (e) {
+    throw e;
+  }
+}
+
+void _validateEmail(String email) {
+  // Email validation regular expression
+  final RegExp emailRegex =
+      RegExp(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$');
+
+  if (!emailRegex.hasMatch(email)) {
+    throw FormatException(code: 'invalid-email-format');
+  }
+}
+
+void _validatePassword(String password) {
+  // Password validation regular expression: 8 characters, letters and digits
+  final RegExp passwordRegex =
+      RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
+
+  if (!passwordRegex.hasMatch(password)) {
+    throw FormatException(code: 'invalid-password-format');
+  }
+}
+
+void _validateNonEmptyPassword(String? password) {
+  // Non empty password validation
+  if (password == null || password == '') {
+    throw FormatException(code: 'empty-password');
   }
 }

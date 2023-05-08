@@ -66,10 +66,12 @@ class UserAccountScreen extends ConsumerWidget {
 void _onPressed(BuildContext context, WidgetRef ref, String redirect) async {
   final user = ref.read(userProvider);
 
-  if (user is AuthUser) {
-    await user.signOut();
-  } else {
+  if (user is UnauthUser) {
     throw Exception('User should be signed in to see this sign out button');
+  } else if (user is AnonymousUser) {
+    throw Exception('User should be signed in to see this sign out button');
+  } else if (user is AuthUser) {
+    await user.signOut();
   }
 
   context.pushReplacement(redirect);
