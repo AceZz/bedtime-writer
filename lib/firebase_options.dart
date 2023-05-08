@@ -47,32 +47,30 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCaub_nEmk3ivrPfVCDyLwT3VeOnQ6LTZY',
-    appId: '1:856886395260:web:aa1bc8da139b87d677a4f9',
-    messagingSenderId: '856886395260',
-    projectId: 'bedtime-writer-prod',
-    authDomain: 'bedtime-writer-prod.firebaseapp.com',
-    storageBucket: 'bedtime-writer-prod.appspot.com',
+    apiKey: 'AIzaSyAzm4JnLoPx5xDuW2x3VDRb494838r63JQ',
+    appId: '1:596701039771:web:261b4cb8bbe957dc758a3e',
+    messagingSenderId: '596701039771',
+    projectId: 'bedtime-writer',
+    authDomain: 'bedtime-writer.firebaseapp.com',
+    storageBucket: 'bedtime-writer.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBsBlhrMSLG8_2QGKbG7lSGyix3EAnqHTI',
-    appId: '1:856886395260:android:0878692e71ce938677a4f9',
-    messagingSenderId: '856886395260',
-    projectId: 'bedtime-writer-prod',
-    storageBucket: 'bedtime-writer-prod.appspot.com',
+    apiKey: 'AIzaSyAO-2jQTyEPCOYJsI37ZFiSf9gNWBZWvoo',
+    appId: '1:596701039771:android:3d599be21798a486758a3e',
+    messagingSenderId: '596701039771',
+    projectId: 'bedtime-writer',
+    storageBucket: 'bedtime-writer.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyB7Hcp4MhNtOjynrtDP4XMnmMBTW9qn7rM',
-    appId: '1:856886395260:ios:563e9d9c302b1ec077a4f9',
-    messagingSenderId: '856886395260',
-    projectId: 'bedtime-writer-prod',
-    storageBucket: 'bedtime-writer-prod.appspot.com',
-    androidClientId:
-        '856886395260-h58le8gjk6j42enfanj0sf6a2qnp3mlc.apps.googleusercontent.com',
-    iosClientId:
-        '856886395260-ra4mo2posth7ka056nv3ubnrstuv5mpo.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAxg_LFlr0sZrbpHe27rAqIsEfFMACSecI',
+    appId: '1:596701039771:ios:c7dbc0fefbb30fbc758a3e',
+    messagingSenderId: '596701039771',
+    projectId: 'bedtime-writer',
+    storageBucket: 'bedtime-writer.appspot.com',
+    androidClientId: '596701039771-ku2lrgmvoqcv0gbo7mon3574pnjbcg51.apps.googleusercontent.com',
+    iosClientId: '596701039771-l5583cm0tolhnn6tjapmad51akjel1k5.apps.googleusercontent.com',
     iosBundleId: 'com.tap.bedtimewriter',
   );
 }
