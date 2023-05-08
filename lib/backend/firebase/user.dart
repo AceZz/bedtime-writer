@@ -249,7 +249,8 @@ Future _linkUserWithEmailAndPassword({
 
 void _validateEmail(String email) {
   // Email validation regular expression
-  final RegExp emailRegex = RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
+  final RegExp emailRegex =
+      RegExp(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$');
 
   if (!emailRegex.hasMatch(email)) {
     throw FormatException(code: 'invalid-email-format');
