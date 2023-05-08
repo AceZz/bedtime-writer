@@ -55,7 +55,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       await user.signInWithGoogle();
     } else if (user is AnonymousUser) {
       await user.linkToGoogle();
-    } else if (user is AuthUser) {
+    } else if (user is RegisteredUser) {
       throw Exception(
           'User is already signed in and should not be able to sign in with Google');
     }
@@ -79,31 +79,29 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     final user = ref.watch(userProvider);
 
-    if (user is UnauthUser) {
-      try {
-        await user.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-        context.pushReplacement(redirect);
-      } on Exception catch (e) {
-        context.pop();
-        _showAlertDialog(context: context, e: e);
-      }
-    } else if (user is AnonymousUser) {
-      try {
-        await user.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-        context.pushReplacement(redirect);
-      } on Exception catch (e) {
-        context.pop();
-        _showAlertDialog(context: context, e: e);
-      }
-    } else if (user is AuthUser) {
+    if (user is RegisteredUser) {
       throw Exception(
-          'User is already signed-in and should be able to re sign in');
+          'User is already signed-in and should not be able to re sign in');
+    }
+
+    try {
+      if (user is UnauthUser) {
+        await user.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        context.pushReplacement(redirect);
+      } else if (user is AnonymousUser) {
+        print('coucou');
+        await user.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        context.pushReplacement(redirect);
+      }
+    } on Exception catch (e) {
+      context.pop();
+      _showAlertDialog(context: context, e: e);
     }
   }
 
@@ -125,27 +123,23 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     final user = ref.watch(userProvider);
 
-    if (user is UnauthUser) {
-      try {
-        await user.createUserWithEmailAndPassword(
-            email: email, password: password);
-        context.pushReplacement(redirect);
-      } on Exception catch (e) {
-        context.pop();
-        _showAlertDialog(context: context, e: e);
-      }
-    } else if (user is AnonymousUser) {
-      try {
-        await user.createUserWithEmailAndPassword(
-            email: email, password: password);
-        context.pushReplacement(redirect);
-      } on Exception catch (e) {
-        context.pop();
-        _showAlertDialog(context: context, e: e);
-      }
-      context.pushReplacement(redirect);
-    } else if (user is AuthUser) {
+    if (user is RegisteredUser) {
       throw Exception('User is signed-in and should not see this screen');
+    }
+
+    try {
+      if (user is UnauthUser) {
+        await user.createUserWithEmailAndPassword(
+            email: email, password: password);
+        context.pushReplacement(redirect);
+      } else if (user is AnonymousUser) {
+        await user.createUserWithEmailAndPassword(
+            email: email, password: password);
+        context.pushReplacement(redirect);
+      }
+    } on Exception catch (e) {
+      context.pop();
+      _showAlertDialog(context: context, e: e);
     }
   }
 
