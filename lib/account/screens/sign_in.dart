@@ -7,10 +7,9 @@ import '../../backend/user.dart';
 import '../../widgets/index.dart';
 import '../../backend/index.dart';
 import '../../widgets/sign_in.dart';
-import '../../widgets/textField.dart';
+import '../../widgets/app_text_field.dart';
 
 /// Asks the user to sign in and redirects to [redirect].
-
 class SignInScreen extends ConsumerStatefulWidget {
   final String redirect;
   final String signInText;
@@ -220,7 +219,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     Widget emailTextField = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: MyTextField(
+      child: AppTextField(
         controller: emailController,
         hintText: 'Email',
         obscureText: false,
@@ -229,7 +228,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     Widget passwordTextField = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: MyTextField(
+      child: AppTextField(
         controller: passwordController,
         hintText: 'Password',
         obscureText: true,

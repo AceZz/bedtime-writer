@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MyTextField extends StatelessWidget {
-  final controller;
+class AppTextField extends StatelessWidget {
+  final TextEditingController controller;
   final String hintText;
   final bool obscureText;
 
-  const MyTextField({
+  const AppTextField({
     Key? key,
     required this.controller,
     required this.hintText,
@@ -15,13 +15,13 @@ class MyTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle inputTextStyle = GoogleFonts.outfit(
+    final TextStyle inputTextStyle = GoogleFonts.outfit(
       color: Colors.black54,
       fontWeight: FontWeight.normal,
       fontSize: 16,
     );
 
-    TextStyle hintStyle = GoogleFonts.outfit(
+    final TextStyle hintStyle = GoogleFonts.outfit(
       color: Colors.grey.shade400,
       fontWeight: FontWeight.normal,
       fontSize: 16,
