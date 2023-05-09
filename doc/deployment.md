@@ -3,8 +3,8 @@
 ## Deployment to production checklist
 
 Check the following items before deploying to production:
-1. Create the right indexes for Firestore in the prod Firebase project if applicable.
-2. Make sure the rules are up-to-date both locally and in Firestore in the prod Firebase project.
+1. Check if [the indexes of the dev Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer/firestore/indexes) match [the prod Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer-prod/firestore/indexes).
+2. Check if [the rules of the dev Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer/firestore/rules) match [the prod Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer-prod/firestore/rules). Also check the [local rules](../firestore.rules).
 
 ## Firebase rules
 
