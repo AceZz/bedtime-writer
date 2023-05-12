@@ -207,7 +207,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             onTap: () => _showResetPasswordAlertDialog(
                 context: context, emailController: emailController),
             child: Text(
-              'Forgot Password?',
+              'Reset or Forgot Password?',
               style: forgotPasswordTextStyle,
             ),
           ),
