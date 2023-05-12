@@ -330,29 +330,65 @@ void _showResetPasswordAlertDialog({
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialogResetPassword(emailController: emailController);
+      return _AlertDialogResetPassword(emailController: emailController);
     },
   );
 }
 
-class AlertDialogResetPassword extends StatefulWidget {
+void _showResetPasswordConfirmationAlertDialog({
+  required BuildContext context,
+}) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      double deviceWidth = MediaQuery.of(context).size.width;
+
+      return AlertDialog(
+        title: Text('Success'),
+        backgroundColor: Theme.of(context).colorScheme.background,
+        content: Container(
+          width: 0.6 * deviceWidth,
+          child: Text(
+            'We sent you an email for the password reset.',
+            style: Theme.of(context).primaryTextTheme.bodySmall,
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              context.pop();
+            },
+            child: Text(
+              'Ok',
+              style: Theme.of(context).primaryTextTheme.bodySmall,
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+class _AlertDialogResetPassword extends StatefulWidget {
   final TextEditingController emailController;
 
-  const AlertDialogResetPassword({
+  const _AlertDialogResetPassword({
     Key? key,
     required this.emailController,
   }) : super(key: key);
 
   @override
-  State<AlertDialogResetPassword> createState() =>
+  State<_AlertDialogResetPassword> createState() =>
       _AlertDialogResetPasswordState();
 }
 
-class _AlertDialogResetPasswordState extends State<AlertDialogResetPassword> {
+class _AlertDialogResetPasswordState extends State<_AlertDialogResetPassword> {
   String _alertText = '';
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+
     Widget alertTextWidget = Text(
       _alertText,
       textAlign: TextAlign.center,
@@ -381,6 +417,7 @@ class _AlertDialogResetPasswordState extends State<AlertDialogResetPassword> {
       try {
         await resetPassword(widget.emailController.text);
         context.pop();
+        _showResetPasswordConfirmationAlertDialog(context: context);
       } on Exception catch (e) {
         _setAlertText(e: e);
       }
@@ -390,13 +427,15 @@ class _AlertDialogResetPasswordState extends State<AlertDialogResetPassword> {
       title: Text('Reset your password'),
       backgroundColor: Theme.of(context).colorScheme.background,
       content: Container(
-        height: 100,
-        child: Column(
-          children: [
-            alertTextWidget,
-            SizedBox(height: 10),
-            emailTextField,
-          ],
+        width: 0.6 * deviceWidth,
+        child: SingleChildScrollView(
+          child: ListBody(
+            children: [
+              alertTextWidget,
+              SizedBox(height: 10),
+              emailTextField,
+            ],
+          ),
         ),
       ),
       actions: <Widget>[
@@ -429,7 +468,7 @@ String _convertExceptionToText({required Exception e}) {
   if (e is AuthException) {
     switch (e.code) {
       case 'user-not-found':
-        text = 'The user does not exist. Please create an account.';
+        text = 'The user does not exist. Please check or create an account.';
         break;
       case 'wrong-password':
         text = 'Incorrect password';
