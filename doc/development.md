@@ -6,7 +6,7 @@
 
 1. Select the right dev or prod Firebase project: `firebase use <project-id>`.
 2. After that build the functions `npm run build:watch`.
-3. Local: Run the local backend `npm run local_backend`. Note: run first the Firebase emulators before launching the android emulator as some ports may conflict.
+3. Local: Run the local backend `npm run local_backend`. Note: run the Firebase emulators before launching the android emulator as some ports may conflict.
 4. Remote: Deploy the functions `npm run deploy_functions`.
 5. Finally run (or build) the app: `flutter run --flavor <env> -d <device-emulator-id>`.
 

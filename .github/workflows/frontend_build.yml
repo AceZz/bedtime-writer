@@ -48,11 +48,11 @@ jobs:
         run: flutter pub get
 
       - name: Build APK (dev)
-        if: matrix.target == 'apk' && github.ref == 'refs/heads/main'
+        if: matrix.target == 'apk' && github.base_ref == 'refs/heads/main'
         run: flutter build apk --flavor dev
 
       - name: Build APK (prod)
-        if: matrix.target == 'apk' && startsWith(github.ref, 'refs/heads/prod/')
+        if: matrix.target == 'apk' && startsWith(github.base_ref, 'refs/heads/prod/')
         run: flutter build apk --flavor prod
 
       - name: Build web
