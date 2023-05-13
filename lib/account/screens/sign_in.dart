@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -215,7 +216,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         style: GoogleFonts.outfit(
           color: Colors.red,
           fontWeight: FontWeight.normal,
-          fontSize: 16,
+          fontSize: 16.sp,
         ),
       ),
     );
@@ -241,7 +242,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     TextStyle forgotPasswordTextStyle = GoogleFonts.outfit(
       color: Theme.of(context).textTheme.bodySmall?.color!,
       fontWeight: FontWeight.normal,
-      fontSize: 14,
+      fontSize: 14.sp,
     );
 
     Widget forgotPasswordText = Row(
