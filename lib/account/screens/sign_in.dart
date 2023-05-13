@@ -207,13 +207,16 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       width: 240,
     );
 
-    Widget alertTextWidget = Text(
-      _alertText,
-      textAlign: TextAlign.center,
-      style: GoogleFonts.outfit(
-        color: Colors.red,
-        fontWeight: FontWeight.normal,
-        fontSize: 16,
+    Widget alertTextWidget = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: Text(
+        _alertText,
+        textAlign: TextAlign.center,
+        style: GoogleFonts.outfit(
+          color: Colors.red,
+          fontWeight: FontWeight.normal,
+          fontSize: 16,
+        ),
       ),
     );
 
@@ -350,6 +353,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             divider,
             SizedBox(height: 20),
             googleSignInButton,
+            SizedBox(height: 30),
           ],
         ),
       ),
