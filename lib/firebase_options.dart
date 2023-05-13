@@ -48,7 +48,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyAzm4JnLoPx5xDuW2x3VDRb494838r63JQ',
-    appId: '1:596701039771:web:261b4cb8bbe957dc758a3e',
+    appId: '1:596701039771:web:e5d7490b2ef4c0e2758a3e',
     messagingSenderId: '596701039771',
     projectId: 'bedtime-writer',
     authDomain: 'bedtime-writer.firebaseapp.com',
@@ -57,7 +57,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAO-2jQTyEPCOYJsI37ZFiSf9gNWBZWvoo',
-    appId: '1:596701039771:android:3d599be21798a486758a3e',
+    appId: '1:596701039771:android:3f10dc1093397021758a3e',
     messagingSenderId: '596701039771',
     projectId: 'bedtime-writer',
     storageBucket: 'bedtime-writer.appspot.com',
@@ -65,14 +65,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAxg_LFlr0sZrbpHe27rAqIsEfFMACSecI',
-    appId: '1:596701039771:ios:c7dbc0fefbb30fbc758a3e',
+    appId: '1:596701039771:ios:653c2a25644930f3758a3e',
     messagingSenderId: '596701039771',
     projectId: 'bedtime-writer',
     storageBucket: 'bedtime-writer.appspot.com',
-    androidClientId:
-        '596701039771-ku2lrgmvoqcv0gbo7mon3574pnjbcg51.apps.googleusercontent.com',
-    iosClientId:
-        '596701039771-l5583cm0tolhnn6tjapmad51akjel1k5.apps.googleusercontent.com',
+    androidClientId: '596701039771-ku2lrgmvoqcv0gbo7mon3574pnjbcg51.apps.googleusercontent.com',
+    iosClientId: '596701039771-l5583cm0tolhnn6tjapmad51akjel1k5.apps.googleusercontent.com',
     iosBundleId: 'com.tap.bedtimewriter',
   );
 }
