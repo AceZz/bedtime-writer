@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../backend/index.dart';
@@ -49,7 +50,7 @@ class _AccountButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      iconSize: 40,
+      iconSize: 40.sp,
       icon: Icon(
         Icons.account_circle,
         color: Theme.of(context).primaryTextTheme.bodyMedium?.color,
