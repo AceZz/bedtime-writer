@@ -35,6 +35,12 @@ production settings, edit `functions/.env` (and redeploy).
 * `FAKE_TEXT_API_NUM_TOKENS_PER_PART`
     * between `1` and `200` (default)
     * The number of tokens per part.
+* `FAKE_TEXT_API_START_WAIT`
+    * between `0` and `10000` (default is `1500`)
+    * The number of ms to wait before starting generating tokens (only for stream).
+* `FAKE_TEXT_API_PART_WAIT`
+    * between `0` and `10000` (default is `1500`)
+    * The number of ms to wait between each part (only for stream).
 * `IMAGE_API`
     * `openai` (default): use OpenAI's image generation API. Use the Google Cloud Secret as a key,
       which can be read from `.secret.local` when using the Firebase emulators.

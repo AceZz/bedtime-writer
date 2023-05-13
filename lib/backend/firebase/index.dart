@@ -4,6 +4,7 @@ export 'story.dart'
         firebaseCreateClassicStory,
         firebaseStoryProvider,
         firebaseFavoriteUserStoriesProvider,
-        firebaseUserStoriesProvider;
-export 'story_request.dart' show firebaseStoryRequestProvider;
+        firebaseUserStoriesProvider,
+        firebaseStoryStatusProvider;
+export 'story_part.dart' show firebaseStoryPartProvider;
 export 'user.dart' show getFirebaseUser;

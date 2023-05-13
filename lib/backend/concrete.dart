@@ -2,17 +2,27 @@
 /// generic functions are chosen.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tuple/tuple.dart';
 
 import 'firebase/index.dart';
 import 'preferences.dart';
 import 'shared_preferences/index.dart';
 import 'story.dart';
 import 'story_params.dart';
-import 'story_request.dart';
+import 'story_part.dart';
+import 'story_status.dart';
 import 'user.dart';
+
+/**
+ * USER
+ */
 
 /// Provides the current [User].
 final userProvider = Provider<User>((ref) => getFirebaseUser(ref));
+
+/**
+ * STORY
+ */
 
 /// Streams the [Story]s authored by the current [User].
 final AutoDisposeStreamProvider<List<Story>> userStoriesProvider =
@@ -26,15 +36,23 @@ final AutoDisposeStreamProvider<List<Story>> favoriteUserStoriesProvider =
 final AutoDisposeStreamProviderFamily<Story, String> storyProvider =
     firebaseStoryProvider;
 
-/// Provides a [Preferences] object and a [PreferencesNotifier] to interact
-/// with it.
-final NotifierProvider<PreferencesNotifier, Preferences> preferencesProvider =
-    sharedPreferencesProvider;
+/// Streams a specific [StoryPart].
+final AutoDisposeStreamProviderFamily<StoryPart, Tuple2<String, String>>
+    storyPartProvider = firebaseStoryPartProvider;
 
 /// Creates a story request, and returns the id of the story.
 Future<String> Function(StoryParams params) createClassicStory =
     firebaseCreateClassicStory;
 
-/// Streams a specific [StoryRequest].
-final AutoDisposeStreamProviderFamily<StoryRequest, String>
-    storyRequestProvider = firebaseStoryRequestProvider;
+/// Streams the [StoryStatus] of a specific story.
+final AutoDisposeFutureProviderFamily<StoryStatus, String> storyStatusProvider =
+    firebaseStoryStatusProvider;
+
+/**
+ * PREFERENCES
+ */
+
+/// Provides a [Preferences] object and a [PreferencesNotifier] to interact
+/// with it.
+final NotifierProvider<PreferencesNotifier, Preferences> preferencesProvider =
+    sharedPreferencesProvider;

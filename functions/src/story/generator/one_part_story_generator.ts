@@ -25,7 +25,7 @@ export class OnePartStoryGenerator implements StoryGenerator {
     return this.logic.title();
   }
 
-  async nextStoryPart(): Promise<StoryPart> {
+  async *storyParts(): AsyncGenerator<StoryPart> {
     const textPrompt = this.logic.prompt();
     const imagePromptPrompt = this.logic.imagePromptPrompt();
 
@@ -37,7 +37,7 @@ export class OnePartStoryGenerator implements StoryGenerator {
       this.getStory(stream),
     ]);
 
-    return new StoryPart(
+    yield new StoryPart(
       text,
       textPrompt,
       image,

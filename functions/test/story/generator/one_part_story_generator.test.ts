@@ -17,7 +17,7 @@ import { getOpenAiApi } from "../../../src/open_ai";
 
 describe("with fake APIs", () => {
   function initGenerator() {
-    const textApi = new FakeTextApi();
+    const textApi = new FakeTextApi(10, 150, 500, 100);
     const imageApi = new FakeImageApi();
     const generator = new OnePartStoryGenerator(
       FULL_CLASSIC_STORY_LOGIC,
@@ -39,8 +39,15 @@ describe("with fake APIs", () => {
 
   test("nextStoryPart", async () => {
     const { textApi, generator } = initGenerator();
-    const storyPart = await generator.nextStoryPart();
     const expectedTokens = Array.from(textApi.getTokens()).join("");
+
+    const parts = [];
+    for await (const part of generator.storyParts()) {
+      parts.push(part);
+    }
+
+    expect(parts.length).toBe(1);
+    const storyPart = parts[0];
 
     expect(storyPart.text).toBe(expectedTokens);
     expect(
@@ -83,7 +90,14 @@ describe.skip("with OpenAI APIs", () => {
   test("nextStoryPart", async () => {
     const PATH = `${OUTPUT_FOLDER}/OnePartStoryGenerator_nextStoryPart.png`;
     const generator = initGenerator();
-    const storyPart = await generator.nextStoryPart();
+
+    const parts = [];
+    for await (const part of generator.storyParts()) {
+      parts.push(part);
+    }
+
+    expect(parts.length).toBe(1);
+    const storyPart = parts[0];
 
     console.log(`OnePartStoryGenerator.nextStoryPart: ${storyPart.text}`);
 

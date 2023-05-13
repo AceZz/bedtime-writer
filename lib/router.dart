@@ -15,7 +15,7 @@ const Map<String, String> signInTexts = {
   'display_story': 'Sign in to access saved stories:',
   'preferences': 'Sign in to access your preferences:',
 };
-const String defaultSignInText = 'Choose how to sign in:';
+const String defaultSignInText = 'Sign in or create your account:';
 
 /// Returns the redirection to the sign-in page if the user is not registered.
 String? _unregisteredRedirect(Ref ref, GoRouterState state) {

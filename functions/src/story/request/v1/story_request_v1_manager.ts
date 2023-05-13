@@ -1,6 +1,5 @@
 import { CLASSIC_LOGIC } from "../../logic";
 import { StoryRequestManager } from "../story_request_manager";
-import { StoryRequestStatus } from "../story_request_status";
 import { StoryRequestV1 } from "./story_request_v1";
 import { StoryRequestV1FirestoreConverter } from "./story_request_v1_firestore_converter";
 import { StoryRequestV1JsonConverter } from "./story_request_v1_json_converter";
@@ -37,9 +36,5 @@ export class StoryRequestV1Manager
     } else {
       throw Error(`StoryRequestV1Manager: unsupported logic ${request.logic}.`);
     }
-  }
-
-  async updateStatus(id: string, status: StoryRequestStatus): Promise<void> {
-    return this.firestoreConverter.updateStatus(id, status);
   }
 }

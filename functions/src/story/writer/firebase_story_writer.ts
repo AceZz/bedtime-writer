@@ -3,20 +3,22 @@ import {
   Firestore,
   CollectionReference,
   DocumentReference,
-  Timestamp,
 } from "firebase-admin/firestore";
 import { StoryMetadata } from "../story_metadata";
 import { StoryPart } from "../story_part";
 import { StoryWriter } from "./story_writer";
+import { StoryStatus } from "../story_status";
+import { valueOrNull } from "./utils";
 
 /**
  * The Firestore document has the following schema:
  *
  * stories/
  *   <story_id>
- *     author
+ *     author (already set)
  *     isFavorite
- *     timestamp
+ *     status
+ *     timestamp (already set)
  *     title
  *     parts = [part1_id, part2_id]
  *     images/
@@ -35,6 +37,11 @@ import { StoryWriter } from "./story_writer";
 export class FirebaseStoryWriter implements StoryWriter {
   private firestore: Firestore;
   private parts: string[];
+  /**
+   * Cache the document IDs of already inserted images. This way, an image can
+   * be written once, but referenced multiple times.
+   */
+  private imageIds: Map<Buffer, string> = new Map();
 
   constructor(
     readonly metadata: StoryMetadata,
@@ -47,13 +54,11 @@ export class FirebaseStoryWriter implements StoryWriter {
 
   async writeMetadata(): Promise<string> {
     const payload = {
-      author: this.metadata.author,
       isFavorite: this.metadata.isFavorite,
-      timestamp: Timestamp.now(),
       title: this.metadata.title,
       parts: [],
     };
-    await this.storyRef.set(payload);
+    await this.storyRef.update(payload);
     return this.id;
   }
 
@@ -63,37 +68,56 @@ export class FirebaseStoryWriter implements StoryWriter {
     this.parts.push(partId);
 
     await Promise.all([
-      this.updateStoryParts(),
+      this.updateStory(),
       this.writePartPrompts(part, partId),
     ]);
 
     return partId;
   }
 
-  private async writePartImage(image?: Buffer): Promise<string> {
+  async writeComplete(): Promise<void> {
+    await this.storyRef.update({ status: StoryStatus.COMPLETE });
+  }
+
+  private async writePartImage(image?: Buffer): Promise<string | undefined> {
+    if (image === undefined) {
+      return undefined;
+    }
+
     const payload = {
       data: image,
     };
-    const document = await this.imagesRef.add(payload);
+    const imageId = this.imageIds.get(image);
 
+    // Already existing image: return it.
+    if (imageId !== undefined) {
+      return imageId;
+    }
+
+    // New image: insert it first.
+    const document = await this.imagesRef.add(payload);
+    this.imageIds.set(image, document.id);
     return document.id;
   }
 
   private async writePartData(
     part: StoryPart,
-    imageId: string
+    imageId: string | undefined
   ): Promise<string> {
     const payload = {
       text: part.text,
-      image: imageId,
+      image: valueOrNull(imageId),
     };
     const document = await this.partsRef.add(payload);
 
     return document.id;
   }
 
-  private async updateStoryParts() {
-    await this.storyRef.update({ parts: this.parts });
+  private async updateStory() {
+    await this.storyRef.update({
+      parts: this.parts,
+      status: StoryStatus.GENERATING,
+    });
   }
 
   private async writePartPrompts(
@@ -102,8 +126,8 @@ export class FirebaseStoryWriter implements StoryWriter {
   ): Promise<string> {
     const payload = {
       textPrompt: part.textPrompt,
-      imagePrompt: part.imagePrompt,
-      imagePromptPrompt: part.imagePromptPrompt,
+      imagePrompt: valueOrNull(part.imagePrompt),
+      imagePromptPrompt: valueOrNull(part.imagePromptPrompt),
     };
     await this.promptsRef.doc(partId).set(payload);
 
