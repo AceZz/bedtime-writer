@@ -1,7 +1,6 @@
 import 'dart:core';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -187,7 +186,7 @@ class _QuestionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget questionText = Padding(
       padding: const EdgeInsets.all(20),
-      child: AutoSizeText(
+      child: Text(
         question.text,
         textAlign: TextAlign.center,
         style: Theme.of(context).primaryTextTheme.headlineMedium,
@@ -208,14 +207,16 @@ class _QuestionScreen extends StatelessWidget {
 
     return AppScaffold(
       appBarTitle: 'New story',
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Flexible(flex: 1, child: questionText),
-          Flexible(flex: 3, child: Column(children: choiceButtons)),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            questionText,
+            Column(children: choiceButtons),
+          ],
+        ),
       ),
     );
   }
@@ -234,7 +235,7 @@ class _ChoiceButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Size size = MediaQuery.of(context).size;
     double buttonWidth = 0.3 * size.width;
-    double textWidth = 0.6 * size.width;
+    double textWidth = 0.5 * size.width;
 
     var text = Container(
       width: textWidth,
