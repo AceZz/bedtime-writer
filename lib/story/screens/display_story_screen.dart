@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tuple/tuple.dart';
 
@@ -109,7 +110,7 @@ class _StoryTitle extends ConsumerWidget {
     );
 
     final _storyTitleStyle =
-        GoogleFonts.amaticSc(fontWeight: FontWeight.bold, fontSize: 52);
+        GoogleFonts.amaticSc(fontWeight: FontWeight.bold, fontSize: 52.sp);
 
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -174,8 +175,8 @@ class _StoryPartWidget extends ConsumerWidget {
           if (part.hasImage)
             StoryImage(
               image: part.image,
-              width: 360,
-              height: 360,
+              width: 360.sp,
+              height: 360.sp,
               fadeColor: Theme.of(context).colorScheme.background,
             ),
           _textWidget(context, part.text, withBigFirstLetter: partIndex == 0),
@@ -210,7 +211,7 @@ class _StoryPartWidget extends ConsumerWidget {
   TextSpan _textWithBigFirstLetter(BuildContext context, String text) {
     final TextStyle _firstLetterStyle = GoogleFonts.croissantOne(
       fontWeight: FontWeight.bold,
-      fontSize: 42,
+      fontSize: 42.sp,
       color: Theme.of(context).primaryTextTheme.bodyMedium?.color,
     );
 
@@ -260,7 +261,7 @@ class _BottomRow extends ConsumerWidget {
 
     final _theEndStyle = GoogleFonts.amaticSc(
       fontWeight: FontWeight.bold,
-      fontSize: 46,
+      fontSize: 46.sp,
     );
 
     final theEndWidget = Padding(
