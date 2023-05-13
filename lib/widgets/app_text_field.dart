@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTextField extends StatelessWidget {
@@ -18,13 +19,13 @@ class AppTextField extends StatelessWidget {
     final TextStyle inputTextStyle = GoogleFonts.outfit(
       color: Colors.black54,
       fontWeight: FontWeight.normal,
-      fontSize: 16,
+      fontSize: 16.sp,
     );
 
     final TextStyle hintStyle = GoogleFonts.outfit(
       color: Colors.grey.shade400,
       fontWeight: FontWeight.normal,
-      fontSize: 16,
+      fontSize: 16.sp,
     );
 
     return TextField(
