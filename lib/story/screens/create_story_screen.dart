@@ -98,7 +98,7 @@ class _LoadingScreen extends StatelessWidget {
             SizedBox(
               height: 200,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: const _LoadingTexts(),
               ),
             )
