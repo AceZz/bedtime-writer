@@ -1,81 +1,37 @@
 {
   "project_info": {
-    "project_number": "856886395260",
-    "project_id": "bedtime-writer-prod",
-    "storage_bucket": "bedtime-writer-prod.appspot.com"
+    "project_number": "596701039771",
+    "project_id": "bedtime-writer",
+    "storage_bucket": "bedtime-writer.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:856886395260:android:c65e9b9b60e82a0477a4f9",
+        "mobilesdk_app_id": "1:596701039771:android:3f10dc1093397021758a3e",
         "android_client_info": {
           "package_name": "com.tap.bedtimewriter"
         }
       },
       "oauth_client": [
         {
-          "client_id": "856886395260-i84dkab9jheq8r20q9jln2b3ttig4ces.apps.googleusercontent.com",
+          "client_id": "596701039771-trtsjnpoubcbkr22hui552emio8c8cfa.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBsBlhrMSLG8_2QGKbG7lSGyix3EAnqHTI"
+          "current_key": "AIzaSyAO-2jQTyEPCOYJsI37ZFiSf9gNWBZWvoo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "856886395260-i84dkab9jheq8r20q9jln2b3ttig4ces.apps.googleusercontent.com",
+              "client_id": "596701039771-5p6qio2tpjgtg5jraremmkff75s0fgnk.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "856886395260-ra4mo2posth7ka056nv3ubnrstuv5mpo.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.tap.bedtimewriter"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:856886395260:android:0878692e71ce938677a4f9",
-        "android_client_info": {
-          "package_name": "com.tap.bedtimewriter.prod"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "856886395260-h58le8gjk6j42enfanj0sf6a2qnp3mlc.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.tap.bedtimewriter.prod",
-            "certificate_hash": "424ebb2a2357ea2ac0abbdab90ee9f39c677672b"
-          }
-        },
-        {
-          "client_id": "856886395260-i84dkab9jheq8r20q9jln2b3ttig4ces.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBsBlhrMSLG8_2QGKbG7lSGyix3EAnqHTI"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "856886395260-i84dkab9jheq8r20q9jln2b3ttig4ces.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "856886395260-ra4mo2posth7ka056nv3ubnrstuv5mpo.apps.googleusercontent.com",
+              "client_id": "596701039771-l5583cm0tolhnn6tjapmad51akjel1k5.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.tap.bedtimewriter"
