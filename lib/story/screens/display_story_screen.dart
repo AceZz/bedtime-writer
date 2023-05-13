@@ -49,7 +49,7 @@ class _ShareButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ShareButton(
-      iconSize: 30,
+      iconSize: 30.sp,
       text: 'Hey! Check out this amazing story I made with Bedtime stories',
     );
   }
@@ -68,7 +68,7 @@ class _FavoriteButton extends ConsumerWidget {
 
     return FavoriteButton(
       isFavorite: isFavorite,
-      iconSize: 30,
+      iconSize: 30.sp,
       onPressed: () async {
         final story = ref.read(storyProvider(storyId)).value;
 
