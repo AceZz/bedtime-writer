@@ -7,14 +7,14 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:558387951881:android:1d1075d740a89757bf7bd8",
+        "mobilesdk_app_id": "1:558387951881:android:be2d026ddbf54fe8bf7bd8",
         "android_client_info": {
           "package_name": "com.dreamstorestudios.bedtimewriter.dev"
         }
       },
       "oauth_client": [
         {
-          "client_id": "558387951881-01a0onuocafaejprm90tnop5pu8iusec.apps.googleusercontent.com",
+          "client_id": "558387951881-fmuuljdv05e4rcn8nf8vkmh40nuo430d.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.dreamstorestudios.bedtimewriter.dev",
@@ -22,7 +22,7 @@
           }
         },
         {
-          "client_id": "558387951881-5l5ppb1bv6m5167okecfkssfi9el38if.apps.googleusercontent.com",
+          "client_id": "558387951881-o3846el2ob75nfkj46sq7g0g6osr1h60.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.dreamstorestudios.bedtimewriter.dev",
@@ -30,24 +30,24 @@
           }
         },
         {
-          "client_id": "558387951881-9s12jsj0b8iodieelegvqrj3btqv826f.apps.googleusercontent.com",
+          "client_id": "558387951881-8kaag2c047a5l5sfkh5ksnaf15s6v1au.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBwvvUcaNlVj57D2M1QVDKDhf8giJ3aEHA"
+          "current_key": "AIzaSyDlz_iCI6CwsmrWNU1aHnCSMjExckXU518"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "558387951881-9s12jsj0b8iodieelegvqrj3btqv826f.apps.googleusercontent.com",
+              "client_id": "558387951881-8kaag2c047a5l5sfkh5ksnaf15s6v1au.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "558387951881-ln3evg34370bsll49f0touv7jsoja5pl.apps.googleusercontent.com",
+              "client_id": "558387951881-pdvrogb1b430v45b2863v6ckib8p1srl.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.dreamstorestudios.bedtimewriter.dev"

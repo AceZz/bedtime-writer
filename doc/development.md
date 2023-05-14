@@ -24,7 +24,7 @@ same SHA1 fingerprint.
 2. Build the functions: `npm run build:watch`.
 3. If needed, run the local backend `npm run local_backend`. Note: run the Firebase emulators
    before launching the Android emulator, as some ports may conflict.
-4. If you want to deploy to the remote servers, use `npm run deploy_functions`.
+4. If you want to deploy to the remote servers, use `npm run deploy_functions_<dev|prod>`.
 5. Finally run (or build) the app: `flutter run --flavor <env> -d <device-emulator-id>`.
 
 ### Create and maintain an environment
@@ -99,8 +99,14 @@ repository](https://docs.github.com/en/get-started/getting-started-with-git/conf
 
 ### Global tips
 
-* Sometimes, removing the `build` folder helps. You can also try to restart your computer, the local
-  emulator, etc.
+If you have a bug you cannot explain, you can try to (every of the following tips has helped us at
+least once):
+
+* search for logs (of the Flutter application, of the emulator,
+  [of GCP](https://console.cloud.google.com/logs/), etc.)
+* clear the cache or uninstall the app on the phone emulator
+* restart (your computer, the emulators, Android Studio, etc.)
+* remove the `build` folder
 
 ### "CLEARTEXT communication to 10.0.2.2 not permitted by network security policy"
 
