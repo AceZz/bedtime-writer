@@ -29,7 +29,8 @@ abstract class _FirebaseUser with GoogleAuthMixin implements User {
   const _FirebaseUser();
 
   bool _credentialAlreadyUsed(firebase_auth.FirebaseAuthException e) {
-    return e.code == 'credential-already-in-use';
+    return e.code == 'credential-already-in-use' ||
+        e.code == 'email-already-in-use';
   }
 
   /// Displays a Google sign in form, returns the Google credential.
