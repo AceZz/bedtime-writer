@@ -14,12 +14,24 @@
       },
       "oauth_client": [
         {
-          "client_id": "558387951881-lfbr20jpsta1b83l5dr8d9s1ud9rl30b.apps.googleusercontent.com",
+          "client_id": "558387951881-01a0onuocafaejprm90tnop5pu8iusec.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dreamstorestudios.bedtimewriter.dev",
+            "certificate_hash": "424ebb2a2357ea2ac0abbdab90ee9f39c677672b"
+          }
+        },
+        {
+          "client_id": "558387951881-5l5ppb1bv6m5167okecfkssfi9el38if.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.dreamstorestudios.bedtimewriter.dev",
             "certificate_hash": "879e1e56f7c0594eecabd988c7a21001ac122f16"
           }
+        },
+        {
+          "client_id": "558387951881-9s12jsj0b8iodieelegvqrj3btqv826f.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
@@ -31,11 +43,11 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "558387951881-0e44ma7o2ih03cijdvr4si4q2btlgqod.apps.googleusercontent.com",
+              "client_id": "558387951881-9s12jsj0b8iodieelegvqrj3btqv826f.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "558387951881-7ol2et38p072qtctabfmus4qcho4peln.apps.googleusercontent.com",
+              "client_id": "558387951881-ln3evg34370bsll49f0touv7jsoja5pl.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.dreamstorestudios.bedtimewriter.dev"

@@ -36,6 +36,9 @@ abstract class _FirebaseUser with GoogleAuthMixin implements User {
   Future<firebase_auth.OAuthCredential> _getGoogleCredential() async {
     final googleAuth = await getGoogleAuth(clientId: _clientId);
 
+    print('googleAuth.idToken: ${googleAuth?.idToken}');
+    print('googleAuth.accessToken: ${googleAuth?.accessToken}');
+
     return firebase_auth.GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
@@ -70,6 +73,7 @@ class _FirebaseUnauthUser extends _FirebaseUser implements UnauthUser {
     }
 
     final credential = await _getGoogleCredential();
+    print('credential: $credential');
     return firebaseAuth.signInWithCredential(credential);
   }
 
