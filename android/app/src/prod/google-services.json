@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:596701039771:android:3f10dc1093397021758a3e",
+        "mobilesdk_app_id": "1:596701039771:android:cf3f69aa22184f11758a3e",
         "android_client_info": {
-          "package_name": "com.tap.bedtimewriter"
+          "package_name": "com.dreamstorestudios.bedtimewriter"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "596701039771-uslcbiqjnv361d8vokpaiurt5onn472q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dreamstorestudios.bedtimewriter",
+            "certificate_hash": "879e1e56f7c0594eecabd988c7a21001ac122f16"
+          }
+        },
         {
           "client_id": "596701039771-trtsjnpoubcbkr22hui552emio8c8cfa.apps.googleusercontent.com",
           "client_type": 3
