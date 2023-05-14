@@ -69,7 +69,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '558387951881',
     projectId: 'bedtime-writer-dev',
     storageBucket: 'bedtime-writer-dev.appspot.com',
-    androidClientId: '558387951881-01a0onuocafaejprm90tnop5pu8iusec.apps.googleusercontent.com',
+    androidClientId: '558387951881-5l5ppb1bv6m5167okecfkssfi9el38if.apps.googleusercontent.com',
     iosClientId: '558387951881-ln3evg34370bsll49f0touv7jsoja5pl.apps.googleusercontent.com',
     iosBundleId: 'com.dreamstorestudios.bedtimewriter.dev',
   );
