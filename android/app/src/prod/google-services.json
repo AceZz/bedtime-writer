@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "596701039771-nq09rc923s6f70t7akajicl5irbgsjpv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dreamstorestudios.bedtimewriter",
+            "certificate_hash": "424ebb2a2357ea2ac0abbdab90ee9f39c677672b"
+          }
+        },
+        {
           "client_id": "596701039771-uslcbiqjnv361d8vokpaiurt5onn472q.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -35,11 +43,11 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "596701039771-5p6qio2tpjgtg5jraremmkff75s0fgnk.apps.googleusercontent.com",
+              "client_id": "596701039771-trtsjnpoubcbkr22hui552emio8c8cfa.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "596701039771-l5583cm0tolhnn6tjapmad51akjel1k5.apps.googleusercontent.com",
+              "client_id": "596701039771-r7enjm9rgh7fdgmr346p5hu9qp9m6nb3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.dreamstorestudios.bedtimewriter"
