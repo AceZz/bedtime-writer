@@ -27,7 +27,8 @@ same SHA1 fingerprint.
    before launching the Android emulator, as some ports may conflict.
 5. If you want to deploy to the remote servers, use `npm run deploy_functions_<dev|prod>`.
 6. Delete the `build` folder.
-7. Finally run (or build) the app: `flutter run --flavor <env> -d <device-emulator-id>`.
+7. Wipe the data/cache of your device emulator.
+8. Finally run (or build) the app: `flutter run --flavor <env> -d <device-emulator-id>`.
 
 ### Create and maintain an environment
 

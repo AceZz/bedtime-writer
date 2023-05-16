@@ -69,8 +69,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '558387951881',
     projectId: 'bedtime-writer-dev',
     storageBucket: 'bedtime-writer-dev.appspot.com',
-    androidClientId: '558387951881-fmuuljdv05e4rcn8nf8vkmh40nuo430d.apps.googleusercontent.com',
-    iosClientId: '558387951881-9dgt5m6q21ce9or0g6ihupbmq1v6jbpd.apps.googleusercontent.com',
+    androidClientId:
+        '558387951881-fmuuljdv05e4rcn8nf8vkmh40nuo430d.apps.googleusercontent.com',
+    iosClientId:
+        '558387951881-9dgt5m6q21ce9or0g6ihupbmq1v6jbpd.apps.googleusercontent.com',
     iosBundleId: 'com.dreamstorestudios.bedtimewriter',
   );
 }
