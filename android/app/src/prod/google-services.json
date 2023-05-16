@@ -56,6 +56,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:596701039771:android:00d1f28d251b99b2758a3e",
+        "android_client_info": {
+          "package_name": "com.dreamstorestudios.bedtimewriter.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "596701039771-trtsjnpoubcbkr22hui552emio8c8cfa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO-2jQTyEPCOYJsI37ZFiSf9gNWBZWvoo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "596701039771-trtsjnpoubcbkr22hui552emio8c8cfa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "596701039771-r7enjm9rgh7fdgmr346p5hu9qp9m6nb3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dreamstorestudios.bedtimewriter"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
