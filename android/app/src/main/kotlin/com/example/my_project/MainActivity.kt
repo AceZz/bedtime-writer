@@ -1,4 +1,4 @@
-package com.tap.bedtimewriter
+package com.dreamstorestudios.bedtimewriter
 
 import io.flutter.embedding.android.FlutterActivity
 

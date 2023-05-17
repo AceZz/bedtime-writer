@@ -1,5 +1,11 @@
 # Deployment
 
+## Deployment to production checklist
+
+Check the following items before deploying to production:
+1. Check if [the indexes of the dev Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer/firestore/indexes) match [the prod Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer-prod/firestore/indexes).
+2. Check if [the rules of the dev Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer/firestore/rules) match [the prod Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer-prod/firestore/rules). Also check the [local rules](../firestore.rules).
+
 ## Firebase rules
 
 The `*.rules` files in the main folder are only used for the Firebase emulators. To deploy them on
@@ -13,8 +19,8 @@ We use Google Cloud Secret Manager to store secrets such as the Open AI API key.
 
 ## Deploy the backend
 
-Run `npm run deploy_functions` in the `functions` folder. Reminder: it will use the `.env` file,
-not `.env.local`.
+Run `npm run deploy_functions_dev` or `npm run deploy_functions_prod` in the `functions` folder.
+Reminder: it will use the `.env` file, not `.env.local`.
 
 ## Deploy the Web frontend
 
@@ -26,7 +32,7 @@ not `.env.local`.
 3. Run `flutter build web --web-renderer canvaskit` (using this specific Web renderer is important
    for the Lottie animations). If the Firebase emulators are running, visit <http://localhost:5000>
    to preview what you are about to deploy.
-4. Deploy with `npm run deploy_hosting` in the `functions` folder. This deploys the app with
+4. Deploy with `npm run deploy_hosting_dev` in the `functions` folder. This deploys the app with
    Firebase Hosting. You can retrieve the link in
    [the console](https://console.firebase.google.com/project/bedtime-writer/hosting/sites). Be aware
    that the link expires after 7 days by default (this can be changed in the console).
