@@ -111,6 +111,24 @@ least once):
 * restart (your computer, the emulators, Android Studio, etc.)
 * remove the `build` folder
 
+### Debug remote Cloud Functions
+
+In a nutshell, if your function seems to be never called (nothing in the logs) and redeploying does
+not solve the problem, try to **remove the function completely** (on the Firebase console) and then
+redeploy it. This will reset the permissions of the function, which might be the issue.
+
+This already happened! The Cloud function on the production project did not work with the remote
+server (no logs on the Android emulator, no logs on GCP), but it did on the development project. For
+reference, those are the steps that helped us (after a lot of debugging):
+
+* We noticed that, by accessing the function directly via its URL (something like
+  <https://europe-west1-bedtime-writer.cloudfunctions.net/createClassicStoryRequest>), the error was
+  not the same (`prod` was returning a 403, `dev` a JSON document with an error field).
+* We realized that the **GCP** configuration of the functions was different in the "Permissions"
+  tab. The `prod` function was missing the `allUsers` principal (role "Cloud Function Invoker").
+* Even after manually adding the missing principal, the function did not work (because of another
+  missing permission, certainly). We thus removed and redeployed the function, and it worked!
+
 ### "CLEARTEXT communication to 10.0.2.2 not permitted by network security policy"
 
 This may happen when using the Android Emulator. Communication with the emulator can only use HTTP;
