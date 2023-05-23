@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-      - 'prod/**'
+      - prod
   pull_request:
     branches:
       - main
-      - 'prod/**'
+      - prod
 
 permissions: read-all
 
