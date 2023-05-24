@@ -28,7 +28,7 @@ initializeApp();
  *
  * Return the ID of the story.
  */
-export const createClassicStoryRequest = region("europe-west1").https.onCall(
+export const createClassicStoryRequest = region("europe-west6").https.onCall(
   async (data, context) => {
     data.author = getUid(context);
 
@@ -43,7 +43,7 @@ export const createClassicStoryRequest = region("europe-west1").https.onCall(
  * Listen to the stories collection in Firestore and create the appropriate
  * story.
  */
-export const createStory = region("europe-west1")
+export const createStory = region("europe-west6")
   .runWith({ secrets: ["OPENAI_API_KEY"] })
   .firestore.document("stories/{story_id}")
   .onCreate(async (snapshot) => {
