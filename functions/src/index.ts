@@ -1,6 +1,7 @@
 import process from "node:process";
 
 import { region } from "firebase-functions";
+import { onCall } from "firebase-functions/v2/https";
 import { initializeApp } from "firebase-admin/app";
 
 import { getUid } from "./auth";
@@ -28,12 +29,13 @@ initializeApp();
  *
  * Return the ID of the story.
  */
-export const createClassicStoryRequest = region("europe-west6").https.onCall(
-  async (data, context) => {
-    data.author = getUid(context);
+export const createClassicStoryRequest = onCall(
+  { region: "europe-west6" },
+  async (request) => {
+    request.data.author = getUid(request.auth);
 
     const requestManager = new StoryRequestV1Manager();
-    const id = await requestManager.create(CLASSIC_LOGIC, data);
+    const id = await requestManager.create(CLASSIC_LOGIC, request.data);
 
     return id;
   }
