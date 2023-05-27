@@ -60,7 +60,7 @@ export const createStory = onDocumentCreated(
     const request = await requestManager.get(storyId);
 
     if (request.logic == CLASSIC_LOGIC) {
-      createClassicStory(storyId, request);
+      return createClassicStory(storyId, request); //TODO: check here
     } else {
       throw new Error(
         `Story id ${storyId}: unrecognized logic ${request.logic}.`
