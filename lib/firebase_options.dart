@@ -65,14 +65,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAvbsOpnKzWpJAra6f9csZcrbRvnkkkS64',
-    appId: '1:558387951881:ios:15a581023d6adbe0bf7bd8',
+    appId: '1:558387951881:ios:f7b146c7c812f701bf7bd8',
     messagingSenderId: '558387951881',
     projectId: 'bedtime-writer-dev',
     storageBucket: 'bedtime-writer-dev.appspot.com',
-    androidClientId:
-        '558387951881-fmuuljdv05e4rcn8nf8vkmh40nuo430d.apps.googleusercontent.com',
-    iosClientId:
-        '558387951881-9dgt5m6q21ce9or0g6ihupbmq1v6jbpd.apps.googleusercontent.com',
+    androidClientId: '558387951881-fmuuljdv05e4rcn8nf8vkmh40nuo430d.apps.googleusercontent.com',
+    iosClientId: '558387951881-9dgt5m6q21ce9or0g6ihupbmq1v6jbpd.apps.googleusercontent.com',
     iosBundleId: 'com.dreamstorestudios.bedtimewriter',
   );
 }
