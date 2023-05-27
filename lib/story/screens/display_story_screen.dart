@@ -195,7 +195,7 @@ class _StoryPartWidget extends ConsumerWidget {
   Widget _textWidget(BuildContext context, String text,
       {required bool withBigFirstLetter}) {
     return Padding(
-      padding: EdgeInsets.only(left: 30.sp, right: 30.sp),
+      padding: EdgeInsets.symmetric(horizontal: 30.sp),
       child: RichText(
         text: withBigFirstLetter
             ? _textWithBigFirstLetter(context, text)
