@@ -66,8 +66,8 @@ class LibraryScreen extends StatelessWidget {
         bottom: _libraryTabBar,
         child: TabBarView(
           children: [
-            _LibraryTab(provider: favoriteUserStoriesProvider),
             _LibraryTab(provider: userStoriesProvider),
+            _LibraryTab(provider: favoriteUserStoriesProvider),
           ],
         ),
       ),
@@ -76,8 +76,8 @@ class LibraryScreen extends StatelessWidget {
 }
 
 const _libraryTabBar = const TabBar(tabs: [
-  const Text('Favorites'),
   const Text('All'),
+  const Text('Favorites'),
 ]);
 
 class _LibraryTab extends ConsumerWidget {
