@@ -1,6 +1,5 @@
 import process from "node:process";
 
-// import { region } from "firebase-functions";
 import { onCall } from "firebase-functions/v2/https";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { setGlobalOptions } from "firebase-functions/v2";
@@ -69,24 +68,6 @@ export const createStory = onDocumentCreated(
     }
   }
 );
-
-// export const createStory2 = region("europe-west6")
-//   .runWith({ secrets: ["OPENAI_API_KEY"] })
-//   .firestore.document("stories/{story_id}")
-//   .onCreate(async (snapshot) => {
-//     const storyId = snapshot.id;
-
-//     const requestManager = new StoryRequestV1Manager();
-//     const request = await requestManager.get(storyId);
-
-//     if (request.logic == CLASSIC_LOGIC) {
-//       createClassicStory(storyId, request);
-//     } else {
-//       throw new Error(
-//         `Story id ${storyId}: unrecognized logic ${request.logic}.`
-//       );
-//     }
-//   });
 
 /**
  * Generate a classic story and add it to Firestore.
