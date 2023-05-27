@@ -43,7 +43,10 @@ class _StoryTile extends StatelessWidget {
           ),
         ),
       ),
-      title: Text(story.title),
+      title: Text(
+        story.title,
+        style: Theme.of(context).primaryTextTheme.titleMedium,
+      ),
       subtitle: Text('Created on $_formattedDateTime'),
       onTap: () {
         context.pushNamed('display_story', params: {'id': story.id});

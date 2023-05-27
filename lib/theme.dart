@@ -47,7 +47,13 @@ class AppTheme {
         titleMedium: GoogleFonts.outfit(
           color: onPrimary,
           fontWeight: FontWeight.normal,
-          fontSize: 20.sp,
+          fontSize: 22.sp,
+        ),
+        // Library tiles title
+        titleSmall: GoogleFonts.outfit(
+          color: onPrimary,
+          fontWeight: FontWeight.normal,
+          fontSize: 18.sp,
         ),
         // Loading text
         bodyLarge: GoogleFonts.outfit(
