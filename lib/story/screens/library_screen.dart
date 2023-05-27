@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../backend/index.dart';
@@ -25,10 +26,10 @@ class _StoryTile extends StatelessWidget {
     return ListTile(
       // Has a preset non-modifiable height
       key: ValueKey(story.id),
-      contentPadding: const EdgeInsets.all(8.0),
+      contentPadding: EdgeInsets.all(8),
       tileColor: tileColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(8),
       ),
       leading: SizedBox(
         height: 55,
@@ -103,28 +104,27 @@ class _LibraryTab extends ConsumerWidget {
     final children = stories
         .map(
           (story) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            padding: EdgeInsets.symmetric(vertical: 10.sp, horizontal: 15.sp),
             child: _StoryTile(story: story),
           ),
         )
         .toList();
 
     return ListView(
-      padding: const EdgeInsets.all(10.0),
       children: children,
     );
   }
 
   Widget _error(error, stackTrace) {
     return Container(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10),
       child: const Text('Something went wrong...'),
     );
   }
 
   Widget _loading() {
     return Container(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10),
       child: const CircularProgressIndicator(),
     );
   }
