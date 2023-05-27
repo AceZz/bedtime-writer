@@ -91,7 +91,9 @@ class _StoryWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
+        SizedBox(height: 20.sp),
         const _StoryTitle(),
+        SizedBox(height: 20.sp),
         const _StoryParts(),
         const _BottomRow(),
       ],
@@ -113,7 +115,7 @@ class _StoryTitle extends ConsumerWidget {
         GoogleFonts.amaticSc(fontWeight: FontWeight.bold, fontSize: 52.sp);
 
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.symmetric(horizontal: 20.sp),
       child: Text(
         title,
         textAlign: TextAlign.center,
@@ -143,6 +145,7 @@ class _StoryParts extends ConsumerWidget {
             ],
             child: const _StoryPartWidget(),
           ),
+          SizedBox(height: 20.sp),
         ]
       ],
     );
@@ -173,12 +176,14 @@ class _StoryPartWidget extends ConsumerWidget {
       data: (part) => Column(
         children: [
           if (part.hasImage)
-            StoryImage(
+            ...[StoryImage(
               image: part.image,
               width: 360.sp,
               height: 360.sp,
               fadeColor: Theme.of(context).colorScheme.background,
             ),
+            SizedBox(height: 30.sp),
+          ],
           _textWidget(context, part.text, withBigFirstLetter: partIndex == 0),
         ],
       ),
@@ -190,7 +195,7 @@ class _StoryPartWidget extends ConsumerWidget {
   Widget _textWidget(BuildContext context, String text,
       {required bool withBigFirstLetter}) {
     return Padding(
-      padding: const EdgeInsets.only(left: 30, right: 30, top: 30, bottom: 10),
+      padding: EdgeInsets.only(left: 30.sp, right: 30.sp),
       child: RichText(
         text: withBigFirstLetter
             ? _textWithBigFirstLetter(context, text)
@@ -265,14 +270,8 @@ class _BottomRow extends ConsumerWidget {
     );
 
     final theEndWidget = Padding(
-      padding: const EdgeInsets.all(5),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-        ),
-        child:
-            Text('The End', textAlign: TextAlign.center, style: _theEndStyle),
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 10.sp),
+      child: Text('The End', textAlign: TextAlign.center, style: _theEndStyle),
     );
 
     return Padding(
