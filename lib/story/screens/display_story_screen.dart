@@ -175,8 +175,8 @@ class _StoryPartWidget extends ConsumerWidget {
     return part.when(
       data: (part) => Column(
         children: [
-          if (part.hasImage)
-            ...[StoryImage(
+          if (part.hasImage) ...[
+            StoryImage(
               image: part.image,
               width: 360.sp,
               height: 360.sp,
