@@ -71,10 +71,19 @@ class HomeScreen extends ConsumerWidget {
           SizedBox(height: 20),
           menuWidget,
           if (debugAuth())
-            Row(
-              children: [
-                Flexible(child: HomeScreenDebug()),
-              ],
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(child: HomeScreenDebug()),
+                    ],
+                  ),
+                ),
+              ),
             ),
         ],
       ),
