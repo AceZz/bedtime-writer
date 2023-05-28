@@ -47,9 +47,21 @@ android {
         checkReleaseBuilds false
     }
 
-    defaultConfig {
+    flavorDimensions "env"
+    productFlavors {
+        dev {
+            dimension "env"
+            applicationId "com.dreamstorestudios.bedtimewriter.dev"
+        }
+        prod {
+            dimension "env"
+            applicationId "com.dreamstorestudios.bedtimewriter"
+        }
+    }
+
+    defaultConfig { //Overridden by productFlavors if they are specified
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.tap.bedtimewriter"
+        applicationId "com.dreamstorestudios.bedtimewriter"
         minSdkVersion 21
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()

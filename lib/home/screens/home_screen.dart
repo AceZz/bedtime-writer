@@ -13,13 +13,14 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Widget titleWidget = Padding(
-      padding: const EdgeInsets.only(top: 80, bottom: 20),
-      child: FadeIn(
-        duration: const Duration(milliseconds: 1500),
-        delay: const Duration(milliseconds: 500),
+    Widget titleWidget = FadeIn(
+      duration: const Duration(milliseconds: 1500),
+      delay: const Duration(milliseconds: 500),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: 0.2 * MediaQuery.of(context).size.width),
         child: Text(
-          'Dreamy Tales',
+          'Dreamy\nTales',
           textAlign: TextAlign.center,
           style: Theme.of(context).primaryTextTheme.headlineLarge,
         ),
@@ -38,47 +39,50 @@ class HomeScreen extends ConsumerWidget {
     Widget preferencesButton =
         _HomeScreenButton(text: 'Preferences', destination: 'preferences');
 
-    Widget menuWidget = Padding(
-      padding: const EdgeInsets.only(top: 30),
-      child: Column(
-        children: [newStoryButton, libraryButton, preferencesButton]
-            .asMap()
-            .map(
-              // The buttons will fade in one after the other
-              (i, button) => MapEntry(
-                  i,
-                  FadeIn(
-                    duration: const Duration(milliseconds: 500),
-                    delay: Duration(milliseconds: 500 + 500 * (i + 1)),
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: button,
-                    ),
-                  )),
-            )
-            .values
-            .toList(),
-      ),
+    Widget menuWidget = Column(
+      children: [newStoryButton, libraryButton, preferencesButton]
+          .asMap()
+          .map(
+            // The buttons will fade in one after the other
+            (i, button) => MapEntry(
+                i,
+                FadeIn(
+                  duration: const Duration(milliseconds: 500),
+                  delay: Duration(milliseconds: 500 + 500 * (i + 1)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: button,
+                  ),
+                )),
+          )
+          .values
+          .toList(),
     );
 
     return AppScaffold(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Flexible(
-            flex: 0,
+          SizedBox(height: 60),
+          FittedBox(
+            fit: BoxFit.scaleDown,
             child: titleWidget,
           ),
-          Flexible(
-            flex: 0,
-            child: menuWidget,
-          ),
+          SizedBox(height: 20),
+          menuWidget,
           if (debugAuth())
-            Flexible(
-              child: Row(
-                children: [
-                  Flexible(child: HomeScreenDebug()),
-                ],
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(child: HomeScreenDebug()),
+                    ],
+                  ),
+                ),
               ),
             ),
         ],
