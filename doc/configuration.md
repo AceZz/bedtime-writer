@@ -1,10 +1,12 @@
 # Configuration
 
+## App Configuration
+
 If a configuration value is not recognized, it falls back to the default.
 
 The values are case-insensitive.
 
-## Frontend
+### Frontend
 
 In `bedtime-writer/.env`:
 
@@ -16,7 +18,7 @@ In `bedtime-writer/.env`:
     * `true`: display helpful info about the user ID on the home screen, and a button to
       log in / log out easily.
 
-## Backend
+### Backend
 
 `functions/.env` is always read. Then, **only if using the Firebase emulators**,
 `functions/.env.local` is read and overrides all previously set values.
@@ -45,3 +47,13 @@ production settings, edit `functions/.env` (and redeploy).
     * `openai` (default): use OpenAI's image generation API. Use the Google Cloud Secret as a key,
       which can be read from `.secret.local` when using the Firebase emulators.
     * `fake`: use the fake image API.
+
+## Firebase Configuration
+
+Firebase configuration is done through the Firebase Console of the project.
+
+### Authentication
+
+* To set-up the reset-password sender domain, email content and url. Go to Authentification > Templates in the Firebase console.
+* For customizing the noreply sender email: follow the instructions given by Firebase and add the changes to Google Domains DNS.
+* For setting-up the custom url for password reset while using Firebase hosting: Go to Hosting > Add custom domain and add there your custom subdomain you want displayed. Make sure to add the path /__/auth/action to the url.
