@@ -56,4 +56,4 @@ Firebase configuration is done through the Firebase Console of the project.
 
 * To set-up the reset-password sender domain, email content and url. Go to Authentification > Templates in the Firebase console.
 * For customizing the noreply sender email: follow the instructions given by Firebase and add the changes to Google Domains DNS.
-* For setting-up the custom url for password reset while using Firebase hosting: Go to Hosting > Add custom domain and add there your custom subdomain you want displayed. Make sure to add the path /__/auth/action to the url.
+* For setting-up the custom url for password reset while using Firebase hosting: Go to Hosting > Add custom domain and add there your custom subdomain you want displayed. Make sure to add the path /__/auth/action in Authentification for password reset when you give this link.
