@@ -1,9 +1,12 @@
 import process from "node:process";
 
+import * as admin from "firebase-admin";
 import { onCall } from "firebase-functions/v2/https";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { setGlobalOptions } from "firebase-functions/v2";
 import { initializeApp } from "firebase-admin/app";
+
+import FirebaseFunctionsRateLimiter from "firebase-functions-rate-limiter";
 
 import { getUid } from "./auth";
 import { logger } from "./logger";
@@ -22,7 +25,21 @@ import {
 import { getOpenAiApi } from "./open_ai";
 import { StoryRequestV1Manager, StoryRequestV1 } from "./story/request";
 
-initializeApp();
+admin.initializeApp();
+
+/**
+ * Access the Firestore database and set requests rate-limiters
+ */
+const firestore = admin.firestore();
+
+const limiter = FirebaseFunctionsRateLimiter.withFirestoreBackend(
+  {
+      name: "rate_limiter_global_collection",
+      maxCalls: 1,
+      periodSeconds: 600,
+  },
+  firestore,
+);
 
 /**
  * Set the default region and secrets for all functions.
@@ -36,6 +53,10 @@ setGlobalOptions({ region: "europe-west6", secrets: ["OPENAI_API_KEY"] });
  * Return the ID of the story.
  */
 export const createClassicStoryRequest = onCall(async (request) => {
+
+  //Check first limiter
+  await limiter.rejectOnQuotaExceededOrRecordUsage();
+
   request.data.author = getUid(request.auth);
 
   const requestManager = new StoryRequestV1Manager();
