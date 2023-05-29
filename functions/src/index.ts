@@ -1,7 +1,9 @@
 import process from "node:process";
 
-import { region } from "firebase-functions";
 import { initializeApp } from "firebase-admin/app";
+import { onCall } from "firebase-functions/v2/https";
+import { onDocumentCreated } from "firebase-functions/v2/firestore";
+import { setGlobalOptions } from "firebase-functions/v2";
 
 import { getUid } from "./auth";
 import { logger } from "./logger";
@@ -22,44 +24,48 @@ import { StoryRequestV1Manager, StoryRequestV1 } from "./story/request";
 
 initializeApp();
 
+// Set the default region.
+setGlobalOptions({ region: "europe-west6" });
+
 /**
  * Request a story. See `StoryRequestV1` for the expected fields (except
  * `author`).
  *
  * Return the ID of the story.
  */
-export const createClassicStoryRequest = region("europe-west1").https.onCall(
-  async (data, context) => {
-    data.author = getUid(context);
+export const createClassicStoryRequest = onCall(async (request) => {
+  request.data.author = getUid(request.auth);
 
-    const requestManager = new StoryRequestV1Manager();
-    const id = await requestManager.create(CLASSIC_LOGIC, data);
+  const requestManager = new StoryRequestV1Manager();
+  const id = await requestManager.create(CLASSIC_LOGIC, request.data);
 
-    return id;
-  }
-);
+  return id;
+});
 
 /**
  * Listen to the stories collection in Firestore and create the appropriate
  * story.
  */
-export const createStory = region("europe-west1")
-  .runWith({ secrets: ["OPENAI_API_KEY"] })
-  .firestore.document("stories/{story_id}")
-  .onCreate(async (snapshot) => {
-    const storyId = snapshot.id;
+export const createStory = onDocumentCreated(
+  { document: "stories/{story_id}", secrets: ["OPENAI_API_KEY"] },
+  async (event) => {
+    if (event.data === null || event.data === undefined) {
+      throw new Error("Event data is null or undefined");
+    }
+    const storyId = event.data.id;
 
     const requestManager = new StoryRequestV1Manager();
     const request = await requestManager.get(storyId);
 
     if (request.logic == CLASSIC_LOGIC) {
-      createClassicStory(storyId, request);
+      return createClassicStory(storyId, request);
     } else {
       throw new Error(
         `Story id ${storyId}: unrecognized logic ${request.logic}.`
       );
     }
-  });
+  }
+);
 
 /**
  * Generate a classic story and add it to Firestore.
