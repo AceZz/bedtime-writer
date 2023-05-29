@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tuple/tuple.dart';
 
@@ -48,7 +49,7 @@ class _ShareButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ShareButton(
-      iconSize: 30,
+      iconSize: 30.sp,
       text: 'Hey! Check out this amazing story I made with Bedtime stories',
     );
   }
@@ -67,7 +68,7 @@ class _FavoriteButton extends ConsumerWidget {
 
     return FavoriteButton(
       isFavorite: isFavorite,
-      iconSize: 30,
+      iconSize: 30.sp,
       onPressed: () async {
         final story = ref.read(storyProvider(storyId)).value;
 
@@ -90,7 +91,9 @@ class _StoryWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
+        SizedBox(height: 20.sp),
         const _StoryTitle(),
+        SizedBox(height: 20.sp),
         const _StoryParts(),
         const _BottomRow(),
       ],
@@ -109,10 +112,10 @@ class _StoryTitle extends ConsumerWidget {
     );
 
     final _storyTitleStyle =
-        GoogleFonts.amaticSc(fontWeight: FontWeight.bold, fontSize: 52);
+        GoogleFonts.amaticSc(fontWeight: FontWeight.bold, fontSize: 52.sp);
 
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.symmetric(horizontal: 20.sp),
       child: Text(
         title,
         textAlign: TextAlign.center,
@@ -142,6 +145,7 @@ class _StoryParts extends ConsumerWidget {
             ],
             child: const _StoryPartWidget(),
           ),
+          SizedBox(height: 20.sp),
         ]
       ],
     );
@@ -171,13 +175,15 @@ class _StoryPartWidget extends ConsumerWidget {
     return part.when(
       data: (part) => Column(
         children: [
-          if (part.hasImage)
+          if (part.hasImage) ...[
             StoryImage(
               image: part.image,
-              width: 360,
-              height: 360,
+              width: 360.sp,
+              height: 360.sp,
               fadeColor: Theme.of(context).colorScheme.background,
             ),
+            SizedBox(height: 30.sp),
+          ],
           _textWidget(context, part.text, withBigFirstLetter: partIndex == 0),
         ],
       ),
@@ -189,7 +195,7 @@ class _StoryPartWidget extends ConsumerWidget {
   Widget _textWidget(BuildContext context, String text,
       {required bool withBigFirstLetter}) {
     return Padding(
-      padding: const EdgeInsets.only(left: 30, right: 30, top: 30, bottom: 10),
+      padding: EdgeInsets.symmetric(horizontal: 30.sp),
       child: RichText(
         text: withBigFirstLetter
             ? _textWithBigFirstLetter(context, text)
@@ -210,7 +216,7 @@ class _StoryPartWidget extends ConsumerWidget {
   TextSpan _textWithBigFirstLetter(BuildContext context, String text) {
     final TextStyle _firstLetterStyle = GoogleFonts.croissantOne(
       fontWeight: FontWeight.bold,
-      fontSize: 42,
+      fontSize: 42.sp,
       color: Theme.of(context).primaryTextTheme.bodyMedium?.color,
     );
 
@@ -260,18 +266,12 @@ class _BottomRow extends ConsumerWidget {
 
     final _theEndStyle = GoogleFonts.amaticSc(
       fontWeight: FontWeight.bold,
-      fontSize: 46,
+      fontSize: 46.sp,
     );
 
     final theEndWidget = Padding(
-      padding: const EdgeInsets.all(5),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-        ),
-        child:
-            Text('The End', textAlign: TextAlign.center, style: _theEndStyle),
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 10.sp),
+      child: Text('The End', textAlign: TextAlign.center, style: _theEndStyle),
     );
 
     return Padding(
