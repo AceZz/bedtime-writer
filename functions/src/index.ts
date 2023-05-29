@@ -1,6 +1,7 @@
 import process from "node:process";
 
 import { initializeApp } from "firebase-admin/app";
+import { firestore } from "firebase-admin";
 import { onCall } from "firebase-functions/v2/https";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { setGlobalOptions } from "firebase-functions/v2";
@@ -20,12 +21,16 @@ import {
   CLASSIC_LOGIC,
 } from "./story/";
 import { getOpenAiApi } from "./open_ai";
+import { requestLimiter } from "./request_limiter";
 import { StoryRequestV1Manager, StoryRequestV1 } from "./story/request";
 
 initializeApp();
 
 // Set the default region.
 setGlobalOptions({ region: "europe-west6" });
+
+// Initialize the database.
+const firestore_database = firestore();
 
 /**
  * Request a story. See `StoryRequestV1` for the expected fields (except
@@ -35,6 +40,9 @@ setGlobalOptions({ region: "europe-west6" });
  */
 export const createClassicStoryRequest = onCall(async (request) => {
   request.data.author = getUid(request.auth);
+
+  // Check against rate limits
+  await requestLimiter(firestore_database, request.data.author);
 
   const requestManager = new StoryRequestV1Manager();
   const id = await requestManager.create(CLASSIC_LOGIC, request.data);
