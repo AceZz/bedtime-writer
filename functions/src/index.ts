@@ -1,9 +1,9 @@
 import process from "node:process";
 
+import { initializeApp } from "firebase-admin/app";
 import { onCall } from "firebase-functions/v2/https";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { setGlobalOptions } from "firebase-functions/v2";
-import { initializeApp } from "firebase-admin/app";
 
 import { getUid } from "./auth";
 import { logger } from "./logger";
@@ -24,10 +24,8 @@ import { StoryRequestV1Manager, StoryRequestV1 } from "./story/request";
 
 initializeApp();
 
-/**
- * Set the default region and secrets for all functions.
- */
-setGlobalOptions({ region: "europe-west6", secrets: ["OPENAI_API_KEY"] });
+// Set the default region.
+setGlobalOptions({ region: "europe-west6" });
 
 /**
  * Request a story. See `StoryRequestV1` for the expected fields (except
@@ -49,7 +47,7 @@ export const createClassicStoryRequest = onCall(async (request) => {
  * story.
  */
 export const createStory = onDocumentCreated(
-  "stories/{story_id}",
+  { document: "stories/{story_id}", secrets: ["OPENAI_API_KEY"] },
   async (event) => {
     if (event.data === null || event.data === undefined) {
       throw new Error("Event data is null or undefined");
@@ -60,7 +58,7 @@ export const createStory = onDocumentCreated(
     const request = await requestManager.get(storyId);
 
     if (request.logic == CLASSIC_LOGIC) {
-      return createClassicStory(storyId, request); //TODO: check here
+      return createClassicStory(storyId, request);
     } else {
       throw new Error(
         `Story id ${storyId}: unrecognized logic ${request.logic}.`
