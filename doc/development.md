@@ -76,7 +76,7 @@ Configure Firestore to use the "Native mode". Do not forget to update the rules 
 
 ##### Functions
 
-* Make sure to return the Promise made by a function using `return` in the code. Otherwise the function will be really slow.
+* Make sure to return the Promise made by a function using `return` in the code (even if it is Promise<void>). Otherwise the function will be really slow.
 
 See [Deployment](./deployment.md) to deploy them.
 
