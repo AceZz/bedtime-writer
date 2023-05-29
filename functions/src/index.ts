@@ -1,11 +1,9 @@
 import process from "node:process";
 
+import { initializeApp } from "firebase-admin/app";
 import { onCall } from "firebase-functions/v2/https";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { setGlobalOptions } from "firebase-functions/v2";
-import { initializeApp, firestore } from "firebase-admin";
-
-import { FirebaseFunctionsRateLimiter } from "firebase-functions-rate-limiter";
 
 import { getUid } from "./auth";
 import { logger } from "./logger";
@@ -26,28 +24,8 @@ import { StoryRequestV1Manager, StoryRequestV1 } from "./story/request";
 
 initializeApp();
 
-/**
- * Access the Firestore database and set requests rate-limiters
- */
-const firestore_database = firestore();
-const limit_period_technical = Number(process.env.LIMIT_PERIOD_TECHNICAL);
-const limit_calls_technical_global = Number(
-  process.env.LIMIT_CALLS_TECHNICAL_GLOBAL
-);
-
-const limiter = FirebaseFunctionsRateLimiter.withFirestoreBackend(
-  {
-    name: "rate_limiter_technical_global_collection",
-    maxCalls: limit_calls_technical_global,
-    periodSeconds: limit_period_technical,
-  },
-  firestore_database
-);
-
-/**
- * Set the default region and secrets for all functions.
- */
-setGlobalOptions({ region: "europe-west6", secrets: ["OPENAI_API_KEY"] });
+// Set the default region.
+setGlobalOptions({ region: "europe-west6" });
 
 /**
  * Request a story. See `StoryRequestV1` for the expected fields (except
@@ -56,9 +34,6 @@ setGlobalOptions({ region: "europe-west6", secrets: ["OPENAI_API_KEY"] });
  * Return the ID of the story.
  */
 export const createClassicStoryRequest = onCall(async (request) => {
-  //Check first limiter
-  await limiter.rejectOnQuotaExceededOrRecordUsage();
-
   request.data.author = getUid(request.auth);
 
   const requestManager = new StoryRequestV1Manager();
@@ -72,7 +47,7 @@ export const createClassicStoryRequest = onCall(async (request) => {
  * story.
  */
 export const createStory = onDocumentCreated(
-  "stories/{story_id}",
+  { document: "stories/{story_id}", secrets: ["OPENAI_API_KEY"] },
   async (event) => {
     if (event.data === null || event.data === undefined) {
       throw new Error("Event data is null or undefined");
@@ -83,7 +58,7 @@ export const createStory = onDocumentCreated(
     const request = await requestManager.get(storyId);
 
     if (request.logic == CLASSIC_LOGIC) {
-      return createClassicStory(storyId, request); //TODO: check here
+      return createClassicStory(storyId, request);
     } else {
       throw new Error(
         `Story id ${storyId}: unrecognized logic ${request.logic}.`
