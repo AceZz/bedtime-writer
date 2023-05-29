@@ -24,8 +24,8 @@ import { StoryRequestV1Manager, StoryRequestV1 } from "./story/request";
 
 initializeApp();
 
-// Set the default region and define secrets for all functions.
-setGlobalOptions({ region: "europe-west6", secrets: ["OPENAI_API_KEY"] });
+// Set the default region.
+setGlobalOptions({ region: "europe-west6" });
 
 /**
  * Request a story. See `StoryRequestV1` for the expected fields (except
@@ -47,7 +47,7 @@ export const createClassicStoryRequest = onCall(async (request) => {
  * story.
  */
 export const createStory = onDocumentCreated(
-  "stories/{story_id}",
+  { document: "stories/{story_id}", secrets: ["OPENAI_API_KEY"] },
   async (event) => {
     if (event.data === null || event.data === undefined) {
       throw new Error("Event data is null or undefined");
