@@ -189,6 +189,18 @@ class _FirebaseRegisteredUser extends _FirebaseAuthUser
   }
 }
 
+/// A function to reset the password for a provided email
+Future<void> firebaseResetPassword(String email) async {
+  try {
+    _validateEmail(email);
+    await firebaseAuth.sendPasswordResetEmail(email: email);
+  } on firebase_auth.FirebaseAuthException catch (e) {
+    throw AuthException(code: e.code);
+  } on FormatException catch (e) {
+    throw e;
+  }
+}
+
 Future _signInWithEmailAndPassword({
   required String email,
   required String password,

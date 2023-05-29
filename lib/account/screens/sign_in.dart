@@ -100,7 +100,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       }
     } on Exception catch (e) {
       context.pop();
-      _showAlertDialog(context: context, e: e);
+      _setAlertText(context: context, e: e);
     }
   }
 
@@ -138,57 +138,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       }
     } on Exception catch (e) {
       context.pop();
-      _showAlertDialog(context: context, e: e);
+      _setAlertText(context: context, e: e);
     }
   }
 
-  void _showAlertDialog({required BuildContext context, required Exception e}) {
-    String text = 'An error occurred';
-
-    if (e is AuthException) {
-      switch (e.code) {
-        case 'user-not-found':
-          text = 'The user does not exist. Please create an account.';
-          break;
-        case 'wrong-password':
-          text = 'Incorrect password';
-          break;
-        case 'invalid-email':
-          text = 'The email format is not valid';
-          break;
-        case 'network-request-failed':
-          text = 'Network request failed';
-          break;
-        case 'internal-error':
-          text = 'Internal error';
-          break;
-        case 'weak-password':
-          text = 'Please choose a stronger password';
-          break;
-        case 'email-already-in-use':
-          text = 'An account already exists with this email. Please sign in.';
-          break;
-        case 'credential-already-in-use':
-          text = 'Account already exists. Please sign in.';
-          break;
-      }
-    } else if (e is FormatException) {
-      switch (e.code) {
-        case 'invalid-email-format':
-          text = 'The email format is not valid';
-          break;
-        case 'invalid-password-format':
-          text =
-              'Passwords must be at least 8 characters, with one letter and one digit';
-          break;
-        case 'empty-password':
-          text = 'Please enter a password';
-          break;
-      }
-    }
-
+  void _setAlertText({required BuildContext context, required Exception e}) {
     setState(() {
-      _alertText = text;
+      _alertText = _convertExceptionToText(e: e);
     });
   }
 
@@ -243,44 +199,56 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       color: Theme.of(context).textTheme.bodySmall?.color!,
       fontWeight: FontWeight.normal,
       fontSize: 14.sp,
+      decoration: TextDecoration.underline,
     );
 
-    Widget forgotPasswordText = Row(
+    Widget forgotPasswordButton = Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: GestureDetector(
+            onTap: () => _showResetPasswordAlertDialog(
+              context: context,
+              emailController: emailController,
+            ),
             child: Text(
-              'Forgot Password?',
+              'Reset or Forgot Password?',
               style: forgotPasswordTextStyle,
-            )),
+            ),
+          ),
+        ),
       ],
     );
 
     Widget signInButton = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: SignInScreenButton(
-          text: 'Sign In',
-          color: Theme.of(context).colorScheme.primary,
-          onTap: () => _signInOnTap(
-              context: context,
-              ref: ref,
-              email: emailController.text,
-              password: passwordController.text,
-              redirect: widget.redirect)),
+        text: 'Sign In',
+        color: Theme.of(context).colorScheme.primary,
+        onTap: () => _signInOnTap(
+          context: context,
+          ref: ref,
+          email: emailController.text,
+          password: passwordController.text,
+          redirect: widget.redirect,
+        ),
+      ),
     );
 
     Widget createAccountButton = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: SignInScreenButton(
-          text: 'Create account',
-          color: Colors.grey.shade500,
-          onTap: () => _createAccountOnTap(
-              context: context,
-              ref: ref,
-              email: emailController.text,
-              password: passwordController.text,
-              redirect: widget.redirect)),
+        text: 'Create account',
+        color: Colors.grey.shade500,
+        onTap: () => _createAccountOnTap(
+          context: context,
+          ref: ref,
+          email: emailController.text,
+          password: passwordController.text,
+          redirect: widget.redirect,
+        ),
+      ),
     );
 
     Widget divider = Padding(
@@ -345,7 +313,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             SizedBox(height: 10),
             passwordTextField,
             SizedBox(height: 5),
-            forgotPasswordText,
+            forgotPasswordButton,
             SizedBox(height: 20),
             signInButton,
             SizedBox(height: 10),
@@ -360,4 +328,183 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       ),
     );
   }
+}
+
+void _showResetPasswordAlertDialog({
+  required BuildContext context,
+  required TextEditingController emailController,
+}) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return _AlertDialogResetPassword(emailController: emailController);
+    },
+  );
+}
+
+void _showResetPasswordConfirmationAlertDialog({
+  required BuildContext context,
+}) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      double deviceWidth = MediaQuery.of(context).size.width;
+
+      return AlertDialog(
+        title: Text('Success'),
+        backgroundColor: Theme.of(context).colorScheme.background,
+        content: Container(
+          width: 0.6 * deviceWidth,
+          child: Text(
+            'We sent you an email to reset your password.',
+            style: Theme.of(context).primaryTextTheme.bodySmall,
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: context.pop,
+            child: Text(
+              'Ok',
+              style: Theme.of(context).primaryTextTheme.bodySmall,
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+class _AlertDialogResetPassword extends StatefulWidget {
+  final TextEditingController emailController;
+
+  const _AlertDialogResetPassword({
+    Key? key,
+    required this.emailController,
+  }) : super(key: key);
+
+  @override
+  State<_AlertDialogResetPassword> createState() =>
+      _AlertDialogResetPasswordState();
+}
+
+class _AlertDialogResetPasswordState extends State<_AlertDialogResetPassword> {
+  String _alertText = '';
+
+  @override
+  Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+
+    Widget alertTextWidget = Text(
+      _alertText,
+      textAlign: TextAlign.center,
+      style: GoogleFonts.outfit(
+        color: Colors.red,
+        fontWeight: FontWeight.normal,
+        fontSize: 16,
+      ),
+    );
+
+    Widget emailTextField = AppTextField(
+      controller: widget.emailController,
+      hintText: 'Email',
+      obscureText: false,
+    );
+
+    void _setAlertText({required Exception e}) {
+      setState(() {
+        _alertText = _convertExceptionToText(e: e);
+      });
+    }
+
+    Future<void> _submitResetPassword() async {
+      try {
+        await resetPassword(widget.emailController.text);
+        context.pop();
+        _showResetPasswordConfirmationAlertDialog(context: context);
+      } on Exception catch (e) {
+        _setAlertText(e: e);
+      }
+    }
+
+    return AlertDialog(
+      title: Text('Reset your password'),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      content: Container(
+        width: 0.6 * deviceWidth,
+        child: SingleChildScrollView(
+          child: ListBody(
+            children: [
+              alertTextWidget,
+              SizedBox(height: 10),
+              emailTextField,
+            ],
+          ),
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: _submitResetPassword,
+          child: Text(
+            'Submit',
+            style: Theme.of(context).primaryTextTheme.bodySmall,
+          ),
+        ),
+        TextButton(
+          onPressed: context.pop,
+          child: Text(
+            'Cancel',
+            style: Theme.of(context).primaryTextTheme.bodySmall,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+String _convertExceptionToText({required Exception e}) {
+  String text = 'An error occurred';
+
+  if (e is AuthException) {
+    switch (e.code) {
+      case 'user-not-found':
+        text = 'The user does not exist. Please check or create an account.';
+        break;
+      case 'wrong-password':
+        text = 'Incorrect password';
+        break;
+      case 'invalid-email':
+        text = 'The email format is not valid';
+        break;
+      case 'network-request-failed':
+        text = 'Network request failed';
+        break;
+      case 'internal-error':
+        text = 'Internal error';
+        break;
+      case 'weak-password':
+        text = 'Please choose a stronger password';
+        break;
+      case 'email-already-in-use':
+        text = 'An account already exists with this email. Please sign in.';
+        break;
+      case 'credential-already-in-use':
+        text = 'Account already exists. Please sign in.';
+        break;
+    }
+  } else if (e is FormatException) {
+    switch (e.code) {
+      case 'invalid-email-format':
+        text = 'The email format is not valid';
+        break;
+      case 'invalid-password-format':
+        text =
+            'Passwords must be at least 8 characters, with one letter and one digit';
+        break;
+      case 'empty-password':
+        text = 'Please enter a password';
+        break;
+    }
+  }
+
+  return text;
 }

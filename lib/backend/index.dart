@@ -3,6 +3,7 @@ export 'concrete.dart'
         createClassicStory,
         favoriteUserStoriesProvider,
         preferencesProvider,
+        resetPassword,
         storyProvider,
         storyPartProvider,
         userProvider,

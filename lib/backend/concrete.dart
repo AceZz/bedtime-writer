@@ -20,6 +20,9 @@ import 'user.dart';
 /// Provides the current [User].
 final userProvider = Provider<User>((ref) => getFirebaseUser(ref));
 
+/// Resets password for given email
+Future<void> Function(String email) resetPassword = firebaseResetPassword;
+
 /**
  * STORY
  */

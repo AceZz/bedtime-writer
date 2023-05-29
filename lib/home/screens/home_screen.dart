@@ -18,8 +18,7 @@ class HomeScreen extends ConsumerWidget {
       delay: const Duration(milliseconds: 500),
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: 0.2 * MediaQuery.of(context).size.width,
-        ),
+            horizontal: 0.2 * MediaQuery.of(context).size.width),
         child: Text(
           'Dreamy\nTales',
           textAlign: TextAlign.center,
