@@ -28,13 +28,15 @@ class DisplayStoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final status = ref.watch(storyStatusProvider(id)).value;
+
     return ProviderScope(
       overrides: [_currentStoryId.overrideWithValue(id)],
       child: AppScaffold(
         appBarTitle: 'Story',
         scrollableAppBar: true,
         actions: [
-          const _ShareButton(),
+          if (status == StoryStatus.complete) const _ShareButton(),
           const _FavoriteButton(),
         ],
         child: const _StoryWidget(),
