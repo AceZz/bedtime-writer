@@ -63,11 +63,17 @@ is in the `build.gradle`.
 
 Enable "Email/Password", "Google" and "Anonymous" providers.
 
-To finish configuring Google authentication, you need to "add the SHA1 fingerprint" of the Android
+* To configure Google authentication, you need to "add the SHA1 fingerprint" of the Android
 app. See
 [this page](https://developers.google.com/android/guides/client-auth#self-signing_your_application)
 for the official instructions (`gradlew signingReport` works well). Put the fingerprint in the
 settings of the project, in the Android app.
+
+Firebase helps to handle the reset of a user's password:
+
+* To set-up the reset-password sender domain, email content and url. Go to Authentification > Templates in the Firebase console.
+* For customizing the noreply sender email: follow the instructions given by Firebase and add the changes to Google Domains DNS.
+* For setting-up the custom url for password reset while using Firebase hosting: Go to Hosting > Add custom domain and add there your custom subdomain you want displayed. Make sure to add the path /__/auth/action in Authentification for password reset when you give this link.
 
 ##### Firestore
 

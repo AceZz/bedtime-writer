@@ -209,7 +209,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: GestureDetector(
             onTap: () => _showResetPasswordAlertDialog(
-                context: context, emailController: emailController),
+              context: context,
+              emailController: emailController,
+            ),
             child: Text(
               'Reset or Forgot Password?',
               style: forgotPasswordTextStyle,
@@ -354,15 +356,13 @@ void _showResetPasswordConfirmationAlertDialog({
         content: Container(
           width: 0.6 * deviceWidth,
           child: Text(
-            'We sent you an email for the password reset.',
+            'We sent you an email to reset your password.',
             style: Theme.of(context).primaryTextTheme.bodySmall,
           ),
         ),
         actions: <Widget>[
           TextButton(
-            onPressed: () {
-              context.pop();
-            },
+            onPressed: context.pop,
             child: Text(
               'Ok',
               style: Theme.of(context).primaryTextTheme.bodySmall,
@@ -412,8 +412,6 @@ class _AlertDialogResetPasswordState extends State<_AlertDialogResetPassword> {
 
     void _setAlertText({required Exception e}) {
       setState(() {
-        //TODO: general further testing (google accounts, existing accounts, email sender etc..)
-        //TODO: handle further error which are specific to reset password
         _alertText = _convertExceptionToText(e: e);
       });
     }
@@ -445,18 +443,14 @@ class _AlertDialogResetPasswordState extends State<_AlertDialogResetPassword> {
       ),
       actions: <Widget>[
         TextButton(
-          onPressed: () {
-            _submitResetPassword();
-          },
+          onPressed: _submitResetPassword,
           child: Text(
             'Submit',
             style: Theme.of(context).primaryTextTheme.bodySmall,
           ),
         ),
         TextButton(
-          onPressed: () {
-            context.pop();
-          },
+          onPressed: context.pop,
           child: Text(
             'Cancel',
             style: Theme.of(context).primaryTextTheme.bodySmall,
