@@ -11,14 +11,16 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "local_backend": "firebase emulators:start",
-    "deploy_functions": "firebase deploy --only functions",
-    "deploy_hosting": "firebase hosting:channel:deploy preview --expires 7d"
+    "deploy_functions_dev": "firebase deploy --only functions --project bedtime-writer-dev",
+    "deploy_functions_prod": "firebase deploy --only functions --project bedtime-writer",
+    "deploy_hosting_dev": "firebase hosting:channel:deploy preview --expires 7d"
   },
   "main": "lib/src/index.js",
   "dependencies": {
     "@types/node": "^18.15.11",
+    "ajv": "^8.12.0",
     "firebase-admin": "^11.5",
-    "firebase-functions": "^4.2",
+    "firebase-functions": "^4.4",
     "openai": "^3.1.0",
     "sharp": "^0.32.0"
   },

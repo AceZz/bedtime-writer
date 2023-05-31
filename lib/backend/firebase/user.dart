@@ -189,6 +189,18 @@ class _FirebaseRegisteredUser extends _FirebaseAuthUser
   }
 }
 
+/// A function to reset the password for a provided email
+Future<void> firebaseResetPassword(String email) async {
+  try {
+    _validateEmail(email);
+    await firebaseAuth.sendPasswordResetEmail(email: email);
+  } on firebase_auth.FirebaseAuthException catch (e) {
+    throw AuthException(code: e.code);
+  } on FormatException catch (e) {
+    throw e;
+  }
+}
+
 Future _signInWithEmailAndPassword({
   required String email,
   required String password,
@@ -203,7 +215,7 @@ Future _signInWithEmailAndPassword({
   } on firebase_auth.FirebaseAuthException catch (e) {
     throw AuthException(code: e.code);
   } on FormatException catch (e) {
-    throw FormatException(code: e.code);
+    throw e;
   }
 }
 
@@ -222,7 +234,7 @@ Future _createUserWithEmailAndPassword({
   } on firebase_auth.FirebaseAuthException catch (e) {
     throw AuthException(code: e.code);
   } on FormatException catch (e) {
-    throw FormatException(code: e.code);
+    throw e;
   }
 }
 
@@ -243,13 +255,14 @@ Future _linkUserWithEmailAndPassword({
   } on firebase_auth.FirebaseAuthException catch (e) {
     throw AuthException(code: e.code);
   } on FormatException catch (e) {
-    throw FormatException(code: e.code);
+    throw e;
   }
 }
 
 void _validateEmail(String email) {
   // Email validation regular expression
-  final RegExp emailRegex = RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
+  final RegExp emailRegex =
+      RegExp(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$');
 
   if (!emailRegex.hasMatch(email)) {
     throw FormatException(code: 'invalid-email-format');

@@ -6,14 +6,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../concrete.dart';
 import '../story.dart';
 import '../story_params.dart';
-import '../story_part.dart';
+import '../story_status.dart';
 import '../user.dart';
 import 'firebase.dart';
+import 'story_part.dart';
 
-/// Creates a story and returns its ID.
-Future<String> firebaseAddStory(StoryParams params) async {
+Future<String> firebaseCreateClassicStory(StoryParams params) async {
   return firebaseFunctions
-      .httpsCallable('addStory')
+      .httpsCallable('createClassicStoryRequest')
       .call(params.serialize())
       .then((result) => result.data);
 }
@@ -35,6 +35,13 @@ final firebaseFavoriteUserStoriesProvider = _userStoriesProvider(
   queryBuilder: (AuthUser user) =>
       _userStoriesQueryBuilder(user).where('isFavorite', isEqualTo: true),
 );
+
+/// Streams a specific [StoryStatus].
+final firebaseStoryStatusProvider =
+    FutureProvider.autoDispose.family<StoryStatus, String>((ref, id) {
+  return ref
+      .watch(firebaseStoryProvider(id).selectAsync((story) => story.status));
+});
 
 /// Helper to create providers that return lists of [Story].
 ///
@@ -65,37 +72,6 @@ Query<Map<String, dynamic>> _userStoriesQueryBuilder(AuthUser user) =>
         .orderBy('timestamp', descending: true)
         .where('author', isEqualTo: user.uid);
 
-/// Firebase implementation of [StoryPart].
-class _FirebaseStoryPart implements StoryPart {
-  final String id;
-  final CollectionReference<Map<String, dynamic>> _imagesRef;
-  final Map<String, dynamic> _data;
-
-  factory _FirebaseStoryPart.deserialize(
-    CollectionReference<Map<String, dynamic>> imagesRef,
-    DocumentSnapshot<Map<String, dynamic>> part,
-  ) {
-    return _FirebaseStoryPart(part.id, imagesRef, part.data()!);
-  }
-
-  const _FirebaseStoryPart(this.id, this._imagesRef, this._data) : super();
-
-  String toString() => '_FirebaseStoryPart(${text.substring(0, 20)}...)';
-
-  @override
-  Future<Uint8List> get image async {
-    final image = await getCacheThenServer(_imageRef);
-    return image.data()!['data'].bytes;
-  }
-
-  DocumentReference<Map<String, dynamic>> get _imageRef {
-    final imageId = _data['image'];
-    return _imagesRef.doc(imageId);
-  }
-
-  String get text => _data['text'];
-}
-
 /// Firebase implementation of [Story].
 class _FirebaseStory implements Story {
   final String id;
@@ -124,6 +100,9 @@ class _FirebaseStory implements Story {
   DateTime get dateTime => (_data['timestamp'] as Timestamp).toDate();
 
   @override
+  StoryStatus get status => tryParseStoryRequestStatus(_data['status']);
+
+  @override
   bool get isFavorite => _data['isFavorite'];
 
   @override
@@ -137,11 +116,7 @@ class _FirebaseStory implements Story {
   int get numParts => parts.length;
 
   @override
-  Future<StoryPart> getPart(int index) async {
-    final partRef = _storyRef.collection('parts').doc(parts[index]);
-    final data = await partRef.get();
-    return _FirebaseStoryPart.deserialize(_imagesRef, data);
-  }
+  String getPartId(int index) => parts[index];
 
   List<dynamic> get parts => _data['parts'];
 
@@ -151,8 +126,15 @@ class _FirebaseStory implements Story {
   @override
   Future<Uint8List?> get thumbnail async {
     if (numParts > 0) {
-      final part = await getPart(0);
-      return part.image;
+      final storyPartData = await getCacheThenServer(
+        _storyRef.collection('parts').doc(getPartId(0)),
+      );
+      final storyPart = FirebaseStoryPart.deserialize(
+        _imagesRef,
+        storyPartData,
+      );
+
+      return storyPart.image;
     }
     return null;
   }

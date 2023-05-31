@@ -8,9 +8,6 @@ final _random = new Random();
 ///
 /// This class is immutable. Use [copyWith] to return a new object with some of
 /// its fields updated.
-///
-/// Use [description] to get a description of this character. Even if some of
-/// the fields are not initialized, a consistent description should be produced.
 @immutable
 class Character {
   final String name;
@@ -39,11 +36,10 @@ class Character {
 
   Map<String, dynamic> serialize() {
     var map = {
-      'name': name,
-      'type': type,
-      'flaw': flaw,
-      'power': power,
-      'challenge': challenge,
+      'characterName': name,
+      'characterFlaw': flaw,
+      'characterPower': power,
+      'characterChallenge': challenge,
     };
     map.removeWhere((key, value) => value == null);
 
@@ -70,7 +66,7 @@ class StoryParams {
   const StoryParams({
     this.style,
     this.character,
-    this.duration = 5,
+    this.duration,
     this.place,
     this.object,
   });
@@ -94,11 +90,11 @@ class StoryParams {
   Map<String, dynamic> serialize() {
     var map = {
       'style': style,
-      'character': character?.serialize(),
       'duration': duration,
       'place': place,
       'object': object,
     };
+    map.addAll(character?.serialize() ?? {});
     map.removeWhere((key, value) => value == null);
 
     return map;

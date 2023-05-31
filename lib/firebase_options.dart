@@ -47,30 +47,32 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAzm4JnLoPx5xDuW2x3VDRb494838r63JQ',
-    appId: '1:596701039771:web:261b4cb8bbe957dc758a3e',
-    messagingSenderId: '596701039771',
-    projectId: 'bedtime-writer',
-    authDomain: 'bedtime-writer.firebaseapp.com',
-    storageBucket: 'bedtime-writer.appspot.com',
+    apiKey: 'AIzaSyCh-zZZN9dHaNX2i31q9pmK8tsmmeH1q4s',
+    appId: '1:558387951881:web:ad8780ded0c7d912bf7bd8',
+    messagingSenderId: '558387951881',
+    projectId: 'bedtime-writer-dev',
+    authDomain: 'bedtime-writer-dev.firebaseapp.com',
+    storageBucket: 'bedtime-writer-dev.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAO-2jQTyEPCOYJsI37ZFiSf9gNWBZWvoo',
-    appId: '1:596701039771:android:46542c1616de2984758a3e',
-    messagingSenderId: '596701039771',
-    projectId: 'bedtime-writer',
-    storageBucket: 'bedtime-writer.appspot.com',
+    apiKey: 'AIzaSyDlz_iCI6CwsmrWNU1aHnCSMjExckXU518',
+    appId: '1:558387951881:android:be2d026ddbf54fe8bf7bd8',
+    messagingSenderId: '558387951881',
+    projectId: 'bedtime-writer-dev',
+    storageBucket: 'bedtime-writer-dev.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAxg_LFlr0sZrbpHe27rAqIsEfFMACSecI',
-    appId: '1:596701039771:ios:c7dbc0fefbb30fbc758a3e',
-    messagingSenderId: '596701039771',
-    projectId: 'bedtime-writer',
-    storageBucket: 'bedtime-writer.appspot.com',
+    apiKey: 'AIzaSyAvbsOpnKzWpJAra6f9csZcrbRvnkkkS64',
+    appId: '1:558387951881:ios:f7b146c7c812f701bf7bd8',
+    messagingSenderId: '558387951881',
+    projectId: 'bedtime-writer-dev',
+    storageBucket: 'bedtime-writer-dev.appspot.com',
+    androidClientId:
+        '558387951881-fmuuljdv05e4rcn8nf8vkmh40nuo430d.apps.googleusercontent.com',
     iosClientId:
-        '596701039771-l5583cm0tolhnn6tjapmad51akjel1k5.apps.googleusercontent.com',
-    iosBundleId: 'com.tap.bedtimewriter',
+        '558387951881-9dgt5m6q21ce9or0g6ihupbmq1v6jbpd.apps.googleusercontent.com',
+    iosBundleId: 'com.dreamstorestudios.bedtimewriter',
   );
 }

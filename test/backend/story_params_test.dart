@@ -45,19 +45,17 @@ void main() {
 
     test('.serialize() returns a full serialization', () {
       expect(fullCharacter.serialize(), {
-        'name': 'Someone',
-        'type': 'some type',
-        'flaw': 'has a flaw',
-        'power': 'has a power',
-        'challenge': 'having a challenge',
+        'characterName': 'Someone',
+        'characterFlaw': 'has a flaw',
+        'characterPower': 'has a power',
+        'characterChallenge': 'having a challenge',
       });
     });
 
     test('.serialize() returns a partial serialization', () {
       expect(partialCharacter.serialize(), {
-        'name': 'Someone',
-        'type': 'some type',
-        'flaw': 'has a flaw',
+        'characterName': 'Someone',
+        'characterFlaw': 'has a flaw',
       });
     });
   });
@@ -82,19 +80,23 @@ void main() {
     test('.serialize() returns a full serialization', () {
       expect(fullStory.serialize(), {
         'style': 'Andersen',
-        'character': fullCharacter.serialize(),
         'duration': 3,
         'place': 'at some place',
         'object': 'some object',
+        'characterName': 'Someone',
+        'characterFlaw': 'has a flaw',
+        'characterPower': 'has a power',
+        'characterChallenge': 'having a challenge',
       });
     });
 
     test('.serialize() returns a partial serialization', () {
       expect(partialStory.serialize(), {
         'style': 'Andersen',
-        'character': partialCharacter.serialize(),
         'duration': 3,
         'place': 'at some place',
+        'characterName': 'Someone',
+        'characterFlaw': 'has a flaw',
       });
     });
   });

@@ -62,6 +62,7 @@ abstract class RegisteredUser extends AuthUser {
 /// Generic authentication exception.
 class AuthException implements Exception {
   String code;
+
   AuthException({required this.code});
 }
 
@@ -71,7 +72,7 @@ class AuthException implements Exception {
 mixin GoogleAuthMixin {
   Future<GoogleSignInAuthentication?> getGoogleAuth({String? clientId}) async {
     // See https://firebase.google.com/docs/auth/flutter/federated-auth.
-    var googleUser = await GoogleSignIn(clientId: clientId).signIn();
+    var googleUser = await GoogleSignIn().signIn();
     return await googleUser?.authentication;
   }
 }

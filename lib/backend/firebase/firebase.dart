@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 final firebaseAuth = FirebaseAuth.instance;
 final firebaseFirestore = FirebaseFirestore.instance;
-final firebaseFunctions = FirebaseFunctions.instanceFor(region: 'europe-west1');
+final firebaseFunctions = FirebaseFunctions.instanceFor(region: 'europe-west6');
 
 /// Tries to get the data of [ref] from the cache. If it fails, returns it from
 /// the server (standard behavior).

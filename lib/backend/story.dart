@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'story_part.dart';
+import 'story_status.dart';
 
 /// Represents a generated story.
 abstract class Story {
@@ -14,6 +14,8 @@ abstract class Story {
 
   DateTime get dateTime;
 
+  StoryStatus get status;
+
   bool get isFavorite;
 
   /// Toggle the [isFavorite] state the story.
@@ -23,7 +25,8 @@ abstract class Story {
 
   int get numParts;
 
-  Future<StoryPart> getPart(int index);
+  /// Returns the ID of the part at [index].
+  String getPartId(int index);
 
   Future<Uint8List?> get thumbnail;
 }

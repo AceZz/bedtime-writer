@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "596701039771",
+    "project_id": "bedtime-writer",
+    "storage_bucket": "bedtime-writer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:596701039771:android:cf3f69aa22184f11758a3e",
+        "android_client_info": {
+          "package_name": "com.dreamstorestudios.bedtimewriter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "596701039771-nq09rc923s6f70t7akajicl5irbgsjpv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dreamstorestudios.bedtimewriter",
+            "certificate_hash": "424ebb2a2357ea2ac0abbdab90ee9f39c677672b"
+          }
+        },
+        {
+          "client_id": "596701039771-uslcbiqjnv361d8vokpaiurt5onn472q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dreamstorestudios.bedtimewriter",
+            "certificate_hash": "879e1e56f7c0594eecabd988c7a21001ac122f16"
+          }
+        },
+        {
+          "client_id": "596701039771-trtsjnpoubcbkr22hui552emio8c8cfa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO-2jQTyEPCOYJsI37ZFiSf9gNWBZWvoo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "596701039771-trtsjnpoubcbkr22hui552emio8c8cfa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "596701039771-r7enjm9rgh7fdgmr346p5hu9qp9m6nb3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dreamstorestudios.bedtimewriter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

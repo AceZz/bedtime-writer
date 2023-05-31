@@ -1,9 +1,11 @@
 export 'concrete.dart'
     show
-        addStory,
+        createClassicStory,
         favoriteUserStoriesProvider,
         preferencesProvider,
+        resetPassword,
         storyProvider,
+        storyPartProvider,
         userProvider,
         userStoriesProvider,
         statsProvider;
@@ -14,6 +16,7 @@ export 'stats.dart' show Stats;
 export 'story.dart' show Story;
 export 'story_params.dart' show Character, Choice, Question, StoryParams;
 export 'story_part.dart' show StoryPart;
+export 'story_status.dart' show StoryStatus, tryParseStoryRequestStatus;
 export 'user.dart'
     show
         User,

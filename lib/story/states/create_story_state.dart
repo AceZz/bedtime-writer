@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../backend/index.dart';
 import 'data.dart';
-import '../../backend/story_params.dart';
 
 final _random = new Random();
 
@@ -120,7 +120,10 @@ var defaultCreateStoryState = CreateStoryState(
 );
 
 class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
-  CreateStoryStateNotifier() : super(defaultCreateStoryState);
+  final Ref ref;
+
+  CreateStoryStateNotifier({required this.ref})
+      : super(defaultCreateStoryState);
 
   String _getRandomStyle() {
     final int randomIndex = Random().nextInt(_styles.length);
@@ -139,9 +142,11 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
 
   /// Resets the StoryState.
   void reset() {
+    final Preferences preferences = ref.read(preferencesProvider);
     state = CreateStoryState(
       storyParams: StoryParams(
         style: _getRandomStyle(),
+        duration: preferences.duration,
       ),
       questions: _getQuestions(),
       numRandom: 0,
@@ -156,5 +161,5 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
 
 final createStoryStateProvider =
     StateNotifierProvider<CreateStoryStateNotifier, CreateStoryState>(
-  (ref) => CreateStoryStateNotifier(),
+  (ref) => CreateStoryStateNotifier(ref: ref),
 );

@@ -5,5 +5,6 @@ import { StoryPart } from "../story_part";
  */
 export interface StoryGenerator {
   title(): string;
-  nextStoryPart(): Promise<StoryPart>;
+
+  storyParts(): AsyncGenerator<StoryPart>;
 }
