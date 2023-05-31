@@ -21,8 +21,11 @@ import {
   CLASSIC_LOGIC,
 } from "./story/";
 import { getOpenAiApi } from "./open_ai";
-import { requestLimiter } from "./request_limiter";
-import { StoryRequestV1Manager, StoryRequestV1 } from "./story/request";
+import {
+  StoryRequestV1Manager,
+  StoryRequestV1,
+  storyRequestLimiter,
+} from "./story/request";
 
 initializeApp();
 
@@ -42,7 +45,7 @@ export const createClassicStoryRequest = onCall(async (request) => {
   request.data.author = getUid(request.auth);
 
   // Check against rate limits
-  await requestLimiter(firestore_database, request.data.author);
+  await storyRequestLimiter(firestore_database, request.data.author);
 
   const requestManager = new StoryRequestV1Manager();
   const id = await requestManager.create(CLASSIC_LOGIC, request.data);
