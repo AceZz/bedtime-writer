@@ -57,9 +57,9 @@ class HomeScreenDebugStats extends ConsumerWidget {
 
     Widget statsWidget = stats.when(
       loading: () => const CircularProgressIndicator(),
-      error: (err, stack) => Text('Error: $err'),
+      error: (err, stack) => Text('numStories error: $err'),
       data: (stats) {
-        return Text('numStories ${stats.numStories}');
+        return Text('numStories: ${stats.numStories}');
       },
     );
 
