@@ -79,18 +79,25 @@ class HomeScreen extends ConsumerWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Flexible(child: HomeScreenDebug()),
+                      Flexible(child: const HomeScreenDebugAuth()),
                     ],
                   ),
                 ),
               ),
             ),
           if (debugStats())
-            Flexible(
-              child: Row(
-                children: [
-                  Flexible(child: HomeScreenDebug()),
-                ],
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(child: const HomeScreenDebugStats()),
+                    ],
+                  ),
+                ),
               ),
             ),
         ],

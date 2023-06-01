@@ -1,4 +1,5 @@
 export 'emulators.dart' show configureFirebaseEmulators;
+export 'stats.dart' show firebaseStatsProvider;
 export 'story.dart'
     show
         firebaseCreateClassicStory,
@@ -7,6 +8,4 @@ export 'story.dart'
         firebaseUserStoriesProvider,
         firebaseStoryStatusProvider;
 export 'story_part.dart' show firebaseStoryPartProvider;
-export 'user.dart'
-    show getFirebaseUser, firebaseResetPassword;
-export 'stats.dart' show firebaseStatsProvider;
+export 'user.dart' show getFirebaseUser, firebaseResetPassword;
