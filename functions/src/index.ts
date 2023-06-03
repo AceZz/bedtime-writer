@@ -83,15 +83,23 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
 
   await writer.writeMetadata();
 
-  for await (const part of generator.storyParts()) {
-    await writer.writePart(part);
+  try {
+    // Write story to database part after part
+    for await (const part of generator.storyParts()) {
+      await writer.writePart(part);
+    }
+
+    await writer.writeComplete();
+    logger.info(
+      `createClassicStory: story ${storyId} was generated and added to Firestore`
+    );
+  } catch (error) {
+    console.log("coucou");
+    await writer.writeError();
+    logger.error(
+      `createClassicStory: story ${storyId} encountered an error: ${error}`
+    );
   }
-
-  await writer.writeComplete();
-
-  logger.info(
-    `createClassicStory: story ${storyId} was generated and added to Firestore`
-  );
 }
 
 function getTextApi(): TextApi {
