@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:bedtime_writer/story/screens/error_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -69,10 +70,10 @@ class _StoryScreen extends ConsumerWidget {
               case StoryStatus.pending:
                 return loadingScreen;
               case StoryStatus.error:
-                return const Text('Something went wrong...');
+                return ErrorScreen();
             }
           },
-          error: (error, stackTrace) => const Text('Something went wrong...'),
+          error: (error, stackTrace) => ErrorScreen(),
           loading: () => loadingScreen,
           skipLoadingOnReload: true,
         ),
