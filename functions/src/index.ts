@@ -94,7 +94,6 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
       `createClassicStory: story ${storyId} was generated and added to Firestore`
     );
   } catch (error) {
-    console.log("coucou");
     await writer.writeError();
     logger.error(
       `createClassicStory: story ${storyId} encountered an error: ${error}`
