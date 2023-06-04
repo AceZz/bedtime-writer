@@ -2,6 +2,7 @@ import process from "node:process";
 
 import { initializeApp } from "firebase-admin/app";
 import { firestore } from "firebase-admin";
+import { FieldValue } from "firebase-admin/firestore";
 import { setGlobalOptions } from "firebase-functions/v2";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { onCall, HttpsError } from "firebase-functions/v2/https";
@@ -78,23 +79,28 @@ export const createStory = onDocumentCreated(
  * Throw an HttpsError in case there are no remaining stories for today.
  */
 export const checkUserRemainingStories = onCall(async (request) => {
-  request.data.author = getUid(request.auth);
+  const author = getUid(request.auth);
+  const userStoriesLimit = Number(process.env.USER_STORIES_LIMIT) ?? 2
 
   // Retrieve user document.
-  const userRef = firestore_db.collection("users").doc(request.data.author);
+  const userRef = firestore_db.collection("users").doc(author);
   const userSnapshot = await userRef.get();
-  const userData = userSnapshot.data();
+  const userSnapshotData = userSnapshot.data();
 
   // If no user data is found, add this user to the collection with maximal daily remaining stories.
-  if (!userData) {
-    const newUserData = {
-      remainingStories: process.env.USER_STORIES_LIMIT ?? 2,
+  let userData;
+  if (!userSnapshotData) {
+    userData = {
+      remainingStories: userStoriesLimit,
     };
-    await userRef.set(newUserData);
+    await userRef.set(userData);
+  } else {
+    userData = userSnapshotData;
   }
 
   // Check remaining stories.
-  if (!userData || userData.remainingStories <= 0) {
+  if (userData.remainingStories <= 0) {
+    logger.error(`User ${author} has reached their daily stories limit.`);
     throw new HttpsError(
       "resource-exhausted",
       "Story requests have reached the limit for today."
@@ -103,34 +109,33 @@ export const checkUserRemainingStories = onCall(async (request) => {
 
   // Decrease remaining stories.
   await userRef.update({
-    remainingStories: firestore.FieldValue.increment(-1),
+    remainingStories: FieldValue.increment(-1),
   });
+
+  return "authorized";
 });
 
 //TODO: test it
 // This function resets the daily requests count for all users at midnight
-export const resetDailyRequests = onSchedule(
-  "every day 00:00",
-  async () => {
-    const usersSnapshot = await firestore_db.collection("users").get();
+export const resetDailyRequests = onSchedule("every day 00:00", async () => {
+  const usersSnapshot = await firestore_db.collection("users").get();
 
-    // Batch write for efficiency
-    const batch = firestore_db.batch();
+  // Batch write for efficiency
+  const batch = firestore_db.batch();
 
-    usersSnapshot.docs.forEach((doc) => {
-      const userRef = firestore_db.collection("users").doc(doc.id);
+  usersSnapshot.docs.forEach((doc) => {
+    const userRef = firestore_db.collection("users").doc(doc.id);
 
-      batch.update(userRef, {
-        remainingStories: process.env.USER_STORIES_LIMIT ?? 2,
-      });
+    batch.update(userRef, {
+      remainingStories: process.env.USER_STORIES_LIMIT ?? 2,
     });
+  });
 
-    await batch.commit();
+  await batch.commit();
 
-    //TODO: do a separate log for success and for error
-    console.log("Successfully reset daily requests count for all users.");
-  }
-);
+  //TODO: do a separate log for success and for error
+  console.log("Successfully reset daily requests count for all users.");
+});
 
 /**
  * Generate a classic story and add it to Firestore.
