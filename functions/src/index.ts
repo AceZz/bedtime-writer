@@ -107,6 +107,7 @@ export const checkUserRemainingStories = onCall(async (request) => {
     );
   }
 
+  //TODO: this should not happen here - make a separate function
   // Decrease remaining stories.
   await userRef.update({
     remainingStories: FieldValue.increment(-1),

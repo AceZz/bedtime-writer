@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,17 +25,65 @@ class CreateStoryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     CreateStoryState state = ref.watch(createStoryStateProvider);
 
+    //TODO: add user stats provider here to do the check instead of backend request to avoid rebuilding
+
+    Widget nextScreen;
+
     // Displays the current question.
     if (state.hasQuestions) {
-      return _QuestionScreen(question: state.currentQuestion);
+      nextScreen = _QuestionScreen(question: state.currentQuestion);
+    } else {
+      nextScreen = FutureBuilder(
+        future: createClassicStory(state.storyParams),
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          final requestId = snapshot.data;
+          return _StoryScreen(requestId: requestId);
+        },
+      );
     }
 
     // Creates the story and displays it.
+    return _LimitCheckScreen(errorScreen: Text("error"), nextScreen: nextScreen);
+  }
+}
+
+
+
+/// Checks the stories limit and redirects towards a nextScreen or errorScreen
+class _LimitCheckScreen extends StatelessWidget {
+  final Widget errorScreen;
+  final Widget nextScreen;
+
+  const _LimitCheckScreen(
+      {Key? key, required this.errorScreen, required this.nextScreen})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    //TODO: remove this test area
+    final firebaseFunctions =
+        FirebaseFunctions.instanceFor(region: 'europe-west6');
+
+    Future<String> firebaseCheckUserRemainingStories() async {
+      return firebaseFunctions
+          .httpsCallable('checkUserRemainingStories')
+          .call()
+          .then((result) => result.data);
+    }
+
     return FutureBuilder(
-      future: createClassicStory(state.storyParams),
+      future: firebaseCheckUserRemainingStories(),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-        final requestId = snapshot.data;
-        return _StoryScreen(requestId: requestId);
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return AppScaffold(
+              appBarTitle: 'Test',
+              scrollableAppBar: true,
+              child: CircularProgressIndicator(),
+            );
+          default:
+            return snapshot.hasError ? this.errorScreen : this.nextScreen;
+        }
       },
     );
   }
