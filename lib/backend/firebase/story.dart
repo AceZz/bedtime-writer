@@ -70,7 +70,8 @@ Query<Map<String, dynamic>> _userStoriesQueryBuilder(AuthUser user) =>
     firebaseFirestore
         .collection('stories')
         .orderBy('timestamp', descending: true)
-        .where('author', isEqualTo: user.uid);
+        .where('author', isEqualTo: user.uid)
+        .where('status', isEqualTo: 'complete');
 
 /// Firebase implementation of [Story].
 class _FirebaseStory implements Story {
