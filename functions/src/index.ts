@@ -21,6 +21,9 @@ import {
 } from "./story/";
 import { getOpenAiApi } from "./open_ai";
 import { StoryRequestV1Manager, StoryRequestV1 } from "./story/request";
+import { BucketRateLimiter, RateLimiter } from "./rate_limiter";
+import { FirestoreBucketRateLimiterStorage } from "./rate_limiter/bucket_rate_limiter/firestore_bucket_rate_limiter_storage";
+import { parseEnvAsNumber as parseEnvNumber } from "./utils";
 
 initializeApp();
 
@@ -35,6 +38,15 @@ setGlobalOptions({ region: "europe-west6" });
  */
 export const createClassicStoryRequest = onCall(async (request) => {
   request.data.author = getUid(request.auth);
+  const userRateLimiter = getRateLimiter(
+    parseEnvNumber("RATE_LIMITER_MAX_REQUESTS_PER_DAY_USER", 50)
+  );
+  await userRateLimiter.addRequests(request.data.author, ["story"]);
+
+  const globalRateLimiter = getRateLimiter(
+    parseEnvNumber("RATE_LIMITER_MAX_REQUESTS_PER_DAY_GLOBAL", 1000)
+  );
+  await globalRateLimiter.addRequests("global", ["story"]);
 
   const requestManager = new StoryRequestV1Manager();
   const id = await requestManager.create(CLASSIC_LOGIC, request.data);
@@ -99,6 +111,14 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
       `createClassicStory: story ${storyId} encountered an error: ${error}`
     );
   }
+}
+
+function getRateLimiter(limit: number): RateLimiter {
+  return new BucketRateLimiter(
+    new FirestoreBucketRateLimiterStorage(),
+    new Map([["story", limit]]),
+    new Map([["story", 24 * 3600]])
+  );
 }
 
 function getTextApi(): TextApi {
