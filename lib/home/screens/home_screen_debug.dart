@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../backend/index.dart';
 
-class HomeScreenDebug extends ConsumerWidget {
-  const HomeScreenDebug({Key? key}) : super(key: key);
+class HomeScreenDebugAuth extends ConsumerWidget {
+  const HomeScreenDebugAuth({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,5 +43,33 @@ class HomeScreenDebug extends ConsumerWidget {
     }
 
     return null;
+  }
+}
+
+class HomeScreenDebugStats extends ConsumerWidget {
+  const HomeScreenDebugStats({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
+
+    AsyncValue<Stats> stats = ref.watch(statsProvider);
+
+    Widget statsWidget = stats.when(
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => Text('numStories error: $err'),
+      data: (stats) => Text('numStories: ${stats.numStories}'),
+    );
+
+    List<Widget> children = [
+      statsWidget,
+      Text(user.toString()),
+    ];
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
   }
 }

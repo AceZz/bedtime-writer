@@ -7,6 +7,7 @@ import 'package:tuple/tuple.dart';
 import 'firebase/index.dart';
 import 'preferences.dart';
 import 'shared_preferences/index.dart';
+import 'stats.dart';
 import 'story.dart';
 import 'story_params.dart';
 import 'story_part.dart';
@@ -59,3 +60,10 @@ final AutoDisposeFutureProviderFamily<StoryStatus, String> storyStatusProvider =
 /// with it.
 final NotifierProvider<PreferencesNotifier, Preferences> preferencesProvider =
     sharedPreferencesProvider;
+
+/**
+ * STATS
+ */
+
+/// Provides a [Stats] object.
+final StreamProvider<Stats> statsProvider = firebaseStatsProvider;
