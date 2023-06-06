@@ -79,6 +79,10 @@ export class FirebaseStoryWriter implements StoryWriter {
     await this.storyRef.update({ status: StoryStatus.COMPLETE });
   }
 
+  async writeError(): Promise<void> {
+    await this.storyRef.update({ status: StoryStatus.ERROR });
+  }
+
   private async writePartImage(image?: Buffer): Promise<string | undefined> {
     if (image === undefined) {
       return undefined;
