@@ -71,9 +71,9 @@ class HomeScreen extends ConsumerWidget {
           SizedBox(height: 20),
           menuWidget,
           if (debugAuth())
-            _CustomCenterAtBottom(child: const HomeScreenDebugAuth()),
+            const _CustomCenterAtBottom(child: const HomeScreenDebugAuth()),
           if (debugStats())
-            _CustomCenterAtBottom(child: const HomeScreenDebugStats()),
+            const _CustomCenterAtBottom(child: const HomeScreenDebugStats()),
         ],
       ),
       showAppBar: false,
