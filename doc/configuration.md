@@ -27,6 +27,12 @@ In `bedtime-writer/.env`:
 In other words, when developing locally, edit `functions/.env.local`. If you wish to modify the
 production settings, edit `functions/.env` (and redeploy).
 
+* `RATE_LIMITER_MAX_REQUESTS_PER_DAY_USER`
+    * default is `50`
+    * The maximum number of requests per day and per user.
+* `RATE_LIMITER_MAX_REQUESTS_PER_DAY_GLOBAL`
+    * default is `1000`
+    * The maximum number of requests per day globally.
 * `TEXT_API`
     * `openai` (default): use OpenAI's text generation API. Use the Google Cloud Secret as a key,
       which can be read from `.secret.local` when using the Firebase emulators.

@@ -21,4 +21,9 @@ export interface StoryWriter {
    * and should be avoided.
    */
   writeComplete(): Promise<void>;
+
+  /**
+   * Mark the story as having encountered an error.
+   */
+  writeError(): Promise<void>;
 }

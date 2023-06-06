@@ -10,6 +10,7 @@ import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
 import '../states/create_story_state.dart';
 import 'display_story_screen.dart';
+import 'error_screen.dart';
 
 /// Entry point of the story creation.
 ///
@@ -69,10 +70,10 @@ class _StoryScreen extends ConsumerWidget {
               case StoryStatus.pending:
                 return loadingScreen;
               case StoryStatus.error:
-                return const Text('Something went wrong...');
+                return ErrorScreen();
             }
           },
-          error: (error, stackTrace) => const Text('Something went wrong...'),
+          error: (error, stackTrace) => ErrorScreen(),
           loading: () => loadingScreen,
           skipLoadingOnReload: true,
         ),
