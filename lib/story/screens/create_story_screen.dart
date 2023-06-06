@@ -1,7 +1,6 @@
 import 'dart:core';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:bedtime_writer/story/screens/error_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,6 +10,7 @@ import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
 import '../states/create_story_state.dart';
 import 'display_story_screen.dart';
+import 'error_screen.dart';
 
 /// Entry point of the story creation.
 ///
