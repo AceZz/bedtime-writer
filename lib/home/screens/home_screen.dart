@@ -71,20 +71,9 @@ class HomeScreen extends ConsumerWidget {
           SizedBox(height: 20),
           menuWidget,
           if (debugAuth())
-            Expanded(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(child: HomeScreenDebug()),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            const _CustomCenterAtBottom(child: const HomeScreenDebugAuth()),
+          if (debugStats())
+            const _CustomCenterAtBottom(child: const HomeScreenDebugStats()),
         ],
       ),
       showAppBar: false,
@@ -130,6 +119,29 @@ class _HomeScreenButton extends ConsumerWidget {
           },
           child: Ink(
             child: Center(child: buttonTextWidget),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CustomCenterAtBottom extends StatelessWidget {
+  final Widget child;
+
+  const _CustomCenterAtBottom({Key? key, required this.child})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Flexible(child: child)],
           ),
         ),
       ),

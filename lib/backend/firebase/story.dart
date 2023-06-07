@@ -27,13 +27,13 @@ final firebaseStoryProvider =
 
 /// Streams the [Story]s authored by the current [User].
 final firebaseUserStoriesProvider = _userStoriesProvider(
-  queryBuilder: _userStoriesQueryBuilder,
+  queryBuilder: userStoriesQueryBuilder,
 );
 
 /// Streams the favorite [Story]s authored by the current [User].
 final firebaseFavoriteUserStoriesProvider = _userStoriesProvider(
   queryBuilder: (AuthUser user) =>
-      _userStoriesQueryBuilder(user).where('isFavorite', isEqualTo: true),
+      userStoriesQueryBuilder(user).where('isFavorite', isEqualTo: true),
 );
 
 /// Streams a specific [StoryStatus].
@@ -46,7 +46,7 @@ final firebaseStoryStatusProvider =
 /// Helper to create providers that return lists of [Story].
 ///
 /// The parameter [queryBuilder] transforms a [AuthUser] into a [Query]. It can
-/// be [_userStoriesQueryBuilder] for instance.
+/// be [userStoriesQueryBuilder] for instance.
 AutoDisposeStreamProvider<List<Story>> _userStoriesProvider({
   required Query<Map<String, dynamic>> Function(AuthUser) queryBuilder,
 }) {
@@ -66,11 +66,12 @@ AutoDisposeStreamProvider<List<Story>> _userStoriesProvider({
 }
 
 /// A query that only returns stories authored by [user].
-Query<Map<String, dynamic>> _userStoriesQueryBuilder(AuthUser user) =>
+Query<Map<String, dynamic>> userStoriesQueryBuilder(AuthUser user) =>
     firebaseFirestore
         .collection('stories')
         .orderBy('timestamp', descending: true)
-        .where('author', isEqualTo: user.uid);
+        .where('author', isEqualTo: user.uid)
+        .where('status', isEqualTo: 'complete');
 
 /// Firebase implementation of [Story].
 class _FirebaseStory implements Story {

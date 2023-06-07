@@ -1,4 +1,5 @@
 export 'emulators.dart' show configureFirebaseEmulators;
+export 'stats.dart' show firebaseStatsProvider;
 export 'story.dart'
     show
         firebaseCreateClassicStory,
