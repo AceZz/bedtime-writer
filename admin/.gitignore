@@ -1,3 +1,6 @@
 lib/
 node_modules/
 *.code-workspace
+service-account.json
+service-account-dev.json
+.env
