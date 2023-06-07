@@ -3,6 +3,7 @@ import process from "node:process";
 import { initializeApp } from "firebase-admin/app";
 import { firestore } from "firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
+import { auth } from "firebase-functions";
 import { setGlobalOptions } from "firebase-functions/v2";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { onCall, HttpsError } from "firebase-functions/v2/https";
@@ -85,6 +86,29 @@ export const createStory = onDocumentCreated(
 );
 
 //TODO: test it
+/**
+ * Initialize user stats in the users collection from Firestore upon new user creation.
+ */
+export const initializeUserStats = auth.user().onCreate(async (user) => {
+  const userStoriesLimit = Number(process.env.USER_STORIES_LIMIT) ?? 2
+
+  // Retrieve user document.
+  const userRef = firestore_db.collection("users").doc(user.uid);
+  const userSnapshot = await userRef.get();
+  const userSnapshotData = userSnapshot.data();
+
+  // If no user data is found, add this user to the collection with maximal daily remaining stories.
+  let userData;
+  if (!userSnapshotData) {
+    userData = {
+      numStories: 0,
+      remainingStories: userStoriesLimit,
+    };
+    await userRef.set(userData);
+  }
+});
+
+
 /**
  * Check if the user has reached their daily limit
  *
