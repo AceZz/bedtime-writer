@@ -3,9 +3,9 @@ export 'stats.dart' show firebaseStatsProvider;
 export 'story.dart'
     show
         firebaseCreateClassicStory,
-        firebaseStoryProvider,
         firebaseFavoriteUserStoriesProvider,
-        firebaseUserStoriesProvider,
-        firebaseStoryStatusProvider;
+        firebaseStoryProvider,
+        firebaseStoryStatusProvider,
+        firebaseUserStoriesProvider;
 export 'story_part.dart' show firebaseStoryPartProvider;
 export 'user.dart' show getFirebaseUser, firebaseResetPassword;
