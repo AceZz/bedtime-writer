@@ -1,0 +1,30 @@
+character:
+  text: "Who is the hero of tonight's story?"
+  choices:
+    blaze:
+      text: "Blaze, the kind dragon"
+      imagePath: "test/story/data/blaze.png"
+    sparkles:
+      text: "Sparkles, the magical horse"
+      imagePath: "test/story/data/sparkles.png"
+    frosty:
+      text: "Frosty, the pinguin"
+      imagePath: "test/story/data/frosty.png"
+flaw:
+  text: "What flaw does the hero have?"
+  choices:
+    failure:
+      text: "Being afraid of failure"
+      imagePath: "test/story/data/failure.png"
+    selfConfidence:
+      text: "Lacking self-confidence"
+      imagePath: "test/story/data/self_confidence.png"
+    lazy:
+      text: "Being a bit lazy"
+      imagePath: "test/story/data/lazy.png"
+    giveUp:
+      text: "Giving up easily"
+      imagePath: "test/story/data/give_up.png"
+    noAdvice:
+      text: "Not listening to advice"
+      imagePath: "test/story/data/no_advice.png"
