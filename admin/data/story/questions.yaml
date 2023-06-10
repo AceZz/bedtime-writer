@@ -1,0 +1,108 @@
+challenge:
+  text: "What challenge awaits the hero?"
+  choices:
+    animal:
+      text: "Fighting a big animal"
+      imagePath: "data/story/challenge/animal.png"
+    friend:
+      text: "Rescuing a friend"
+      imagePath: "data/story/challenge/friend.png"
+    lost:
+      text: "Being lost"
+      imagePath: "data/story/challenge/lost.png"
+    riddle:
+      text: "Solving a riddle"
+      imagePath: "data/story/challenge/riddle.png"
+    witch:
+      text: "Captured by a witch"
+      imagePath: "data/story/challenge/witch.png"
+character:
+  text: "Who is the hero of tonight's story?"
+  choices:
+    blaze:
+      text: "Blaze, the kind dragon"
+      imagePath: "data/story/character/blaze.png"
+    frosty:
+      text: "Frosty, the pinguin"
+      imagePath: "data/story/character/frosty.png"
+    sparkles:
+      text: "Sparkles, the magical horse"
+      imagePath: "data/story/character/sparkles.png"
+flaw:
+  text: "What flaw does the hero have?"
+  choices:
+    failure:
+      text: "Being afraid of failure"
+      imagePath: "data/story/flaw/failure.png"
+    giveUp:
+      text: "Giving up easily"
+      imagePath: "data/story/flaw/give_up.png"
+    lazy:
+      text: "Being a bit lazy"
+      imagePath: "data/story/flaw/lazy.png"
+    noAdvice:
+      text: "Not listening to advice"
+      imagePath: "data/story/flaw/no_advice.png"
+    selfConfidence:
+      text: "Lacking self-confidence"
+      imagePath: "data/story/flaw/self_confidence.png"
+object:
+  text: "What object does the hero find?"
+  choices:
+    amulet:
+      text: "A powerful amulet"
+      imagePath: "data/story/object/amulet.png"
+    diamond:
+      text: "A big diamond"
+      imagePath: "data/story/object/diamond.png"
+    flower:
+      text: "A rare flower"
+      imagePath: "data/story/object/flower.png"
+    ring:
+      text: "A magical ring"
+      imagePath: "data/story/object/ring.png"
+    shield:
+      text: "An enchanted shield"
+      imagePath: "data/story/object/shield.png"
+place:
+  text: "Where does the story take place?"
+  choices:
+    beach:
+      text: "On a sunny beach"
+      imagePath: "data/story/place/beach.png"
+    desert:
+      text: "In a dry desert"
+      imagePath: "data/story/place/desert.png"
+    magic:
+      text: "In a magical forest"
+      imagePath: "data/story/place/magic.png"
+    space:
+      text: "In a space station"
+      imagePath: "data/story/place/space.png"
+    underwater:
+      text: "In an underwater kingdom"
+      imagePath: "data/story/place/underwater.png"
+    village:
+      text: "In a quiet village"
+      imagePath: "data/story/place/village.png"
+power:
+  text: "What power does the hero have?"
+  choices:
+    animals:
+      text: "Can communicate with animals"
+      imagePath: "data/story/power/animals.png"
+    fly:
+      text: "Is able to fly"
+      imagePath: "data/story/power/fly.png"
+    heal:
+      text: "Can heal the others"
+      imagePath: "data/story/power/heal.png"
+    invisible:
+      text: "Can become invisible"
+      imagePath: "data/story/power/invisible.png"
+    minds:
+      text: "Can read minds"
+      imagePath: "data/story/power/minds.png"
+    weather:
+      text: "Can control the weather"
+      imagePath: "data/story/power/weather.png"
