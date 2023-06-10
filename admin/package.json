@@ -9,7 +9,8 @@
     "test": "npx jest",
     "lint_check": "npx prettier --check src test",
     "build": "tsc",
-    "build:watch": "tsc --watch"
+    "build:watch": "tsc --watch",
+    "set_story_questions": "node lib/src/set_story_questions.js"
   },
   "main": "lib/src/index.js",
   "dependencies": {

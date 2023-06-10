@@ -1,3 +1,5 @@
+import { readFileSync } from "fs";
+
 import "dotenv/config";
 import { applicationDefault, initializeApp } from "firebase-admin/app";
 
@@ -18,7 +20,7 @@ export function initFirebase(forceEmulators = false) {
  * This function must be called before `initializeApp()` of `firebase-admin`.
  */
 function configureFirebaseEmulators(forceEmulators: boolean) {
-  if (process.env.USE_FIREBASE_EMULATORS?.toLowerCase() === "true") {
+  if (firebaseEmulatorsAreUsed()) {
     console.log("Use Firebase emulators");
 
     process.env["FIREBASE_AUTH_EMULATOR_HOST"] = "localhost:9099";
@@ -29,6 +31,13 @@ function configureFirebaseEmulators(forceEmulators: boolean) {
     throw new Error(`Emulators are requested. Please set
 "USE_FIREBASE_EMULATORS=true" in your .env file.`);
   }
+}
+
+/**
+ * Return true if Firebase emulators are used.
+ */
+export function firebaseEmulatorsAreUsed(): boolean {
+  return process.env.USE_FIREBASE_EMULATORS?.toLowerCase() === "true";
 }
 
 /**
@@ -51,4 +60,16 @@ Where ... is the path to the file (usually service-account.json or service-accou
 See https://firebase.google.com/docs/admin/setup#initialize_the_sdk_in_non-google_environments for more details.
 `);
   }
+}
+
+/**
+ * Return the project used by the Google service account configuration in use.
+ */
+export function getFirebaseProject(): string {
+  checkFirebaseCredentialsEnv();
+
+  const creds = JSON.parse(
+    readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS ?? "").toString()
+  );
+  return creds.project_id;
 }
