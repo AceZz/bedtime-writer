@@ -61,3 +61,5 @@ launched!
 * `npm run set_story_questions [questions.yaml]`: set the story questions for the current project
   (on the emulator if `USE_FIREBASE_EMULATORS` is `true`). By default,
   `admin/data/story/questions.yaml` is used.
+* `npm run compress_story_images [folder]`: compress the images of the story choices. By default,
+  `admin/data/` is used.
