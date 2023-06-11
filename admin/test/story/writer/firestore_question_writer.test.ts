@@ -14,20 +14,23 @@ beforeEach(async () => {
 });
 
 test("Simple write", async () => {
-  await questions.writer.write(questions.samples[0]);
-  await questions.expectQuestionsToBe(questions.samples[0]);
+  const samples = await questions.samples();
+  await questions.writer.write(samples[0]);
+  await questions.expectQuestionsToBe(samples[0]);
 });
 
 test("Complex write", async () => {
-  await questions.writer.write(questions.samples[0]);
-  await questions.writer.write(questions.samples[1]);
+  const samples = await questions.samples();
+  await questions.writer.write(samples[0]);
+  await questions.writer.write(samples[1]);
 
-  await questions.expectQuestionsToBe(questions.samples[1]);
+  await questions.expectQuestionsToBe(samples[1]);
 });
 
 test("Write twice", async () => {
-  await questions.writer.write(questions.samples[0]);
-  await questions.writer.write(questions.samples[0]);
+  const samples = await questions.samples();
+  await questions.writer.write(samples[0]);
+  await questions.writer.write(samples[0]);
 
-  await questions.expectQuestionsToBe(questions.samples[0]);
+  await questions.expectQuestionsToBe(samples[0]);
 });

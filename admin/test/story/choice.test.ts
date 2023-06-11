@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 import { beforeAll, test } from "@jest/globals";
 import { Choice } from "../../src/story/choice";
@@ -9,19 +9,19 @@ beforeAll(async () => {
   await mkdir(OUTPUT_FOLDER, { recursive: true });
 });
 
-test("Can create a Choice", () => {
-  new Choice("yesNo", "Yes and no", "some/path.png");
+test("Can create a Choice", async () => {
+  const image = await readFile("test/story/data/choice.jpg");
+  new Choice("yesNo", "Yes and no", image);
 });
 
-test("Choice.image()", async () => {
-  const PATH = `${OUTPUT_FOLDER}/Choice_image.png`;
-
-  const image = await new Choice(
+test("Choice.fromImagePath", async () => {
+  const choice = await Choice.fromImagePath(
     "yesNo",
     "Yes and no",
     "test/story/data/choice.jpg"
-  ).image();
-  await writeFile(PATH, image);
+  );
 
-  console.log(`Choice.image: image saved at ${PATH}`);
+  const OUTPUT_PATH = `${OUTPUT_FOLDER}/Choice_image.png`;
+  await writeFile(OUTPUT_PATH, choice.image);
+  console.log(`Choice.fromImagePath: image saved at ${OUTPUT_PATH}`);
 });

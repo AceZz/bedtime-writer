@@ -34,24 +34,24 @@ export class YAMLQuestionReader implements Reader<Question[]> {
 
     const parsed: Question[] = [];
     for (const questionKey in data) {
-      parsed.push(this.parseQuestion(questionKey, data[questionKey]));
+      parsed.push(await this.parseQuestion(questionKey, data[questionKey]));
     }
 
     return parsed;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private parseQuestion(key: string, data: any): Question {
+  private async parseQuestion(key: string, data: any): Promise<Question> {
     const choices: Choice[] = [];
     for (const choiceKey in data.choices) {
-      choices.push(this.parseChoice(choiceKey, data.choices[choiceKey]));
+      choices.push(await this.parseChoice(choiceKey, data.choices[choiceKey]));
     }
 
     return new Question(key, data.text, choices);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private parseChoice(key: string, data: any): Choice {
-    return new Choice(key, data.text, data.imagePath);
+  private async parseChoice(key: string, data: any): Promise<Choice> {
+    return await Choice.fromImagePath(key, data.text, data.imagePath);
   }
 }
