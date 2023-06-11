@@ -3,28 +3,28 @@ character:
   choices:
     blaze:
       text: "Blaze, the kind dragon"
-      imagePath: "test/story/data/blaze.png"
+      imagePath: "test/story/data/choice.jpg"
     sparkles:
       text: "Sparkles, the magical horse"
-      imagePath: "test/story/data/sparkles.png"
+      imagePath: "test/story/data/choice.jpg"
     frosty:
       text: "Frosty, the pinguin"
-      imagePath: "test/story/data/frosty.png"
+      imagePath: "test/story/data/choice.jpg"
 flaw:
   text: "What flaw does the hero have?"
   choices:
     failure:
       text: "Being afraid of failure"
-      imagePath: "test/story/data/failure.png"
+      imagePath: "test/story/data/choice.jpg"
     selfConfidence:
       text: "Lacking self-confidence"
-      imagePath: "test/story/data/self_confidence.png"
+      imagePath: "test/story/data/choice.jpg"
     lazy:
       text: "Being a bit lazy"
-      imagePath: "test/story/data/lazy.png"
+      imagePath: "test/story/data/choice.jpg"
     giveUp:
       text: "Giving up easily"
-      imagePath: "test/story/data/give_up.png"
+      imagePath: "test/story/data/choice.jpg"
     noAdvice:
       text: "Not listening to advice"
-      imagePath: "test/story/data/no_advice.png"
+      imagePath: "test/story/data/choice.jpg"

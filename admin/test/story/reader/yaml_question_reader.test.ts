@@ -9,35 +9,47 @@ test("read questions", async () => {
   const result = await reader.read();
   const expected = [
     new Question("character", "Who is the hero of tonight's story?", [
-      new Choice(
+      await Choice.fromImagePath(
         "blaze",
         "Blaze, the kind dragon",
-        "test/story/data/blaze.png"
+        "test/story/data/choice.jpg"
       ),
-      new Choice(
+      await Choice.fromImagePath(
         "sparkles",
         "Sparkles, the magical horse",
-        "test/story/data/sparkles.png"
+        "test/story/data/choice.jpg"
       ),
-      new Choice("frosty", "Frosty, the pinguin", "test/story/data/frosty.png"),
+      await Choice.fromImagePath(
+        "frosty",
+        "Frosty, the pinguin",
+        "test/story/data/choice.jpg"
+      ),
     ]),
     new Question("flaw", "What flaw does the hero have?", [
-      new Choice(
+      await Choice.fromImagePath(
         "failure",
         "Being afraid of failure",
-        "test/story/data/failure.png"
+        "test/story/data/choice.jpg"
       ),
-      new Choice(
+      await Choice.fromImagePath(
         "selfConfidence",
         "Lacking self-confidence",
-        "test/story/data/self_confidence.png"
+        "test/story/data/choice.jpg"
       ),
-      new Choice("lazy", "Being a bit lazy", "test/story/data/lazy.png"),
-      new Choice("giveUp", "Giving up easily", "test/story/data/give_up.png"),
-      new Choice(
+      await Choice.fromImagePath(
+        "lazy",
+        "Being a bit lazy",
+        "test/story/data/choice.jpg"
+      ),
+      await Choice.fromImagePath(
+        "giveUp",
+        "Giving up easily",
+        "test/story/data/choice.jpg"
+      ),
+      await Choice.fromImagePath(
         "noAdvice",
         "Not listening to advice",
-        "test/story/data/no_advice.png"
+        "test/story/data/choice.jpg"
       ),
     ]),
   ];

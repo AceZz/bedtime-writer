@@ -92,7 +92,7 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
   async writeChoice(questionId: string, choice: Choice): Promise<void> {
     await this.choiceRef(questionId, choice.id).set({
       text: choice.text,
-      image: await choice.image(),
+      image: choice.image,
     });
   }
 
