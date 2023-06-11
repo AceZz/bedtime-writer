@@ -1,0 +1,7 @@
+lib/
+node_modules/
+test/output/
+*.code-workspace
+service-account.json
+service-account-dev.json
+.env
