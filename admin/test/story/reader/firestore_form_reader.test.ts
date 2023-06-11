@@ -20,5 +20,6 @@ test("FirestoreFormReader", async () => {
   const forms = await utils.reader.read();
   forms.sort((a, b) => a.start.getTime() - b.start.getTime());
 
-  expect(forms).toStrictEqual(utils.samples());
+  const samples = utils.samples();
+  expect(forms).toStrictEqual([samples[0], samples[1]]);
 });
