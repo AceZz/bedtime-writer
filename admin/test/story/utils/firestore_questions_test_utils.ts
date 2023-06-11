@@ -1,5 +1,6 @@
 import { DocumentReference, getFirestore } from "firebase-admin/firestore";
 import { FirestoreQuestionWriter } from "../../../src/story";
+import { FirestoreQuestionReader } from "../../../src/story/reader/firestore_question_reader";
 import { Question } from "../../../src/story/question";
 import { Choice } from "../../../src/story/choice";
 import { expect } from "@jest/globals";
@@ -75,6 +76,10 @@ export class FirestoreQuestionsTestUtils {
 
   get writer(): FirestoreQuestionWriter {
     return new FirestoreQuestionWriter(this.collectionName);
+  }
+
+  get reader(): FirestoreQuestionReader {
+    return new FirestoreQuestionReader(this.collectionName);
   }
 
   async samples(): Promise<Question[][]> {
