@@ -1,13 +1,7 @@
-import {
-  CollectionReference,
-  DocumentReference,
-  Firestore,
-  getFirestore,
-} from "firebase-admin/firestore";
-
 import { Question } from "../question";
 import { Writer } from "./writer";
 import { Choice } from "../choice";
+import { FirestoreQuestions } from "../firestore/firestore_questions";
 
 /**
  * This class writes a list of Question objects to a Firestore database.
@@ -31,13 +25,10 @@ import { Choice } from "../choice";
  * be fast, we thus chose to do sequential writes.
  */
 export class FirestoreQuestionWriter implements Writer<Question[]> {
-  private firestore: Firestore;
+  private collection: FirestoreQuestions;
 
-  constructor(
-    readonly collectionName = "story__questions",
-    firestore?: Firestore
-  ) {
-    this.firestore = firestore ?? getFirestore();
+  constructor(collectionName?: string) {
+    this.collection = new FirestoreQuestions(collectionName);
   }
 
   /**
@@ -56,7 +47,7 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
 
   async removeExtraQuestions(questions: Question[]): Promise<void> {
     const questionIds = questions.map((question) => question.id);
-    const snapshot = await this.questionsRef().get();
+    const snapshot = await this.collection.questionsRef().get();
 
     // Delete every document which ID is not in `questionIds` (i.e. not in
     // `questions`).
@@ -68,7 +59,7 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
   }
 
   async writeQuestion(question: Question): Promise<void> {
-    await this.questionRef(question.id).set({ text: question.text });
+    await this.collection.questionRef(question.id).set({ text: question.text });
     await this.removeExtraChoices(question);
 
     for (const choice of question.choices) {
@@ -78,7 +69,7 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
 
   async removeExtraChoices(question: Question): Promise<void> {
     const choiceIds = question.choices.map((choice) => choice.id);
-    const snapshot = await this.choicesRef(question.id).get();
+    const snapshot = await this.collection.choicesRef(question.id).get();
 
     // Delete every document which ID is not in `choiceIds` (i.e. not in
     // `question`).
@@ -90,25 +81,9 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
   }
 
   async writeChoice(questionId: string, choice: Choice): Promise<void> {
-    await this.choiceRef(questionId, choice.id).set({
+    await this.collection.choiceRef(questionId, choice.id).set({
       text: choice.text,
       image: choice.image,
     });
-  }
-
-  private choiceRef(questionId: string, choiceId: string): DocumentReference {
-    return this.choicesRef(questionId).doc(choiceId);
-  }
-
-  private choicesRef(questionId: string): CollectionReference {
-    return this.questionRef(questionId).collection("choices");
-  }
-
-  private questionRef(id: string): DocumentReference {
-    return this.questionsRef().doc(id);
-  }
-
-  private questionsRef(): CollectionReference {
-    return this.firestore.collection(this.collectionName);
   }
 }
