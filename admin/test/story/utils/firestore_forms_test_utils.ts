@@ -2,10 +2,16 @@
  * Contains fixtures and utils for `Form`-related tests.
  */
 
-import { CollectionReference, getFirestore } from "firebase-admin/firestore";
+import {
+  CollectionReference,
+  Timestamp,
+  getFirestore,
+} from "firebase-admin/firestore";
 import { Form } from "../../../src/story/form";
 import { FirestoreFormReader } from "../../../src/story/reader/firestore_form_reader";
 import { FirestoreForms } from "../../../src/story/firestore/firestore_forms";
+import { FirestoreFormWriter } from "../../../src/story/writer/firestore_form_writer";
+import { expect } from "@jest/globals";
 
 /**
  * Works with QUESTIONS_0.
@@ -48,6 +54,22 @@ const SERIALIZED_FORM_1 = {
 };
 
 /**
+ * Does not work with QUESTIONS_0 (question does not exist).
+ */
+export const FORM_2 = new Form(
+  new Map([["doesnotexist", ["one", "two", "three"]]]),
+  new Date("2023-01-01T12:00:00Z")
+);
+
+/**
+ * Does not work with QUESTIONS_0 (choice does not exist).
+ */
+export const FORM_3 = new Form(
+  new Map([["question1", ["doesnotexist", "choice2"]]]),
+  new Date("2023-01-01T12:00:00Z")
+);
+
+/**
  * Helper class to interact with the story forms Firestore collection.
  */
 export class FirestoreFormsTestUtils {
@@ -61,8 +83,15 @@ export class FirestoreFormsTestUtils {
     return new FirestoreFormReader(this.collectionName);
   }
 
+  get writer(): FirestoreFormWriter {
+    return new FirestoreFormWriter(
+      this.collectionName,
+      `${this.prefix}__story__questions`
+    );
+  }
+
   samples(): Form[] {
-    return [FORM_0, FORM_1];
+    return [FORM_0, FORM_1, FORM_2, FORM_3];
   }
 
   serializedSamples(): object[] {
@@ -83,5 +112,35 @@ export class FirestoreFormsTestUtils {
     const firestore = getFirestore();
     const forms = await firestore.collection(this.collectionName).get();
     await Promise.all(forms.docs.map((form) => form.ref.delete()));
+  }
+  /**
+   * Checks the number of forms in the Firestore database.
+   *
+   * Firebase must be initialized before calling this function.
+   */
+  async expectCountToBe(expected: number): Promise<void> {
+    const firestore = getFirestore();
+    const forms = firestore.collection(this.collectionName);
+    const query = await forms.count().get();
+
+    expect(query.data().count).toBe(expected);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async expectToBe(expected: any[]): Promise<void> {
+    const firestore = getFirestore();
+    const forms = firestore.collection(this.collectionName);
+    const snapshots = await forms.orderBy("start").get();
+
+    const tested = snapshots.docs.map((snapshot) => snapshot.data());
+    const expected_ = expected.map((item) => {
+      return {
+        ...item,
+        start: new Timestamp(item.start.getTime() / 1000, 0),
+      };
+    });
+    expected_.sort((a, b) => a.start - b.start);
+
+    expect(tested).toStrictEqual(expected_);
   }
 }
