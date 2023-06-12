@@ -11,6 +11,7 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "set_story_questions": "node lib/src/set_story_questions.js",
+    "add_story_form": "node lib/src/add_story_form.js",
     "compress_story_images": "node lib/src/compress_story_images.js"
   },
   "main": "lib/src/index.js",
