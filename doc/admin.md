@@ -63,3 +63,8 @@ launched!
   `admin/data/story/questions.yaml` is used.
 * `npm run compress_story_images [folder]`: compress the images of the story choices. By default,
   `admin/data/` is used.
+* `npm run add_story_form [form.yaml]`: add a story form. By default, `admin/data/story/form.yaml`
+  is used, and the form is valid now (i.e. it immediately replaces any other form). You can add
+  a `start` field next to the `questions` field if you want to change the start date of the form
+  (`start: "2023-05-11T00:13:32Z"`). Finally, this script will fail if any of the provided questions
+  or choices is not in `story__questions`. If necessary, run `set_story_questions` before. 
