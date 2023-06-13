@@ -41,8 +41,8 @@ Then, set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable:
 ### Using the emulators
 
 By default, the real Firebase servers are used. If you want to use the Firebase emulators, run them
-with `npm run local_backend` (**in the `functions` project, not `admin`**) and create a `.env` file
-in the `admin` folder with this content:
+with `npm run local_backend` in *either* `functions` or `admin` (just make sure they are not already
+launched) and create a `.env` file in the `admin` folder with this content:
 
 ```
 USE_FIREBASE_EMULATORS=true
