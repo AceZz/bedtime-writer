@@ -20,7 +20,7 @@ import {
  *         image: bytes
  * ```
  */
-export class FirestoreQuestions {
+export class FirestoreStoryQuestions {
   private firestore: Firestore;
 
   constructor(

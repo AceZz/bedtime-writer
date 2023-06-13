@@ -1,6 +1,6 @@
 import { Writer } from "./writer";
 import { Form } from "../form";
-import { FirestoreForms } from "../firestore/firestore_forms";
+import { FirestoreStoryForms } from "../../firebase/firestore_story_forms";
 import { Reader } from "../reader/reader";
 import { Question } from "../question";
 import { FirestoreQuestionReader } from "../reader/firestore_question_reader";
@@ -11,7 +11,7 @@ import { FirestoreFormReader } from "../reader/firestore_form_reader";
  *
  */
 export class FirestoreFormWriter implements Writer<Form> {
-  private formsCollection: FirestoreForms;
+  private formsCollection: FirestoreStoryForms;
   private formReader: Reader<Form[]>;
   private questionReader: Reader<Question[]>;
 
@@ -19,7 +19,7 @@ export class FirestoreFormWriter implements Writer<Form> {
     readonly formsCollectionName?: string,
     readonly questionsCollectionName?: string
   ) {
-    this.formsCollection = new FirestoreForms(formsCollectionName);
+    this.formsCollection = new FirestoreStoryForms(formsCollectionName);
     this.formReader = new FirestoreFormReader(formsCollectionName);
     this.questionReader = new FirestoreQuestionReader(questionsCollectionName);
   }

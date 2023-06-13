@@ -9,7 +9,7 @@ import {
 } from "firebase-admin/firestore";
 import { Form } from "../../../src/story/form";
 import { FirestoreFormReader } from "../../../src/story/reader/firestore_form_reader";
-import { FirestoreForms } from "../../../src/story/firestore/firestore_forms";
+import { FirestoreStoryForms } from "../../../src/firebase/firestore_story_forms";
 import { FirestoreFormWriter } from "../../../src/story/writer/firestore_form_writer";
 import { expect } from "@jest/globals";
 
@@ -99,7 +99,7 @@ export class FirestoreFormsTestUtils {
   }
 
   collectionRef(): CollectionReference {
-    const forms = new FirestoreForms(this.collectionName);
+    const forms = new FirestoreStoryForms(this.collectionName);
     return forms.formsRef();
   }
 

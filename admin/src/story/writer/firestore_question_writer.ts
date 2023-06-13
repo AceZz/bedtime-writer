@@ -1,7 +1,7 @@
 import { Question } from "../question";
 import { Writer } from "./writer";
 import { Choice } from "../choice";
-import { FirestoreQuestions } from "../firestore/firestore_questions";
+import { FirestoreStoryQuestions } from "../../firebase/firestore_story_questions";
 
 /**
  * This class writes a list of Question objects to a Firestore database.
@@ -25,10 +25,10 @@ import { FirestoreQuestions } from "../firestore/firestore_questions";
  * be fast, we thus chose to do sequential writes.
  */
 export class FirestoreQuestionWriter implements Writer<Question[]> {
-  private collection: FirestoreQuestions;
+  private collection: FirestoreStoryQuestions;
 
   constructor(collectionName?: string) {
-    this.collection = new FirestoreQuestions(collectionName);
+    this.collection = new FirestoreStoryQuestions(collectionName);
   }
 
   /**

@@ -1,17 +1,17 @@
 import { Question } from "../question";
 import { Reader } from "./reader";
 import { Choice } from "../choice";
-import { FirestoreQuestions } from "../firestore/firestore_questions";
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
+import { FirestoreStoryQuestions } from "../../firebase/firestore_story_questions";
 
 /**
  * Read a list of Questions from a Firestore collection.
  */
 export class FirestoreQuestionReader implements Reader<Question[]> {
-  private collection: FirestoreQuestions;
+  private collection: FirestoreStoryQuestions;
 
   constructor(collectionName?: string) {
-    this.collection = new FirestoreQuestions(collectionName);
+    this.collection = new FirestoreStoryQuestions(collectionName);
   }
 
   async read(): Promise<Question[]> {
