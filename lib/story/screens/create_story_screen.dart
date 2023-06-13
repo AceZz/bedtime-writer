@@ -1,7 +1,6 @@
 import 'dart:core';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,15 +25,21 @@ class CreateStoryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     CreateStoryState state = ref.watch(createStoryStateProvider);
 
-    //TODO: add user stats provider here to do the check instead of backend request to avoid rebuilding
-
     Widget nextScreen;
 
-    // Displays the current question.
+    final String limitReachedText =
+        "Your storytelling magic has reached its limit for the day. Come back to Dreamy Tales tomorrow to discover a new set of stories.";
+
+    // Checks on stories limit and displays a question
     if (state.hasQuestions) {
       nextScreen = _QuestionScreen(question: state.currentQuestion);
-    } else {
-      nextScreen = FutureBuilder(
+      return _LimitCheckScreen(
+          limitReachScreen: ErrorScreen(text: limitReachedText),
+          nextScreen: nextScreen);
+    }
+    // Creates and displays story after questions have been answered
+    else {
+      return FutureBuilder(
         future: createClassicStory(state.storyParams),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           final requestId = snapshot.data;
@@ -42,51 +47,40 @@ class CreateStoryScreen extends ConsumerWidget {
         },
       );
     }
-
-    // Creates the story and displays it.
-    return _LimitCheckScreen(errorScreen: Text("error"), nextScreen: nextScreen);
   }
 }
 
-
-
 /// Checks the stories limit and redirects towards a nextScreen or errorScreen
-class _LimitCheckScreen extends StatelessWidget {
-  final Widget errorScreen;
+class _LimitCheckScreen extends ConsumerWidget {
+  final Widget limitReachScreen;
   final Widget nextScreen;
 
   const _LimitCheckScreen(
-      {Key? key, required this.errorScreen, required this.nextScreen})
+      {Key? key, required this.limitReachScreen, required this.nextScreen})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    //TODO: remove this test area
-    final firebaseFunctions =
-        FirebaseFunctions.instanceFor(region: 'europe-west6');
+  Widget build(BuildContext context, WidgetRef ref) {
+    AsyncValue<Stats> stats = ref.watch(statsProvider);
 
-    Future<String> firebaseCheckUserRemainingStories() async {
-      return firebaseFunctions
-          .httpsCallable('checkUserRemainingStories')
-          .call()
-          .then((result) => result.data);
-    }
-
-    return FutureBuilder(
-      future: firebaseCheckUserRemainingStories(),
-      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return AppScaffold(
-              appBarTitle: 'Test',
-              scrollableAppBar: true,
-              child: CircularProgressIndicator(),
-            );
-          default:
-            return snapshot.hasError ? this.errorScreen : this.nextScreen;
+    Widget limitCheckWidget = stats.when(
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => ErrorScreen(
+          text:
+              'An error happened during limit check: $err. Please try again.'),
+      data: (stats) {
+        // If user has enough remaining stories, proceed with story creation
+        if (stats.remainingStories >= 1) {
+          return this.nextScreen;
+        }
+        // Else display limitReachScreen
+        else {
+          return this.limitReachScreen;
         }
       },
     );
+
+    return limitCheckWidget;
   }
 }
 
@@ -108,6 +102,9 @@ class _StoryScreen extends ConsumerWidget {
       return loadingScreen;
     }
 
+    final failedLoadingText =
+        'A mystical force seems to have interrupted your story.\n\nLet\'s try creating your dreamy tale again:';
+
     return ref.watch(
       storyStatusProvider(_requestId).select(
         (status) => status.when(
@@ -119,10 +116,10 @@ class _StoryScreen extends ConsumerWidget {
               case StoryStatus.pending:
                 return loadingScreen;
               case StoryStatus.error:
-                return ErrorScreen();
+                return ErrorScreen(text: failedLoadingText);
             }
           },
-          error: (error, stackTrace) => ErrorScreen(),
+          error: (error, stackTrace) => ErrorScreen(text: failedLoadingText),
           loading: () => loadingScreen,
           skipLoadingOnReload: true,
         ),

@@ -2,15 +2,15 @@ import process from "node:process";
 
 import { initializeApp } from "firebase-admin/app";
 import { firestore } from "firebase-admin";
-import { FieldValue } from "firebase-admin/firestore";
 import { auth } from "firebase-functions";
 import { setGlobalOptions } from "firebase-functions/v2";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
-import { onCall, HttpsError } from "firebase-functions/v2/https";
+import { onCall } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 
 import { getUid } from "./auth";
 import { logger } from "./logger";
+import { updateRemainingStories } from "./stats";
 import {
   OpenAiTextApi,
   OpenAiImageApi,
@@ -76,7 +76,7 @@ export const createStory = onDocumentCreated(
     const request = await requestManager.get(storyId);
 
     if (request.logic == CLASSIC_LOGIC) {
-      return createClassicStory(storyId, request);
+      return createClassicStory(storyId, request, );
     } else {
       throw new Error(
         `Story id ${storyId}: unrecognized logic ${request.logic}.`
@@ -85,12 +85,11 @@ export const createStory = onDocumentCreated(
   }
 );
 
-//TODO: test it
 /**
  * Initialize user stats in the users collection from Firestore upon new user creation.
  */
 export const initializeUserStats = auth.user().onCreate(async (user) => {
-  const userStoriesLimit = Number(process.env.USER_STORIES_LIMIT) ?? 2
+  const userStoriesLimit = Number(process.env.USER_STORIES_LIMIT) ?? 2;
 
   // Retrieve user document.
   const userRef = firestore_db.collection("users").doc(user.uid);
@@ -106,50 +105,6 @@ export const initializeUserStats = auth.user().onCreate(async (user) => {
     };
     await userRef.set(userData);
   }
-});
-
-
-/**
- * Check if the user has reached their daily limit
- *
- * Throw an HttpsError in case there are no remaining stories for today.
- */
-export const checkUserRemainingStories = onCall(async (request) => {
-  const author = getUid(request.auth);
-  const userStoriesLimit = Number(process.env.USER_STORIES_LIMIT) ?? 2
-
-  // Retrieve user document.
-  const userRef = firestore_db.collection("users").doc(author);
-  const userSnapshot = await userRef.get();
-  const userSnapshotData = userSnapshot.data();
-
-  // If no user data is found, add this user to the collection with maximal daily remaining stories.
-  let userData;
-  if (!userSnapshotData) {
-    userData = {
-      remainingStories: userStoriesLimit,
-    };
-    await userRef.set(userData);
-  } else {
-    userData = userSnapshotData;
-  }
-
-  // Check remaining stories.
-  if (userData.remainingStories <= 0) {
-    logger.error(`User ${author} has reached their daily stories limit.`);
-    throw new HttpsError(
-      "resource-exhausted",
-      "Story requests have reached the limit for today."
-    );
-  }
-
-  //TODO: this should not happen here - make a separate function
-  // Decrease remaining stories.
-  await userRef.update({
-    remainingStories: FieldValue.increment(-1),
-  });
-
-  return "authorized";
 });
 
 //TODO: test it
@@ -177,7 +132,10 @@ export const resetDailyRequests = onSchedule("every day 00:00", async () => {
 /**
  * Generate a classic story and add it to Firestore.
  */
-async function createClassicStory(storyId: string, request: StoryRequestV1) {
+async function createClassicStory(
+  storyId: string,
+  request: StoryRequestV1,
+) {
   // Transform the request into a `ClassicStoryLogic`.
   const logic = request.toClassicStoryLogic();
   const textApi = getTextApi();
@@ -195,15 +153,19 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
     for await (const part of generator.storyParts()) {
       await writer.writePart(part);
     }
-
     await writer.writeComplete();
     logger.info(
       `createClassicStory: story ${storyId} was generated and added to Firestore`
     );
+    // Update remaining stories for the user
+    await updateRemainingStories(request.author, firestore_db); //TODO: understand why this throws an error
+    logger.info(
+      `createClassicStory: remaining daily stories for user ${request.author} were succesfully updated`
+    );
   } catch (error) {
     await writer.writeError();
     logger.error(
-      `createClassicStory: story ${storyId} encountered an error: ${error}`
+      `createClassicStory: story ${storyId} created by user ${request.author} encountered an error: ${error}`
     );
   }
 }
