@@ -5,6 +5,7 @@ import { Reader } from "../reader/reader";
 import { Question } from "../question";
 import { FirestoreQuestionReader } from "../reader/firestore_question_reader";
 import { FirestoreFormReader } from "../reader/firestore_form_reader";
+import { FirestorePaths } from "../../firebase/firestore_paths";
 
 /**
  * This class writes a Form object to a Firestore database.
@@ -15,13 +16,10 @@ export class FirestoreFormWriter implements Writer<Form> {
   private formReader: Reader<Form[]>;
   private questionReader: Reader<Question[]>;
 
-  constructor(
-    readonly formsCollectionName?: string,
-    readonly questionsCollectionName?: string
-  ) {
-    this.formsCollection = new FirestoreStoryForms(formsCollectionName);
-    this.formReader = new FirestoreFormReader(formsCollectionName);
-    this.questionReader = new FirestoreQuestionReader(questionsCollectionName);
+  constructor(paths?: FirestorePaths) {
+    this.formsCollection = new FirestoreStoryForms(paths);
+    this.formReader = new FirestoreFormReader(paths);
+    this.questionReader = new FirestoreQuestionReader(paths);
   }
 
   async write(form: Form): Promise<void> {

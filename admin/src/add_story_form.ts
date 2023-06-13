@@ -10,6 +10,7 @@ import {
   initFirebase,
 } from "./firebase/utils";
 import { FirestoreFormWriter, YAMLFormReader } from "./story";
+import { FirestorePaths } from "./firebase/firestore_paths";
 
 const DEFAULT_COLLECTION_NAME = "story__forms";
 const DEFAULT_YAML_PATH = "data/story/form.yaml";
@@ -17,16 +18,16 @@ const DEFAULT_YAML_PATH = "data/story/form.yaml";
 main().then(() => process.exit(0));
 
 async function main() {
-  const collectionName = DEFAULT_COLLECTION_NAME;
+  const paths = new FirestorePaths();
   const yamlPath = getYamlPath();
 
-  if (await confirm(collectionName, yamlPath)) {
+  if (await confirm(paths, yamlPath)) {
     initFirebase();
 
     const reader = new YAMLFormReader(yamlPath);
     const form = await reader.read();
 
-    const writer = new FirestoreFormWriter(collectionName);
+    const writer = new FirestoreFormWriter(paths);
     await writer.write(form);
     console.log(`Form saved to ${DEFAULT_COLLECTION_NAME}.`);
   } else {
@@ -39,7 +40,7 @@ function getYamlPath(): string {
 }
 
 async function confirm(
-  collectionName: string,
+  paths: FirestorePaths,
   yamlPath: string
 ): Promise<boolean> {
   const projectLog = firebaseEmulatorsAreUsed()
@@ -47,7 +48,7 @@ async function confirm(
     : `of project ${getFirebaseProject()}`;
 
   const answer = await prompt(
-    `The collection ${collectionName} ${projectLog} will be added the ` +
+    `The collection ${paths.story.forms} ${projectLog} will be added the ` +
       `content of ${yamlPath}. Proceed? (y/N) `
   );
 

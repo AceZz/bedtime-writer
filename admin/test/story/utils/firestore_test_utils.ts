@@ -1,3 +1,4 @@
+import { FirestorePaths } from "../../../src/firebase/firestore_paths";
 import { FirestoreFormsTestUtils } from "./firestore_forms_test_utils";
 import { FirestoreQuestionsTestUtils } from "./firestore_questions_test_utils";
 
@@ -9,13 +10,13 @@ import { FirestoreQuestionsTestUtils } from "./firestore_questions_test_utils";
  * is concerned).
  */
 export class FirestoreTestUtils {
-  prefix: string;
+  paths: FirestorePaths;
   questions: FirestoreQuestionsTestUtils;
   forms: FirestoreFormsTestUtils;
 
   constructor(readonly id: string) {
-    this.prefix = `test_${id}`;
-    this.questions = new FirestoreQuestionsTestUtils(this.prefix);
-    this.forms = new FirestoreFormsTestUtils(this.prefix);
+    this.paths = new FirestorePaths(`test_${id}`);
+    this.questions = new FirestoreQuestionsTestUtils(this.paths);
+    this.forms = new FirestoreFormsTestUtils(this.paths);
   }
 }

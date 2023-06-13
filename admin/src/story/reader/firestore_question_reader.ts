@@ -3,6 +3,7 @@ import { Reader } from "./reader";
 import { Choice } from "../choice";
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
 import { FirestoreStoryQuestions } from "../../firebase/firestore_story_questions";
+import { FirestorePaths } from "../../firebase/firestore_paths";
 
 /**
  * Read a list of Questions from a Firestore collection.
@@ -10,8 +11,8 @@ import { FirestoreStoryQuestions } from "../../firebase/firestore_story_question
 export class FirestoreQuestionReader implements Reader<Question[]> {
   private collection: FirestoreStoryQuestions;
 
-  constructor(collectionName?: string) {
-    this.collection = new FirestoreStoryQuestions(collectionName);
+  constructor(paths?: FirestorePaths) {
+    this.collection = new FirestoreStoryQuestions(paths);
   }
 
   async read(): Promise<Question[]> {
