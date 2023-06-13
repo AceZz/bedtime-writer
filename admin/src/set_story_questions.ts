@@ -10,6 +10,7 @@ import {
   initFirebase,
 } from "./firebase/utils";
 import { FirestoreQuestionWriter, YAMLQuestionReader } from "./story";
+import { FirestorePaths } from "./firebase/firestore_paths";
 
 const DEFAULT_COLLECTION_NAME = "story__questions";
 const DEFAULT_YAML_PATH = "data/story/questions.yaml";
@@ -17,16 +18,16 @@ const DEFAULT_YAML_PATH = "data/story/questions.yaml";
 main().then(() => process.exit(0));
 
 async function main() {
-  const collectionName = DEFAULT_COLLECTION_NAME;
+  const paths = new FirestorePaths();
   const yamlPath = getYamlPath();
 
-  if (await confirm(collectionName, yamlPath)) {
+  if (await confirm(paths, yamlPath)) {
     initFirebase();
 
     const reader = new YAMLQuestionReader(yamlPath);
     const questions = await reader.read();
 
-    const writer = new FirestoreQuestionWriter(collectionName);
+    const writer = new FirestoreQuestionWriter(paths);
     await writer.write(questions);
     console.log(
       `${questions.length} question(s) saved to ${DEFAULT_COLLECTION_NAME}.`
@@ -41,7 +42,7 @@ function getYamlPath(): string {
 }
 
 async function confirm(
-  collectionName: string,
+  paths: FirestorePaths,
   yamlPath: string
 ): Promise<boolean> {
   const projectLog = firebaseEmulatorsAreUsed()
@@ -49,8 +50,8 @@ async function confirm(
     : `of project ${getFirebaseProject()}`;
 
   const answer = await prompt(
-    `The collection ${collectionName} ${projectLog} will be set to the ` +
-      `content of ${yamlPath}. Proceed? (y/N) `
+    `The collection ${paths.story.questions} ${projectLog} will be set to ` +
+      `the content of ${yamlPath}. Proceed? (y/N) `
   );
 
   return ["yes", "y"].includes(answer?.toLowerCase() ?? "no");

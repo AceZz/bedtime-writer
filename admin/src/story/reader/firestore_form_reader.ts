@@ -2,6 +2,7 @@ import { Form } from "../form";
 import { Reader } from "./reader";
 import { FirestoreStoryForms } from "../../firebase/firestore_story_forms";
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
+import { FirestorePaths } from "../../firebase/firestore_paths";
 
 /**
  * Read a list of Forms from a Firestore collection.
@@ -9,8 +10,8 @@ import { QueryDocumentSnapshot } from "firebase-admin/firestore";
 export class FirestoreFormReader implements Reader<Form[]> {
   private collection: FirestoreStoryForms;
 
-  constructor(collectionName?: string) {
-    this.collection = new FirestoreStoryForms(collectionName);
+  constructor(paths?: FirestorePaths) {
+    this.collection = new FirestoreStoryForms(paths);
   }
 
   async read(): Promise<Form[]> {

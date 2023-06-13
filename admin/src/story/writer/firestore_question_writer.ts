@@ -2,6 +2,7 @@ import { Question } from "../question";
 import { Writer } from "./writer";
 import { Choice } from "../choice";
 import { FirestoreStoryQuestions } from "../../firebase/firestore_story_questions";
+import { FirestorePaths } from "../../firebase/firestore_paths";
 
 /**
  * This class writes a list of Question objects to a Firestore database.
@@ -27,8 +28,8 @@ import { FirestoreStoryQuestions } from "../../firebase/firestore_story_question
 export class FirestoreQuestionWriter implements Writer<Question[]> {
   private collection: FirestoreStoryQuestions;
 
-  constructor(collectionName?: string) {
-    this.collection = new FirestoreStoryQuestions(collectionName);
+  constructor(paths?: FirestorePaths) {
+    this.collection = new FirestoreStoryQuestions(paths);
   }
 
   /**

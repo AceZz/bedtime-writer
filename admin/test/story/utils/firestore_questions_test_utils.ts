@@ -4,6 +4,7 @@ import { FirestoreQuestionReader } from "../../../src/story/reader/firestore_que
 import { Question } from "../../../src/story/question";
 import { Choice } from "../../../src/story/choice";
 import { expect } from "@jest/globals";
+import { FirestorePaths } from "../../../src/firebase/firestore_paths";
 
 const QUESTIONS_0 = async () => [
   new Question("question1", "Question 1", [
@@ -68,18 +69,14 @@ const QUESTIONS_1 = async () => [
  * Helper class to interact with the story questions Firestore collection.
  */
 export class FirestoreQuestionsTestUtils {
-  collectionName: string;
-
-  constructor(readonly prefix: string) {
-    this.collectionName = `${this.prefix}__story__questions`;
-  }
+  constructor(readonly paths: FirestorePaths) {}
 
   get writer(): FirestoreQuestionWriter {
-    return new FirestoreQuestionWriter(this.collectionName);
+    return new FirestoreQuestionWriter(this.paths);
   }
 
   get reader(): FirestoreQuestionReader {
-    return new FirestoreQuestionReader(this.collectionName);
+    return new FirestoreQuestionReader(this.paths);
   }
 
   async samples(): Promise<Question[][]> {
@@ -93,7 +90,9 @@ export class FirestoreQuestionsTestUtils {
    */
   async deleteCollection(): Promise<void> {
     const firestore = getFirestore();
-    const questions = await firestore.collection(this.collectionName).get();
+    const questions = await firestore
+      .collection(this.paths.story.questions)
+      .get();
     await Promise.all(
       questions.docs.map((question) => this.deleteQuestion(question.ref))
     );
@@ -120,7 +119,7 @@ export class FirestoreQuestionsTestUtils {
    */
   async expectQuestionsToBe(expected: Question[]) {
     const firestore = getFirestore();
-    const questions = firestore.collection(this.collectionName);
+    const questions = firestore.collection(this.paths.story.questions);
 
     // Test each question.
     await Promise.all(
