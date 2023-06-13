@@ -8,7 +8,7 @@ import {
   firebaseEmulatorsAreUsed,
   getFirebaseProject,
   initFirebase,
-} from "./firebase_utils";
+} from "./firebase/utils";
 import { FirestoreQuestionWriter, YAMLQuestionReader } from "./story";
 
 const DEFAULT_COLLECTION_NAME = "story__questions";

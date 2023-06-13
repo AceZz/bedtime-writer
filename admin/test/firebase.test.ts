@@ -1,6 +1,6 @@
 import { beforeAll, expect, test } from "@jest/globals";
 import { getFirestore } from "firebase-admin/firestore";
-import { initFirebase } from "../src/firebase_utils";
+import { initFirebase } from "../src/firebase/utils";
 
 beforeAll(() => {
   // Check we are running in emulator mode before initializing Firebase.
