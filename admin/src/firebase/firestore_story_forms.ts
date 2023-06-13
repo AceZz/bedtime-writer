@@ -19,7 +19,7 @@ import {
  *     ...
  * ```
  */
-export class FirestoreForms {
+export class FirestoreStoryForms {
   private firestore: Firestore;
 
   constructor(readonly collectionName = "story__forms", firestore?: Firestore) {
