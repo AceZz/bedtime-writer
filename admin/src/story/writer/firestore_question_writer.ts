@@ -25,8 +25,10 @@ import { Choice } from "../choice";
  *         image: bytes
  * ```
  *
- * Note: we do not use batching, as (per the Firestore documentation), the most
- * efficient way to insert a lot of documents is by parallelizing writes.
+ * Note: we make the requests one by one. This is far from being the most
+ * efficient, as the Firestore documentation recommends to parallelize writes.
+ * However, we had random bugs with this approach. As this tool does not need to
+ * be fast, we thus chose to do sequential writes.
  */
 export class FirestoreQuestionWriter implements Writer<Question[]> {
   private firestore: Firestore;
@@ -46,9 +48,10 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
    */
   async write(questions: Question[]): Promise<void> {
     await this.removeExtraQuestions(questions);
-    await Promise.all(
-      questions.map((question) => this.writeQuestion(question))
-    );
+
+    for (const question of questions) {
+      await this.writeQuestion(question);
+    }
   }
 
   async removeExtraQuestions(questions: Question[]): Promise<void> {
@@ -65,13 +68,12 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
   }
 
   async writeQuestion(question: Question): Promise<void> {
-    await Promise.all([
-      this.questionRef(question.id).set({ text: question.text }),
-      this.removeExtraChoices(question),
-    ]);
-    await Promise.all(
-      question.choices.map((choice) => this.writeChoice(question.id, choice))
-    );
+    await this.questionRef(question.id).set({ text: question.text });
+    await this.removeExtraChoices(question);
+
+    for (const choice of question.choices) {
+      await this.writeChoice(question.id, choice);
+    }
   }
 
   async removeExtraChoices(question: Question): Promise<void> {
