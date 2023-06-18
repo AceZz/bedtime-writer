@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../backend/index.dart';
 import '../../config.dart';
 import '../../story/index.dart';
 import '../../widgets/app_scaffold.dart';
@@ -31,6 +32,7 @@ class HomeScreen extends ConsumerWidget {
       text: 'New story',
       destination: 'create_story',
       resetStoryState: true,
+      waitStats: true,
     );
 
     Widget libraryButton =
@@ -86,12 +88,14 @@ class _HomeScreenButton extends ConsumerWidget {
   final String text;
   final String destination;
   final bool resetStoryState;
+  final bool waitStats;
 
   const _HomeScreenButton({
     Key? key,
     required this.text,
     required this.destination,
     this.resetStoryState = false,
+    this.waitStats = false,
   }) : super(key: key);
 
   @override
@@ -100,6 +104,10 @@ class _HomeScreenButton extends ConsumerWidget {
       text,
       style: Theme.of(context).primaryTextTheme.headlineSmall,
     );
+
+    final stats = ref.watch(statsProvider);
+    final statsIsLoadingOrError = stats is AsyncLoading || stats is AsyncError;
+    final waitingStats = this.waitStats & statsIsLoadingOrError;
 
     return Container(
       width: 0.7 * MediaQuery.of(context).size.width,
@@ -110,15 +118,22 @@ class _HomeScreenButton extends ConsumerWidget {
         borderRadius: BorderRadius.circular(10),
         clipBehavior: Clip.antiAliasWithSaveLayer,
         child: InkWell(
-          onTap: () {
-            if (resetStoryState) {
-              // Resets story state while considering preferences
-              ref.read(createStoryStateProvider.notifier).reset();
-            }
-            context.pushNamed(destination);
-          },
+          onTap: waitingStats
+              ? null
+              : () {
+                  if (resetStoryState) {
+                    // Resets story state while considering preferences
+                    ref.read(createStoryStateProvider.notifier).reset();
+                  }
+                  context.pushNamed(destination);
+                },
           child: Ink(
-            child: Center(child: buttonTextWidget),
+            child: Center(
+                child: waitingStats
+                    ? CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      )
+                    : buttonTextWidget),
           ),
         ),
       ),
