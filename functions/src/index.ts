@@ -76,7 +76,7 @@ export const createStory = onDocumentCreated(
     const request = await requestManager.get(storyId);
 
     if (request.logic == CLASSIC_LOGIC) {
-      return createClassicStory(storyId, request, );
+      return createClassicStory(storyId, request);
     } else {
       throw new Error(
         `Story id ${storyId}: unrecognized logic ${request.logic}.`
@@ -132,10 +132,7 @@ export const resetDailyRequests = onSchedule("every day 00:00", async () => {
 /**
  * Generate a classic story and add it to Firestore.
  */
-async function createClassicStory(
-  storyId: string,
-  request: StoryRequestV1,
-) {
+async function createClassicStory(storyId: string, request: StoryRequestV1) {
   // Transform the request into a `ClassicStoryLogic`.
   const logic = request.toClassicStoryLogic();
   const textApi = getTextApi();
