@@ -42,7 +42,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'home',
         path: '/',
-        builder: (context, state) => HomeScreen(),
+        builder: (context, state) {
+          final user = ref.read(userProvider.select((user) => user));
+          if (user is UnauthUser) {
+            return FutureBuilder(
+              future: user.signInAnonymously(),
+              builder: (context, snapshot) => const HomeScreen(),
+            );
+          }
+          return const HomeScreen();
+        },
       ),
       GoRoute(
         name: 'account',
@@ -65,16 +74,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'create_story',
         path: '/story/new',
-        builder: (context, state) {
-          final user = ref.read(userProvider.select((user) => user));
-          if (user is UnauthUser) {
-            return FutureBuilder(
-              future: user.signInAnonymously(),
-              builder: (context, snapshot) => const CreateStoryScreen(),
-            );
-          }
-          return const CreateStoryScreen();
-        },
+        builder: (context, state) => const CreateStoryScreen(),
       ),
       GoRoute(
         name: 'library',
