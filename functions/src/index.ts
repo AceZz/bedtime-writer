@@ -2,7 +2,7 @@ import process from "node:process";
 
 import { initializeApp } from "firebase-admin/app";
 import { firestore } from "firebase-admin";
-import { auth } from "firebase-functions";
+import { region } from "firebase-functions";
 import { setGlobalOptions } from "firebase-functions/v2";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { onCall } from "firebase-functions/v2/https";
@@ -10,7 +10,7 @@ import { onSchedule } from "firebase-functions/v2/scheduler";
 
 import { getUid } from "./auth";
 import { logger } from "./logger";
-import { updateRemainingStories } from "./stats";
+import { updateUserStats } from "./stats";
 import {
   OpenAiTextApi,
   OpenAiImageApi,
@@ -31,6 +31,7 @@ import { parseEnvAsNumber as parseEnvNumber } from "./utils";
 
 initializeApp();
 
+// Set database
 const firestore_db = firestore();
 
 // Set the default region.
@@ -88,45 +89,58 @@ export const createStory = onDocumentCreated(
 /**
  * Initialize user stats in the users collection from Firestore upon new user creation.
  */
-export const initializeUserStats = auth.user().onCreate(async (user) => {
-  const userStoriesLimit = Number(process.env.USER_STORIES_LIMIT) ?? 2;
+export const initializeUserStats = region("europe-west6")
+  .auth.user()
+  .onCreate(async (user) => {
+    // Retrieve user document.
+    const userRef = firestore_db.collection("users").doc(user.uid);
+    const userSnapshot = await userRef.get();
+    const userSnapshotData = userSnapshot.data();
+    const userStoriesLimit = parseEnvNumber("USER_STORIES_LIMIT", 2);
 
-  // Retrieve user document.
-  const userRef = firestore_db.collection("users").doc(user.uid);
-  const userSnapshot = await userRef.get();
-  const userSnapshotData = userSnapshot.data();
-
-  // If no user data is found, add this user to the collection with maximal daily remaining stories.
-  let userData;
-  if (!userSnapshotData) {
-    userData = {
-      numStories: 0,
-      remainingStories: userStoriesLimit,
-    };
-    await userRef.set(userData);
-  }
-});
-
-//TODO: test it
-// This function resets the daily requests count for all users at midnight
-export const resetDailyRequests = onSchedule("every day 00:00", async () => {
-  const usersSnapshot = await firestore_db.collection("users").get();
-
-  // Batch write for efficiency
-  const batch = firestore_db.batch();
-
-  usersSnapshot.docs.forEach((doc) => {
-    const userRef = firestore_db.collection("users").doc(doc.id);
-
-    batch.update(userRef, {
-      remainingStories: process.env.USER_STORIES_LIMIT ?? 2,
-    });
+    // If no user data is found, add this user to the collection with maximal daily remaining stories.
+    let userData;
+    if (!userSnapshotData) {
+      userData = {
+        numStories: 0,
+        remainingStories: userStoriesLimit,
+      };
+      await userRef.set(userData);
+    }
   });
 
-  await batch.commit();
+/**
+ * Resets the daily stories limit at midnight.
+ */
+export const resetDailyLimits = onSchedule("every day 01:00", async () => {
+  logger.info("Started resetDailyLimits function");
+  const userStoriesLimit = parseEnvNumber("USER_STORIES_LIMIT", 2);
+  try {
+    const usersSnapshot = await firestore_db.collection("users").get();
+    const numberUsersQuery = await firestore_db
+      .collection("users")
+      .count()
+      .get();
+    const numberUsers = numberUsersQuery.data().count;
 
-  //TODO: do a separate log for success and for error
-  console.log("Successfully reset daily requests count for all users.");
+    // Batch write for efficiency and atomicity
+    const batch = firestore_db.batch();
+
+    usersSnapshot.docs.forEach((doc) => {
+      const userRef = firestore_db.collection("users").doc(doc.id);
+
+      batch.update(userRef, {
+        remainingStories: userStoriesLimit,
+      });
+    });
+
+    await batch.commit();
+    logger.info(
+      `resetDailyLimits function executed successfully, updated ${numberUsers} user(s)`
+    );
+  } catch (error) {
+    logger.error(`An error occurred during resetDailyLimits: ${error}`);
+  }
 });
 
 /**
@@ -155,7 +169,7 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
       `createClassicStory: story ${storyId} was generated and added to Firestore`
     );
     // Update remaining stories for the user
-    await updateRemainingStories(request.author, firestore_db); //TODO: understand why this throws an error
+    await updateUserStats(request.author, firestore_db);
     logger.info(
       `createClassicStory: remaining daily stories for user ${request.author} were succesfully updated`
     );

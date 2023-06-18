@@ -3,17 +3,17 @@ import { FieldValue } from "firebase-admin/firestore";
 import { HttpsError } from "firebase-functions/v2/https";
 import { logger } from "./logger";
 
+//TODO: add numStories update here, possibly batch
+
 /**
- * Check if the user has reached their daily limit
+ * Update stories stats
  *
  * Throw an HttpsError in case there are no remaining stories for today.
  */
-export async function updateRemainingStories(
+export async function updateUserStats(
   uid: string,
   firestore_db: firestore.Firestore
 ) {
-  console.log(`THIS IS UID: ${uid}`);
-
   // Retrieve user document.
   const userRef = firestore_db.collection("users").doc(uid);
   const userSnapshot = await userRef.get();
@@ -22,7 +22,11 @@ export async function updateRemainingStories(
   // If no user data is found, throw an error.
   let userData;
   if (!userSnapshotData) {
-    throw new HttpsError("not-found", "User was not found in the database.");
+    logger.error(`User ${uid} was not found in the collection users.`);
+    throw new HttpsError(
+      "not-found",
+      "User was not found in the collection users."
+    );
   } else {
     userData = userSnapshotData;
   }
@@ -30,7 +34,7 @@ export async function updateRemainingStories(
   // Check remaining stories and throw an error if there are none.
   if (userData.remainingStories <= 0) {
     logger.error(
-      `User ${uid} tried to create a new story despite having no more remaining stories today.`
+      `User ${uid} sent a new story request despite having no more remaining stories today. It should not be possible.`
     );
     throw new HttpsError(
       "resource-exhausted",
@@ -38,8 +42,9 @@ export async function updateRemainingStories(
     );
   }
 
-  // Decrease remaining stories.
+  // Decrease remaining stories and increase total created stories.
   await userRef.update({
     remainingStories: FieldValue.increment(-1),
+    numStories: FieldValue.increment(1),
   });
 }
