@@ -1,4 +1,5 @@
 lib/
+local_backend_export/
 node_modules/
 test/output/
 *.code-workspace
