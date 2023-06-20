@@ -9,6 +9,9 @@ import '../../widgets/app_scaffold.dart';
 import '../../widgets/fade_in.dart';
 import 'home_screen_debug.dart';
 
+//TODO: add number of stories remaining
+//TODO: prevent limit reset on logout
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
