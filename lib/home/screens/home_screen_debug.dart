@@ -52,6 +52,7 @@ class HomeScreenDebugStats extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
+    final preferences = ref.watch(preferencesProvider);
 
     AsyncValue<Stats> stats = ref.watch(statsProvider);
 
@@ -59,7 +60,7 @@ class HomeScreenDebugStats extends ConsumerWidget {
       loading: () => const CircularProgressIndicator(),
       error: (err, stack) => Text('numStories error: $err'),
       data: (stats) => Text(
-          'numStories: ${stats.numStories}\nremainingStories: ${stats.remainingStories}'),
+          'numStories: ${stats.numStories}\nremainingStories: ${stats.remainingStories}\nhasLoggedOut: ${preferences.hasLoggedOut}'),
     );
 
     List<Widget> children = [
