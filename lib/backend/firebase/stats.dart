@@ -15,12 +15,21 @@ final firebaseStatsProvider = StreamProvider<Stats>((ref) {
   if (user is AuthUser) {
     Stream<DocumentSnapshot> docSnapshots =
         _userStatsDocument(user).snapshots();
-    return docSnapshots.map(
-      (snapshot) => Stats(
-        numStories: snapshot['numStories'] ?? 0,
-        remainingStories: snapshot['remainingStories'] ?? 0,
-      ),
-    );
+    return docSnapshots.map((snapshot) {
+      final int snapshotNumStories = snapshot['numStories'] ?? 0;
+      int snapshotRemainingStories = snapshot['remainingStories'] ?? 0;
+      //For anonymous users, having logged out imposes 0 remaining stories
+      if (user is AnonymousUser) {
+        if (ref.read(preferencesProvider).hasLoggedOut) {
+          snapshotRemainingStories = 0;
+        }
+      }
+
+      return Stats(
+        numStories: snapshotNumStories,
+        remainingStories: snapshotRemainingStories,
+      );
+    });
   } else {
     return Stream.value(Stats(numStories: 0, remainingStories: 0));
   }

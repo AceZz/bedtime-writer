@@ -29,6 +29,7 @@ class SharedPreferencesNotifier extends Notifier<Preferences>
     final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
     return Preferences(
       duration: sharedPreferences.getInt('duration') ?? 2,
+      hasLoggedOut: sharedPreferences.getBool('hasLoggedOut') ?? false,
     );
   }
 
@@ -36,6 +37,12 @@ class SharedPreferencesNotifier extends Notifier<Preferences>
     final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
     await sharedPreferences.setInt('duration', newDuration);
     state = state.copyWith(duration: newDuration);
+  }
+
+  Future<void> updateHasLoggedOut(bool hasLoggedOut) async {
+    final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
+    await sharedPreferences.setBool('hasLoggedOut', hasLoggedOut);
+    state = state.copyWith(hasLoggedOut: hasLoggedOut);
   }
 }
 

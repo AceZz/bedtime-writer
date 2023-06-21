@@ -24,11 +24,14 @@ class CreateStoryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     CreateStoryState state = ref.watch(createStoryStateProvider);
+    User user = ref.watch(userProvider);
+    Preferences preferences = ref.watch(preferencesProvider);
 
     Widget nextScreen;
 
-    final String limitReachedText =
-        "Your storytelling magic has reached its limit for the day. Come back to Dreamy Tales tomorrow to discover a new set of stories.";
+    final String limitReachedText = ((user is AnonymousUser) && preferences.hasLoggedOut)
+        ? "Your storytelling magic has reached its limit. Sign in to discover a new set of stories."
+        : "Your storytelling magic has reached its limit. Come back to Dreamy Tales tomorrow to discover a new set of stories.";
 
     // Checks on stories limit and displays a question
     if (state.hasQuestions) {
