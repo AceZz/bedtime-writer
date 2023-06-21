@@ -9,7 +9,6 @@ import '../../widgets/app_scaffold.dart';
 import '../../widgets/fade_in.dart';
 import 'home_screen_debug.dart';
 
-//TODO: add number of stories remaining
 //TODO: prevent limit reset on logout
 
 class HomeScreen extends ConsumerWidget {
@@ -73,6 +72,8 @@ class HomeScreen extends ConsumerWidget {
             fit: BoxFit.scaleDown,
             child: titleWidget,
           ),
+          SizedBox(height: 20),
+          _DisplayRemainingStories(),
           SizedBox(height: 20),
           menuWidget,
           if (debugAuth())
@@ -164,5 +165,36 @@ class _CustomCenterAtBottom extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _DisplayRemainingStories extends ConsumerWidget {
+  const _DisplayRemainingStories({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    AsyncValue<Stats> stats = ref.watch(statsProvider);
+
+    Widget displayWidget = stats.when(
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => const CircularProgressIndicator(),
+      data: (stats) {
+        return FadeIn(
+          duration: const Duration(milliseconds: 1500),
+          delay: const Duration(milliseconds: 500),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: 0.2 * MediaQuery.of(context).size.width),
+            child: Text(
+              'Remaining stories: ${stats.remainingStories}',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).primaryTextTheme.bodyMedium,
+            ),
+          ),
+        );
+      },
+    );
+
+    return displayWidget;
   }
 }
