@@ -3,8 +3,6 @@ import { FieldValue } from "firebase-admin/firestore";
 import { HttpsError } from "firebase-functions/v2/https";
 import { logger } from "./logger";
 
-//TODO: add numStories update here, possibly batch
-
 /**
  * Update stories stats
  *
@@ -15,17 +13,17 @@ export async function updateUserStats(
   firestore_db: firestore.Firestore
 ) {
   // Retrieve user document.
-  const userRef = firestore_db.collection("users").doc(uid);
+  const userRef = firestore_db.collection("users__stats").doc(uid);
   const userSnapshot = await userRef.get();
   const userSnapshotData = userSnapshot.data();
 
   // If no user data is found, throw an error.
   let userData;
   if (!userSnapshotData) {
-    logger.error(`User ${uid} was not found in the collection users.`);
+    logger.error(`User ${uid} was not found in the collection users__stats.`);
     throw new HttpsError(
       "not-found",
-      "User was not found in the collection users."
+      "User was not found in the collection users__stats."
     );
   } else {
     userData = userSnapshotData;

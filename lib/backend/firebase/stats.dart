@@ -16,18 +16,17 @@ final firebaseStatsProvider = StreamProvider<Stats>((ref) {
     Stream<DocumentSnapshot> docSnapshots =
         _userStatsDocument(user).snapshots();
     return docSnapshots.map((snapshot) {
-      final int snapshotNumStories = snapshot['numStories'] ?? 0;
-      int snapshotRemainingStories = snapshot['remainingStories'] ?? 0;
+      final int numStories = snapshot['numStories'] ?? 0;
+      int remainingStories = snapshot['remainingStories'] ?? 0;
+
       //For anonymous users, having logged out imposes 0 remaining stories
-      if (user is AnonymousUser) {
-        if (ref.read(preferencesProvider).hasLoggedOut) {
-          snapshotRemainingStories = 0;
-        }
+      if (user is AnonymousUser && ref.read(preferencesProvider).hasLoggedOut) {
+        remainingStories = 0;
       }
 
       return Stats(
-        numStories: snapshotNumStories,
-        remainingStories: snapshotRemainingStories,
+        numStories: numStories,
+        remainingStories: remainingStories,
       );
     });
   } else {
@@ -35,6 +34,6 @@ final firebaseStatsProvider = StreamProvider<Stats>((ref) {
   }
 });
 
-/// A query that only returns stories authored by [user].
+/// A query that returns stats for [user].
 DocumentReference<Map<String, dynamic>> _userStatsDocument(AuthUser user) =>
     firebaseFirestore.collection('users').doc(user.uid);

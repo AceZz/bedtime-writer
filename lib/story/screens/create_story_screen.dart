@@ -38,8 +38,9 @@ class CreateStoryScreen extends ConsumerWidget {
     if (state.hasQuestions) {
       nextScreen = _QuestionScreen(question: state.currentQuestion);
       return _LimitCheckScreen(
-          limitReachScreen: ErrorScreen(text: limitReachedText),
-          nextScreen: nextScreen);
+        limitReachedScreen: ErrorScreen(text: limitReachedText),
+        nextScreen: nextScreen,
+      );
     }
     // Creates and displays story after questions have been answered
     else {
@@ -56,11 +57,11 @@ class CreateStoryScreen extends ConsumerWidget {
 
 /// Checks the stories limit and redirects towards a nextScreen or errorScreen
 class _LimitCheckScreen extends ConsumerWidget {
-  final Widget limitReachScreen;
+  final Widget limitReachedScreen;
   final Widget nextScreen;
 
   const _LimitCheckScreen(
-      {Key? key, required this.limitReachScreen, required this.nextScreen})
+      {Key? key, required this.limitReachedScreen, required this.nextScreen})
       : super(key: key);
 
   @override
@@ -79,7 +80,7 @@ class _LimitCheckScreen extends ConsumerWidget {
         }
         // Else display limitReachScreen
         else {
-          return this.limitReachScreen;
+          return this.limitReachedScreen;
         }
       },
     );
@@ -106,7 +107,7 @@ class _StoryScreen extends ConsumerWidget {
       return loadingScreen;
     }
 
-    final failedLoadingText =
+    const failedLoadingText =
         'A mystical force seems to have interrupted your story.\n\nLet\'s try creating your dreamy tale again:';
 
     return ref.watch(
@@ -120,10 +121,11 @@ class _StoryScreen extends ConsumerWidget {
               case StoryStatus.pending:
                 return loadingScreen;
               case StoryStatus.error:
-                return ErrorScreen(text: failedLoadingText);
+                return const ErrorScreen(text: failedLoadingText);
             }
           },
-          error: (error, stackTrace) => ErrorScreen(text: failedLoadingText),
+          error: (error, stackTrace) =>
+              const ErrorScreen(text: failedLoadingText),
           loading: () => loadingScreen,
           skipLoadingOnReload: true,
         ),

@@ -9,8 +9,6 @@ import '../../widgets/app_scaffold.dart';
 import '../../widgets/fade_in.dart';
 import 'home_screen_debug.dart';
 
-//TODO: prevent limit reset on logout
-
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -34,7 +32,7 @@ class HomeScreen extends ConsumerWidget {
       text: 'New story',
       destination: 'create_story',
       resetStoryState: true,
-      waitStats: true,
+      dependsOnStats: true,
     );
 
     Widget libraryButton =
@@ -92,14 +90,14 @@ class _HomeScreenButton extends ConsumerWidget {
   final String text;
   final String destination;
   final bool resetStoryState;
-  final bool waitStats;
+  final bool dependsOnStats; //Indicates
 
   const _HomeScreenButton({
     Key? key,
     required this.text,
     required this.destination,
     this.resetStoryState = false,
-    this.waitStats = false,
+    this.dependsOnStats = false,
   }) : super(key: key);
 
   @override
@@ -109,9 +107,10 @@ class _HomeScreenButton extends ConsumerWidget {
       style: Theme.of(context).primaryTextTheme.headlineSmall,
     );
 
+    // Stats are fetched from Firestore which can have some latency. We handle this delay by showing a CircularProgressIndicator
     final stats = ref.watch(statsProvider);
     final statsIsLoadingOrError = stats is AsyncLoading || stats is AsyncError;
-    final waitingStats = this.waitStats & statsIsLoadingOrError;
+    final waitingStats = this.dependsOnStats && statsIsLoadingOrError;
 
     return Container(
       width: 0.7 * MediaQuery.of(context).size.width,
