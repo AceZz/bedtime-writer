@@ -87,13 +87,13 @@ export const createStory = onDocumentCreated(
 );
 
 /**
- * Initialize user stats in the users__stats collection from Firestore upon new user creation.
+ * Initialize user stats in the user__stats collection from Firestore upon new user creation.
  */
 export const initializeUserStats = region("europe-west6")
   .auth.user()
   .onCreate(async (user) => {
     // Retrieve user document.
-    const userRef = firestore.collection("users__stats").doc(user.uid);
+    const userRef = firestore.collection("user__stats").doc(user.uid);
     const userSnapshot = await userRef.get();
     const userSnapshotData = userSnapshot.data();
     const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
@@ -117,11 +117,11 @@ export const resetDailyLimits = onSchedule("every 2 minutes", async () => {
   logger.info("Started resetDailyLimits function");
   const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
   try {
-    const usersSnapshot = await firestore.collection("users__stats").get();
+    const usersSnapshot = await firestore.collection("user__stats").get();
     const numberUsers = usersSnapshot.size;
 
     const updates = usersSnapshot.docs.map((doc) => {
-      const userRef = firestore.collection("users__stats").doc(doc.id);
+      const userRef = firestore.collection("user__stats").doc(doc.id);
       return userRef.update({
         remainingStories: userStoriesLimit,
       });
