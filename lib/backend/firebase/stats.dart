@@ -36,4 +36,4 @@ final firebaseStatsProvider = StreamProvider<Stats>((ref) {
 
 /// A query that returns stats for [user].
 DocumentReference<Map<String, dynamic>> _userStatsDocument(AuthUser user) =>
-    firebaseFirestore.collection('users').doc(user.uid);
+    firebaseFirestore.collection('user__stats').doc(user.uid);
