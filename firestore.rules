@@ -32,7 +32,7 @@ service cloud.firestore {
       }
     }
 
-    match /users/{r} {
+    match /user__stats/{r} {
           allow get: if isAuth() && r == request.auth.uid;
           allow list: if false;
           allow write: if false;
