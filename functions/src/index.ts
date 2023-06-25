@@ -1,7 +1,6 @@
 import process from "node:process";
 
 import { initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
 import { region } from "firebase-functions";
 import { setGlobalOptions } from "firebase-functions/v2";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
@@ -10,7 +9,6 @@ import { onSchedule } from "firebase-functions/v2/scheduler";
 
 import { getUid } from "./auth";
 import { logger } from "./logger";
-import { updateUserStats } from "./stats";
 import {
   OpenAiTextApi,
   OpenAiImageApi,
@@ -28,11 +26,9 @@ import { StoryRequestV1Manager, StoryRequestV1 } from "./story/request";
 import { BucketRateLimiter, RateLimiter } from "./rate_limiter";
 import { FirestoreBucketRateLimiterStorage } from "./rate_limiter/bucket_rate_limiter/firestore_bucket_rate_limiter_storage";
 import { parseEnvAsNumber as parseEnvNumber } from "./utils";
+import { FirestoreUserStatsManager, UserStats } from "./user";
 
 initializeApp();
-
-// Set database
-const firestore = getFirestore();
 
 // Set the default region.
 setGlobalOptions({ region: "europe-west6" });
@@ -92,49 +88,24 @@ export const createStory = onDocumentCreated(
 export const initializeUserStats = region("europe-west6")
   .auth.user()
   .onCreate(async (user) => {
-    // Retrieve user document.
-    const userRef = firestore.collection("user__stats").doc(user.uid);
-    const userSnapshot = await userRef.get();
-    const userSnapshotData = userSnapshot.data();
-    const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
+    const userStatsManager = new FirestoreUserStatsManager();
 
-    // If no user data is found, add this user to the collection with maximal daily remaining stories.
-    let userData;
-    if (!userSnapshotData) {
-      userData = {
-        numStories: 0,
-        remainingStories: userStoriesLimit,
-      };
-      await userRef.set(userData);
-    }
+    const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
+    const initialUserStats = new UserStats(0, userStoriesLimit);
+
+    await userStatsManager.initializeUserStats(user.uid, initialUserStats);
   });
 
 /**
- * Resets the daily stories limit at midnight.
+ * Resets the daily stories limit at a fixed schedule.
  */
-// export const  resetDailyLimits = onSchedule("every day 01:00", async () => {
-export const resetDailyLimits = onSchedule("every 2 minutes", async () => {
+export const  resetDailyLimits = onSchedule("every day 01:00", async () => {
   logger.info("Started resetDailyLimits function");
   const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
-  try {
-    const usersSnapshot = await firestore.collection("user__stats").get();
-    const numberUsers = usersSnapshot.size;
 
-    const updates = usersSnapshot.docs.map((doc) => {
-      const userRef = firestore.collection("user__stats").doc(doc.id);
-      return userRef.update({
-        remainingStories: userStoriesLimit,
-      });
-    });
+  const userStatsManager = new FirestoreUserStatsManager();
 
-    await Promise.all(updates);
-
-    logger.info(
-      `resetDailyLimits function executed successfully, updated ${numberUsers} user(s)`
-    );
-  } catch (error) {
-    logger.error(`An error occurred during resetDailyLimits: ${error}`);
-  }
+  await userStatsManager.resetAllRemainingStories(userStoriesLimit);
 });
 
 /**
@@ -151,6 +122,9 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
   const metadata = new StoryMetadata(request.author, generator.title());
   const writer = new FirebaseStoryWriter(metadata, storyId);
 
+  // Update user stats
+  const userStatsManager = new FirestoreUserStatsManager();
+
   await writer.writeMetadata();
 
   try {
@@ -163,10 +137,7 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
       `createClassicStory: story ${storyId} was generated and added to Firestore`
     );
     // Update remaining stories for the user
-    await updateUserStats(request.author, firestore);
-    logger.info(
-      `createClassicStory: remaining daily stories for user ${request.author} were successfully updated`
-    );
+    userStatsManager.updateUserStats(request.author);
   } catch (error) {
     await writer.writeError();
     logger.error(
