@@ -100,12 +100,12 @@ export const initializeUserStats = region("europe-west6")
  * Resets the daily stories limit at a fixed schedule.
  */
 export const resetDailyLimits = onSchedule("every day 01:00", async () => {
-  logger.info("Started resetDailyLimits function");
+  logger.info("resetDailyLimits: started");
   const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
 
   const userStatsManager = new FirestoreUserStatsManager();
 
-  await userStatsManager.resetAllRemainingStories(userStoriesLimit);
+  await userStatsManager.resetDailyLimit(userStoriesLimit);
 });
 
 /**

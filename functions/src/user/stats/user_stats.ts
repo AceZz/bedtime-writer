@@ -4,7 +4,7 @@
 export interface UserStatsManager {
   getUserStats(uid: string): Promise<UserStats | undefined>;
   initializeStats(uid: string, userStats: UserStats): Promise<void>;
-  resetAllRemainingStories(remainingStories: number): Promise<void>;
+  resetDailyLimit(remainingStories: number): Promise<void>;
   updateStatsAfterStory(uid: string, data: Partial<UserStats>): Promise<void>;
 }
 

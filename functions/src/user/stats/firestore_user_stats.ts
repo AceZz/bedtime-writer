@@ -42,7 +42,7 @@ export class FirestoreUserStatsManager implements UserStatsManager {
     }
   }
 
-  async resetAllRemainingStories(remainingStories: number): Promise<void> {
+  async resetDailyLimit(remainingStories: number): Promise<void> {
     try {
       const usersSnapshot = await this.firestore
         .collection("user__stats")
@@ -59,10 +59,10 @@ export class FirestoreUserStatsManager implements UserStatsManager {
       await Promise.all(updates);
 
       logger.info(
-        `resetDailyLimits function executed successfully, updated ${numberUsers} user(s)`
+        `resetDailyLimit: function executed successfully, updated ${numberUsers} user(s)`
       );
     } catch (error) {
-      logger.error(`An error occurred during resetDailyLimits: ${error}`);
+      logger.error(`resetDailyLimit: error: ${error}`);
     }
   }
 
@@ -74,7 +74,7 @@ export class FirestoreUserStatsManager implements UserStatsManager {
 
     // If no user data is found, throw an error.
     if (!userSnapshotData) {
-      logger.error(`User ${uid} was not found in the collection user__stats.`);
+      logger.error(`updateStatsAfterStory: User ${uid} was not found in the collection user__stats.`);
       throw new HttpsError(
         "not-found",
         "User was not found in the collection user__stats."
@@ -84,7 +84,7 @@ export class FirestoreUserStatsManager implements UserStatsManager {
     // Check remaining stories and throw an error if there are none.
     if (userSnapshotData.remainingStories <= 0) {
       logger.error(
-        `User ${uid} sent a new story request despite having no more remaining stories today. It should not be possible.`
+        `updateStatsAfterStory: user ${uid} sent a new story request despite having no more remaining stories today. It should not be possible.`
       );
       throw new HttpsError(
         "resource-exhausted",
