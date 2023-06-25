@@ -99,7 +99,7 @@ export const initializeUserStats = region("europe-west6")
 /**
  * Resets the daily stories limit at a fixed schedule.
  */
-export const  resetDailyLimits = onSchedule("every day 01:00", async () => {
+export const resetDailyLimits = onSchedule("every day 01:00", async () => {
   logger.info("Started resetDailyLimits function");
   const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
 
