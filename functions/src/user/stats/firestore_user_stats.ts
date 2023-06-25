@@ -74,7 +74,9 @@ export class FirestoreUserStatsManager implements UserStatsManager {
 
     // If no user data is found, throw an error.
     if (!userSnapshotData) {
-      logger.error(`updateStatsAfterStory: User ${uid} was not found in the collection user__stats.`);
+      logger.error(
+        `updateStatsAfterStory: User ${uid} was not found in the collection user__stats.`
+      );
       throw new HttpsError(
         "not-found",
         "User was not found in the collection user__stats."
