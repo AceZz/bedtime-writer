@@ -29,8 +29,10 @@ class CreateStoryScreen extends ConsumerWidget {
 
     Widget nextScreen;
 
-    final String limitReachedText = ((user is AnonymousUser) &&
-            preferences.hasLoggedOut)
+    final isAnonymousBlocked =
+        (user is AnonymousUser) && preferences.hasLoggedOut;
+    final isUnauth = (user is UnauthUser);
+    final String limitReachedText = (isAnonymousBlocked || isUnauth)
         ? "Your storytelling magic has reached its limit. Sign in to discover a new set of stories."
         : "Your storytelling magic has reached its limit. Come back to Dreamy Tales tomorrow to discover a new set of stories.";
 

@@ -43,13 +43,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'home',
         path: '/',
         builder: (context, state) {
-          final user = ref.read(userProvider.select((user) => user));
-          if (user is UnauthUser) {
-            return FutureBuilder(
-              future: user.signInAnonymously(),
-              builder: (context, snapshot) => const HomeScreen(),
-            );
-          }
           return const HomeScreen();
         },
       ),
