@@ -1,5 +1,5 @@
 /**
- * Set the story questions according to the provided YAML file (defaults to
+ * Add a story form corresponding to the provided YAML file (defaults to
  * DEFAULT_YAML_PATH).
  */
 
@@ -9,11 +9,11 @@ import {
   getFirebaseProject,
   initFirebase,
 } from "./firebase/utils";
-import { FirestoreQuestionWriter, YAMLQuestionReader } from "./story";
+import { FirestoreFormWriter, YAMLFormReader } from "./story";
 import { FirestorePaths } from "./firebase/firestore_paths";
 
-const DEFAULT_COLLECTION_NAME = "story__questions";
-const DEFAULT_YAML_PATH = "data/story/questions.yaml";
+const DEFAULT_COLLECTION_NAME = "story__forms";
+const DEFAULT_YAML_PATH = "data/story/form.yaml";
 
 main().then(() => process.exit(0));
 
@@ -24,14 +24,12 @@ async function main() {
   if (await confirm(paths, yamlPath)) {
     initFirebase();
 
-    const reader = new YAMLQuestionReader(yamlPath);
-    const questions = await reader.read();
+    const reader = new YAMLFormReader(yamlPath);
+    const form = await reader.read();
 
-    const writer = new FirestoreQuestionWriter(paths);
-    await writer.write(questions);
-    console.log(
-      `${questions.length} question(s) saved to ${DEFAULT_COLLECTION_NAME}.`
-    );
+    const writer = new FirestoreFormWriter(paths);
+    await writer.write(form);
+    console.log(`Form saved to ${DEFAULT_COLLECTION_NAME}.`);
   } else {
     console.log("Abort");
   }
@@ -50,8 +48,8 @@ async function confirm(
     : `of project ${getFirebaseProject()}`;
 
   const answer = await prompt(
-    `The collection ${paths.story.questions} ${projectLog} will be set to ` +
-      `the content of ${yamlPath}. Proceed? (y/N) `
+    `The collection ${paths.story.forms} ${projectLog} will be added the ` +
+      `content of ${yamlPath}. Proceed? (y/N) `
   );
 
   return ["yes", "y"].includes(answer?.toLowerCase() ?? "no");

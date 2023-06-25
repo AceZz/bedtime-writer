@@ -1,13 +1,8 @@
-import {
-  CollectionReference,
-  DocumentReference,
-  Firestore,
-  getFirestore,
-} from "firebase-admin/firestore";
-
 import { Question } from "../question";
 import { Writer } from "./writer";
 import { Choice } from "../choice";
+import { FirestoreStoryQuestions } from "../../firebase/firestore_story_questions";
+import { FirestorePaths } from "../../firebase/firestore_paths";
 
 /**
  * This class writes a list of Question objects to a Firestore database.
@@ -25,17 +20,16 @@ import { Choice } from "../choice";
  *         image: bytes
  * ```
  *
- * Note: we do not use batching, as (per the Firestore documentation), the most
- * efficient way to insert a lot of documents is by parallelizing writes.
+ * Note: we make the requests one by one. This is far from being the most
+ * efficient, as the Firestore documentation recommends to parallelize writes.
+ * However, we had random bugs with this approach. As this tool does not need to
+ * be fast, we thus chose to do sequential writes.
  */
 export class FirestoreQuestionWriter implements Writer<Question[]> {
-  private firestore: Firestore;
+  private collection: FirestoreStoryQuestions;
 
-  constructor(
-    readonly collectionName = "story__questions",
-    firestore?: Firestore
-  ) {
-    this.firestore = firestore ?? getFirestore();
+  constructor(paths?: FirestorePaths) {
+    this.collection = new FirestoreStoryQuestions(paths);
   }
 
   /**
@@ -46,14 +40,15 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
    */
   async write(questions: Question[]): Promise<void> {
     await this.removeExtraQuestions(questions);
-    await Promise.all(
-      questions.map((question) => this.writeQuestion(question))
-    );
+
+    for (const question of questions) {
+      await this.writeQuestion(question);
+    }
   }
 
   async removeExtraQuestions(questions: Question[]): Promise<void> {
     const questionIds = questions.map((question) => question.id);
-    const snapshot = await this.questionsRef().get();
+    const snapshot = await this.collection.questionsRef().get();
 
     // Delete every document which ID is not in `questionIds` (i.e. not in
     // `questions`).
@@ -65,18 +60,17 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
   }
 
   async writeQuestion(question: Question): Promise<void> {
-    await Promise.all([
-      this.questionRef(question.id).set({ text: question.text }),
-      this.removeExtraChoices(question),
-    ]);
-    await Promise.all(
-      question.choices.map((choice) => this.writeChoice(question.id, choice))
-    );
+    await this.collection.questionRef(question.id).set({ text: question.text });
+    await this.removeExtraChoices(question);
+
+    for (const choice of question.choices) {
+      await this.writeChoice(question.id, choice);
+    }
   }
 
   async removeExtraChoices(question: Question): Promise<void> {
     const choiceIds = question.choices.map((choice) => choice.id);
-    const snapshot = await this.choicesRef(question.id).get();
+    const snapshot = await this.collection.choicesRef(question.id).get();
 
     // Delete every document which ID is not in `choiceIds` (i.e. not in
     // `question`).
@@ -88,25 +82,9 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
   }
 
   async writeChoice(questionId: string, choice: Choice): Promise<void> {
-    await this.choiceRef(questionId, choice.id).set({
+    await this.collection.choiceRef(questionId, choice.id).set({
       text: choice.text,
-      image: await choice.image(),
+      image: choice.image,
     });
-  }
-
-  private choiceRef(questionId: string, choiceId: string): DocumentReference {
-    return this.choicesRef(questionId).doc(choiceId);
-  }
-
-  private choicesRef(questionId: string): CollectionReference {
-    return this.questionRef(questionId).collection("choices");
-  }
-
-  private questionRef(id: string): DocumentReference {
-    return this.questionsRef().doc(id);
-  }
-
-  private questionsRef(): CollectionReference {
-    return this.firestore.collection(this.collectionName);
   }
 }

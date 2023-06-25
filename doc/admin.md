@@ -41,8 +41,8 @@ Then, set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable:
 ### Using the emulators
 
 By default, the real Firebase servers are used. If you want to use the Firebase emulators, run them
-with `npm run local_backend` (**in the `functions` project, not `admin`**) and create a `.env` file
-in the `admin` folder with this content:
+with `npm run local_backend` in *either* `functions` or `admin` (just make sure they are not already
+launched) and create a `.env` file in the `admin` folder with this content:
 
 ```
 USE_FIREBASE_EMULATORS=true
@@ -50,6 +50,11 @@ USE_FIREBASE_EMULATORS=true
 
 Note: if the Firebase emulators are not used even if the environment variable is set, it may be
 because you did not call `initFirebase()` of `src/firebase_utils.ts` in your script.
+
+This command creates emulators with **no data**. We provide some tools to quickly add data from
+files (see below) but, as you can guess, it can be quite annoying to do so every time you want to
+launch the emulators. Thankfully, a shortcut is possible, the `npm run lbd` command, for "local
+backend (with) data". See below to configure it.
 
 ### Run the tests
 
@@ -63,3 +68,32 @@ launched!
   `admin/data/story/questions.yaml` is used.
 * `npm run compress_story_images [folder]`: compress the images of the story choices. By default,
   `admin/data/` is used.
+* `npm run add_story_form [form.yaml]`: add a story form. By default, `admin/data/story/form.yaml`
+  is used, and the form is valid now (i.e. it immediately replaces any other form). You can add
+  a `start` field next to the `questions` field if you want to change the start date of the form
+  (`start: "2023-05-11T00:13:32Z"`). Finally, this script will fail if any of the provided questions
+  or choices is not in `story__questions`. If necessary, run `set_story_questions` before. 
+
+## Start the local backend with pre-loaded data
+
+### First-time setup
+
+The following commands must be run in the `admin` folder.
+
+Make sure to set `USE_FIREBASE_EMULATORS=true` in `admin/.env` and start the local
+backend: `npm run local_backend`
+
+Fill it with some data. You can choose whichever data you want, a good start is
+`npm run set_story_questions` and `npm run add_story_form` (run them in another terminal, you will
+be likely asked to set `GOOGLE_APPLICATION_CREDENTIALS` first).
+
+Export the Firebase data with `firebase emulators:export local_backend_export`. Firebase will write
+to `local_backend_export`. This folder should never be committed!
+
+### Use
+
+Compile the code in both `admin` and `functions` (`npm run build:watch`).
+
+Make sure to set `USE_FIREBASE_EMULATORS=true` in `admin/.env` and start the local backend
+with `npm run lbd` (still in `admin`). Your data previously saved should be restored. `lbd` is a
+shortcut for "local backend (with) data".

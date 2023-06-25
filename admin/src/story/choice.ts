@@ -14,19 +14,23 @@ export class Choice {
   constructor(
     readonly id: string,
     readonly text: string,
-    readonly imagePath: string
+    readonly image: Buffer
   ) {}
 
   /**
-   * Read `imagePath` and return the compressed image.
+   * Read `imagePath` and return a `Choice` with the compressed image.
    */
-  async image(): Promise<Buffer> {
-    const data = await readFile(this.imagePath);
+  static async fromImagePath(
+    id: string,
+    text: string,
+    imagePath: string
+  ): Promise<Choice> {
+    const data = await readFile(imagePath);
 
     const sizeBefore = data.length;
     const compressed = await compressToPng(data, IMAGE_COMPRESSION_PARAMETERS);
     const sizeAfter = compressed.length;
 
-    return sizeBefore <= sizeAfter ? data : compressed;
+    return new Choice(id, text, sizeBefore <= sizeAfter ? data : compressed);
   }
 }
