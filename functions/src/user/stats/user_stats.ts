@@ -3,9 +3,9 @@
  */
 export interface UserStatsManager {
   getUserStats(uid: string): Promise<UserStats | undefined>;
-  initializeUserStats(uid: string, userStats: UserStats): Promise<void>;
+  initializeStats(uid: string, userStats: UserStats): Promise<void>;
   resetAllRemainingStories(remainingStories: number): Promise<void>;
-  updateUserStats(uid: string, data: Partial<UserStats>): Promise<void>;
+  updateStatsAfterStory(uid: string, data: Partial<UserStats>): Promise<void>;
 }
 
 export class UserStats {

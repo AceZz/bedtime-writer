@@ -93,7 +93,7 @@ export const initializeUserStats = region("europe-west6")
     const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
     const initialUserStats = new UserStats(0, userStoriesLimit);
 
-    await userStatsManager.initializeUserStats(user.uid, initialUserStats);
+    await userStatsManager.initializeStats(user.uid, initialUserStats);
   });
 
 /**
@@ -137,7 +137,7 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
       `createClassicStory: story ${storyId} was generated and added to Firestore`
     );
     // Update remaining stories for the user
-    userStatsManager.updateUserStats(request.author);
+    userStatsManager.updateStatsAfterStory(request.author);
   } catch (error) {
     await writer.writeError();
     logger.error(

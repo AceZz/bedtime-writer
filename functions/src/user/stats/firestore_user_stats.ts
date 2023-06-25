@@ -26,7 +26,7 @@ export class FirestoreUserStatsManager implements UserStatsManager {
     }
   }
 
-  async initializeUserStats(uid: string, userStats: UserStats): Promise<void> {
+  async initializeStats(uid: string, userStats: UserStats): Promise<void> {
     // Retrieve user document.
     const userRef = this.firestore.collection("user__stats").doc(uid);
     const userSnapshot = await userRef.get();
@@ -66,26 +66,23 @@ export class FirestoreUserStatsManager implements UserStatsManager {
     }
   }
 
-  async updateUserStats(uid: string): Promise<void> {
+  async updateStatsAfterStory(uid: string): Promise<void> {
     // Retrieve user document.
     const userRef = this.firestore.collection("user__stats").doc(uid);
     const userSnapshot = await userRef.get();
     const userSnapshotData = userSnapshot.data();
 
     // If no user data is found, throw an error.
-    let userData;
     if (!userSnapshotData) {
       logger.error(`User ${uid} was not found in the collection user__stats.`);
       throw new HttpsError(
         "not-found",
         "User was not found in the collection user__stats."
       );
-    } else {
-      userData = userSnapshotData;
     }
 
     // Check remaining stories and throw an error if there are none.
-    if (userData.remainingStories <= 0) {
+    if (userSnapshotData.remainingStories <= 0) {
       logger.error(
         `User ${uid} sent a new story request despite having no more remaining stories today. It should not be possible.`
       );
