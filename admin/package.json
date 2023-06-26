@@ -14,7 +14,8 @@
     "lbd": "firebase emulators:start --import=local_backend_export",
     "set_story_questions": "node lib/src/set_story_questions.js",
     "add_story_form": "node lib/src/add_story_form.js",
-    "compress_story_images": "node lib/src/compress_story_images.js"
+    "compress_story_images": "node lib/src/compress_story_images.js",
+    "generate_story_cache": "node lib/src/generate_story_cache.js"
   },
   "main": "lib/src/index.js",
   "dependencies": {
