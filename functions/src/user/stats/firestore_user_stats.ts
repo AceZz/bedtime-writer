@@ -14,8 +14,12 @@ export class FirestoreUserStatsManager implements UserStatsManager {
     this.firestore = firestore ?? getFirestore();
   }
 
+  getUserRef(uid: string) {
+    return this.firestore.collection("user__stats").doc(uid);
+  }
+
   async getUserStats(uid: string): Promise<UserStats | undefined> {
-    const userRef = this.firestore.collection("user__stats").doc(uid);
+    const userRef = this.getUserRef(uid);
     const userSnapshot = await userRef.get();
     const userData = userSnapshot.data();
 
@@ -26,9 +30,9 @@ export class FirestoreUserStatsManager implements UserStatsManager {
     }
   }
 
-  async initializeStats(uid: string, userStats: UserStats): Promise<void> {
+  async setUserStats(uid: string, userStats: UserStats): Promise<void> {
     // Retrieve user document.
-    const userRef = this.firestore.collection("user__stats").doc(uid);
+    const userRef = this.getUserRef(uid);
     const userSnapshot = await userRef.get();
     const userSnapshotData = userSnapshot.data();
 
@@ -42,7 +46,7 @@ export class FirestoreUserStatsManager implements UserStatsManager {
     }
   }
 
-  async resetDailyLimit(remainingStories: number): Promise<void> {
+  async setAllRemainingStories(remainingStories: number): Promise<void> {
     try {
       const usersSnapshot = await this.firestore
         .collection("user__stats")
@@ -50,7 +54,7 @@ export class FirestoreUserStatsManager implements UserStatsManager {
       const numberUsers = usersSnapshot.size;
 
       const updates = usersSnapshot.docs.map((doc) => {
-        const userRef = this.firestore.collection("user__stats").doc(doc.id);
+        const userRef = this.getUserRef(doc.id);
         return userRef.update({
           remainingStories: remainingStories,
         });
@@ -68,7 +72,7 @@ export class FirestoreUserStatsManager implements UserStatsManager {
 
   async updateStatsAfterStory(uid: string): Promise<void> {
     // Retrieve user document.
-    const userRef = this.firestore.collection("user__stats").doc(uid);
+    const userRef = this.getUserRef(uid);
     const userSnapshot = await userRef.get();
     const userSnapshotData = userSnapshot.data();
 
@@ -77,10 +81,7 @@ export class FirestoreUserStatsManager implements UserStatsManager {
       logger.error(
         `updateStatsAfterStory: user ${uid} was not found in the collection user__stats.`
       );
-      throw new HttpsError(
-        "not-found",
-        "User was not found in the collection user__stats."
-      );
+      throw new HttpsError("not-found", "User not found.");
     }
 
     // Check remaining stories and throw an error if there are none.

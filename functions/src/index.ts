@@ -93,7 +93,7 @@ export const initializeUserStats = region("europe-west6")
     const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
     const initialUserStats = new UserStats(0, userStoriesLimit);
 
-    await userStatsManager.initializeStats(user.uid, initialUserStats);
+    await userStatsManager.setUserStats(user.uid, initialUserStats);
   });
 
 /**
@@ -105,7 +105,7 @@ export const resetDailyLimits = onSchedule("every day 01:00", async () => {
 
   const userStatsManager = new FirestoreUserStatsManager();
 
-  await userStatsManager.resetDailyLimit(userStoriesLimit);
+  await userStatsManager.setAllRemainingStories(userStoriesLimit);
 });
 
 /**
@@ -122,9 +122,6 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
   const metadata = new StoryMetadata(request.author, generator.title());
   const writer = new FirebaseStoryWriter(metadata, storyId);
 
-  // Update user stats
-  const userStatsManager = new FirestoreUserStatsManager();
-
   await writer.writeMetadata();
 
   try {
@@ -136,7 +133,8 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
     logger.info(
       `createClassicStory: story ${storyId} was generated and added to Firestore`
     );
-    // Update remaining stories for the user
+
+    const userStatsManager = new FirestoreUserStatsManager();
     userStatsManager.updateStatsAfterStory(request.author);
   } catch (error) {
     await writer.writeError();
