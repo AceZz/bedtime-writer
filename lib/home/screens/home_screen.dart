@@ -90,7 +90,8 @@ class _HomeScreenButton extends ConsumerWidget {
   final String text;
   final String destination;
   final bool resetStoryState;
-  final bool dependsOnStats; //Indicates if the button depends on user stats to be clickable.
+  final bool
+      dependsOnStats; //Indicates if the button depends on user stats to be clickable.
 
   const _HomeScreenButton({
     Key? key,
