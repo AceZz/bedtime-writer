@@ -5,16 +5,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../concrete.dart';
 import '../story.dart';
-import '../story_params.dart';
+import '../story_form.dart';
 import '../story_status.dart';
 import '../user.dart';
 import 'firebase.dart';
 import 'story_part.dart';
 
-Future<String> firebaseCreateClassicStory(StoryParams params) async {
+Future<String> firebaseCreateClassicStory(StoryAnswers answers) async {
   return firebaseFunctions
       .httpsCallable('createClassicStoryRequest')
-      .call(params.serialize())
+      .call(answers.serialize())
       .then((result) => result.data);
 }
 
