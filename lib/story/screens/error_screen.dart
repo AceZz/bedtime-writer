@@ -4,6 +4,13 @@ import 'package:go_router/go_router.dart';
 import '../../widgets/app_scaffold.dart';
 
 class ErrorScreen extends StatelessWidget {
+  final String text;
+
+  const ErrorScreen({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -15,7 +22,7 @@ class ErrorScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(
                 horizontal: 0.1 * MediaQuery.of(context).size.width),
             child: Text(
-              'A mystical force seems to have interrupted your story.\n\nLet\'s try creating your dreamy tale again:',
+              this.text,
               textAlign: TextAlign.center,
               style: Theme.of(context).primaryTextTheme.bodyMedium,
             ),

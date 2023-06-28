@@ -24,20 +24,70 @@ class CreateStoryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     CreateStoryState state = ref.watch(createStoryStateProvider);
+    User user = ref.watch(userProvider);
+    Preferences preferences = ref.watch(preferencesProvider);
 
-    // Displays the current question.
+    Widget nextScreen;
+
+    final isAnonymousBlocked =
+        (user is AnonymousUser) && preferences.hasLoggedOut;
+    final isUnauth = (user is UnauthUser);
+    final String limitReachedText = (isAnonymousBlocked || isUnauth)
+        ? "Your storytelling magic has reached its limit. Sign in to discover a new set of stories."
+        : "Your storytelling magic has reached its limit. Come back to Dreamy Tales tomorrow to discover a new set of stories.";
+
+    // Checks on stories limit and displays a question
     if (state.hasQuestions) {
-      return _QuestionScreen(question: state.currentQuestion);
+      nextScreen = _QuestionScreen(question: state.currentQuestion);
+      return _LimitCheckScreen(
+        limitReachedScreen: ErrorScreen(text: limitReachedText),
+        nextScreen: nextScreen,
+      );
     }
+    // Creates and displays story after questions have been answered
+    else {
+      return FutureBuilder(
+        future: createClassicStory(state.storyParams),
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          final requestId = snapshot.data;
+          return _StoryScreen(requestId: requestId);
+        },
+      );
+    }
+  }
+}
 
-    // Creates the story and displays it.
-    return FutureBuilder(
-      future: createClassicStory(state.storyParams),
-      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-        final requestId = snapshot.data;
-        return _StoryScreen(requestId: requestId);
+/// Checks the stories limit and redirects towards a nextScreen or errorScreen
+class _LimitCheckScreen extends ConsumerWidget {
+  final Widget limitReachedScreen;
+  final Widget nextScreen;
+
+  const _LimitCheckScreen(
+      {Key? key, required this.limitReachedScreen, required this.nextScreen})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    AsyncValue<Stats> stats = ref.watch(statsProvider);
+
+    Widget limitCheckWidget = stats.when(
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => ErrorScreen(
+          text:
+              'An error happened during limit check: $err. Please try again.'),
+      data: (stats) {
+        // If user has enough remaining stories, proceed with story creation
+        if (stats.remainingStories >= 1) {
+          return this.nextScreen;
+        }
+        // Else display limitReachScreen
+        else {
+          return this.limitReachedScreen;
+        }
       },
     );
+
+    return limitCheckWidget;
   }
 }
 
@@ -59,6 +109,9 @@ class _StoryScreen extends ConsumerWidget {
       return loadingScreen;
     }
 
+    const failedLoadingText =
+        'A mystical force seems to have interrupted your story.\n\nLet\'s try creating your dreamy tale again:';
+
     return ref.watch(
       storyStatusProvider(_requestId).select(
         (status) => status.when(
@@ -70,10 +123,11 @@ class _StoryScreen extends ConsumerWidget {
               case StoryStatus.pending:
                 return loadingScreen;
               case StoryStatus.error:
-                return ErrorScreen();
+                return const ErrorScreen(text: failedLoadingText);
             }
           },
-          error: (error, stackTrace) => ErrorScreen(),
+          error: (error, stackTrace) =>
+              const ErrorScreen(text: failedLoadingText),
           loading: () => loadingScreen,
           skipLoadingOnReload: true,
         ),

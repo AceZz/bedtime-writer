@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../backend/index.dart';
 import '../../config.dart';
 import '../../story/index.dart';
 import '../../widgets/app_scaffold.dart';
@@ -31,6 +32,7 @@ class HomeScreen extends ConsumerWidget {
       text: 'New story',
       destination: 'create_story',
       resetStoryState: true,
+      dependsOnStats: true,
     );
 
     Widget libraryButton =
@@ -69,6 +71,8 @@ class HomeScreen extends ConsumerWidget {
             child: titleWidget,
           ),
           SizedBox(height: 20),
+          _DisplayRemainingStories(),
+          SizedBox(height: 20),
           menuWidget,
           if (debugAuth())
             const _CustomCenterAtBottom(child: const HomeScreenDebugAuth()),
@@ -86,12 +90,15 @@ class _HomeScreenButton extends ConsumerWidget {
   final String text;
   final String destination;
   final bool resetStoryState;
+  final bool
+      dependsOnStats; //Indicates if the button depends on user stats to be clickable.
 
   const _HomeScreenButton({
     Key? key,
     required this.text,
     required this.destination,
     this.resetStoryState = false,
+    this.dependsOnStats = false,
   }) : super(key: key);
 
   @override
@@ -100,6 +107,11 @@ class _HomeScreenButton extends ConsumerWidget {
       text,
       style: Theme.of(context).primaryTextTheme.headlineSmall,
     );
+
+    // Stats are fetched from Firestore which can have some latency. We handle this delay by showing a CircularProgressIndicator
+    final stats = ref.watch(statsProvider);
+    final statsIsLoadingOrError = stats is AsyncLoading || stats is AsyncError;
+    final waitingStats = this.dependsOnStats && statsIsLoadingOrError;
 
     return Container(
       width: 0.7 * MediaQuery.of(context).size.width,
@@ -110,15 +122,22 @@ class _HomeScreenButton extends ConsumerWidget {
         borderRadius: BorderRadius.circular(10),
         clipBehavior: Clip.antiAliasWithSaveLayer,
         child: InkWell(
-          onTap: () {
-            if (resetStoryState) {
-              // Resets story state while considering preferences
-              ref.read(createStoryStateProvider.notifier).reset();
-            }
-            context.pushNamed(destination);
-          },
+          onTap: waitingStats
+              ? null
+              : () {
+                  if (resetStoryState) {
+                    // Resets story state while considering preferences
+                    ref.read(createStoryStateProvider.notifier).reset();
+                  }
+                  context.pushNamed(destination);
+                },
           child: Ink(
-            child: Center(child: buttonTextWidget),
+            child: Center(
+                child: waitingStats
+                    ? CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      )
+                    : buttonTextWidget),
           ),
         ),
       ),
@@ -146,5 +165,36 @@ class _CustomCenterAtBottom extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _DisplayRemainingStories extends ConsumerWidget {
+  const _DisplayRemainingStories({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    AsyncValue<Stats> stats = ref.watch(statsProvider);
+
+    Widget displayWidget = stats.when(
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => const CircularProgressIndicator(),
+      data: (stats) {
+        return FadeIn(
+          duration: const Duration(milliseconds: 1500),
+          delay: const Duration(milliseconds: 500),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: 0.2 * MediaQuery.of(context).size.width),
+            child: Text(
+              'Remaining stories: ${stats.remainingStories}',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).primaryTextTheme.bodyMedium,
+            ),
+          ),
+        );
+      },
+    );
+
+    return displayWidget;
   }
 }

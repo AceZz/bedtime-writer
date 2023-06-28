@@ -1,9 +1,11 @@
 import process from "node:process";
 
 import { initializeApp } from "firebase-admin/app";
-import { onCall } from "firebase-functions/v2/https";
-import { onDocumentCreated } from "firebase-functions/v2/firestore";
+import { region } from "firebase-functions";
 import { setGlobalOptions } from "firebase-functions/v2";
+import { onDocumentCreated } from "firebase-functions/v2/firestore";
+import { onCall } from "firebase-functions/v2/https";
+import { onSchedule } from "firebase-functions/v2/scheduler";
 
 import { getUid } from "./auth";
 import { logger } from "./logger";
@@ -24,6 +26,7 @@ import { StoryRequestV1Manager, StoryRequestV1 } from "./story/request";
 import { BucketRateLimiter, RateLimiter } from "./rate_limiter";
 import { FirestoreBucketRateLimiterStorage } from "./rate_limiter/bucket_rate_limiter/firestore_bucket_rate_limiter_storage";
 import { parseEnvAsNumber as parseEnvNumber } from "./utils";
+import { FirestoreUserStatsManager, UserStats } from "./user";
 
 initializeApp();
 
@@ -80,6 +83,32 @@ export const createStory = onDocumentCreated(
 );
 
 /**
+ * Initialize user stats in the user__stats collection from Firestore upon new user creation.
+ */
+export const initializeUserStats = region("europe-west6")
+  .auth.user()
+  .onCreate(async (user) => {
+    const userStatsManager = new FirestoreUserStatsManager();
+
+    const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
+    const initialUserStats = new UserStats(0, userStoriesLimit);
+
+    await userStatsManager.setUserStats(user.uid, initialUserStats);
+  });
+
+/**
+ * Resets the daily stories limit at a fixed schedule.
+ */
+export const resetDailyLimits = onSchedule("every day 01:00", async () => {
+  logger.info("resetDailyLimits: started");
+  const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
+
+  const userStatsManager = new FirestoreUserStatsManager();
+
+  await userStatsManager.setAllRemainingStories(userStoriesLimit);
+});
+
+/**
  * Generate a classic story and add it to Firestore.
  */
 async function createClassicStory(storyId: string, request: StoryRequestV1) {
@@ -100,15 +129,17 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
     for await (const part of generator.storyParts()) {
       await writer.writePart(part);
     }
-
     await writer.writeComplete();
     logger.info(
       `createClassicStory: story ${storyId} was generated and added to Firestore`
     );
+
+    const userStatsManager = new FirestoreUserStatsManager();
+    userStatsManager.updateStatsAfterStory(request.author);
   } catch (error) {
     await writer.writeError();
     logger.error(
-      `createClassicStory: story ${storyId} encountered an error: ${error}`
+      `createClassicStory: story ${storyId} created by user ${request.author} encountered an error: ${error}`
     );
   }
 }
