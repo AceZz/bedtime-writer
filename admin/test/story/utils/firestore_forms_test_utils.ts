@@ -7,7 +7,7 @@ import {
   Timestamp,
   getFirestore,
 } from "firebase-admin/firestore";
-import { Form } from "../../../src/story/form";
+import { StoryForm } from "../../../src/story/story_form";
 import { FirestoreFormReader } from "../../../src/story/reader/firestore_form_reader";
 import { FirestoreStoryForms } from "../../../src/firebase/firestore_story_forms";
 import { FirestoreFormWriter } from "../../../src/story/writer/firestore_form_writer";
@@ -17,7 +17,7 @@ import { FirestorePaths } from "../../../src/firebase/firestore_paths";
 /**
  * Works with QUESTIONS_0.
  */
-const FORM_0 = new Form(
+const FORM_0 = new StoryForm(
   new Map([
     ["question1", ["choice1", "choice2"]],
     ["question2", ["choice1"]],
@@ -37,7 +37,7 @@ const SERIALIZED_FORM_0 = {
 /**
  * Works with QUESTIONS_0.
  */
-const FORM_1 = new Form(
+const FORM_1 = new StoryForm(
   new Map([
     ["question1", ["choice1", "choice2"]],
     ["question2", ["choice2"]],
@@ -57,7 +57,7 @@ const SERIALIZED_FORM_1 = {
 /**
  * Does not work with QUESTIONS_0 (question does not exist).
  */
-export const FORM_2 = new Form(
+export const FORM_2 = new StoryForm(
   new Map([["doesnotexist", ["one", "two", "three"]]]),
   new Date("2023-01-01T12:00:00Z")
 );
@@ -65,7 +65,7 @@ export const FORM_2 = new Form(
 /**
  * Does not work with QUESTIONS_0 (choice does not exist).
  */
-export const FORM_3 = new Form(
+export const FORM_3 = new StoryForm(
   new Map([["question1", ["doesnotexist", "choice2"]]]),
   new Date("2023-01-01T12:00:00Z")
 );
@@ -84,7 +84,7 @@ export class FirestoreFormsTestUtils {
     return new FirestoreFormWriter(this.paths);
   }
 
-  samples(): Form[] {
+  samples(): StoryForm[] {
     return [FORM_0, FORM_1, FORM_2, FORM_3];
   }
 

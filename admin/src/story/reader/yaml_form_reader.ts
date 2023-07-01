@@ -2,7 +2,7 @@ import { readFile } from "fs/promises";
 
 import { parse } from "yaml";
 
-import { Form } from "../form";
+import { StoryForm } from "../story_form";
 import { Reader } from "./reader";
 
 /**
@@ -17,10 +17,10 @@ import { Reader } from "./reader";
  *   <question2>: ...
  * ```
  */
-export class YAMLFormReader implements Reader<Form> {
+export class YAMLFormReader implements Reader<StoryForm> {
   constructor(readonly path: string) {}
 
-  async read(): Promise<Form> {
+  async read(): Promise<StoryForm> {
     const file = await readFile(this.path, "utf8");
     const data = parse(file);
 
@@ -32,6 +32,6 @@ export class YAMLFormReader implements Reader<Form> {
       questions.set(questionId, questionData[questionId]);
     }
 
-    return new Form(questions, start);
+    return new StoryForm(questions, start);
   }
 }
