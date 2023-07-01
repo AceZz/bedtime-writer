@@ -86,6 +86,18 @@ Configure Firestore to use the "Native mode". Do not forget to update the rules 
 
 See [Deployment](./deployment.md) to deploy them.
 
+## CI (GitHub actions)
+
+To generate the `GOOGLE_SERVICE_ACCOUNT` secret (used in `backend_ci.yml`), generate a service
+account file for the CI (see [admin](./admin.md)), name it `service-account-ci.json` and run the
+following command: `base64 -w 0 "service-account-ci.json"` on Linux,
+`base64 -i "service-account-ci-json` on macOS. **This string is not encrypted, treat it as the
+original file!**
+
+Then, go to <https://github.com/App-Galaxy/bedtime-writer/settings/secrets/actions/> and add a
+"repository secret" called `GOOGLE_SERVICE_ACCOUNT` containing the string you generated. After
+checking that the CI runs, dispose of `service-account-ci.json`.
+
 ## Line separators
 
 Line separators should always be LF. On Unix and macOS, you have nothing to do. On Windows, ensure
