@@ -10,7 +10,7 @@ import {
 import { StoryForm } from "../../../src/story/story_form";
 import { FirestoreFormReader } from "../../../src/story/reader/firestore_form_reader";
 import { FirestoreStoryForms } from "../../../src/firebase/firestore_story_forms";
-import { FirestoreFormWriter } from "../../../src/story/writer/firestore_form_writer";
+import { FirebaseFormWriter } from "../../../src/story/writer/firebase_form_writer";
 import { expect } from "@jest/globals";
 import { FirestorePaths } from "../../../src/firebase/firestore_paths";
 
@@ -80,8 +80,8 @@ export class FirestoreFormsTestUtils {
     return new FirestoreFormReader(this.paths);
   }
 
-  get writer(): FirestoreFormWriter {
-    return new FirestoreFormWriter(this.paths);
+  get writer(): FirebaseFormWriter {
+    return new FirebaseFormWriter(this.paths);
   }
 
   samples(): StoryForm[] {
