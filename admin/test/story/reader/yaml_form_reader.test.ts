@@ -1,12 +1,12 @@
 import { expect, test, jest } from "@jest/globals";
 import { YAMLFormReader } from "../../../src/story/reader/yaml_form_reader";
-import { Form } from "../../../src/story/form";
+import { StoryForm } from "../../../src/story/story_form";
 
 test("parse form with date", async () => {
   const reader = new YAMLFormReader("test/story/data/form.yaml");
 
   const result = await reader.read();
-  const expected = new Form(
+  const expected = new StoryForm(
     new Map([
       ["character", ["blaze", "frosty", "sparkles"]],
       ["flaw", ["failure", "lazy", "noAdvice"]],
@@ -23,7 +23,7 @@ test("parse form without date", async () => {
   const reader = new YAMLFormReader("test/story/data/form_no_start.yaml");
 
   const result = await reader.read();
-  const expected = new Form(
+  const expected = new StoryForm(
     new Map([
       ["character", ["blaze", "frosty", "sparkles"]],
       ["flaw", ["failure", "lazy", "noAdvice"]],

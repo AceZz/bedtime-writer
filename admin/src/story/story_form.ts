@@ -3,7 +3,7 @@
  *
  * `questions` maps a question ID to choices IDs.
  */
-export class Form {
+export class StoryForm {
   readonly start: Date;
 
   constructor(readonly questions: Map<string, string[]>, start?: Date) {
