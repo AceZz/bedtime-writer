@@ -3,14 +3,14 @@
  * DEFAULT_YAML_PATH).
  */
 
-import { prompt } from "./utils";
+import { prompt } from "../utils";
 import {
   firebaseEmulatorsAreUsed,
   getFirebaseProject,
   initFirebase,
-} from "./firebase/utils";
-import { FirebaseQuestionWriter, YAMLQuestionReader } from "./story";
-import { FirestorePaths } from "./firebase/firestore_paths";
+} from "../firebase/utils";
+import { FirebaseQuestionWriter, YAMLQuestionReader } from "../story";
+import { FirestorePaths } from "../firebase/firestore_paths";
 
 const DEFAULT_COLLECTION_NAME = "story__questions";
 const DEFAULT_YAML_PATH = "data/story/questions.yaml";
