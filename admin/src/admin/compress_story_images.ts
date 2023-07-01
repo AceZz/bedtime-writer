@@ -6,7 +6,7 @@
  */
 
 import { readFile, readdir, writeFile } from "fs/promises";
-import { compressToPng, prompt } from "./utils";
+import { compressToPng, prompt } from "../utils";
 import { extname, join } from "path";
 
 const DEFAULT_FOLDER = "data/story/";
