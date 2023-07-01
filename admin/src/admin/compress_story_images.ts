@@ -9,7 +9,7 @@ import { readFile, readdir, writeFile } from "fs/promises";
 import { compressToPng, prompt } from "../utils";
 import { extname, join } from "path";
 
-const DEFAULT_FOLDER = "data/story/";
+const DEFAULT_FOLDER = "admin_data/story/";
 const EXTENSIONS = [".jpg", ".jpeg", ".png"];
 const COMPRESSION_PARAMETERS = {
   cpuEffort: 10,
