@@ -1,13 +1,13 @@
 import { DocumentReference, getFirestore } from "firebase-admin/firestore";
 import { FirestoreQuestionWriter } from "../../../src/story";
 import { FirestoreQuestionReader } from "../../../src/story/reader/firestore_question_reader";
-import { Question } from "../../../src/story/question";
+import { StoryQuestion } from "../../../src/story/story_question";
 import { StoryChoice } from "../../../src/story/story_choice";
 import { expect } from "@jest/globals";
 import { FirestorePaths } from "../../../src/firebase/firestore_paths";
 
 const QUESTIONS_0 = async () => [
-  new Question("question1", "Question 1", [
+  new StoryQuestion("question1", "Question 1", [
     await StoryChoice.fromImagePath(
       "choice1",
       "Choice 1",
@@ -19,7 +19,7 @@ const QUESTIONS_0 = async () => [
       "test/story/data/choice.jpg"
     ),
   ]),
-  new Question("question2", "Question 2", [
+  new StoryQuestion("question2", "Question 2", [
     await StoryChoice.fromImagePath(
       "choice1",
       "Choice 1",
@@ -39,7 +39,7 @@ const QUESTIONS_0 = async () => [
 // * `question2` was replaced by `question3`
 
 const QUESTIONS_1 = async () => [
-  new Question("question1", "New question 1", [
+  new StoryQuestion("question1", "New question 1", [
     await StoryChoice.fromImagePath(
       "choice1",
       "New choice 1",
@@ -51,7 +51,7 @@ const QUESTIONS_1 = async () => [
       "test/story/data/choice.jpg"
     ),
   ]),
-  new Question("question3", "Question 3", [
+  new StoryQuestion("question3", "Question 3", [
     await StoryChoice.fromImagePath(
       "choice1",
       "Choice 1",
@@ -79,7 +79,7 @@ export class FirestoreQuestionsTestUtils {
     return new FirestoreQuestionReader(this.paths);
   }
 
-  async samples(): Promise<Question[][]> {
+  async samples(): Promise<StoryQuestion[][]> {
     return Promise.all([QUESTIONS_0(), QUESTIONS_1()]);
   }
 
@@ -113,11 +113,12 @@ export class FirestoreQuestionsTestUtils {
   }
 
   /**
-   * Compare `Question` objects against the content of the Firestore database.
+   * Compare `StoryQuestion` objects against the content of the Firestore
+   * database.
    *
    * Firebase must be initialized before calling this function.
    */
-  async expectQuestionsToBe(expected: Question[]) {
+  async expectQuestionsToBe(expected: StoryQuestion[]) {
     const firestore = getFirestore();
     const questions = firestore.collection(this.paths.story.questions);
 
@@ -138,7 +139,7 @@ export class FirestoreQuestionsTestUtils {
 
   private async expectQuestionToBe(
     document: DocumentReference,
-    expected: Question
+    expected: StoryQuestion
   ) {
     // Test the question's data.
     const data = (await document.get()).data();

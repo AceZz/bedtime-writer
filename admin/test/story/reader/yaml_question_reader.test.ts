@@ -1,6 +1,6 @@
 import { expect, test } from "@jest/globals";
 import { YAMLQuestionReader } from "../../../src/story/reader/yaml_question_reader";
-import { Question } from "../../../src/story/question";
+import { StoryQuestion } from "../../../src/story/story_question";
 import { StoryChoice } from "../../../src/story/story_choice";
 
 test("read questions", async () => {
@@ -8,7 +8,7 @@ test("read questions", async () => {
 
   const result = await reader.read();
   const expected = [
-    new Question("character", "Who is the hero of tonight's story?", [
+    new StoryQuestion("character", "Who is the hero of tonight's story?", [
       await StoryChoice.fromImagePath(
         "blaze",
         "Blaze, the kind dragon",
@@ -25,7 +25,7 @@ test("read questions", async () => {
         "test/story/data/choice.jpg"
       ),
     ]),
-    new Question("flaw", "What flaw does the hero have?", [
+    new StoryQuestion("flaw", "What flaw does the hero have?", [
       await StoryChoice.fromImagePath(
         "failure",
         "Being afraid of failure",

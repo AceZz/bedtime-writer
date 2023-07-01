@@ -2,7 +2,7 @@ import { readFile } from "fs/promises";
 
 import { parse } from "yaml";
 
-import { Question } from "../question";
+import { StoryQuestion } from "../story_question";
 import { Reader } from "./reader";
 import { StoryChoice } from "../story_choice";
 
@@ -25,14 +25,14 @@ import { StoryChoice } from "../story_choice";
  *   ...
  * ```
  */
-export class YAMLQuestionReader implements Reader<Question[]> {
+export class YAMLQuestionReader implements Reader<StoryQuestion[]> {
   constructor(readonly path: string) {}
 
-  async read(): Promise<Question[]> {
+  async read(): Promise<StoryQuestion[]> {
     const file = await readFile(this.path, "utf8");
     const data = parse(file);
 
-    const parsed: Question[] = [];
+    const parsed: StoryQuestion[] = [];
     for (const questionKey in data) {
       parsed.push(await this.parseQuestion(questionKey, data[questionKey]));
     }
@@ -41,13 +41,13 @@ export class YAMLQuestionReader implements Reader<Question[]> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async parseQuestion(key: string, data: any): Promise<Question> {
+  private async parseQuestion(key: string, data: any): Promise<StoryQuestion> {
     const choices: StoryChoice[] = [];
     for (const choiceKey in data.choices) {
       choices.push(await this.parseChoice(choiceKey, data.choices[choiceKey]));
     }
 
-    return new Question(key, data.text, choices);
+    return new StoryQuestion(key, data.text, choices);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
