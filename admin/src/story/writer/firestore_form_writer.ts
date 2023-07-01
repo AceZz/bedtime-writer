@@ -2,7 +2,7 @@ import { Writer } from "./writer";
 import { Form } from "../form";
 import { FirestoreStoryForms } from "../../firebase/firestore_story_forms";
 import { Reader } from "../reader/reader";
-import { Question } from "../question";
+import { StoryQuestion } from "../story_question";
 import { FirestoreQuestionReader } from "../reader/firestore_question_reader";
 import { FirestoreFormReader } from "../reader/firestore_form_reader";
 import { FirestorePaths } from "../../firebase/firestore_paths";
@@ -14,7 +14,7 @@ import { FirestorePaths } from "../../firebase/firestore_paths";
 export class FirestoreFormWriter implements Writer<Form> {
   private formsCollection: FirestoreStoryForms;
   private formReader: Reader<Form[]>;
-  private questionReader: Reader<Question[]>;
+  private questionReader: Reader<StoryQuestion[]>;
 
   constructor(paths?: FirestorePaths) {
     this.formsCollection = new FirestoreStoryForms(paths);
@@ -46,7 +46,7 @@ export class FirestoreFormWriter implements Writer<Form> {
     await this.formsCollection.formsRef().add(data);
   }
 
-  private async getQuestions(): Promise<Map<string, Question>> {
+  private async getQuestions(): Promise<Map<string, StoryQuestion>> {
     const questions = new Map();
 
     const questionsList = await this.questionReader.read();
@@ -76,7 +76,7 @@ export class FirestoreFormWriter implements Writer<Form> {
   private checkQuestionForm(
     questionId: string,
     choiceIds: string[],
-    questions: Map<string, Question>
+    questions: Map<string, StoryQuestion>
   ) {
     const question = questions.get(questionId);
     if (question === undefined) {

@@ -3,7 +3,7 @@ import { StoryChoice } from "./story_choice";
 /**
  * A question of a story.
  */
-export class Question {
+export class StoryQuestion {
   constructor(
     readonly id: string,
     readonly text: string,

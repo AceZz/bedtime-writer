@@ -1,11 +1,11 @@
-import { Question } from "../question";
+import { StoryQuestion } from "../story_question";
 import { Writer } from "./writer";
 import { StoryChoice } from "../story_choice";
 import { FirestoreStoryQuestions } from "../../firebase/firestore_story_questions";
 import { FirestorePaths } from "../../firebase/firestore_paths";
 
 /**
- * This class writes a list of Question objects to a Firestore database.
+ * This class writes a list of StoryQuestion objects to a Firestore database.
  *
  * The Firestore collection follows this schema:
  *
@@ -25,7 +25,7 @@ import { FirestorePaths } from "../../firebase/firestore_paths";
  * However, we had random bugs with this approach. As this tool does not need to
  * be fast, we thus chose to do sequential writes.
  */
-export class FirestoreQuestionWriter implements Writer<Question[]> {
+export class FirestoreQuestionWriter implements Writer<StoryQuestion[]> {
   private collection: FirestoreStoryQuestions;
 
   constructor(paths?: FirestorePaths) {
@@ -38,7 +38,7 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
    * After the operation, the database contains exactly the same data as what
    * was provided. In other words, any data not in `questions` is removed.
    */
-  async write(questions: Question[]): Promise<void> {
+  async write(questions: StoryQuestion[]): Promise<void> {
     await this.removeExtraQuestions(questions);
 
     for (const question of questions) {
@@ -46,7 +46,7 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
     }
   }
 
-  async removeExtraQuestions(questions: Question[]): Promise<void> {
+  async removeExtraQuestions(questions: StoryQuestion[]): Promise<void> {
     const questionIds = questions.map((question) => question.id);
     const snapshot = await this.collection.questionsRef().get();
 
@@ -59,7 +59,7 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
     );
   }
 
-  async writeQuestion(question: Question): Promise<void> {
+  async writeQuestion(question: StoryQuestion): Promise<void> {
     await this.collection.questionRef(question.id).set({ text: question.text });
     await this.removeExtraChoices(question);
 
@@ -68,7 +68,7 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
     }
   }
 
-  async removeExtraChoices(question: Question): Promise<void> {
+  async removeExtraChoices(question: StoryQuestion): Promise<void> {
     const choiceIds = question.choices.map((choice) => choice.id);
     const snapshot = await this.collection.choicesRef(question.id).get();
 

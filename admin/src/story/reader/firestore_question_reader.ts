@@ -1,4 +1,4 @@
-import { Question } from "../question";
+import { StoryQuestion } from "../story_question";
 import { Reader } from "./reader";
 import { StoryChoice } from "../story_choice";
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
@@ -8,14 +8,14 @@ import { FirestorePaths } from "../../firebase/firestore_paths";
 /**
  * Read a list of Questions from a Firestore collection.
  */
-export class FirestoreQuestionReader implements Reader<Question[]> {
+export class FirestoreQuestionReader implements Reader<StoryQuestion[]> {
   private collection: FirestoreStoryQuestions;
 
   constructor(paths?: FirestorePaths) {
     this.collection = new FirestoreStoryQuestions(paths);
   }
 
-  async read(): Promise<Question[]> {
+  async read(): Promise<StoryQuestion[]> {
     const snapshots = await this.collection.questionsRef().get();
     return Promise.all(
       snapshots.docs.map((snapshot) => this.readQuestion(snapshot))
@@ -24,8 +24,8 @@ export class FirestoreQuestionReader implements Reader<Question[]> {
 
   private async readQuestion(
     snapshot: QueryDocumentSnapshot
-  ): Promise<Question> {
-    return new Question(
+  ): Promise<StoryQuestion> {
+    return new StoryQuestion(
       snapshot.id,
       snapshot.data().text ?? "",
       await this.readChoices(snapshot.id)
