@@ -10,7 +10,7 @@ const IMAGE_COMPRESSION_PARAMETERS = {
 /**
  * A choice of a question.
  */
-export class Choice {
+export class StoryChoice {
   constructor(
     readonly id: string,
     readonly text: string,
@@ -18,19 +18,23 @@ export class Choice {
   ) {}
 
   /**
-   * Read `imagePath` and return a `Choice` with the compressed image.
+   * Read `imagePath` and return a `StoryChoice` with the compressed image.
    */
   static async fromImagePath(
     id: string,
     text: string,
     imagePath: string
-  ): Promise<Choice> {
+  ): Promise<StoryChoice> {
     const data = await readFile(imagePath);
 
     const sizeBefore = data.length;
     const compressed = await compressToPng(data, IMAGE_COMPRESSION_PARAMETERS);
     const sizeAfter = compressed.length;
 
-    return new Choice(id, text, sizeBefore <= sizeAfter ? data : compressed);
+    return new StoryChoice(
+      id,
+      text,
+      sizeBefore <= sizeAfter ? data : compressed
+    );
   }
 }

@@ -2,30 +2,30 @@ import { DocumentReference, getFirestore } from "firebase-admin/firestore";
 import { FirestoreQuestionWriter } from "../../../src/story";
 import { FirestoreQuestionReader } from "../../../src/story/reader/firestore_question_reader";
 import { Question } from "../../../src/story/question";
-import { Choice } from "../../../src/story/choice";
+import { StoryChoice } from "../../../src/story/story_choice";
 import { expect } from "@jest/globals";
 import { FirestorePaths } from "../../../src/firebase/firestore_paths";
 
 const QUESTIONS_0 = async () => [
   new Question("question1", "Question 1", [
-    await Choice.fromImagePath(
+    await StoryChoice.fromImagePath(
       "choice1",
       "Choice 1",
       "test/story/data/choice.jpg"
     ),
-    await Choice.fromImagePath(
+    await StoryChoice.fromImagePath(
       "choice2",
       "Choice 2",
       "test/story/data/choice.jpg"
     ),
   ]),
   new Question("question2", "Question 2", [
-    await Choice.fromImagePath(
+    await StoryChoice.fromImagePath(
       "choice1",
       "Choice 1",
       "test/story/data/choice.jpg"
     ),
-    await Choice.fromImagePath(
+    await StoryChoice.fromImagePath(
       "choice2",
       "Choice 2",
       "test/story/data/choice.jpg"
@@ -40,24 +40,24 @@ const QUESTIONS_0 = async () => [
 
 const QUESTIONS_1 = async () => [
   new Question("question1", "New question 1", [
-    await Choice.fromImagePath(
+    await StoryChoice.fromImagePath(
       "choice1",
       "New choice 1",
       "test/story/data/choice.jpg"
     ),
-    await Choice.fromImagePath(
+    await StoryChoice.fromImagePath(
       "choice3",
       "Choice 3",
       "test/story/data/choice.jpg"
     ),
   ]),
   new Question("question3", "Question 3", [
-    await Choice.fromImagePath(
+    await StoryChoice.fromImagePath(
       "choice1",
       "Choice 1",
       "test/story/data/choice.jpg"
     ),
-    await Choice.fromImagePath(
+    await StoryChoice.fromImagePath(
       "choice2",
       "Choice 2",
       "test/story/data/choice.jpg"
@@ -159,7 +159,7 @@ export class FirestoreQuestionsTestUtils {
 
   private async expectChoiceToBe(
     document: DocumentReference,
-    expected: Choice
+    expected: StoryChoice
   ) {
     const data = (await document.get()).data();
     expect(data?.image).toStrictEqual(expected.image);

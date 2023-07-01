@@ -4,7 +4,7 @@ import { parse } from "yaml";
 
 import { Question } from "../question";
 import { Reader } from "./reader";
-import { Choice } from "../choice";
+import { StoryChoice } from "../story_choice";
 
 /**
  * This class reads a YAML file.
@@ -42,7 +42,7 @@ export class YAMLQuestionReader implements Reader<Question[]> {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async parseQuestion(key: string, data: any): Promise<Question> {
-    const choices: Choice[] = [];
+    const choices: StoryChoice[] = [];
     for (const choiceKey in data.choices) {
       choices.push(await this.parseChoice(choiceKey, data.choices[choiceKey]));
     }
@@ -51,7 +51,7 @@ export class YAMLQuestionReader implements Reader<Question[]> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async parseChoice(key: string, data: any): Promise<Choice> {
-    return await Choice.fromImagePath(key, data.text, data.imagePath);
+  private async parseChoice(key: string, data: any): Promise<StoryChoice> {
+    return await StoryChoice.fromImagePath(key, data.text, data.imagePath);
   }
 }
