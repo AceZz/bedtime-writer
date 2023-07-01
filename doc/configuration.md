@@ -27,6 +27,9 @@ In `bedtime-writer/.env`:
 In other words, when developing locally, edit `functions/.env.local`. If you wish to modify the
 production settings, edit `functions/.env` (and redeploy).
 
+There is one exception: `USE_FIREBASE_EMULATORS`, which is only in `.env.local` and used for the
+tests and the admin tools.
+
 * `RATE_LIMITER_MAX_REQUESTS_PER_DAY_USER`
     * default is `50`
     * The maximum number of requests per day and per user.
@@ -54,3 +57,9 @@ production settings, edit `functions/.env` (and redeploy).
     * `openai` (default): use OpenAI's image generation API. Use the Google Cloud Secret as a key,
       which can be read from `.secret.local` when using the Firebase emulators.
     * `fake`: use the fake image API.
+* `USE_FIREBASE_EMULATORS`
+    * Only useful in `.env.local`. 
+    * If `true`, the application will use the Firebase emulators. This is required for launching
+      tests (either locally or on the CI) and using the [admin](./admin.md) tools locally.
+    * If unspecified or not `true`, the tests will fail and the admin tools will write to the remote
+      database.

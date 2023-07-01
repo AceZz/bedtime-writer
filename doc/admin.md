@@ -1,15 +1,11 @@
 # Administration tools
 
-The `admin` folder contains a Node.js project with tools to administrate `bedtime-writer`.
+The `functions` folder also contains tools to administrate `bedtime-writer`.
 
 ## Setup
 
 These instructions will use `bedtime-writer-dev` as an example. Change the project accordingly if
 necessary.
-
-### Node setup
-
-Go to the `admin` folder and run `npm install --include=dev`.
 
 ### Service account file
 
@@ -24,8 +20,8 @@ that someone was given access to it, **revoke your access immediately**. To do s
 select the `firebase-adminsdk` account, go to Keys and remove your key (the key ID is in the JSON
 file).
 
-Rename the file to `service-account.json` or `service-account-dev.json` and put it in the `admin`
-folder.
+Rename the file to `service-account.json` or `service-account-dev.json` and put it in the
+`functions` folder.
 
 ## Run
 
@@ -41,8 +37,7 @@ Then, set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable:
 ### Using the emulators
 
 By default, the real Firebase servers are used. If you want to use the Firebase emulators, run them
-with `npm run local_backend` in *either* `functions` or `admin` (just make sure they are not already
-launched) and create a `.env` file in the `admin` folder with this content:
+with `npm run local_backend` and add this content to `.env.local`:
 
 ```
 USE_FIREBASE_EMULATORS=true
@@ -65,10 +60,10 @@ launched!
 
 * `npm run set_story_questions [questions.yaml]`: set the story questions for the current project
   (on the emulator if `USE_FIREBASE_EMULATORS` is `true`). By default,
-  `admin/data/story/questions.yaml` is used.
+  `admin_data/story/questions.yaml` is used.
 * `npm run compress_story_images [folder]`: compress the images of the story choices. By default,
-  `admin/data/` is used.
-* `npm run add_story_form [form.yaml]`: add a story form. By default, `admin/data/story/form.yaml`
+  `admin_data/` is used.
+* `npm run add_story_form [form.yaml]`: add a story form. By default, `admin_data/story/form.yaml`
   is used, and the form is valid now (i.e. it immediately replaces any other form). You can add
   a `start` field next to the `questions` field if you want to change the start date of the form
   (`start: "2023-05-11T00:13:32Z"`). Finally, this script will fail if any of the provided questions
@@ -78,9 +73,9 @@ launched!
 
 ### First-time setup
 
-The following commands must be run in the `admin` folder.
+The following commands must be run in the `functions` folder.
 
-Make sure to set `USE_FIREBASE_EMULATORS=true` in `admin/.env` and start the local
+Make sure to set `USE_FIREBASE_EMULATORS=true` in `.env.local` and start the local
 backend: `npm run local_backend`
 
 Fill it with some data. You can choose whichever data you want, a good start is
@@ -92,8 +87,8 @@ to `local_backend_export`. This folder should never be committed!
 
 ### Use
 
-Compile the code in both `admin` and `functions` (`npm run build:watch`).
+Compile the code in both `functions` (`npm run build:watch`).
 
-Make sure to set `USE_FIREBASE_EMULATORS=true` in `admin/.env` and start the local backend
-with `npm run lbd` (still in `admin`). Your data previously saved should be restored. `lbd` is a
-shortcut for "local backend (with) data".
+Make sure to set `USE_FIREBASE_EMULATORS=true` in `.env.local` and start the local backend
+with `npm run lbd`. Your data previously saved should be restored. `lbd` is a shortcut for
+"local backend (with) data".

@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 
-import "dotenv/config";
+import { config } from "dotenv";
+
 import { applicationDefault, initializeApp } from "firebase-admin/app";
 
 /**
@@ -34,9 +35,13 @@ function configureFirebaseEmulators(forceEmulators: boolean) {
 }
 
 /**
- * Return true if Firebase emulators are used.
+ * Return true if Firebase emulators are used (i.e. the environment variable
+ * `USE_FIREBASE_EMULATORS` is set to `true`).
+ *
+ * If there is a `env.local` file, it is loaded first.
  */
 export function firebaseEmulatorsAreUsed(): boolean {
+  config({ path: ".env.local" });
   return process.env.USE_FIREBASE_EMULATORS?.toLowerCase() === "true";
 }
 
