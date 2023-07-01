@@ -1,6 +1,9 @@
 lib/
+local_backend_export/
 node_modules/
 test/output/
 *.code-workspace
+service-account.json
+service-account-dev.json
 .env.local
 .secret.local
