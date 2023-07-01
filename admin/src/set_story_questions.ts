@@ -9,7 +9,7 @@ import {
   getFirebaseProject,
   initFirebase,
 } from "./firebase/utils";
-import { FirestoreQuestionWriter, YAMLQuestionReader } from "./story";
+import { FirebaseQuestionWriter, YAMLQuestionReader } from "./story";
 import { FirestorePaths } from "./firebase/firestore_paths";
 
 const DEFAULT_COLLECTION_NAME = "story__questions";
@@ -27,7 +27,7 @@ async function main() {
     const reader = new YAMLQuestionReader(yamlPath);
     const questions = await reader.read();
 
-    const writer = new FirestoreQuestionWriter(paths);
+    const writer = new FirebaseQuestionWriter(paths);
     await writer.write(questions);
     console.log(
       `${questions.length} question(s) saved to ${DEFAULT_COLLECTION_NAME}.`

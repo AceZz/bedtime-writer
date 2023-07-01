@@ -1,5 +1,5 @@
 import { DocumentReference, getFirestore } from "firebase-admin/firestore";
-import { FirestoreQuestionWriter } from "../../../src/story";
+import { FirebaseQuestionWriter } from "../../../src/story";
 import { FirestoreQuestionReader } from "../../../src/story/reader/firestore_question_reader";
 import { StoryQuestion } from "../../../src/story/story_question";
 import { StoryChoice } from "../../../src/story/story_choice";
@@ -71,8 +71,8 @@ const QUESTIONS_1 = async () => [
 export class FirestoreQuestionsTestUtils {
   constructor(readonly paths: FirestorePaths) {}
 
-  get writer(): FirestoreQuestionWriter {
-    return new FirestoreQuestionWriter(this.paths);
+  get writer(): FirebaseQuestionWriter {
+    return new FirebaseQuestionWriter(this.paths);
   }
 
   get reader(): FirestoreQuestionReader {

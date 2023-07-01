@@ -9,7 +9,7 @@ import {
   getFirebaseProject,
   initFirebase,
 } from "./firebase/utils";
-import { FirestoreFormWriter, YAMLFormReader } from "./story";
+import { FirebaseFormWriter, YAMLFormReader } from "./story";
 import { FirestorePaths } from "./firebase/firestore_paths";
 
 const DEFAULT_COLLECTION_NAME = "story__forms";
@@ -27,7 +27,7 @@ async function main() {
     const reader = new YAMLFormReader(yamlPath);
     const form = await reader.read();
 
-    const writer = new FirestoreFormWriter(paths);
+    const writer = new FirebaseFormWriter(paths);
     await writer.write(form);
     console.log(`Form saved to ${DEFAULT_COLLECTION_NAME}.`);
   } else {

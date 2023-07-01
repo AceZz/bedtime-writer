@@ -8,10 +8,10 @@ import { FirestoreFormReader } from "../reader/firestore_form_reader";
 import { FirestorePaths } from "../../firebase/firestore_paths";
 
 /**
- * This class writes a Form object to a Firestore database.
+ * This class writes a Form object to Firebase.
  *
  */
-export class FirestoreFormWriter implements Writer<StoryForm> {
+export class FirebaseFormWriter implements Writer<StoryForm> {
   private formsCollection: FirestoreStoryForms;
   private formReader: Reader<StoryForm[]>;
   private questionReader: Reader<StoryQuestion[]>;

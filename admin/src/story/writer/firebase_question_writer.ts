@@ -5,27 +5,14 @@ import { FirestoreStoryQuestions } from "../../firebase/firestore_story_question
 import { FirestorePaths } from "../../firebase/firestore_paths";
 
 /**
- * This class writes a list of StoryQuestion objects to a Firestore database.
- *
- * The Firestore collection follows this schema:
- *
- * ```plain
- * story__questions/
- *   <question_id>:
- *     text: str
- *
- *     choices/
- *       <choice_id>:
- *         text: str
- *         image: bytes
- * ```
+ * This class writes a list of StoryQuestion objects to Firebase.
  *
  * Note: we make the requests one by one. This is far from being the most
  * efficient, as the Firestore documentation recommends to parallelize writes.
  * However, we had random bugs with this approach. As this tool does not need to
  * be fast, we thus chose to do sequential writes.
  */
-export class FirestoreQuestionWriter implements Writer<StoryQuestion[]> {
+export class FirebaseQuestionWriter implements Writer<StoryQuestion[]> {
   private collection: FirestoreStoryQuestions;
 
   constructor(paths?: FirestorePaths) {
