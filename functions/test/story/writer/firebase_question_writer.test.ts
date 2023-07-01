@@ -13,7 +13,7 @@ beforeEach(async () => {
   await questions.deleteCollection();
 });
 
-test.only("Simple write", async () => {
+test("Simple write", async () => {
   const samples = await questions.samples();
   await questions.writer.write(samples[0]);
   await questions.expectQuestionsToBe(samples[0]);
