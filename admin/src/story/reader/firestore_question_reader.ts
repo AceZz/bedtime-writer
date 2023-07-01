@@ -1,6 +1,6 @@
 import { Question } from "../question";
 import { Reader } from "./reader";
-import { Choice } from "../choice";
+import { StoryChoice } from "../story_choice";
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
 import { FirestoreStoryQuestions } from "../../firebase/firestore_story_questions";
 import { FirestorePaths } from "../../firebase/firestore_paths";
@@ -32,14 +32,20 @@ export class FirestoreQuestionReader implements Reader<Question[]> {
     );
   }
 
-  private async readChoices(questionId: string): Promise<Choice[]> {
+  private async readChoices(questionId: string): Promise<StoryChoice[]> {
     const snapshopts = await this.collection.choicesRef(questionId).get();
     return Promise.all(
       snapshopts.docs.map((snapshot) => this.readChoice(snapshot))
     );
   }
 
-  private async readChoice(snapshot: QueryDocumentSnapshot): Promise<Choice> {
-    return new Choice(snapshot.id, snapshot.data().text, snapshot.data().image);
+  private async readChoice(
+    snapshot: QueryDocumentSnapshot
+  ): Promise<StoryChoice> {
+    return new StoryChoice(
+      snapshot.id,
+      snapshot.data().text,
+      snapshot.data().image
+    );
   }
 }

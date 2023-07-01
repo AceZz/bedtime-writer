@@ -1,6 +1,6 @@
 import { Question } from "../question";
 import { Writer } from "./writer";
-import { Choice } from "../choice";
+import { StoryChoice } from "../story_choice";
 import { FirestoreStoryQuestions } from "../../firebase/firestore_story_questions";
 import { FirestorePaths } from "../../firebase/firestore_paths";
 
@@ -81,7 +81,7 @@ export class FirestoreQuestionWriter implements Writer<Question[]> {
     );
   }
 
-  async writeChoice(questionId: string, choice: Choice): Promise<void> {
+  async writeChoice(questionId: string, choice: StoryChoice): Promise<void> {
     await this.collection.choiceRef(questionId, choice.id).set({
       text: choice.text,
       image: choice.image,
