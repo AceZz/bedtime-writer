@@ -13,7 +13,7 @@ import { FirebaseQuestionWriter, YAMLQuestionReader } from "../story";
 import { FirestorePaths } from "../firebase/firestore_paths";
 
 const DEFAULT_COLLECTION_NAME = "story__questions";
-const DEFAULT_YAML_PATH = "data/story/questions.yaml";
+const DEFAULT_YAML_PATH = "admin_data/story/questions.yaml";
 
 main().then(() => process.exit(0));
 
