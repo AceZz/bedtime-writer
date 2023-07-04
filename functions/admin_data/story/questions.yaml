@@ -1,51 +1,87 @@
-challenge:
-  text: "What challenge awaits the hero?"
-  choices:
-    animal:
-      text: "Fighting a big animal"
-      imagePath: "admin_data/story/challenge/animal.png"
-    friend:
-      text: "Rescuing a friend"
-      imagePath: "admin_data/story/challenge/friend.png"
-    lost:
-      text: "Being lost"
-      imagePath: "admin_data/story/challenge/lost.png"
-    riddle:
-      text: "Solving a riddle"
-      imagePath: "admin_data/story/challenge/riddle.png"
-    witch:
-      text: "Captured by a witch"
-      imagePath: "admin_data/story/challenge/witch.png"
-character:
+####################################################################################
+#
+# Questions naming must be identical to related fields from ClassicStoryLogic class
+#
+####################################################################################
+
+########################
+# Required question(s)
+########################
+
+characterName:
   text: "Who is the hero of tonight's story?"
   choices:
     blaze:
       text: "Blaze, the kind dragon"
-      imagePath: "admin_data/story/character/blaze.png"
+      imagePath: "admin_data/story/characterName/blaze.png"
     frosty:
       text: "Frosty, the pinguin"
-      imagePath: "admin_data/story/character/frosty.png"
+      imagePath: "admin_data/story/characterName/frosty.png"
     sparkles:
       text: "Sparkles, the magical horse"
-      imagePath: "admin_data/story/character/sparkles.png"
-flaw:
+      imagePath: "admin_data/story/characterName/sparkles.png"
+
+########################
+# Optional question(s)
+########################
+
+characterChallenge:
+  text: "What challenge awaits the hero?"
+  choices:
+    animal:
+      text: "Fighting a big animal"
+      imagePath: "admin_data/story/characterChallenge/animal.png"
+    friend:
+      text: "Rescuing a friend"
+      imagePath: "admin_data/story/characterChallenge/friend.png"
+    lost:
+      text: "Being lost"
+      imagePath: "admin_data/story/characterChallenge/lost.png"
+    riddle:
+      text: "Solving a riddle"
+      imagePath: "admin_data/story/characterChallenge/riddle.png"
+    witch:
+      text: "Captured by a witch"
+      imagePath: "admin_data/story/characterChallenge/witch.png"
+characterFlaw:
   text: "What flaw does the hero have?"
   choices:
     failure:
       text: "Being afraid of failure"
-      imagePath: "admin_data/story/flaw/failure.png"
+      imagePath: "admin_data/story/characterFlaw/failure.png"
     giveUp:
       text: "Giving up easily"
-      imagePath: "admin_data/story/flaw/give_up.png"
+      imagePath: "admin_data/story/characterFlaw/give_up.png"
     lazy:
       text: "Being a bit lazy"
-      imagePath: "admin_data/story/flaw/lazy.png"
+      imagePath: "admin_data/story/characterFlaw/lazy.png"
     noAdvice:
       text: "Not listening to advice"
-      imagePath: "admin_data/story/flaw/no_advice.png"
+      imagePath: "admin_data/story/characterFlaw/no_advice.png"
     selfConfidence:
       text: "Lacking self-confidence"
-      imagePath: "admin_data/story/flaw/self_confidence.png"
+      imagePath: "admin_data/story/characterFlaw/self_confidence.png"
+characterPower:
+  text: "What power does the hero have?"
+  choices:
+    animals:
+      text: "Can communicate with animals"
+      imagePath: "admin_data/story/characterPower/animals.png"
+    fly:
+      text: "Is able to fly"
+      imagePath: "admin_data/story/characterPower/fly.png"
+    heal:
+      text: "Can heal the others"
+      imagePath: "admin_data/story/characterPower/heal.png"
+    invisible:
+      text: "Can become invisible"
+      imagePath: "admin_data/story/characterPower/invisible.png"
+    minds:
+      text: "Can read minds"
+      imagePath: "admin_data/story/characterPower/minds.png"
+    weather:
+      text: "Can control the weather"
+      imagePath: "admin_data/story/characterPower/weather.png"
 object:
   text: "What object does the hero find?"
   choices:
@@ -85,24 +121,3 @@ place:
     village:
       text: "In a quiet village"
       imagePath: "admin_data/story/place/village.png"
-power:
-  text: "What power does the hero have?"
-  choices:
-    animals:
-      text: "Can communicate with animals"
-      imagePath: "admin_data/story/power/animals.png"
-    fly:
-      text: "Is able to fly"
-      imagePath: "admin_data/story/power/fly.png"
-    heal:
-      text: "Can heal the others"
-      imagePath: "admin_data/story/power/heal.png"
-    invisible:
-      text: "Can become invisible"
-      imagePath: "admin_data/story/power/invisible.png"
-    minds:
-      text: "Can read minds"
-      imagePath: "admin_data/story/power/minds.png"
-    weather:
-      text: "Can control the weather"
-      imagePath: "admin_data/story/power/weather.png"

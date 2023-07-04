@@ -1,4 +1,4 @@
 questions:
-  character: ["blaze", "frosty", "sparkles"]
-  flaw: ["failure", "lazy", "noAdvice"]
-  challenge: ["animal", "lost", "riddle"]
+  characterName: ["blaze", "frosty", "sparkles"]
+  characterFlaw: ["failure", "lazy", "noAdvice"]
+  characterChallenge: ["animal", "lost", "riddle"]

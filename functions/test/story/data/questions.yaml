@@ -1,4 +1,4 @@
-character:
+characterName:
   text: "Who is the hero of tonight's story?"
   choices:
     blaze:
@@ -10,7 +10,7 @@ character:
     frosty:
       text: "Frosty, the pinguin"
       imagePath: "test/story/data/choice.jpg"
-flaw:
+characterFlaw:
   text: "What flaw does the hero have?"
   choices:
     failure:

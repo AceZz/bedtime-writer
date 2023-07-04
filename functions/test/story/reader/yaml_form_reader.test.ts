@@ -8,8 +8,8 @@ test("parse form with date", async () => {
   const result = await reader.read();
   const expected = new StoryForm(
     new Map([
-      ["character", ["blaze", "frosty", "sparkles"]],
-      ["flaw", ["failure", "lazy", "noAdvice"]],
+      ["characterName", ["blaze", "frosty", "sparkles"]],
+      ["characterFlaw", ["failure", "lazy", "noAdvice"]],
     ]),
     new Date("2023-05-11T00:13:32Z")
   );
@@ -25,8 +25,8 @@ test("parse form without date", async () => {
   const result = await reader.read();
   const expected = new StoryForm(
     new Map([
-      ["character", ["blaze", "frosty", "sparkles"]],
-      ["flaw", ["failure", "lazy", "noAdvice"]],
+      ["characterName", ["blaze", "frosty", "sparkles"]],
+      ["characterFlaw", ["failure", "lazy", "noAdvice"]],
     ]),
     new Date("2023-05-11T00:13:32Z")
   );
