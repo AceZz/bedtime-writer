@@ -6,6 +6,10 @@ import {
   initFirebase,
 } from "../firebase/utils";
 import { prompt } from "../utils";
+import { ClassicStoryLogic } from "../story/logic";
+import { StoryRequestV1JsonConverter } from "../story/request/v1/story_request_v1_json_converter";
+
+import { CLASSIC_LOGIC } from "../story/";
 
 main().then(() => process.exit(0));
 
@@ -32,18 +36,31 @@ async function main() {
 
     const questions = form.questions;
 
-    console.log(questions);
-
-    const choicesArrays = [];
-    for (const [, choices] of questions) {
-      choicesArrays.push(choices)
+    // Unpack the questions map to arrays for convenience
+    const choicesArrays: string[][] = [];
+    const questionsArray: string[] = [];
+    for (const [question, choices] of questions) {
+      questionsArray.push(question);
+      choicesArrays.push(choices);
     }
 
+    // Compute all possibilities of choices
     const choicesCartesianProduct = cartesianProduct(choicesArrays);
-    console.log(choicesCartesianProduct);
 
-    
+    // Pick one possible choices combination
+    const choicesCombination = choicesCartesianProduct[0] //TODO: make loop here
 
+    const entriesChoicesCombination = questionsArray.map((question, index) => [question, choicesCombination[index]])
+
+    const logicObject = Object.fromEntries(entriesChoicesCombination);
+
+    console.log(logicObject); //TODO: make logic and questions naming similar
+
+    StoryRequestV1JsonConverter.convertFromJson(CLASSIC_LOGIC, {}); //TODO: use object here with corresponding fields for selected questions
+
+    ClassicStoryLogic;
+
+    //TODO: pass on the right structure to storyWriter
   }
   // TODO: capture logic here, do for loop
   //const logic = request.toClassicStoryLogic();
@@ -95,17 +112,22 @@ async function confirm(paths: FirestorePaths): Promise<boolean> {
  * Create the cartesian product of an array of string arrays. Throw an error if one array is empty.
  */
 function cartesianProduct(arrays: string[][]): string[][] {
-
   if (arrays.length === 0) {
-    throw new Error("generateStoriesCache: No string array was provided for the cartesian product of choices.");
+    throw new Error(
+      "generateStoriesCache: No string array was provided for the cartesian product of choices."
+    );
   }
 
-  if (arrays.some(subArray => subArray.length === 0)) {
-    throw new Error("generateStoriesCache: Empty arrays are not allowed for the cartesian product of choices.");
+  if (arrays.some((subArray) => subArray.length === 0)) {
+    throw new Error(
+      "generateStoriesCache: Empty arrays are not allowed for the cartesian product of choices."
+    );
   }
 
-  return arrays.reduce<string[][]>((a: string[][], b: string[]) => {
-    return a.flatMap((d: string[]) => b.map((e: string) => [...d, e]));
-  }, [[]]);
+  return arrays.reduce<string[][]>(
+    (a: string[][], b: string[]) => {
+      return a.flatMap((d: string[]) => b.map((e: string) => [...d, e]));
+    },
+    [[]]
+  );
 }
-
