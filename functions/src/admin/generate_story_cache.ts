@@ -6,10 +6,28 @@ import {
   initFirebase,
 } from "../firebase/utils";
 import { prompt } from "../utils";
-import { ClassicStoryLogic } from "../story/logic";
 import { StoryRequestV1JsonConverter } from "../story/request/v1/story_request_v1_json_converter";
 
-import { CLASSIC_LOGIC } from "../story/";
+import {
+  OpenAiTextApi,
+  OpenAiImageApi,
+  FakeTextApi,
+  FakeImageApi,
+  FirebaseStoryWriter,
+  NPartStoryGenerator,
+  StoryMetadata,
+  ImageApi,
+  TextApi,
+  CLASSIC_LOGIC,
+} from "../story/";
+import { logger } from "../logger";
+import { getOpenAiApi } from "../open_ai";
+import { FirestoreUserStatsManager } from "../user";
+import { StoryRequestV1Manager } from "../story/request";
+
+import * as dotenv from "dotenv";
+
+dotenv.config({ path: "../../.env.local" });
 
 main().then(() => process.exit(0));
 
@@ -30,8 +48,6 @@ async function main() {
     const reader = new FirestoreFormReader(paths);
     const forms = await reader.read(); //TODO: this returns array, so filter for the right forms for want to use
 
-    console.log(forms);
-
     const form = forms[0]; //TODO: handle which form we select
 
     const questions = form.questions;
@@ -48,51 +64,86 @@ async function main() {
     const choicesCartesianProduct = cartesianProduct(choicesArrays);
 
     // Pick one possible choices combination
-    const choicesCombination = choicesCartesianProduct[0] //TODO: make loop here
+    const choicesCombination = choicesCartesianProduct[0]; //TODO: make loop here
 
-    const entriesChoicesCombination = questionsArray.map((question, index) => [question, choicesCombination[index]])
+    const entriesChoicesCombination = questionsArray.map((question, index) => [
+      question,
+      choicesCombination[index],
+    ]);
 
-    const logicObject = Object.fromEntries(entriesChoicesCombination);
+    const choicesObject = Object.fromEntries(entriesChoicesCombination);
+
+    const logicObject = {
+      //TODO: rethink StoryLogic fields for batch job
+      author: "@CACHE_BATCH_JOB",
+      duration: 2,
+      style: "Andersen",
+      ...choicesObject,
+    };
 
     console.log(logicObject); //TODO: make logic and questions naming similar
 
-    StoryRequestV1JsonConverter.convertFromJson(CLASSIC_LOGIC, {}); //TODO: use object here with corresponding fields for selected questions
+    // Ensure our story request is valid
+    const request = StoryRequestV1JsonConverter.convertFromJson(
+      CLASSIC_LOGIC,
+      logicObject
+    ); //TODO: use object here with corresponding fields for selected questions
 
-    ClassicStoryLogic;
+    // Have StoryRequestV1Manager create the story doc
+    const requestManager = new StoryRequestV1Manager();
+    const storyId = await requestManager.create(CLASSIC_LOGIC, request.data);
 
-    //TODO: pass on the right structure to storyWriter
+    const logic = request.toClassicStoryLogic();
+    const textApi = getTextApi();
+    const imageApi = getImageApi();
+
+    // Generate and save the story.
+    const generator = new NPartStoryGenerator(logic, textApi, imageApi); //TODO: change in another PR this from stream to batch
+    const metadata = new StoryMetadata(request.author, generator.title());
+    const writer = new FirebaseStoryWriter(metadata, storyId);
+
+    await writer.writeMetadata();
+
+    try {
+      // Write story to database part after part
+      for await (const part of generator.storyParts()) {
+        await writer.writePart(part);
+      }
+      await writer.writeComplete();
+      logger.info(
+        `createClassicStory: story ${storyId} was generated and added to Firestore`
+      );
+
+    } catch (error) {
+      await writer.writeError();
+      logger.error(
+        `createClassicStory: story ${storyId} created by user ${request.author} encountered an error: ${error}`
+      );
+    }
   }
-  // TODO: capture logic here, do for loop
-  //const logic = request.toClassicStoryLogic();
+}
 
-  //   // TODO: get text api
-  //   const textApi = getTextApi();
+function getTextApi(): TextApi {
+  if (process.env.TEXT_API?.toLowerCase() === "fake") {
+    logger.info("using FakeTextApi");
+    return new FakeTextApi();
+  }
 
-  //   //TODO: get imGE pi
-  //   const imageApi = getImageApi();
+  logger.info("using OpenAiTextApi");
+  return new OpenAiTextApi(
+    getOpenAiApi(process.env.OPENAI_API_KEY),
+    "gpt-3.5-turbo"
+  );
+}
 
-  //   // Generate and save the story.
-  //   const generator = new NPartStoryGenerator(logic, textApi, imageApi);
-  //   const metadata = new StoryMetadata(request.author, generator.title());
-  //   const writer = new FirebaseStoryWriter(metadata, storyId);
+function getImageApi(): ImageApi {
+  if (process.env.IMAGE_API?.toLowerCase() === "fake") {
+    logger.info("using FakeImageApi");
+    return new FakeImageApi();
+  }
 
-  //   await writer.writeMetadata();
-
-  //   try {
-  //     // Write story to database part after part
-  //     for await (const part of generator.storyParts()) {
-  //       await writer.writePart(part);
-  //     }
-
-  //     await writer.writeComplete();
-  //     logger.info(
-  //       `createClassicStory: story ${storyId} was generated and added to Firestore`
-  //     );
-  //   } catch (error) {
-  //     await writer.writeError();
-  //     logger.error(
-  //       `createClassicStory: story ${storyId} encountered an error: ${error}`
-  //     );
+  logger.info("using OpenAiImageApi");
+  return new OpenAiImageApi(getOpenAiApi(process.env.OPENAI_API_KEY));
 }
 
 async function confirm(paths: FirestorePaths): Promise<boolean> {
