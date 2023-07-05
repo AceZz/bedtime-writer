@@ -8,7 +8,7 @@ test("read questions", async () => {
 
   const result = await reader.read();
   const expected = [
-    new StoryQuestion("character", "Who is the hero of tonight's story?", [
+    new StoryQuestion("characterName", "Who is the hero of tonight's story?", [
       await StoryChoice.fromImagePath(
         "blaze",
         "Blaze, the kind dragon",
@@ -25,7 +25,7 @@ test("read questions", async () => {
         "test/story/data/choice.jpg"
       ),
     ]),
-    new StoryQuestion("flaw", "What flaw does the hero have?", [
+    new StoryQuestion("characterFlaw", "What flaw does the hero have?", [
       await StoryChoice.fromImagePath(
         "failure",
         "Being afraid of failure",
