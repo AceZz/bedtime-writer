@@ -34,4 +34,4 @@ export class StoryRequestV1 implements StoryRequest {
   }
 }
 
-export type StoryPath = {collection: string} | {collection: string, document: string, subcollection: string}
+export type StoryPath = {collection: string} | {collection: string, docId: string, subcollection: string}
