@@ -7,11 +7,13 @@ import { StoryRequestV1JsonConverter } from "./story_request_v1_json_converter";
 export class StoryRequestV1Manager
   implements StoryRequestManager<StoryRequestV1>
 {
+  readonly storyCollection: string;
   private firestoreConverter: StoryRequestV1FirestoreConverter;
   private jsonConverter: StoryRequestV1JsonConverter;
 
-  constructor() {
-    this.firestoreConverter = new StoryRequestV1FirestoreConverter();
+  constructor(storyCollection: string) {
+    this.storyCollection = storyCollection;
+    this.firestoreConverter = new StoryRequestV1FirestoreConverter(this.storyCollection);
     this.jsonConverter = new StoryRequestV1JsonConverter();
   }
 

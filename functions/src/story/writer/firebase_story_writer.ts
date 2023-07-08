@@ -35,6 +35,7 @@ import { valueOrNull } from "./utils";
  *         imagePromptPrompt
  */
 export class FirebaseStoryWriter implements StoryWriter {
+  readonly storyCollection: string;
   private firestore: Firestore;
   private parts: string[];
   /**
@@ -44,10 +45,12 @@ export class FirebaseStoryWriter implements StoryWriter {
   private imageIds: Map<Buffer, string> = new Map();
 
   constructor(
+    storyCollection: string,
     readonly metadata: StoryMetadata,
     private readonly id: string,
     firestore?: Firestore
   ) {
+    this.storyCollection = storyCollection;
     this.firestore = firestore ?? getFirestore();
     this.parts = [];
   }
@@ -139,7 +142,7 @@ export class FirebaseStoryWriter implements StoryWriter {
   }
 
   private get storyRef(): DocumentReference {
-    return this.firestore.collection("stories").doc(this.id);
+    return this.firestore.collection(this.storyCollection).doc(this.id);
   }
 
   private get imagesRef(): CollectionReference {

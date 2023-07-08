@@ -25,9 +25,11 @@ import { StoryStatus } from "../../story_status";
 export class StoryRequestV1FirestoreConverter
   implements StoryRequestFirestoreConverter<StoryRequestV1>
 {
+  readonly storyCollection: string;
   private firestore: Firestore;
 
-  constructor() {
+  constructor(storyCollection: string) {
+    this.storyCollection = storyCollection;
     this.firestore = getFirestore();
   }
 
@@ -77,6 +79,6 @@ export class StoryRequestV1FirestoreConverter
   }
 
   private get storiesRef(): CollectionReference {
-    return this.firestore.collection("stories");
+    return this.firestore.collection(this.storyCollection);
   }
 }
