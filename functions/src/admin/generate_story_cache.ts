@@ -32,9 +32,9 @@ async function main() {
     const form = forms[0]; //TODO: handle which form we select
 
     const storyCacheManager = new FirestoreStoryCacheManager();
-    const request = storyCacheManager.generateRequestsFromForm(form)[0]; //TODO: handle all requests
+    const requests = storyCacheManager.generateRequestsFromForm(form); //TODO: handle all requests
 
-    await storyCacheManager.cacheStories([request]);
+    await storyCacheManager.cacheStories(requests);
   }
 }
 
