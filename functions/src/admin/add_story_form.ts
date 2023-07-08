@@ -48,7 +48,7 @@ async function confirm(
     : `of project ${getFirebaseProject()}`;
 
   const answer = await prompt(
-    `The collection ${paths.story.forms} ${projectLog} will be added the ` +
+    `The collection ${paths.story.forms} ${projectLog} will be overwritten to add the ` +
       `content of ${yamlPath}. Proceed? (y/N) `
   );
 

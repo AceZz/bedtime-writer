@@ -1,3 +1,5 @@
+import { DocumentReference } from "firebase-admin/firestore";
+
 import { Writer } from "./writer";
 import { StoryForm } from "../story_form";
 import { FirestoreStoryForms } from "../../firebase/firestore_story_forms";
@@ -43,7 +45,19 @@ export class FirebaseFormWriter implements Writer<StoryForm> {
     }
     data.numQuestions = index;
 
-    await this.formsCollection.formsRef().add(data);
+    const formId = this.getFormId(data.start);
+    await this.getDocRef(formId).set(data);
+  }
+
+  private getFormId(date: Date): string {
+    const year = date.getUTCFullYear().toString();
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0"); //Months start at 0
+    const day = date.getUTCDate().toString().padStart(2, "0");
+    return `${year}${month}${day}`;
+  }
+
+  private getDocRef(docId: string): DocumentReference {
+    return this.formsCollection.formsRef().doc(docId);
   }
 
   private async getQuestions(): Promise<Map<string, StoryQuestion>> {
