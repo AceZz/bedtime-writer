@@ -3,7 +3,7 @@ import { StoryRequestManager } from "../story_request_manager";
 import { StoryPath, StoryRequestV1 } from "./story_request_v1";
 import { StoryRequestV1FirestoreConverter } from "./story_request_v1_firestore_converter";
 import { StoryRequestV1JsonConverter } from "./story_request_v1_json_converter";
-  
+
 export class StoryRequestV1Manager
   implements StoryRequestManager<StoryRequestV1>
 {
@@ -13,7 +13,9 @@ export class StoryRequestV1Manager
 
   constructor(storyPath: StoryPath) {
     this.storyPath = storyPath;
-    this.firestoreConverter = new StoryRequestV1FirestoreConverter(this.storyPath);
+    this.firestoreConverter = new StoryRequestV1FirestoreConverter(
+      this.storyPath
+    );
     this.jsonConverter = new StoryRequestV1JsonConverter();
   }
 

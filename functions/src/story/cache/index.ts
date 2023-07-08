@@ -1,1 +1,1 @@
-export { StoryCacheManager } from "./story_cache_manager"
+export { StoryCacheManager } from "./story_cache_manager";
