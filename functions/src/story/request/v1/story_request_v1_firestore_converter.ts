@@ -61,6 +61,15 @@ export class StoryRequestV1FirestoreConverter
   }
 
   async write(request: StoryRequestV1): Promise<string> {
+    if ("subcollection" in this.storyPath) {
+      this.firestore
+        .collection(this.storyPath.collection)
+        .doc(this.storyPath.docId)
+        .set({
+          formId: "MyFormId",
+        });
+    }
+
     const payload = {
       author: request.author,
       timestamp: Timestamp.now(),
@@ -90,7 +99,7 @@ export class StoryRequestV1FirestoreConverter
     return "subcollection" in this.storyPath
       ? this.firestore
           .collection(this.storyPath.collection)
-          .doc(this.storyPath.document)
+          .doc(this.storyPath.docId)
           .collection(this.storyPath.subcollection)
       : this.firestore.collection(this.storyPath.collection);
   }

@@ -11,6 +11,9 @@ import { StoryMetadata } from "../story_metadata";
 import { FirebaseStoryWriter } from "../writer";
 import { StoryCacheManager } from "./story_cache_manager";
 import { cartesianProduct } from "./utils";
+import { FirestorePaths } from "../../firebase/firestore_paths";
+import { Firestore, getFirestore } from "firebase-admin/firestore";
+import { StoryPath } from "../request/v1/story_request_v1";
 
 //TODO: maybe extend to several forms
 //TODO: ensure we dont hit API rate limit (bottleneck openai dalle 50 RPM)
@@ -19,6 +22,12 @@ import { cartesianProduct } from "./utils";
  * Interface to manage caching of stories.
  */
 export class FirestoreStoryCacheManager implements StoryCacheManager {
+  private firestore: Firestore;
+
+  constructor() {
+    this.firestore = getFirestore();
+  }
+
   generateRequestsFromForm(form: StoryForm): StoryRequestV1[] {
     const questions = form.questions;
 
@@ -61,22 +70,30 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
   }
 
   async cacheStories(
+    //TODO: add Firestorepaths as arg
     requests: StoryRequestV1[]
   ): Promise<void> {
+    const firestorePaths = new FirestorePaths();
+
+    const formId = "DummyID"; //TODO: change
+    const cacheDocRef = this.firestore
+      .collection(firestorePaths.story.cache)
+      .doc();
+
+    await cacheDocRef.set({ formId: formId });
+
     //TODO: handle all requests
+    const storyPath: StoryPath = {
+      collection: firestorePaths.story.cache,
+      docId: cacheDocRef.id,
+      subcollection: firestorePaths.story.stories,
+    };
 
     const promises = requests.map(async (request) => {
       // Have StoryRequestV1Manager create the story doc
-      const formId = "DummyID" //TODO: change
 
-      const requestManager = new StoryRequestV1Manager({
-        collection: "story__cache",
-        document: formId,
-        subcollection: "stories",
-      }); //TODO: add subcollection on form id
+      const requestManager = new StoryRequestV1Manager(storyPath); //TODO: add subcollection on form id
       const storyId = await requestManager.create(CLASSIC_LOGIC, request.data);
-
-      //const storyId = `${Date.now()}-${shortUuid.generate()}`;
 
       const logic = request.toClassicStoryLogic();
       const textApi = getTextApi();
@@ -85,7 +102,7 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
       // Generate and save the story.
       const generator = new NPartStoryGenerator(logic, textApi, imageApi); //TODO: change in another PR this from stream to batch
       const metadata = new StoryMetadata(request.author, generator.title());
-      const writer = new FirebaseStoryWriter("story__cache", metadata, storyId); //TODO: add subcollection on form id
+      const writer = new FirebaseStoryWriter(storyPath, metadata, storyId); //TODO: Adapt writer //TODO: add subcollection on form id
 
       await writer.writeMetadata();
 

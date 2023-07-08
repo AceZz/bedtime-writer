@@ -120,7 +120,11 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
   // Generate and save the story.
   const generator = new NPartStoryGenerator(logic, textApi, imageApi);
   const metadata = new StoryMetadata(request.author, generator.title());
-  const writer = new FirebaseStoryWriter("stories", metadata, storyId);
+  const writer = new FirebaseStoryWriter(
+    { collection: "stories" },
+    metadata,
+    storyId
+  );
 
   await writer.writeMetadata();
 
