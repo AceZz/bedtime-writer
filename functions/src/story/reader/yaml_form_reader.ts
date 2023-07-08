@@ -27,7 +27,9 @@ export class YAMLFormReader implements Reader<StoryForm> {
     const now = new Date();
     const start =
       data.start === undefined
-        ? new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+        ? new Date(
+            Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+          )
         : new Date(data.start);
 
     const questionData = data.questions ?? {};
