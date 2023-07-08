@@ -17,18 +17,26 @@ main().then(() => process.exit(0));
 async function main() {
   // Transform the request into a `ClassicStoryLogic`.
 
-  const paths = new FirestorePaths();
-  if (await confirm(paths)) {
+  const firestorePaths = new FirestorePaths();
+  if (await confirm(firestorePaths)) {
     initFirebase();
 
-    const reader = new FirestoreFormReader(paths);
-    const forms = await reader.read(); //TODO: this returns array, so filter for the right forms for want to use
+    const reader = new FirestoreFormReader(firestorePaths);
+    const formsWithId = await reader.readWithIds(); //TODO: this returns array, so filter for the right forms for want to use
 
-    const form = forms[0]; //TODO: handle which form we select
+    //TODO: manage and handle which forms we select
+    const formWithId = formsWithId[0];
 
     const storyCacheManager = new FirestoreStoryCacheManager();
-    const requests = storyCacheManager.generateRequestsFromForm(form); //TODO: handle all requests
-    await storyCacheManager.cacheStories(requests);
+    const requests = storyCacheManager.generateRequestsFromForm(
+      formWithId.storyForm
+    );
+
+    const storyPath = await storyCacheManager.setStoriesCacheDoc(
+      formWithId.docId
+    );
+
+    await storyCacheManager.cacheStories(requests, storyPath);
   }
 }
 

@@ -1,5 +1,3 @@
-//import * as shortUuid from "short-uuid";
-
 import { getImageApi, getTextApi } from "../../api";
 import { logger } from "../../logger";
 import { NPartStoryGenerator } from "../generator";
@@ -53,7 +51,7 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
       const logicObject = {
         //TODO: rethink StoryLogic fields for batch job
         author: "@CACHE_BATCH_JOB",
-        duration: 2,
+        duration: 2, //TODO: manage this, prbly from env
         style: "Andersen", //TODO: fill here randomly
         ...choicesObject,
       };
@@ -69,30 +67,32 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
     return requests;
   }
 
-  async cacheStories(
-    //TODO: add Firestorepaths as arg
-    requests: StoryRequestV1[]
-  ): Promise<void> {
+  async setStoriesCacheDoc(formId: string): Promise<StoryPath> {
     const firestorePaths = new FirestorePaths();
 
-    const formId = "DummyID"; //TODO: change
+    // Initiate the doc for this batch of stories cache
     const cacheDocRef = this.firestore
       .collection(firestorePaths.story.cache)
       .doc();
 
     await cacheDocRef.set({ formId: formId });
 
-    //TODO: handle all requests
     const storyPath: StoryPath = {
       collection: firestorePaths.story.cache,
       docId: cacheDocRef.id,
       subcollection: firestorePaths.story.stories,
     };
 
-    const promises = requests.map(async (request) => {
-      // Have StoryRequestV1Manager create the story doc
+    return storyPath;
+  }
 
-      const requestManager = new StoryRequestV1Manager(storyPath); //TODO: add subcollection on form id
+  //TODO: in the Firestore data structure place more intelligently each story to easily find it according to choices made (possibly hashmap)
+  async cacheStories(
+    requests: StoryRequestV1[],
+    storyPath: StoryPath
+  ): Promise<void> {
+    const promises = requests.map(async (request) => {
+      const requestManager = new StoryRequestV1Manager(storyPath);
       const storyId = await requestManager.create(CLASSIC_LOGIC, request.data);
 
       const logic = request.toClassicStoryLogic();
@@ -102,7 +102,7 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
       // Generate and save the story.
       const generator = new NPartStoryGenerator(logic, textApi, imageApi); //TODO: change in another PR this from stream to batch
       const metadata = new StoryMetadata(request.author, generator.title());
-      const writer = new FirebaseStoryWriter(storyPath, metadata, storyId); //TODO: Adapt writer //TODO: add subcollection on form id
+      const writer = new FirebaseStoryWriter(storyPath, metadata, storyId);
 
       await writer.writeMetadata();
 
