@@ -51,7 +51,7 @@ export const createClassicStoryRequest = onCall(async (request) => {
   );
   await globalRateLimiter.addRequests("global", ["story"]);
 
-  const requestManager = new StoryRequestV1Manager("stories");
+  const requestManager = new StoryRequestV1Manager({ collection: "stories" });
   const id = await requestManager.create(CLASSIC_LOGIC, request.data);
 
   return id;
@@ -69,7 +69,7 @@ export const createStory = onDocumentCreated(
     }
     const storyId = event.data.id;
 
-    const requestManager = new StoryRequestV1Manager("stories");
+    const requestManager = new StoryRequestV1Manager({ collection: "stories" });
     const request = await requestManager.get(storyId);
 
     if (request.logic == CLASSIC_LOGIC) {
@@ -120,7 +120,7 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
   // Generate and save the story.
   const generator = new NPartStoryGenerator(logic, textApi, imageApi);
   const metadata = new StoryMetadata(request.author, generator.title());
-  const writer = new FirebaseStoryWriter("stories",metadata, storyId);
+  const writer = new FirebaseStoryWriter("stories", metadata, storyId);
 
   await writer.writeMetadata();
 
