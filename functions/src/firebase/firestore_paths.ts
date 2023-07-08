@@ -14,9 +14,11 @@ class FirestoreStoryPaths {
   private static BASE_FORMS = "story__forms";
   private static BASE_QUESTIONS = "story__questions";
   private static BASE_CACHE = "story__cache";
+  private static BASE_STORIES = "stories";
   forms: string;
   questions: string;
   cache: string;
+  stories: string;
 
   constructor(private readonly prefix?: string) {
     this.forms =
@@ -33,5 +35,10 @@ class FirestoreStoryPaths {
       this.prefix === undefined
         ? FirestoreStoryPaths.BASE_CACHE
         : `${this.prefix}__${FirestoreStoryPaths.BASE_CACHE}`;
+
+    this.stories =
+      this.prefix === undefined
+        ? FirestoreStoryPaths.BASE_STORIES
+        : `${this.prefix}__${FirestoreStoryPaths.BASE_STORIES}`;
   }
 }
