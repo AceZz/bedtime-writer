@@ -7,14 +7,9 @@ import {
 } from "../firebase/utils";
 import { prompt } from "../utils";
 
-import * as dotenv from "dotenv";
 import { FirestoreStoryCacheManager } from "../story/cache/firestore_story_cache_manager";
 
-dotenv.config({ path: "../../.env.local" });
-
 main().then(() => process.exit(0));
-
-//TODO: handle case where user has the form of the day before, sends his request just at the moment where the form changes so the new cached stories it hits don't match anymore
 
 /**
  * Generate a classic story and add it to Firestore.
@@ -33,7 +28,6 @@ async function main() {
 
     const storyCacheManager = new FirestoreStoryCacheManager();
     const requests = storyCacheManager.generateRequestsFromForm(form); //TODO: handle all requests
-
     await storyCacheManager.cacheStories(requests);
   }
 }
