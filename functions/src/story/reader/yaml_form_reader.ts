@@ -24,7 +24,11 @@ export class YAMLFormReader implements Reader<StoryForm> {
     const file = await readFile(this.path, "utf8");
     const data = parse(file);
 
-    const start = data.start === undefined ? new Date() : new Date(data.start);
+    const now = new Date();
+    const start =
+      data.start === undefined
+        ? new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+        : new Date(data.start);
 
     const questionData = data.questions ?? {};
     const questions = new Map();
