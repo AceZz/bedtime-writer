@@ -15,7 +15,6 @@ main().then(() => process.exit(0));
  * Generate a classic story and add it to Firestore.
  */
 async function main() {
-  // Transform the request into a `ClassicStoryLogic`.
 
   const firestorePaths = new FirestorePaths();
   if (await confirm(firestorePaths)) {
