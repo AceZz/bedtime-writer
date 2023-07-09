@@ -12,6 +12,7 @@ import { cartesianProduct } from "./utils";
 import { FirestorePaths } from "../../firebase/firestore_paths";
 import { Firestore, getFirestore } from "firebase-admin/firestore";
 import { StoryPath } from "../request/v1/story_request_v1";
+import { getRandomDuration, getRandomStyle } from "../story_utils";
 
 //TODO: maybe extend to several forms
 //TODO: ensure we dont hit API rate limit (bottleneck openai dalle 50 RPM)
@@ -49,10 +50,9 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
       const choicesObject = Object.fromEntries(entriesChoicesCombination);
 
       const logicObject = {
-        //TODO: rethink StoryLogic fields for batch job
         author: "@CACHE_BATCH_JOB",
-        duration: 2, //TODO: manage this, prbly from env
-        style: "Andersen", //TODO: fill here randomly
+        duration: getRandomDuration(),
+        style: getRandomStyle(),
         ...choicesObject,
       };
 
