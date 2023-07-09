@@ -9,7 +9,9 @@ export interface StoryCacheManager {
   /**
    * Get all possible requests from a given story form.
    */
-  generateRequestsFromForm(form: StoryForm): { jsonKey: string, request: StoryRequestV1 }[];
+  generateRequestsFromForm(
+    form: StoryForm
+  ): { jsonKey: string; request: StoryRequestV1 }[];
 
   /**
    * Create the doc for stories cache with corresponding formId in the cache collection.
@@ -20,5 +22,8 @@ export interface StoryCacheManager {
   /**
    * Cache the stories corresponding to the given requests.
    */
-  cacheStories(requestsWithKey: { jsonKey: string; request: StoryRequestV1 }[], storyPath: StoryPath): Promise<void>;
+  cacheStories(
+    requestsWithKey: { jsonKey: string; request: StoryRequestV1 }[],
+    storyPath: StoryPath
+  ): Promise<void>;
 }
