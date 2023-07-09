@@ -1,4 +1,4 @@
 start: "2023-05-11T00:13:32Z"
 questions:
-  character: ["blaze", "frosty", "sparkles"]
-  flaw: ["failure", "lazy", "noAdvice"]
+  characterName: ["blaze", "frosty", "sparkles"]
+  characterFlaw: ["failure", "lazy", "noAdvice"]
