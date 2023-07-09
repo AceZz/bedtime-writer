@@ -8,10 +8,10 @@ import { StoryForm } from "../story_form";
 import { StoryMetadata } from "../story_metadata";
 import { FirebaseStoryWriter } from "../writer";
 import { StoryCacheManager } from "./story_cache_manager";
-import { cartesianProduct } from "./utils";
+import { cartesianProduct, generateChoicesCombinationJsonKey } from "./utils";
 import { FirestorePaths } from "../../firebase/firestore_paths";
 import { Firestore, getFirestore } from "firebase-admin/firestore";
-import { StoryPath } from "../request/v1/story_request_v1";
+import { StoryPathSubCollection } from "../request/v1/story_request_v1";
 import { getRandomDuration, getRandomStyle } from "../story_utils";
 
 //TODO: maybe extend to several forms
@@ -27,7 +27,9 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
     this.firestore = getFirestore();
   }
 
-  generateRequestsFromForm(form: StoryForm): StoryRequestV1[] {
+  generateRequestsFromForm(
+    form: StoryForm
+  ): { jsonKey: string; request: StoryRequestV1 }[] {
     const questions = form.questions;
 
     // Unpack the questions map to arrays for convenience
@@ -42,12 +44,14 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
     const choicesCombinations = cartesianProduct(choicesArrays);
 
     // Pick one possible choices combination
-    const requests = choicesCombinations.map((choicesCombination) => {
+    const requestsWithKey = choicesCombinations.map((choicesCombination) => {
       const entriesChoicesCombination = questionsArray.map(
         (question, index) => [question, choicesCombination[index]]
       );
 
       const choicesObject = Object.fromEntries(entriesChoicesCombination);
+
+      const jsonKey = generateChoicesCombinationJsonKey(choicesObject);
 
       const logicObject = {
         author: "@CACHE_BATCH_JOB",
@@ -61,13 +65,13 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
         CLASSIC_LOGIC,
         logicObject
       ); //TODO: use object here with corresponding fields for selected questions
-      return request;
+      return { jsonKey: jsonKey, request: request };
     });
 
-    return requests;
+    return requestsWithKey;
   }
 
-  async setStoriesCacheDoc(formId: string): Promise<StoryPath> {
+  async setStoriesCacheDoc(formId: string): Promise<StoryPathSubCollection> {
     const firestorePaths = new FirestorePaths();
 
     // Initiate the doc for this batch of stories cache
@@ -77,7 +81,7 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
 
     await cacheDocRef.set({ formId: formId });
 
-    const storyPath: StoryPath = {
+    const storyPath: StoryPathSubCollection = {
       collection: firestorePaths.story.cache,
       docId: cacheDocRef.id,
       subcollection: firestorePaths.story.stories,
@@ -88,13 +92,24 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
 
   //TODO: in the Firestore data structure place more intelligently each story to easily find it according to choices made (possibly hashmap)
   async cacheStories(
-    requests: StoryRequestV1[],
-    storyPath: StoryPath
+    requestsWithKey: { jsonKey: string; request: StoryRequestV1 }[],
+    storyPath: StoryPathSubCollection
   ): Promise<void> {
-    const promises = requests.map(async (request) => {
+    const choicesStoryMapping: { [name: string]: string } = {};
+
+    const promises = requestsWithKey.map(async (requestWithKey) => {
+      const request = requestWithKey.request;
+      const jsonKey = requestWithKey.jsonKey;
+
+      //TODO: add dynamically to an object the json: jsonkey -> story doc id
+
       const requestManager = new StoryRequestV1Manager(storyPath);
       const storyId = await requestManager.create(CLASSIC_LOGIC, request.data);
 
+      // Write the choices story mapping
+      choicesStoryMapping[jsonKey] = storyId;
+
+      // Prepare APIs
       const logic = request.toClassicStoryLogic();
       const textApi = getTextApi();
       const imageApi = getImageApi();
@@ -124,5 +139,22 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
     });
 
     await Promise.all(promises);
+
+    // Add the choices story mapping to the cache doc
+    await this.updateDoc(
+      { choicesStoryMapping: choicesStoryMapping },
+      storyPath
+    );
+  }
+
+  private async updateDoc(
+    obj: { [name: string]: string | object },
+    storyPath: StoryPathSubCollection
+  ): Promise<void> {
+    const firestorePaths = new FirestorePaths();
+    const cacheDocRef = this.firestore
+      .collection(firestorePaths.story.cache)
+      .doc(storyPath.docId);
+    await cacheDocRef.update(obj);
   }
 }

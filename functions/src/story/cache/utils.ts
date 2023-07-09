@@ -21,3 +21,16 @@ export function cartesianProduct(arrays: string[][]): string[][] {
     [[]]
   );
 }
+
+/**
+ * Take one combination of choices (with questions) and generate a string to use as a JSONKey.
+ * The key is based on the sorted questions and their corresponding choice.
+ */
+export function generateChoicesCombinationJsonKey(obj: {
+  [key: string]: string;
+}) {
+  return Object.keys(obj)
+    .sort()
+    .map((key) => `${key}:${obj[key]}`)
+    .join(",");
+}

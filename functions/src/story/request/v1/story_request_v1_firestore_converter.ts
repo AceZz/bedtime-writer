@@ -61,7 +61,6 @@ export class StoryRequestV1FirestoreConverter
   }
 
   async write(request: StoryRequestV1): Promise<string> {
-
     const payload = {
       author: request.author,
       timestamp: Timestamp.now(),

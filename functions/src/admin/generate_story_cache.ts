@@ -15,7 +15,6 @@ main().then(() => process.exit(0));
  * Generate a classic story and add it to Firestore.
  */
 async function main() {
-
   const firestorePaths = new FirestorePaths();
   if (await confirm(firestorePaths)) {
     initFirebase();
@@ -27,7 +26,7 @@ async function main() {
     const formWithId = formsWithId[0];
 
     const storyCacheManager = new FirestoreStoryCacheManager();
-    const requests = storyCacheManager.generateRequestsFromForm(
+    const requestsWithKey = storyCacheManager.generateRequestsFromForm(
       formWithId.storyForm
     );
 
@@ -35,7 +34,7 @@ async function main() {
       formWithId.docId
     );
 
-    await storyCacheManager.cacheStories(requests, storyPath);
+    await storyCacheManager.cacheStories(requestsWithKey, storyPath);
   }
 }
 
