@@ -11,7 +11,7 @@ export interface StoryCacheManager {
    */
   generateRequestsFromForm(
     form: StoryForm
-  ): { jsonKey: string; request: StoryRequestV1 }[];
+  ): StoryRequestV1[];
 
   /**
    * Create the doc for stories cache with corresponding formId in the cache collection.
@@ -23,7 +23,7 @@ export interface StoryCacheManager {
    * Cache the stories corresponding to the given requests.
    */
   cacheStories(
-    requestsWithKey: { jsonKey: string; request: StoryRequestV1 }[],
+    requests: StoryRequestV1[],
     storyPath: StoryPath
   ): Promise<void>;
 }
