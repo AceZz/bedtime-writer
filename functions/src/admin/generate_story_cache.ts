@@ -20,9 +20,8 @@ async function main() {
     initFirebase();
 
     const reader = new FirestoreFormReader(firestorePaths);
-    const formsWithId = await reader.readWithIds(); //TODO: this returns array, so filter for the right forms for want to use
+    const formsWithId = await reader.readMostRecentWithIds(1);
 
-    //TODO: manage and handle which forms we select
     const formWithId = formsWithId[0];
 
     const storyCacheManager = new FirestoreStoryCacheManager();

@@ -30,6 +30,21 @@ export class FirestoreFormReader implements Reader<StoryForm[]> {
     );
   }
 
+  async readMostRecentWithIds(
+    n: number
+  ): Promise<{ docId: string; storyForm: StoryForm }[]> {
+    const snapshots = await this.collection
+      .formsRef()
+      .orderBy("start", "desc")
+      .limit(n)
+      .get();
+    return Promise.all(
+      snapshots.docs.map((snapshot) => {
+        return { docId: snapshot.id, storyForm: this.readForm(snapshot) };
+      })
+    );
+  }
+
   private readForm(snapshot: QueryDocumentSnapshot): StoryForm {
     const data = snapshot.data();
 

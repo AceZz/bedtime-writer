@@ -14,9 +14,6 @@ import { getRandomDuration, getRandomStyle } from "../story_utils";
 import { FirestoreStoryCache } from "../../firebase/firestore_story_cache";
 import { SubCollectionPath } from "../../collection";
 
-//TODO: maybe extend to several forms
-//TODO: ensure we dont hit API rate limit (bottleneck openai dalle 50 RPM)
-
 /**
  * Interface to manage caching of stories.
  */
