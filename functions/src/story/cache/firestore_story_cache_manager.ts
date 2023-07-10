@@ -10,9 +10,9 @@ import { FirebaseStoryWriter } from "../writer";
 import { StoryCacheManager } from "./story_cache_manager";
 import { cartesianProduct } from "./utils";
 import { FirestorePaths } from "../../firebase/firestore_paths";
-import { Firestore, getFirestore } from "firebase-admin/firestore";
-import { StoryPathSubCollection } from "../request/v1/story_request_v1";
 import { getRandomDuration, getRandomStyle } from "../story_utils";
+import { FirestoreStoryCache } from "../../firebase/firestore_story_cache";
+import { SubCollectionPath } from "../../collection";
 
 //TODO: maybe extend to several forms
 //TODO: ensure we dont hit API rate limit (bottleneck openai dalle 50 RPM)
@@ -21,10 +21,10 @@ import { getRandomDuration, getRandomStyle } from "../story_utils";
  * Interface to manage caching of stories.
  */
 export class FirestoreStoryCacheManager implements StoryCacheManager {
-  private firestore: Firestore;
+  private collection: FirestoreStoryCache;
 
   constructor() {
-    this.firestore = getFirestore();
+    this.collection = new FirestoreStoryCache();
   }
 
   generateRequestsFromForm(form: StoryForm): StoryRequestV1[] {
@@ -60,39 +60,36 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
       const request = StoryRequestV1JsonConverter.convertFromJson(
         CLASSIC_LOGIC,
         logicObject
-      ); //TODO: use object here with corresponding fields for selected questions
+      );
       return request;
     });
 
     return requests;
   }
 
-  async setStoriesCacheDoc(formId: string): Promise<StoryPathSubCollection> {
+  async setStoriesCacheDoc(formId: string): Promise<SubCollectionPath> {
     const firestorePaths = new FirestorePaths();
 
     // Initiate the doc for this batch of stories cache
-    const cacheDocRef = this.firestore
-      .collection(firestorePaths.story.cache)
-      .doc();
+    const cacheDocRef = this.collection.cacheRef().doc();
 
     await cacheDocRef.set({ formId: formId });
 
-    const storyPath: StoryPathSubCollection = {
+    const storiesPath: SubCollectionPath = {
       collection: firestorePaths.story.cache,
       docId: cacheDocRef.id,
       subcollection: firestorePaths.story.stories,
     };
 
-    return storyPath;
+    return storiesPath;
   }
 
-  //TODO: in the Firestore data structure place more intelligently each story to easily find it according to choices made (possibly hashmap)
   async cacheStories(
     requests: StoryRequestV1[],
-    storyPath: StoryPathSubCollection
+    storiesPath: SubCollectionPath
   ): Promise<void> {
     const promises = requests.map(async (request) => {
-      const requestManager = new StoryRequestV1Manager(storyPath);
+      const requestManager = new StoryRequestV1Manager(storiesPath);
       const storyId = await requestManager.create(CLASSIC_LOGIC, request.data);
 
       // Prepare APIs
@@ -101,9 +98,9 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
       const imageApi = getImageApi();
 
       // Generate and save the story.
-      const generator = new NPartStoryGenerator(logic, textApi, imageApi); //TODO: change in another PR this from stream to batch
+      const generator = new NPartStoryGenerator(logic, textApi, imageApi);
       const metadata = new StoryMetadata(request.author, generator.title());
-      const writer = new FirebaseStoryWriter(storyPath, metadata, storyId);
+      const writer = new FirebaseStoryWriter(storiesPath, metadata, storyId);
 
       await writer.writeMetadata();
 

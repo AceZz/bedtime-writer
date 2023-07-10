@@ -5,13 +5,10 @@ import {
   DocumentReference,
   Timestamp,
 } from "firebase-admin/firestore";
-import {
-  StoryPath,
-  StoryRequestV1,
-  StoryRequestV1Data,
-} from "./story_request_v1";
+import { StoryRequestV1, StoryRequestV1Data } from "./story_request_v1";
 import { StoryRequestFirestoreConverter } from "../story_request_firestore_converter";
 import { StoryStatus } from "../../story_status";
+import { CollectionPath } from "../../../collection";
 
 /**
  * Schema:
@@ -33,11 +30,11 @@ import { StoryStatus } from "../../story_status";
 export class StoryRequestV1FirestoreConverter
   implements StoryRequestFirestoreConverter<StoryRequestV1>
 {
-  readonly storyPath: StoryPath;
+  readonly collectionPath: CollectionPath;
   private firestore: Firestore;
 
-  constructor(storyPath: StoryPath) {
-    this.storyPath = storyPath;
+  constructor(collectionPath: CollectionPath) {
+    this.collectionPath = collectionPath;
     this.firestore = getFirestore();
   }
 
@@ -87,11 +84,11 @@ export class StoryRequestV1FirestoreConverter
   }
 
   private get storiesRef(): CollectionReference {
-    return "subcollection" in this.storyPath
+    return "subcollection" in this.collectionPath
       ? this.firestore
-          .collection(this.storyPath.collection)
-          .doc(this.storyPath.docId)
-          .collection(this.storyPath.subcollection)
-      : this.firestore.collection(this.storyPath.collection);
+          .collection(this.collectionPath.collection)
+          .doc(this.collectionPath.docId)
+          .collection(this.collectionPath.subcollection)
+      : this.firestore.collection(this.collectionPath.collection);
   }
 }

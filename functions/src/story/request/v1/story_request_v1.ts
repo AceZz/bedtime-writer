@@ -33,11 +33,3 @@ export class StoryRequestV1 implements StoryRequest {
     );
   }
 }
-
-export type StoryPathCollection = { collection: string };
-export type StoryPathSubCollection = {
-  collection: string;
-  docId: string;
-  subcollection: string;
-};
-export type StoryPath = StoryPathCollection | StoryPathSubCollection;

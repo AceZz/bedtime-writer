@@ -1,20 +1,21 @@
+import { CollectionPath } from "../../../collection";
 import { CLASSIC_LOGIC } from "../../logic";
 import { StoryRequestManager } from "../story_request_manager";
-import { StoryPath, StoryRequestV1 } from "./story_request_v1";
+import { StoryRequestV1 } from "./story_request_v1";
 import { StoryRequestV1FirestoreConverter } from "./story_request_v1_firestore_converter";
 import { StoryRequestV1JsonConverter } from "./story_request_v1_json_converter";
 
 export class StoryRequestV1Manager
   implements StoryRequestManager<StoryRequestV1>
 {
-  readonly storyPath: StoryPath;
+  readonly collectionPath: CollectionPath;
   private firestoreConverter: StoryRequestV1FirestoreConverter;
   private jsonConverter: StoryRequestV1JsonConverter;
 
-  constructor(storyPath: StoryPath) {
-    this.storyPath = storyPath;
+  constructor(collection: CollectionPath) {
+    this.collectionPath = collection;
     this.firestoreConverter = new StoryRequestV1FirestoreConverter(
-      this.storyPath
+      this.collectionPath
     );
     this.jsonConverter = new StoryRequestV1JsonConverter();
   }

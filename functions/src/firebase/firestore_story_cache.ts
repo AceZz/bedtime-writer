@@ -1,5 +1,6 @@
 import {
   CollectionReference,
+  DocumentReference,
   Firestore,
   getFirestore,
 } from "firebase-admin/firestore";
@@ -10,18 +11,16 @@ import { FirestorePaths } from "./firestore_paths";
  * schema:
  *
  * ```plain
- * TODO: Update below
- * <form_id>:
- *   start: timestamp
- *   numQuestions: int
- *   question0Choices[0]: string
- *      question1Choices[0]: string
- *         question2Choices[0]: string
- *             story
- *         question2Choices[1]: string
- *             story
- *         ...
- *      ...
+ * story__cache:
+ *   <cache_doc>:
+ *     formId: timestamp
+ *     stories:
+ *       <story_1>:
+ *          ...
+ *       <story_2>:
+ *          ...
+ *       ...
+ *     ...
  *   ...
  * ```
  */
@@ -32,7 +31,15 @@ export class FirestoreStoryCache {
     this.firestore = firestore ?? getFirestore();
   }
 
-  formsRef(): CollectionReference {
+  cacheRef(): CollectionReference {
     return this.firestore.collection(this.paths.story.cache);
+  }
+
+  cacheDocRef(docId: string): DocumentReference {
+    return this.cacheRef().doc(docId);
+  }
+
+  storiesRef(cacheDocId: string): CollectionReference {
+    return this.cacheDocRef(cacheDocId).collection(this.paths.story.stories);
   }
 }
