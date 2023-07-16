@@ -19,6 +19,7 @@ import { FirestoreBucketRateLimiterStorage } from "./rate_limiter/bucket_rate_li
 import { parseEnvAsNumber as parseEnvNumber } from "./utils";
 import { FirestoreUserStatsManager, UserStats } from "./user";
 import { getImageApi, getTextApi } from "./api";
+import { FirestorePaths } from "./firebase/firestore_paths";
 
 initializeApp();
 
@@ -43,7 +44,10 @@ export const createClassicStoryRequest = onCall(async (request) => {
   );
   await globalRateLimiter.addRequests("global", ["story"]);
 
-  const requestManager = new StoryRequestV1Manager({ collection: "stories" });
+  const firestorePaths = new FirestorePaths();
+  const requestManager = new StoryRequestV1Manager(
+    firestorePaths.story.stories
+  );
   const id = await requestManager.create(CLASSIC_LOGIC, request.data);
 
   return id;
@@ -61,7 +65,10 @@ export const createStory = onDocumentCreated(
     }
     const storyId = event.data.id;
 
-    const requestManager = new StoryRequestV1Manager({ collection: "stories" });
+    const firestorePaths = new FirestorePaths();
+    const requestManager = new StoryRequestV1Manager(
+      firestorePaths.story.stories
+    );
     const request = await requestManager.get(storyId);
 
     if (request.logic == CLASSIC_LOGIC) {
@@ -112,8 +119,9 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
   // Generate and save the story.
   const generator = new NPartStoryGenerator(logic, textApi, imageApi);
   const metadata = new StoryMetadata(request.author, generator.title());
+  const firestorePaths = new FirestorePaths();
   const writer = new FirebaseStoryWriter(
-    { collection: "stories" },
+    firestorePaths.story.stories,
     metadata,
     storyId
   );

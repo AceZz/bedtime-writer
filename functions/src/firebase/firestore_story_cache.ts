@@ -1,6 +1,5 @@
 import {
   CollectionReference,
-  DocumentReference,
   Firestore,
   getFirestore,
 } from "firebase-admin/firestore";
@@ -12,34 +11,29 @@ import { FirestorePaths } from "./firestore_paths";
  *
  * ```plain
  * story__cache:
- *   <cache_doc>:
- *     formId:
- *     stories:
- *       <story_1>:
- *          ...
- *       <story_2>:
- *          ...
- *       ...
+ *     <story_1>:
+ *        ...
+ *        request:
+ *           <version>:
+ *              formId: string
+ *              <question>: <choice>
+ *              ...
+ *     <story_2>:
+ *        ...
  *     ...
  *   ...
  * ```
  */
 export class FirestoreStoryCache {
   private firestore: Firestore;
+  readonly name: string;
 
   constructor(readonly paths = new FirestorePaths(), firestore?: Firestore) {
     this.firestore = firestore ?? getFirestore();
+    this.name = this.paths.story.cache;
   }
 
-  cacheRef(): CollectionReference {
-    return this.firestore.collection(this.paths.story.cache);
-  }
-
-  cacheDocRef(docId: string): DocumentReference {
-    return this.cacheRef().doc(docId);
-  }
-
-  storiesRef(cacheDocId: string): CollectionReference {
-    return this.cacheDocRef(cacheDocId).collection(this.paths.story.stories);
+  storyCacheRef(): CollectionReference {
+    return this.firestore.collection(this.name);
   }
 }

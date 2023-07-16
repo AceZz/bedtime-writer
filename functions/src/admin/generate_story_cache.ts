@@ -24,16 +24,12 @@ async function main() {
 
     const formWithId = formsWithId[0];
 
-    const storyCacheManager = new FirestoreStoryCacheManager();
+    const storyCacheManager = new FirestoreStoryCacheManager(formWithId.docId);
     const requests = storyCacheManager.generateRequestsFromForm(
       formWithId.storyForm
     );
 
-    const storiesPath = await storyCacheManager.setStoriesCacheDoc(
-      formWithId.docId
-    );
-
-    await storyCacheManager.cacheStories(requests, storiesPath);
+    await storyCacheManager.cacheStories(requests);
   }
 }
 

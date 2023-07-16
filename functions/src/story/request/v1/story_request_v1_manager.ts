@@ -1,4 +1,3 @@
-import { CollectionPath } from "../../../collection";
 import { CLASSIC_LOGIC } from "../../logic";
 import { StoryRequestManager } from "../story_request_manager";
 import { StoryRequestV1 } from "./story_request_v1";
@@ -8,14 +7,14 @@ import { StoryRequestV1JsonConverter } from "./story_request_v1_json_converter";
 export class StoryRequestV1Manager
   implements StoryRequestManager<StoryRequestV1>
 {
-  readonly collectionPath: CollectionPath;
+  readonly collection: string;
   private firestoreConverter: StoryRequestV1FirestoreConverter;
   private jsonConverter: StoryRequestV1JsonConverter;
 
-  constructor(collection: CollectionPath) {
-    this.collectionPath = collection;
+  constructor(collection: string) {
+    this.collection = collection;
     this.firestoreConverter = new StoryRequestV1FirestoreConverter(
-      this.collectionPath
+      this.collection
     );
     this.jsonConverter = new StoryRequestV1JsonConverter();
   }

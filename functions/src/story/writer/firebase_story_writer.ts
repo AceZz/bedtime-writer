@@ -9,7 +9,6 @@ import { StoryPart } from "../story_part";
 import { StoryWriter } from "./story_writer";
 import { StoryStatus } from "../story_status";
 import { valueOrNull } from "./utils";
-import { CollectionPath } from "../../collection";
 
 /**
  * The Firestore document has the following schema:
@@ -36,7 +35,7 @@ import { CollectionPath } from "../../collection";
  *         imagePromptPrompt
  */
 export class FirebaseStoryWriter implements StoryWriter {
-  readonly storiesPath: CollectionPath;
+  readonly collection: string;
   private firestore: Firestore;
   private parts: string[];
   /**
@@ -46,12 +45,12 @@ export class FirebaseStoryWriter implements StoryWriter {
   private imageIds: Map<Buffer, string> = new Map();
 
   constructor(
-    storiesPath: CollectionPath,
+    collection: string,
     readonly metadata: StoryMetadata,
     private readonly storyId: string,
     firestore?: Firestore
   ) {
-    this.storiesPath = storiesPath;
+    this.collection = collection;
     this.firestore = firestore ?? getFirestore();
     this.parts = [];
   }
@@ -143,15 +142,7 @@ export class FirebaseStoryWriter implements StoryWriter {
   }
 
   private get storyRef(): DocumentReference {
-    return "subcollection" in this.storiesPath
-      ? this.firestore
-          .collection(this.storiesPath.collection)
-          .doc(this.storiesPath.docId)
-          .collection(this.storiesPath.subcollection)
-          .doc(this.storyId)
-      : this.firestore
-          .collection(this.storiesPath.collection)
-          .doc(this.storyId);
+    return this.firestore.collection(this.collection).doc(this.storyId);
   }
 
   private get imagesRef(): CollectionReference {

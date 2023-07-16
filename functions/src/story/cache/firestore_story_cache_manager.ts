@@ -9,18 +9,18 @@ import { StoryMetadata } from "../story_metadata";
 import { FirebaseStoryWriter } from "../writer";
 import { StoryCacheManager } from "./story_cache_manager";
 import { cartesianProduct } from "./utils";
-import { FirestorePaths } from "../../firebase/firestore_paths";
 import { getRandomDuration, getRandomStyle } from "../story_utils";
 import { FirestoreStoryCache } from "../../firebase/firestore_story_cache";
-import { SubCollectionPath } from "../../collection";
 
 /**
  * Interface to manage caching of stories.
  */
 export class FirestoreStoryCacheManager implements StoryCacheManager {
+  private formId: string;
   private collection: FirestoreStoryCache;
 
-  constructor() {
+  constructor(formId: string) {
+    this.formId = formId;
     this.collection = new FirestoreStoryCache();
   }
 
@@ -53,10 +53,12 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
         ...choicesObject,
       };
 
+      const requestData = { formId: this.formId, ...logicObject };
+
       // Ensure our story request is valid
       const request = StoryRequestV1JsonConverter.convertFromJson(
         CLASSIC_LOGIC,
-        logicObject
+        requestData
       );
       return request;
     });
@@ -64,29 +66,9 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
     return requests;
   }
 
-  async setStoriesCacheDoc(formId: string): Promise<SubCollectionPath> {
-    const firestorePaths = new FirestorePaths();
-
-    // Initiate the doc for this batch of stories cache
-    const cacheDocRef = this.collection.cacheRef().doc();
-
-    await cacheDocRef.set({ formId: formId });
-
-    const storiesPath: SubCollectionPath = {
-      collection: firestorePaths.story.cache,
-      docId: cacheDocRef.id,
-      subcollection: firestorePaths.story.stories,
-    };
-
-    return storiesPath;
-  }
-
-  async cacheStories(
-    requests: StoryRequestV1[],
-    storiesPath: SubCollectionPath
-  ): Promise<void> {
+  async cacheStories(requests: StoryRequestV1[]): Promise<void> {
     const promises = requests.map(async (request) => {
-      const requestManager = new StoryRequestV1Manager(storiesPath);
+      const requestManager = new StoryRequestV1Manager(this.collection.name);
       const storyId = await requestManager.create(CLASSIC_LOGIC, request.data);
 
       // Prepare APIs
@@ -97,7 +79,11 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
       // Generate and save the story.
       const generator = new NPartStoryGenerator(logic, textApi, imageApi);
       const metadata = new StoryMetadata(request.author, generator.title());
-      const writer = new FirebaseStoryWriter(storiesPath, metadata, storyId);
+      const writer = new FirebaseStoryWriter(
+        this.collection.name,
+        metadata,
+        storyId
+      );
 
       await writer.writeMetadata();
 

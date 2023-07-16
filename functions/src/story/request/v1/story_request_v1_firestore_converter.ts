@@ -8,7 +8,6 @@ import {
 import { StoryRequestV1, StoryRequestV1Data } from "./story_request_v1";
 import { StoryRequestFirestoreConverter } from "../story_request_firestore_converter";
 import { StoryStatus } from "../../story_status";
-import { CollectionPath } from "../../../collection";
 
 /**
  * Schema:
@@ -30,11 +29,11 @@ import { CollectionPath } from "../../../collection";
 export class StoryRequestV1FirestoreConverter
   implements StoryRequestFirestoreConverter<StoryRequestV1>
 {
-  readonly collectionPath: CollectionPath;
+  readonly collection: string;
   private firestore: Firestore;
 
-  constructor(collectionPath: CollectionPath) {
-    this.collectionPath = collectionPath;
+  constructor(collection: string) {
+    this.collection = collection;
     this.firestore = getFirestore();
   }
 
@@ -84,11 +83,6 @@ export class StoryRequestV1FirestoreConverter
   }
 
   private get storiesRef(): CollectionReference {
-    return "subcollection" in this.collectionPath
-      ? this.firestore
-          .collection(this.collectionPath.collection)
-          .doc(this.collectionPath.docId)
-          .collection(this.collectionPath.subcollection)
-      : this.firestore.collection(this.collectionPath.collection);
+    return this.firestore.collection(this.collection);
   }
 }
