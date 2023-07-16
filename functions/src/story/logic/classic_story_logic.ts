@@ -4,21 +4,9 @@ export const MAX_DURATION = 10;
 export const MAX_STRING_LENGTH = 50;
 
 /**
- * A user choices interface to clarify user's inputs.
- */
-export interface ClassicUserChoices {
-  readonly characterName: string;
-  readonly place?: string;
-  readonly object?: string;
-  readonly characterFlaw?: string;
-  readonly characterPower?: string;
-  readonly characterChallenge?: string;
-}
-
-/**
  * A story logic with prompts adapted to a classic story (no interactivity).
  */
-export class ClassicStoryLogic implements ClassicUserChoices, StoryLogic {
+export class ClassicStoryLogic implements StoryLogic {
   constructor(
     private readonly duration: number,
     private readonly style: string,

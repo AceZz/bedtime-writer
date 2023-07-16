@@ -108,12 +108,12 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
         }
         await writer.writeComplete();
         logger.info(
-          `createClassicStory: story ${storyId} was generated and added to Firestore`
+          `cacheStories: story ${storyId} was generated and added to Firestore`
         );
       } catch (error) {
         await writer.writeError();
         logger.error(
-          `createClassicStory: story ${storyId} created by user ${request.author} encountered an error: ${error}`
+          `cacheStories: story ${storyId} created by user ${request.author} encountered an error: ${error}`
         );
       }
     });

@@ -13,7 +13,7 @@ import { FirestorePaths } from "./firestore_paths";
  * ```plain
  * story__cache:
  *   <cache_doc>:
- *     formId: timestamp
+ *     formId:
  *     stories:
  *       <story_1>:
  *          ...
