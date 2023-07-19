@@ -11,6 +11,7 @@ import { StoryCacheManager } from "./story_cache_manager";
 import { cartesianProduct } from "./utils";
 import { getRandomDuration, getRandomStyle } from "../story_utils";
 import { FirestoreStoryCache } from "../../firebase/firestore_story_cache";
+import { FirestorePaths } from "../../firebase/firestore_paths";
 
 /**
  * Interface to manage caching of stories.
@@ -19,9 +20,9 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
   private formId: string;
   private collection: FirestoreStoryCache;
 
-  constructor(formId: string) {
+  constructor(formId: string, paths?: FirestorePaths) {
     this.formId = formId;
-    this.collection = new FirestoreStoryCache();
+    this.collection = new FirestoreStoryCache(paths);
   }
 
   generateRequestsFromForm(form: StoryForm): StoryRequestV1[] {

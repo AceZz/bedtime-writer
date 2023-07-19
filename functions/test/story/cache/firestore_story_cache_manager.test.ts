@@ -15,7 +15,7 @@ describe("Firestore story cache manager", () => {
     await cache.deleteCollection();
   });
 
-  test("Should generate an array of StoryRequestV1 from Form", () => {
+  test("Should generate an array of correct StoryRequestV1 from Form", () => {
     const input = cache.formSample();
     const formId = cache.formIdSample();
     const expected = cache.requestsSample();
@@ -26,5 +26,22 @@ describe("Firestore story cache manager", () => {
     cache.expectSameRequestsNoRandom(actual, expected);
   });
 
-  //TODO: test cache stories
+  test("Should write the same number of stories as requests", async () => {
+    const input = cache.requestsSample();
+    const expected = input.length;
+    const storyCacheManager = cache.manager;
+
+    await storyCacheManager.cacheStories(input);
+
+    cache.expectCountToBe(expected);
+  });
+
+  test("Should write the right request fields for stories", async () => {
+    const input = cache.requestsSample();
+
+    const storyCacheManager = cache.manager;
+    await storyCacheManager.cacheStories(input);
+
+    await cache.expectStoryRequestDocsToEqual(input);
+  });
 });

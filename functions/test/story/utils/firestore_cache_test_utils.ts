@@ -2,11 +2,7 @@
  * Contains fixtures and utils for `Cache`-related tests.
  */
 
-import {
-  CollectionReference,
-  Timestamp,
-  getFirestore,
-} from "firebase-admin/firestore";
+import { CollectionReference, getFirestore } from "firebase-admin/firestore";
 import { StoryForm } from "../../../src/story/story_form";
 import { expect } from "@jest/globals";
 import { FirestorePaths } from "../../../src/firebase/firestore_paths";
@@ -18,7 +14,7 @@ import { CLASSIC_LOGIC } from "../../../src/story/logic";
 /**
  * Initializes a dummy form_id. Should be the form doc ref in real case.
  */
-const FORM_ID = "form_id1";
+const FORM_ID_0 = "form_id_0";
 
 /**
  * Initializes other request data fields.
@@ -46,7 +42,7 @@ const FORM_0 = new StoryForm(
 const REQUESTS_DATA_0 = CHARACTER_NAMES.map((name) => {
   return {
     author: AUTHOR,
-    formId: FORM_ID,
+    formId: FORM_ID_0,
     duration: DURATION,
     style: STYLE,
     characterName: name,
@@ -68,7 +64,7 @@ export class FirestoreCacheTestUtils {
   constructor(readonly paths: FirestorePaths) {}
 
   get manager(): FirestoreStoryCacheManager {
-    return new FirestoreStoryCacheManager(FORM_ID);
+    return new FirestoreStoryCacheManager(FORM_ID_0, this.paths);
   }
 
   formSample(): StoryForm {
@@ -76,7 +72,7 @@ export class FirestoreCacheTestUtils {
   }
 
   formIdSample(): string {
-    return FORM_ID;
+    return FORM_ID_0;
   }
 
   requestsSample(): StoryRequestV1[] {
@@ -135,33 +131,43 @@ export class FirestoreCacheTestUtils {
   ) {
     this.expectSameRequestsLogic(actual, expected);
     const actualDataNoRandom = actual.map((request) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { duration, style, ...rest } = request.data;
       return rest;
     });
     const expectedDataNoRandom = expected.map((request) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { duration, style, ...rest } = request.data;
       return rest;
     });
     expect(actualDataNoRandom).toEqual(expectedDataNoRandom);
-    //TODO: check random types for sanity
+  }
+
+  async expectStoryRequestDocsToEqual(requests: StoryRequestV1[]) {
+    const firestore = getFirestore();
+    const cache = firestore.collection(this.paths.story.cache);
+    const query = await cache.get();
+    const expected = requests.map((request) => {
+      return { logic: request.logic, ...request.data };
+    });
+
+    const promises = query.docs.map(async (doc) => {
+      const requestDoc = await doc.ref.collection("request").doc("v1").get();
+      return requestDoc.data();
+    });
+    const actual = await Promise.all(promises);
+
+    this.expectArraysToEqual(actual, expected);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async expectRequestDataToBe(expected: any[]): Promise<void> {
-    //TODO: adapt below
-    const firestore = getFirestore();
-    const cache = firestore.collection(this.paths.story.cache);
-    const snapshots = await cache.get();
-
-    const tested = snapshots.docs.map((snapshot) => snapshot.data());
-    const expected_ = expected.map((item) => {
-      return {
-        ...item,
-        start: new Timestamp(item.start.getTime() / 1000, 0),
-      };
+  private expectArraysToEqual(actual: any[], expected: any[]) {
+    // If A /inc B and B /inc A then A = B
+    actual.forEach((x) => {
+      expect(expected).toContainEqual(x);
     });
-    expected_.sort((a, b) => a.start - b.start);
-
-    expect(tested).toStrictEqual(expected_);
+    expected.forEach((x) => {
+      expect(actual).toContainEqual(x);
+    });
   }
 }
