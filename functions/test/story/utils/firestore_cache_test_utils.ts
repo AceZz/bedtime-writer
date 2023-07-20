@@ -10,7 +10,6 @@ import { FirestoreStoryCacheManager } from "../../../src/story/cache/firestore_s
 import { FirestoreStoryCache } from "../../../src/firebase/firestore_story_cache";
 import { StoryRequestV1 } from "../../../src/story/request/v1";
 import { CLASSIC_LOGIC } from "../../../src/story/logic";
-import exp from "node:constants";
 
 /**
  * Initializes a dummy form_id. Should be the form doc ref in real case.
