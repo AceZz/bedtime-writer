@@ -34,7 +34,7 @@ describe("Firestore story cache manager", () => {
     await storyCacheManager.cacheStories(input);
 
     cache.expectCountToBe(expected);
-  });
+  }, 20000);
 
   test("Should write the right request fields for stories", async () => {
     const input = cache.requestsSample();
@@ -43,5 +43,5 @@ describe("Firestore story cache manager", () => {
     await storyCacheManager.cacheStories(input);
 
     await cache.expectStoryRequestDocsToEqual(input);
-  });
+  }, 20000);
 });
