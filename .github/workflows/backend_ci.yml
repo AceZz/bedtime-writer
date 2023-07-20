@@ -61,6 +61,8 @@ jobs:
           firebase emulators:exec --only firestore "npm test"
         env:
           USE_FIREBASE_EMULATORS: true
+          TEXT_API: fake
+          IMAGE_API: fake
 
       - name: Build
         run: |
