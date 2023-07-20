@@ -10,6 +10,7 @@ import { FirestoreStoryCacheManager } from "../../../src/story/cache/firestore_s
 import { FirestoreStoryCache } from "../../../src/firebase/firestore_story_cache";
 import { StoryRequestV1 } from "../../../src/story/request/v1";
 import { CLASSIC_LOGIC } from "../../../src/story/logic";
+import exp from "node:constants";
 
 /**
  * Initializes a dummy form_id. Should be the form doc ref in real case.
@@ -162,7 +163,8 @@ export class FirestoreCacheTestUtils {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private expectArraysToEqual(actual: any[], expected: any[]) {
-    // If A /inc B and B /inc A then A = B
+    // If A /inc B, B /inc A and len(A)=len(B) then A = B
+    expect(actual.length).toBe(expected.length);
     actual.forEach((x) => {
       expect(expected).toContainEqual(x);
     });
