@@ -23,6 +23,9 @@ import { FirestorePaths } from "./firebase/firestore_paths";
 
 initializeApp();
 
+// Set Firestore paths
+const firestorePaths = new FirestorePaths();
+
 // Set the default region.
 setGlobalOptions({ region: "europe-west6" });
 
@@ -44,7 +47,6 @@ export const createClassicStoryRequest = onCall(async (request) => {
   );
   await globalRateLimiter.addRequests("global", ["story"]);
 
-  const firestorePaths = new FirestorePaths();
   const requestManager = new StoryRequestV1Manager(
     firestorePaths.story.stories
   );
@@ -65,7 +67,6 @@ export const createStory = onDocumentCreated(
     }
     const storyId = event.data.id;
 
-    const firestorePaths = new FirestorePaths();
     const requestManager = new StoryRequestV1Manager(
       firestorePaths.story.stories
     );
@@ -119,7 +120,6 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
   // Generate and save the story.
   const generator = new NPartStoryGenerator(logic, textApi, imageApi);
   const metadata = new StoryMetadata(request.author, generator.title());
-  const firestorePaths = new FirestorePaths();
   const writer = new FirebaseStoryWriter(
     firestorePaths.story.stories,
     metadata,

@@ -4,7 +4,7 @@ import { FirestoreStoryCacheManager } from "../../../src/story/cache/firestore_s
 
 import { FirestoreTestUtils } from "../utils/firestore_test_utils";
 
-const cache = new FirestoreTestUtils("question_writer").cache;
+const cache = new FirestoreTestUtils("firestore_story_cache_manager").cache;
 
 describe("Firestore story cache manager", () => {
   beforeAll(() => {

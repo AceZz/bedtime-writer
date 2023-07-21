@@ -11,20 +11,16 @@ import { StoryStatus } from "../../story_status";
 
 /**
  * Schema:
- *
- * -- optional
- * story_cache/
- *   <form_id>:
- * --
- *     stories/
- *       <story_id>:
- *         request/
- *           v1:
- *             logic
- *             [StoryRequest fields]
- *         author
- *         timestamp
- *         status
+ *   <story collection>/
+ *     <story_id>:
+ *       request/
+ *         v1:
+ *           logic
+ *           [StoryRequest fields]
+ *       author
+ *       timestamp
+ *       status
+ *       form_id
  */
 export class StoryRequestV1FirestoreConverter
   implements StoryRequestFirestoreConverter<StoryRequestV1>
