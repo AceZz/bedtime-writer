@@ -1,6 +1,4 @@
 import {
-  getFirestore,
-  Firestore,
   CollectionReference,
   DocumentReference,
   Timestamp,
@@ -8,6 +6,7 @@ import {
 import { StoryRequestV1, StoryRequestV1Data } from "./story_request_v1";
 import { StoryRequestFirestoreConverter } from "../story_request_firestore_converter";
 import { StoryStatus } from "../../story_status";
+import { FirestoreStories } from "../../../firebase/firestore_stories";
 
 /**
  * Schema:
@@ -25,12 +24,10 @@ import { StoryStatus } from "../../story_status";
 export class StoryRequestV1FirestoreConverter
   implements StoryRequestFirestoreConverter<StoryRequestV1>
 {
-  readonly collection: string;
-  private firestore: Firestore;
+  readonly stories: FirestoreStories;
 
-  constructor(collection: string) {
-    this.collection = collection;
-    this.firestore = getFirestore();
+  constructor(stories: FirestoreStories) {
+    this.stories = stories;
   }
 
   async get(id: string): Promise<StoryRequestV1> {
@@ -79,6 +76,6 @@ export class StoryRequestV1FirestoreConverter
   }
 
   private get storiesRef(): CollectionReference {
-    return this.firestore.collection(this.collection);
+    return this.stories.storiesRef();
   }
 }

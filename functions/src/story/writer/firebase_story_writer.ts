@@ -1,6 +1,4 @@
 import {
-  getFirestore,
-  Firestore,
   CollectionReference,
   DocumentReference,
 } from "firebase-admin/firestore";
@@ -9,11 +7,12 @@ import { StoryPart } from "../story_part";
 import { StoryWriter } from "./story_writer";
 import { StoryStatus } from "../story_status";
 import { valueOrNull } from "./utils";
+import { FirestoreStories } from "../../firebase/firestore_stories";
 
 /**
  * The Firestore document has the following schema:
  *
- * stories/
+ * <story_collection>/
  *   <story_id>
  *     author (already set)
  *     isFavorite
@@ -35,8 +34,7 @@ import { valueOrNull } from "./utils";
  *         imagePromptPrompt
  */
 export class FirebaseStoryWriter implements StoryWriter {
-  readonly collection: string;
-  private firestore: Firestore;
+  readonly stories: FirestoreStories;
   private parts: string[];
   /**
    * Cache the document IDs of already inserted images. This way, an image can
@@ -45,13 +43,11 @@ export class FirebaseStoryWriter implements StoryWriter {
   private imageIds: Map<Buffer, string> = new Map();
 
   constructor(
-    collection: string,
+    stories: FirestoreStories,
     readonly metadata: StoryMetadata,
-    private readonly storyId: string,
-    firestore?: Firestore
+    private readonly storyId: string
   ) {
-    this.collection = collection;
-    this.firestore = firestore ?? getFirestore();
+    this.stories = stories;
     this.parts = [];
   }
 
@@ -142,7 +138,7 @@ export class FirebaseStoryWriter implements StoryWriter {
   }
 
   private get storyRef(): DocumentReference {
-    return this.firestore.collection(this.collection).doc(this.storyId);
+    return this.stories.storyRef(this.storyId);
   }
 
   private get imagesRef(): CollectionReference {

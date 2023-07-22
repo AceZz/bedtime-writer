@@ -18,11 +18,11 @@ import { FirestorePaths } from "../../firebase/firestore_paths";
  */
 export class FirestoreStoryCacheManager implements StoryCacheManager {
   private formId: string;
-  private collection: FirestoreStoryCache;
+  private stories: FirestoreStoryCache;
 
   constructor(formId: string, paths?: FirestorePaths) {
     this.formId = formId;
-    this.collection = new FirestoreStoryCache(paths);
+    this.stories = new FirestoreStoryCache(paths);
   }
 
   generateRequestsFromForm(form: StoryForm): StoryRequestV1[] {
@@ -69,7 +69,7 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
 
   async cacheStories(requests: StoryRequestV1[]): Promise<void> {
     const promises = requests.map(async (request) => {
-      const requestManager = new StoryRequestV1Manager(this.collection.name);
+      const requestManager = new StoryRequestV1Manager(this.stories);
       const storyId = await requestManager.create(CLASSIC_LOGIC, request.data);
 
       // Prepare APIs
@@ -80,11 +80,7 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
       // Generate and save the story.
       const generator = new NPartStoryGenerator(logic, textApi, imageApi);
       const metadata = new StoryMetadata(request.author, generator.title());
-      const writer = new FirebaseStoryWriter(
-        this.collection.name,
-        metadata,
-        storyId
-      );
+      const writer = new FirebaseStoryWriter(this.stories, metadata, storyId);
 
       await writer.writeMetadata();
 

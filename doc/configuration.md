@@ -18,6 +18,9 @@ In `bedtime-writer/.env`:
 * `DEBUG_STATS`
     * `false` (default)
     * `true`: display helpful info about user stats, like the number of generated stories overall and today.
+* `DEBUG_STORY`
+  * `false` (default)
+  * `true`: display helpful info about story errors, like during story generation or in the library.
 
 ## Backend
 

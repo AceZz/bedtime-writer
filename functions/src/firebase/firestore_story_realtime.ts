@@ -8,11 +8,11 @@ import { FirestorePaths } from "./firestore_paths";
 import { FirestoreStories } from "./firestore_stories";
 
 /**
- * Helper class to manipulate the story cache collection. It follows this
+ * Helper class to manipulate the story realtime collection. It follows this
  * schema:
  *
  * ```plain
- * story__cache:
+ * story__realtime:
  *     <story_1>:
  *        ...
  *        request:
@@ -26,7 +26,7 @@ import { FirestoreStories } from "./firestore_stories";
  *   ...
  * ```
  */
-export class FirestoreStoryCache implements FirestoreStories {
+export class FirestoreStoryRealtime implements FirestoreStories {
   private firestore: Firestore;
 
   constructor(readonly paths = new FirestorePaths(), firestore?: Firestore) {
@@ -34,7 +34,7 @@ export class FirestoreStoryCache implements FirestoreStories {
   }
 
   storiesRef(): CollectionReference {
-    return this.firestore.collection(this.paths.story.cache);
+    return this.firestore.collection(this.paths.story.realtime);
   }
   newStoryRef(): DocumentReference {
     return this.storiesRef().doc();

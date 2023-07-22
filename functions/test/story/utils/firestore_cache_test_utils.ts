@@ -81,7 +81,7 @@ export class FirestoreCacheTestUtils {
 
   collectionRef(): CollectionReference {
     const cache = new FirestoreStoryCache(this.paths);
-    return cache.storyCacheRef();
+    return cache.storiesRef();
   }
 
   /**

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../backend/index.dart';
+import '../../config.dart';
 import '../../widgets/app_scaffold.dart';
 import 'story_image.dart';
 
@@ -121,7 +122,9 @@ class _LibraryTab extends ConsumerWidget {
   Widget _error(error, stackTrace) {
     return Container(
       padding: const EdgeInsets.all(10),
-      child: const Text('Something went wrong...'),
+      child: debugStory()
+          ? Text('Error: $error')
+          : const Text('Something went wrong...'),
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'collection.dart';
 import 'firebase.dart';
 import '../concrete.dart';
 import '../stats.dart';
@@ -36,4 +37,4 @@ final firebaseStatsProvider = StreamProvider<Stats>((ref) {
 
 /// A query that returns stats for [user].
 DocumentReference<Map<String, dynamic>> _userStatsDocument(AuthUser user) =>
-    firebaseFirestore.collection('user__stats').doc(user.uid);
+    firebaseFirestore.collection(USER_STATS).doc(user.uid);
