@@ -22,7 +22,8 @@ Future<String> firebaseCreateClassicStory(StoryParams params) async {
 /// Streams a specific [Story].
 final firebaseStoryProvider =
     StreamProvider.autoDispose.family<Story, String>((ref, id) {
-  final snapshots = firebaseFirestore.collection(STORY_REALTIME).doc(id).snapshots();
+  final snapshots =
+      firebaseFirestore.collection(STORY_REALTIME).doc(id).snapshots();
   return snapshots.map((story) => _FirebaseStory.deserialize(story));
 });
 
