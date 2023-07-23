@@ -1,6 +1,5 @@
 import { describe, test, beforeAll, beforeEach } from "@jest/globals";
 import { initFirebase } from "../../../src/firebase/utils";
-import { FirestoreStoryCacheManager } from "../../../src/story/cache/firestore_story_cache_manager";
 
 import { FirestoreTestUtils } from "../utils/firestore_test_utils";
 
@@ -17,9 +16,8 @@ describe("Firestore story cache manager", () => {
 
   test("Should generate an array of correct StoryRequestV1 from Form", () => {
     const input = cache.formSample();
-    const formId = cache.formIdSample();
     const expected = cache.requestsSample();
-    const storyCacheManager = new FirestoreStoryCacheManager(formId);
+    const storyCacheManager = cache.manager;
 
     const actual = storyCacheManager.generateRequestsFromForm(input);
 

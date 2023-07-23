@@ -1,6 +1,5 @@
-import { getImageApi, getTextApi } from "../../api";
 import { logger } from "../../logger";
-import { NPartStoryGenerator } from "../generator";
+import { ImageApi, NPartStoryGenerator, TextApi } from "../generator";
 import { CLASSIC_LOGIC } from "../logic";
 import { StoryRequestV1, StoryRequestV1Manager } from "../request";
 import { StoryRequestV1JsonConverter } from "../request/v1/story_request_v1_json_converter";
@@ -18,10 +17,19 @@ import { FirestorePaths } from "../../firebase/firestore_paths";
  */
 export class FirestoreStoryCacheManager implements StoryCacheManager {
   private formId: string;
+  private textApi: TextApi;
+  private imageApi: ImageApi;
   private stories: FirestoreStoryCache;
 
-  constructor(formId: string, paths?: FirestorePaths) {
+  constructor(
+    formId: string,
+    textApi: TextApi,
+    imageApi: ImageApi,
+    paths?: FirestorePaths
+  ) {
     this.formId = formId;
+    this.textApi = textApi;
+    this.imageApi = imageApi;
     this.stories = new FirestoreStoryCache(paths);
   }
 
@@ -72,13 +80,15 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
       const requestManager = new StoryRequestV1Manager(this.stories);
       const storyId = await requestManager.create(CLASSIC_LOGIC, request.data);
 
-      // Prepare APIs
+      // Set the logic
       const logic = request.toClassicStoryLogic();
-      const textApi = getTextApi();
-      const imageApi = getImageApi();
 
       // Generate and save the story.
-      const generator = new NPartStoryGenerator(logic, textApi, imageApi);
+      const generator = new NPartStoryGenerator(
+        logic,
+        this.textApi,
+        this.imageApi
+      );
       const metadata = new StoryMetadata(request.author, generator.title());
       const writer = new FirebaseStoryWriter(this.stories, metadata, storyId);
 

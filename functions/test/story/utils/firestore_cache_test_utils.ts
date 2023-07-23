@@ -10,6 +10,7 @@ import { FirestoreStoryCacheManager } from "../../../src/story/cache/firestore_s
 import { FirestoreStoryCache } from "../../../src/firebase/firestore_story_cache";
 import { StoryRequestV1 } from "../../../src/story/request/v1";
 import { CLASSIC_LOGIC } from "../../../src/story/logic";
+import { FakeImageApi, FakeTextApi } from "../../../src/story";
 
 /**
  * Initializes a dummy form_id. Should be the form doc ref in real case.
@@ -58,13 +59,24 @@ const REQUESTS_0 = REQUESTS_DATA_0.map((data) => {
 });
 
 /**
+ * Sets Api to use.
+ */
+const FAKE_TEXT_API = new FakeTextApi();
+const FAKE_IMAGE_API = new FakeImageApi();
+
+/**
  * Helper class to interact with the story cache Firestore collection.
  */
 export class FirestoreCacheTestUtils {
   constructor(readonly paths: FirestorePaths) {}
 
   get manager(): FirestoreStoryCacheManager {
-    return new FirestoreStoryCacheManager(FORM_ID_0, this.paths);
+    return new FirestoreStoryCacheManager(
+      FORM_ID_0,
+      FAKE_TEXT_API,
+      FAKE_IMAGE_API,
+      this.paths
+    );
   }
 
   formSample(): StoryForm {
