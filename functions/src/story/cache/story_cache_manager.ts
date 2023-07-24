@@ -14,4 +14,9 @@ export interface StoryCacheManager {
    * Cache the stories corresponding to the given requests.
    */
   cacheStories(requests: StoryRequestV1[]): Promise<void>;
+
+  /**
+   * Check the stories generated and throw an error if a check does not pass.
+   */
+  checkStories(): Promise<void>;
 }

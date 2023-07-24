@@ -6,7 +6,10 @@ import { CollectionReference, getFirestore } from "firebase-admin/firestore";
 import { StoryForm } from "../../../src/story/story_form";
 import { expect } from "@jest/globals";
 import { FirestorePaths } from "../../../src/firebase/firestore_paths";
-import { FirestoreStoryCacheManager } from "../../../src/story/cache/firestore_story_cache_manager";
+import {
+  CACHE_AUTHOR,
+  FirestoreStoryCacheManager,
+} from "../../../src/story/cache/firestore_story_cache_manager";
 import { FirestoreStoryCache } from "../../../src/firebase/firestore_story_cache";
 import { StoryRequestV1 } from "../../../src/story/request/v1";
 import { CLASSIC_LOGIC } from "../../../src/story/logic";
@@ -20,7 +23,7 @@ const FORM_ID_0 = "form_id_0";
 /**
  * Initializes other request data fields.
  */
-const AUTHOR = "@CACHE_BATCH_JOB";
+const AUTHOR = CACHE_AUTHOR;
 const CHARACTER_NAMES = ["name1", "name2"];
 const CHARACTER_FLAW = "flaw1";
 const DURATION = 1;

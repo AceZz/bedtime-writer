@@ -11,6 +11,9 @@ import { cartesianProduct } from "./utils";
 import { getRandomDuration, getRandomStyle } from "../story_utils";
 import { FirestoreStoryCache } from "../../firebase/firestore_story_cache";
 import { FirestorePaths } from "../../firebase/firestore_paths";
+import { FirestoreStoryForms } from "../../firebase/firestore_story_forms";
+
+export const CACHE_AUTHOR = "@CACHE_MANAGER";
 
 /**
  * Interface to manage caching of stories.
@@ -20,6 +23,7 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
   private textApi: TextApi;
   private imageApi: ImageApi;
   private stories: FirestoreStoryCache;
+  private forms: FirestoreStoryForms;
 
   constructor(
     formId: string,
@@ -31,6 +35,7 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
     this.textApi = textApi;
     this.imageApi = imageApi;
     this.stories = new FirestoreStoryCache(paths);
+    this.forms = new FirestoreStoryForms(paths);
   }
 
   generateRequestsFromForm(form: StoryForm): StoryRequestV1[] {
@@ -56,7 +61,7 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
       const choicesObject = Object.fromEntries(entriesChoicesCombination);
 
       const logicObject = {
-        author: "@CACHE_BATCH_JOB",
+        author: CACHE_AUTHOR,
         duration: getRandomDuration(),
         style: getRandomStyle(),
         ...choicesObject,
@@ -112,5 +117,113 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
     });
 
     await Promise.all(promises);
+  }
+
+  async checkStories(): Promise<void> {
+    const allStoryDocs = await this.stories.storiesRef().get();
+
+    const storyDocs: string[] = [];
+
+    for (const doc of allStoryDocs.docs) {
+      // Checks existence of request doc
+      await this.checkStoryRequest(doc.id);
+      // Selects story docs with right form ids
+      const requestDoc = await this.stories.storyRequestRef(doc.id).get();
+      const requestData = requestDoc.data();
+      if (requestData !== undefined && requestData.formId == this.formId) {
+        storyDocs.push(doc.id);
+      }
+    }
+
+    // Checks right number of stories is generated
+    this.checkStoriesNumber(storyDocs);
+
+    // Checks story docs are valid
+    const promises = storyDocs.map(async (docId) => {
+      await this.checkStory(docId);
+    });
+    await Promise.all(promises);
+  }
+
+  private async checkStoriesNumber(storyDocs: string[]): Promise<void> {
+    // Checks we have the right number of story docs
+    const expectedChoicesCombinations = await this.forms.getChoicesCombinations(
+      this.formId
+    );
+    if (storyDocs.length != expectedChoicesCombinations.length) {
+      throw new Error(
+        `FirestoreStoryCacheManager: The cache collection does not have the right number of stories for form ${this.formId}`
+      );
+    }
+  }
+
+  private async checkStory(docId: string): Promise<void> {
+    this.checkStoryRequest(docId);
+
+    const storyDoc = await this.stories.storyRef(docId).get();
+    if (!storyDoc.exists) {
+      throw new Error(
+        `FirestoreStoryCacheManager: Cannot check story ${docId} because it does not exist`
+      );
+    }
+
+    if (!storyDoc.exists) {
+      throw new Error(
+        `FirestoreStoryCacheManager: Story ${docId} has no request doc`
+      );
+    }
+
+    const storyData = storyDoc.data();
+    if (storyData === undefined) {
+      throw new Error(
+        `FirestoreStoryCacheManager: story ${docId} has empty data`
+      );
+    } else {
+      this.checkStoryData(storyData, docId);
+    }
+  }
+
+  private async checkStoryData(
+    storyData: FirebaseFirestore.DocumentData,
+    docId: string
+  ) {
+    if (storyData.author !== CACHE_AUTHOR) {
+      throw new Error(
+        `FirestoreStoryCacheManager: story ${docId} does not have the right author name ${CACHE_AUTHOR}`
+      );
+    }
+    if (storyData.status !== "complete") {
+      throw new Error(
+        `FirestoreStoryCacheManager: story ${docId} has incorrect values`
+      );
+    }
+    if (storyData.parts.length === 0) {
+      throw new Error(
+        `FirestoreStoryCacheManager: story ${docId} has no parts for the story`
+      );
+    }
+    if (storyData.title == undefined || storyData.title == "") {
+      throw new Error(
+        `FirestoreStoryCacheManager: story ${docId} has no story title`
+      );
+    }
+  }
+
+  private async checkStoryRequest(storyDocId: string) {
+    const storyRequestDoc = await this.stories
+      .storyRequestRef(storyDocId)
+      .get();
+    if (!storyRequestDoc.exists) {
+      throw new Error(
+        `FirestoreStoryCacheManager: Story ${storyDocId} has no request doc`
+      );
+    }
+
+    const storyData = storyRequestDoc.data();
+    if (storyData === undefined) {
+      throw new Error(
+        `FirestoreStoryCacheManager: story ${storyDocId} has empty request data`
+      );
+    }
   }
 }

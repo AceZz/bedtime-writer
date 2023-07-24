@@ -38,6 +38,7 @@ async function main() {
     );
 
     await storyCacheManager.cacheStories(requests);
+    await storyCacheManager.checkStories();
   }
 }
 

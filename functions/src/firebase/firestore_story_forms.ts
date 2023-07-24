@@ -1,8 +1,10 @@
 import {
   CollectionReference,
+  DocumentReference,
   Firestore,
   getFirestore,
 } from "firebase-admin/firestore";
+import { cartesianProduct } from "../story/cache/utils";
 import { FirestorePaths } from "./firestore_paths";
 
 /**
@@ -28,5 +30,23 @@ export class FirestoreStoryForms {
 
   formsRef(): CollectionReference {
     return this.firestore.collection(this.paths.story.forms);
+  }
+
+  formRef(formId: string): DocumentReference {
+    return this.formsRef().doc(formId);
+  }
+
+  async getChoicesCombinations(formId: string): Promise<string[][]> {
+    const formDoc = await this.formRef(formId).get();
+    const formData = formDoc.data();
+    const choicesCombinations: string[][] = [];
+    if (formData != undefined) {
+      const numQuestions = formData.numQuestions;
+      for (let i = 0; i < numQuestions; i++) {
+        console.log(`data: ${formData[`question${i}Choices`]}`);
+        choicesCombinations.push(formData[`question${i}Choices`]);
+      }
+    }
+    return cartesianProduct(choicesCombinations);
   }
 }
