@@ -43,7 +43,6 @@ export class FirestoreStoryForms {
     if (formData != undefined) {
       const numQuestions = formData.numQuestions;
       for (let i = 0; i < numQuestions; i++) {
-        console.log(`data: ${formData[`question${i}Choices`]}`);
         choicesCombinations.push(formData[`question${i}Choices`]);
       }
     }
