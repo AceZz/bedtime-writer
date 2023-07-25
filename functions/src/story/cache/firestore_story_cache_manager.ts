@@ -1,4 +1,3 @@
-import { logger } from "../../logger";
 import { ImageApi, NPartStoryGenerator, TextApi } from "../generator";
 import { CLASSIC_LOGIC } from "../logic";
 import { StoryRequestV1, StoryRequestV1Manager } from "../request";
@@ -12,6 +11,7 @@ import { getRandomDuration, getRandomStyle } from "../story_utils";
 import { FirestoreStoryCache } from "../../firebase/firestore_story_cache";
 import { FirestorePaths } from "../../firebase/firestore_paths";
 import { FirestoreStoryForms } from "../../firebase/firestore_story_forms";
+import { retryAsyncFunction } from "../../utils";
 
 export const CACHE_AUTHOR = "@CACHE_MANAGER";
 
@@ -82,40 +82,8 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
 
   async cacheStories(requests: StoryRequestV1[]): Promise<void> {
     const promises = requests.map(async (request) => {
-      const requestManager = new StoryRequestV1Manager(this.stories);
-      const storyId = await requestManager.create(CLASSIC_LOGIC, request.data);
-
-      // Set the logic
-      const logic = request.toClassicStoryLogic();
-
-      // Generate and save the story.
-      const generator = new NPartStoryGenerator(
-        logic,
-        this.textApi,
-        this.imageApi
-      );
-      const metadata = new StoryMetadata(request.author, generator.title());
-      const writer = new FirebaseStoryWriter(this.stories, metadata, storyId);
-
-      await writer.writeMetadata();
-
-      try {
-        // Write story to database part after part
-        for await (const part of generator.storyParts()) {
-          await writer.writePart(part);
-        }
-        await writer.writeComplete();
-        logger.info(
-          `cacheStories: story ${storyId} was generated and added to Firestore`
-        );
-      } catch (error) {
-        await writer.writeError();
-        logger.error(
-          `cacheStories: story ${storyId} created by user ${request.author} encountered an error: ${error}`
-        );
-      }
+      await this.cacheStory(request);
     });
-
     await Promise.all(promises);
   }
 
@@ -143,6 +111,34 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
       await this.checkStory(docId);
     });
     await Promise.all(promises);
+  }
+
+  //TODO: write test
+  private async cacheStory(request: StoryRequestV1): Promise<void> {
+    const promiseFn = async () => {
+      const requestManager = new StoryRequestV1Manager(this.stories);
+      const storyId = await requestManager.create(CLASSIC_LOGIC, request.data);
+
+      // Set the logic
+      const logic = request.toClassicStoryLogic();
+
+      // Generate and save the story.
+      const generator = new NPartStoryGenerator(
+        logic,
+        this.textApi,
+        this.imageApi
+      );
+      const metadata = new StoryMetadata(request.author, generator.title());
+      const writer = new FirebaseStoryWriter(this.stories, metadata, storyId);
+
+      await writer.writeFromGenerator(generator);
+    };
+
+    //TODO: make this env variables
+    const retries = 2;
+    const delay = 1000;
+    const timeout = 120000;
+    await retryAsyncFunction(promiseFn, retries, delay, timeout);
   }
 
   private async checkStoriesNumber(storyDocs: string[]): Promise<void> {
