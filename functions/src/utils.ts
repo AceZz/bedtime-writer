@@ -82,16 +82,19 @@ export async function promiseTimeout<T>(
 
 /**
  * Try once the given async function with specified timeout, and then retry the given number of times with a delay.
+ *
+ * The delay iterator allows to implement variable types of delaying strategies, like exponential delay.
  */
 export async function retryAsyncFunction<T>(
   fn: () => Promise<T>,
   retries = 2,
   delay = 1000,
-  timeout = 60000
+  timeout = 60000,
+  delayIterator = (x: number) => x
 ): Promise<T> {
-  if (retries < 0 || !Number.isInteger(retries)) {
+  if (retries < 0 || retries > 10 || !Number.isInteger(retries)) {
     throw new Error(
-      "retryAsyncFunction: arg retries must be a positive integer"
+      "retryAsyncFunction: arg retries must be a positive integer between 0 and 10"
     );
   }
   if (delay < 1 || !Number.isInteger(delay)) {
@@ -108,7 +111,7 @@ export async function retryAsyncFunction<T>(
   } catch (error) {
     if (retries >= 1) {
       await sleep(delay);
-      return retryAsyncFunction(fn, retries - 1, delay, timeout);
+      return retryAsyncFunction(fn, retries - 1, delayIterator(delay), timeout);
     } else {
       logger.error("retry: Maximum number of retries reached");
       throw error;
