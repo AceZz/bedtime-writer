@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../backend/index.dart';
-import 'data.dart';
 
 const List<String> _styles = [
   'the Arabian Nights',

@@ -1,35 +1,37 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 /// A list of questions to generate a story.
 ///
 /// We assume that [questions] comes in the order that they should be asked.
 @immutable
-class StoryForm {
-  final List<Question> questions;
-
-  const StoryForm({required this.questions});
+abstract class StoryForm {
+  List<Question> get questions;
 }
 
 /// A question of the story form.
 ///
 /// We assume that [choices] comes in the order that they should be presented.
 @immutable
-class Question {
-  final String id;
-  final String text;
-  final List<Choice> choices;
+abstract class Question {
+  String get id;
 
-  const Question({required this.id, required this.text, required this.choices});
+  String get text;
+
+  List<Choice> get choices;
 }
 
 /// One of the choices of a [Question].
+///
+/// Note: we require [image] NOT to be a Future, to force loading before use.
 @immutable
-class Choice {
-  final String id;
-  final String text;
-  final Image? image;
+abstract class Choice {
+  String get id;
 
-  const Choice({required this.id, required this.text, this.image});
+  String get text;
+
+  Uint8List? get image;
 }
 
 /// The answers to a story form.
