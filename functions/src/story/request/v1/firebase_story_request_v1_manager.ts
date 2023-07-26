@@ -1,17 +1,18 @@
+import { FirestoreStories } from "../../../firebase/firestore_stories";
 import { CLASSIC_LOGIC } from "../../logic";
 import { StoryRequestManager } from "../story_request_manager";
 import { StoryRequestV1 } from "./story_request_v1";
 import { StoryRequestV1FirestoreConverter } from "./story_request_v1_firestore_converter";
 import { StoryRequestV1JsonConverter } from "./story_request_v1_json_converter";
 
-export class StoryRequestV1Manager
+export class FirebaseStoryRequestV1Manager
   implements StoryRequestManager<StoryRequestV1>
 {
   private firestoreConverter: StoryRequestV1FirestoreConverter;
   private jsonConverter: StoryRequestV1JsonConverter;
 
-  constructor() {
-    this.firestoreConverter = new StoryRequestV1FirestoreConverter();
+  constructor(stories: FirestoreStories) {
+    this.firestoreConverter = new StoryRequestV1FirestoreConverter(stories);
     this.jsonConverter = new StoryRequestV1JsonConverter();
   }
 
