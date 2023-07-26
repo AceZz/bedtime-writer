@@ -1,293 +1,206 @@
 import 'package:flutter/material.dart';
 
-import '../../backend/story_params.dart';
+import '../../backend/story_form.dart';
 
-var allQuestions = [
-  characterQuestion,
-  placeQuestion,
-  objectQuestion,
-  powerQuestion,
-  flawQuestion,
-  challengeQuestion,
-];
-
-/// CHARACTERS
-
-final Choice characterBlaze = Choice<Character>(
-  text: 'Blaze, the kind dragon',
-  value: const Character(
-    name: 'Blaze, the kind dragon',
-    type: 'dragon',
-  ),
-  image: Image.asset('assets/story/character/dragon.png'),
-);
-
-final Choice characterSparkles = Choice<Character>(
-  text: 'Sparkles, the magical horse',
-  value: const Character(
-    name: 'Sparkles, the magical horse',
-    type: 'horse',
-  ),
-  image: Image.asset('assets/story/character/horse.png'),
-);
-
-final Choice characterPinguin = Choice<Character>(
-  text: 'Frosty, the pinguin',
-  value: const Character(
-    name: 'Frosty, the pinguin',
-    type: 'pinguin',
-  ),
-  image: Image.asset('assets/story/character/pinguin.png'),
-);
-
-Question characterQuestion = Question(
-  text: "Who is the hero of tonight\'s story?",
-  choices: [characterBlaze, characterSparkles, characterPinguin],
-  answer: ((story, choice) {
-    return story.copyWith(character: choice.value);
-  }),
-  randomAllowed: false,
-);
-
-/// FLAWS
-
-final Choice flawFailure = Choice<String>(
-  text: 'Being afraid of failure',
-  value: 'is afraid of failure',
-  image: Image.asset('assets/story/flaw/failure.png'),
-);
-
-final Choice flawSelfConfidence = Choice<String>(
-  text: 'Lacking self-confidence',
-  value: 'lacks self-confidence',
-  image: Image.asset('assets/story/flaw/self_confidence.png'),
-);
-
-final Choice flawLazy = Choice<String>(
-  text: 'Being a bit lazy',
-  value: 'is a bit lazy',
-  image: Image.asset('assets/story/flaw/lazy.png'),
-);
-
-final Choice flawGiveUp = Choice<String>(
-  text: 'Giving up easily',
-  value: 'gives up easily',
-  image: Image.asset('assets/story/flaw/give_up.png'),
-);
-
-final Choice flawNoAdvice = Choice<String>(
-  text: 'Not listening to advice',
-  value: 'does not listen to advice',
-  image: Image.asset('assets/story/flaw/no_advice.png'),
-);
-
-Question flawQuestion = Question(
-  text: 'What flaw does the hero have?',
-  choices: [
-    flawFailure,
-    flawSelfConfidence,
-    flawLazy,
-    flawGiveUp,
-    flawNoAdvice
+final StoryForm storyForm = StoryForm(
+  questions: [
+    characterName,
+    place,
+    object,
+    characterFlaw,
+    characterPower,
+    characterChallenge,
   ],
-  answer: ((story, choice) {
-    return story.copyWith(
-        character: story.character?.copyWith(flaw: choice.value));
-  }),
 );
 
-/// PLACES
-
-final Choice placeMagic = Choice<String>(
-  text: 'In a magical forest',
-  image: Image.asset('assets/story/place/magic.png'),
-  value: 'in a magical forest',
+final characterName = Question(
+  id: 'characterName',
+  text: "Who is the hero of tonight\'s story?",
+  choices: [
+    Choice(
+      id: 'blaze',
+      text: 'Blaze, the kind dragon',
+      image: Image.asset('assets/story/character/dragon.png'),
+    ),
+    Choice(
+      id: 'sparkles',
+      text: 'Sparkles, the magical horse',
+      image: Image.asset('assets/story/character/horse.png'),
+    ),
+    Choice(
+      id: 'frosty',
+      text: 'Frosty, the pinguin',
+      image: Image.asset('assets/story/character/pinguin.png'),
+    ),
+  ],
 );
 
-final Choice placeVillage = Choice<String>(
-  text: 'In a quiet village',
-  image: Image.asset('assets/story/place/village.png'),
-  value: 'in a quiet village',
-);
-
-final Choice placeUnderwater = Choice<String>(
-  text: 'In an underwater kingdom',
-  image: Image.asset('assets/story/place/underwater.png'),
-  value: 'in an underwater kingdom',
-  isAvailable: (story) => story.character?.type != 'horse',
-);
-
-final Choice placeSpace = Choice<String>(
-  text: 'In a space station',
-  image: Image.asset('assets/story/place/space.png'),
-  value: 'in a space station',
-);
-
-final Choice placeDesert = Choice<String>(
-  text: 'In a dry desert',
-  image: Image.asset('assets/story/place/desert.png'),
-  value: 'in a dry desert',
-);
-
-final Choice placeBeach = Choice<String>(
-  text: 'On a sunny beach',
-  image: Image.asset('assets/story/place/beach.png'),
-  value: 'on a sunny beach',
-);
-
-Question placeQuestion = Question(
+final place = Question(
+  id: 'place',
   text: 'Where does the story take place?',
   choices: [
-    placeMagic,
-    placeVillage,
-    placeUnderwater,
-    placeSpace,
-    placeDesert,
-    placeBeach,
+    Choice(
+      id: 'magic',
+      text: 'In a magical forest',
+      image: Image.asset('assets/story/place/magic.png'),
+    ),
+    Choice(
+      id: 'village',
+      text: 'In a quiet village',
+      image: Image.asset('assets/story/place/village.png'),
+    ),
+    Choice(
+      id: 'underwater',
+      text: 'In an underwater kingdom',
+      image: Image.asset('assets/story/place/underwater.png'),
+    ),
+    Choice(
+      id: 'space',
+      text: 'In a space station',
+      image: Image.asset('assets/story/place/space.png'),
+    ),
+    Choice(
+      id: 'desert',
+      text: 'In a dry desert',
+      image: Image.asset('assets/story/place/desert.png'),
+    ),
+    Choice(
+      id: 'beach',
+      text: 'On a sunny beach',
+      image: Image.asset('assets/story/place/beach.png'),
+    ),
   ],
-  answer: ((story, choice) => story.copyWith(place: choice.value)),
 );
 
-/// CHALLENGES
-
-final Choice challengeLost = Choice<String>(
-  text: 'Being lost',
-  image: Image.asset('assets/story/challenge/lost.png'),
-  value: 'being lost',
-);
-
-final Choice challengeWitch = Choice<String>(
-  text: 'Captured by a witch',
-  image: Image.asset('assets/story/challenge/witch.png'),
-  value: 'being captured by a witch',
-);
-
-final Choice challengeAnimal = Choice<String>(
-  text: 'Fighting a big animal',
-  image: Image.asset('assets/story/challenge/animal.png'),
-  value: 'fighting a big animal',
-);
-
-final Choice challengeFriend = Choice<String>(
-  text: 'Rescuing a friend',
-  image: Image.asset('assets/story/challenge/friend.png'),
-  value: 'rescuing a friend',
-);
-
-final Choice challengeRiddle = Choice<String>(
-  text: 'Solving a riddle',
-  image: Image.asset('assets/story/challenge/riddle.png'),
-  value: 'solving a riddle',
-);
-
-Question challengeQuestion = Question(
-  text: 'What challenge awaits the hero?',
-  choices: [
-    challengeLost,
-    challengeWitch,
-    challengeAnimal,
-    challengeFriend,
-    challengeRiddle,
-  ],
-  answer: ((story, choice) => story.copyWith(
-      character: story.character?.copyWith(challenge: choice.value))),
-);
-
-/// POWERS
-
-Choice powerFly = Choice<String>(
-  text: 'Is able to fly',
-  image: Image.asset('assets/story/power/fly.png'),
-  value: 'can fly',
-  isAvailable: (story) => !['dove', 'dragon'].contains(story.character?.type),
-);
-
-final Choice powerAnimals = Choice<String>(
-  text: 'Can communicate with animals',
-  image: Image.asset('assets/story/power/animals.png'),
-  value: 'can communicate with animals',
-  isAvailable: (story) =>
-      !['dove', 'dragon', 'horse'].contains(story.character?.type),
-);
-
-final Choice powerInvisible = Choice<String>(
-  text: 'Can become invisible',
-  image: Image.asset('assets/story/power/invisible.png'),
-  value: 'can become invisible',
-);
-
-final Choice powerWeather = Choice<String>(
-  text: 'Can control the weather',
-  image: Image.asset('assets/story/power/weather.png'),
-  value: 'can control the weather',
-);
-
-final Choice powerHeal = Choice<String>(
-  text: 'Can heal the others',
-  image: Image.asset('assets/story/power/heal.png'),
-  value: 'can heal others',
-);
-
-final Choice powerMinds = Choice<String>(
-  text: 'Can read minds',
-  image: Image.asset('assets/story/power/minds.png'),
-  value: 'can read minds',
-);
-
-Question powerQuestion = Question(
-  text: 'What power does the hero have?',
-  choices: [
-    powerFly,
-    powerAnimals,
-    powerInvisible,
-    powerWeather,
-    powerHeal,
-    powerMinds,
-  ],
-  answer: ((story, choice) => story.copyWith(
-      character: story.character?.copyWith(power: choice.value))),
-);
-
-/// OBJECTS
-
-final Choice objectRing = Choice<String>(
-  text: 'A magical ring',
-  image: Image.asset('assets/story/object/ring.png'),
-  value: 'a magical ring',
-);
-
-final Choice objectAmulet = Choice<String>(
-  text: 'A powerful amulet',
-  image: Image.asset('assets/story/object/amulet.png'),
-  value: 'a powerful amulet',
-);
-
-final Choice objectShield = Choice<String>(
-  text: 'An enchanted shield',
-  image: Image.asset('assets/story/object/shield.png'),
-  value: 'an enchanted shield',
-);
-
-final Choice objectFlower = Choice<String>(
-  text: 'A rare flower',
-  image: Image.asset('assets/story/object/flower.png'),
-  value: 'an rare flower',
-);
-
-final Choice objectDiamond = Choice<String>(
-  text: 'A big diamond',
-  image: Image.asset('assets/story/object/diamond.png'),
-  value: 'a big diamond',
-);
-
-Question objectQuestion = Question(
+Question object = Question(
+  id: 'object',
   text: 'What object does the hero find?',
   choices: [
-    objectRing,
-    objectAmulet,
-    objectShield,
-    objectFlower,
-    objectDiamond,
+    Choice(
+      id: 'ring',
+      text: 'A magical ring',
+      image: Image.asset('assets/story/object/ring.png'),
+    ),
+    Choice(
+      id: 'amulet',
+      text: 'A powerful amulet',
+      image: Image.asset('assets/story/object/amulet.png'),
+    ),
+    Choice(
+      id: 'shield',
+      text: 'An enchanted shield',
+      image: Image.asset('assets/story/object/shield.png'),
+    ),
+    Choice(
+      id: 'flower',
+      text: 'A rare flower',
+      image: Image.asset('assets/story/object/flower.png'),
+    ),
+    Choice(
+      id: 'diamond',
+      text: 'A big diamond',
+      image: Image.asset('assets/story/object/diamond.png'),
+    ),
   ],
-  answer: ((story, choice) => story.copyWith(object: choice.value)),
+);
+
+final characterFlaw = Question(
+  id: 'characterFlaw',
+  text: 'What flaw does the hero have?',
+  choices: [
+    Choice(
+      id: 'failure',
+      text: 'Being afraid of failure',
+      image: Image.asset('assets/story/flaw/failure.png'),
+    ),
+    Choice(
+      id: 'self_confidence',
+      text: 'Lacking self-confidence',
+      image: Image.asset('assets/story/flaw/self_confidence.png'),
+    ),
+    Choice(
+      id: 'lazy',
+      text: 'Being a bit lazy',
+      image: Image.asset('assets/story/flaw/lazy.png'),
+    ),
+    Choice(
+      id: 'give_up',
+      text: 'Giving up easily',
+      image: Image.asset('assets/story/flaw/give_up.png'),
+    ),
+    Choice(
+      id: 'no_advice',
+      text: 'Not listening to advice',
+      image: Image.asset('assets/story/flaw/no_advice.png'),
+    ),
+  ],
+);
+
+final characterPower = Question(
+  id: 'characterPower',
+  text: 'What power does the hero have?',
+  choices: [
+    Choice(
+      id: 'fly',
+      text: 'Is able to fly',
+      image: Image.asset('assets/story/power/fly.png'),
+    ),
+    Choice(
+      id: 'animals',
+      text: 'Can communicate with animals',
+      image: Image.asset('assets/story/power/animals.png'),
+    ),
+    Choice(
+      id: 'invisible',
+      text: 'Can become invisible',
+      image: Image.asset('assets/story/power/invisible.png'),
+    ),
+    Choice(
+      id: 'weather',
+      text: 'Can control the weather',
+      image: Image.asset('assets/story/power/weather.png'),
+    ),
+    Choice(
+      id: 'heal',
+      text: 'Can heal the others',
+      image: Image.asset('assets/story/power/heal.png'),
+    ),
+    Choice(
+      id: 'minds',
+      text: 'Can read minds',
+      image: Image.asset('assets/story/power/minds.png'),
+    ),
+  ],
+);
+
+final characterChallenge = Question(
+  id: 'characterChallenge',
+  text: 'What challenge awaits the hero?',
+  choices: [
+    Choice(
+      id: 'lost',
+      text: 'Being lost',
+      image: Image.asset('assets/story/challenge/lost.png'),
+    ),
+    Choice(
+      id: 'witch',
+      text: 'Captured by a witch',
+      image: Image.asset('assets/story/challenge/witch.png'),
+    ),
+    Choice(
+      id: 'animal',
+      text: 'Fighting a big animal',
+      image: Image.asset('assets/story/challenge/animal.png'),
+    ),
+    Choice(
+      id: 'friend',
+      text: 'Rescuing a friend',
+      image: Image.asset('assets/story/challenge/friend.png'),
+    ),
+    Choice(
+      id: 'riddle',
+      text: 'Solving a riddle',
+      image: Image.asset('assets/story/challenge/riddle.png'),
+    ),
+  ],
 );

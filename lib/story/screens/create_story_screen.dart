@@ -38,7 +38,7 @@ class CreateStoryScreen extends ConsumerWidget {
         : "Your storytelling magic has reached its limit. Come back to Dreamy Tales tomorrow to discover a new set of stories.";
 
     // Checks on stories limit and displays a question
-    if (state.hasQuestions) {
+    if (state.hasRemainingQuestions) {
       nextScreen = _QuestionScreen(question: state.currentQuestion);
       return _LimitCheckScreen(
         limitReachedScreen: ErrorScreen(text: limitReachedText),
@@ -48,7 +48,7 @@ class CreateStoryScreen extends ConsumerWidget {
     // Creates and displays story after questions have been answered
     else {
       return FutureBuilder(
-        future: createClassicStory(state.storyParams),
+        future: createClassicStory(state.storyAnswers),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           final requestId = snapshot.data;
           return _StoryScreen(requestId: requestId);
@@ -255,14 +255,7 @@ class _QuestionScreen extends StatelessWidget {
       ),
     );
 
-    // Shuffles the choices for randomness
-    List<Choice<dynamic>> questionChoices = List.from(question.choices);
-
-    if (question.shuffleChoices) {
-      questionChoices.shuffle();
-    }
-
-    List<Widget> choiceButtons = questionChoices
+    List<Widget> choiceButtons = question.choices
         .take(maxNumChoices)
         .map((choice) => _ChoiceButton(choice: choice))
         .toList();
@@ -324,7 +317,7 @@ class _ChoiceButton extends ConsumerWidget {
             onTap: () {
               ref
                   .read(createStoryStateProvider.notifier)
-                  .updateStoryParams(choice);
+                  .answerCurrentQuestion(choice);
             },
             child: Ink(
               child: Row(

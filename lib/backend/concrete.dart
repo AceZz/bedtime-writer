@@ -9,7 +9,7 @@ import 'preferences.dart';
 import 'shared_preferences/index.dart';
 import 'stats.dart';
 import 'story.dart';
-import 'story_params.dart';
+import 'story_form.dart';
 import 'story_part.dart';
 import 'story_status.dart';
 import 'user.dart';
@@ -45,7 +45,7 @@ final AutoDisposeStreamProviderFamily<StoryPart, Tuple2<String, String>>
     storyPartProvider = firebaseStoryPartProvider;
 
 /// Creates a story request, and returns the id of the story.
-Future<String> Function(StoryParams params) createClassicStory =
+Future<String> Function(StoryAnswers answers) createClassicStory =
     firebaseCreateClassicStory;
 
 /// Streams the [StoryStatus] of a specific story.
