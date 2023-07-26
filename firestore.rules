@@ -11,21 +11,21 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    match /stories/{story} {
+    match /story__realtime/{story} {
       allow read: if isAuth() && resource.data.author == request.auth.uid;
       allow create: if isAuth();
       allow update: if (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isFavorite']));
       allow delete: if false;
 
       match /images/{image} {
-        allow read: if isAuth() && get(/databases/$(database)/documents/stories/$(story)).data.author == request.auth.uid;
+        allow read: if isAuth() && get(/databases/$(database)/documents/story__realtime/$(story)).data.author == request.auth.uid;
         allow create: if isAuth();
         allow update: if false;
         allow delete: if false;
       }
 
       match /parts/{part} {
-        allow read: if isAuth() && get(/databases/$(database)/documents/stories/$(story)).data.author == request.auth.uid;
+        allow read: if isAuth() && get(/databases/$(database)/documents/story__realtime/$(story)).data.author == request.auth.uid;
         allow create: if isAuth();
         allow update: if false;
         allow delete: if false;

@@ -19,8 +19,14 @@ import { FirestoreBucketRateLimiterStorage } from "./rate_limiter/bucket_rate_li
 import { parseEnvAsNumber as parseEnvNumber } from "./utils";
 import { FirestoreUserStatsManager, UserStats } from "./user";
 import { getImageApi, getTextApi } from "./api";
+import { FirestorePaths } from "./firebase/firestore_paths";
+import { FirestoreStoryRealtime } from "./firebase/firestore_story_realtime";
 
 initializeApp();
+
+// Set Firestore paths and helpers
+const firestorePaths = new FirestorePaths();
+const firestoreStoryRealtime = new FirestoreStoryRealtime(firestorePaths);
 
 // Set the default region.
 setGlobalOptions({ region: "europe-west6" });
@@ -43,7 +49,7 @@ export const createClassicStoryRequest = onCall(async (request) => {
   );
   await globalRateLimiter.addRequests("global", ["story"]);
 
-  const requestManager = new StoryRequestV1Manager();
+  const requestManager = new StoryRequestV1Manager(firestoreStoryRealtime);
   const id = await requestManager.create(CLASSIC_LOGIC, request.data);
 
   return id;
@@ -54,14 +60,17 @@ export const createClassicStoryRequest = onCall(async (request) => {
  * story.
  */
 export const createStory = onDocumentCreated(
-  { document: "stories/{story_id}", secrets: ["OPENAI_API_KEY"] },
+  {
+    document: `${firestorePaths.story.realtime}/{story_id}`,
+    secrets: ["OPENAI_API_KEY"],
+  },
   async (event) => {
     if (event.data === null || event.data === undefined) {
       throw new Error("Event data is null or undefined");
     }
     const storyId = event.data.id;
 
-    const requestManager = new StoryRequestV1Manager();
+    const requestManager = new StoryRequestV1Manager(firestoreStoryRealtime);
     const request = await requestManager.get(storyId);
 
     if (request.logic == CLASSIC_LOGIC) {
@@ -112,7 +121,11 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
   // Generate and save the story.
   const generator = new NPartStoryGenerator(logic, textApi, imageApi);
   const metadata = new StoryMetadata(request.author, generator.title());
-  const writer = new FirebaseStoryWriter(metadata, storyId);
+  const writer = new FirebaseStoryWriter(
+    firestoreStoryRealtime,
+    metadata,
+    storyId
+  );
 
   await writer.writeMetadata();
 
