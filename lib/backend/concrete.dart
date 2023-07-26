@@ -52,6 +52,11 @@ Future<String> Function(StoryAnswers answers) createClassicStory =
 final AutoDisposeFutureProviderFamily<StoryStatus, String> storyStatusProvider =
     firebaseStoryStatusProvider;
 
+/// Returns the current [StoryForm]. Has to be overridden with
+/// [Provider.overrideWithValue].
+final Provider<StoryForm> storyFormProvider =
+    Provider((ref) => throw UnimplementedError());
+
 /**
  * PREFERENCES
  */

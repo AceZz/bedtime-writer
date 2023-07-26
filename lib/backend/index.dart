@@ -6,6 +6,7 @@ export 'concrete.dart'
         resetPassword,
         storyProvider,
         storyPartProvider,
+        storyFormProvider,
         userProvider,
         userStoriesProvider,
         statsProvider;
