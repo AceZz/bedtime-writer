@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../backend/concrete.dart';
 import '../../backend/index.dart';
+import '../../config.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
 import '../states/create_story_state.dart';
@@ -123,11 +124,17 @@ class _StoryScreen extends ConsumerWidget {
               case StoryStatus.pending:
                 return loadingScreen;
               case StoryStatus.error:
-                return const ErrorScreen(text: failedLoadingText);
+                final errorText = debugStory()
+                    ? 'Error: StoryStatus.error'
+                    : failedLoadingText;
+                return ErrorScreen(text: errorText);
             }
           },
-          error: (error, stackTrace) =>
-              const ErrorScreen(text: failedLoadingText),
+          error: (error, stackTrace) {
+            final errorText =
+                debugStory() ? 'Error: $error' : failedLoadingText;
+            return ErrorScreen(text: errorText);
+          },
           loading: () => loadingScreen,
           skipLoadingOnReload: true,
         ),
