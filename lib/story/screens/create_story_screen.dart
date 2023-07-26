@@ -344,10 +344,11 @@ class _ChoiceButton extends ConsumerWidget {
             child: Ink(
               child: Row(
                 children: [
-                  SizedBox(
-                    width: buttonWidth,
-                    child: ClipOval(child: choice.image),
-                  ),
+                  if (choice.image != null)
+                    Container(
+                      width: buttonWidth,
+                      child: ClipOval(child: Image.memory(choice.image!)),
+                    ),
                   text,
                 ],
               ),
