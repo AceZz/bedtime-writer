@@ -4,8 +4,7 @@ import {
 } from "firebase-admin/firestore";
 
 export interface FirestoreStories {
-  storyRequestRef(storyDocId: string): DocumentReference;
+  storyRef(storyId: string): DocumentReference;
   storiesRef(): CollectionReference;
-  newStoryRef(): DocumentReference;
-  storyRef(storyDocId: string): DocumentReference;
+  storyRequestRef(storyId: string, requestVersion: string): DocumentReference;
 }

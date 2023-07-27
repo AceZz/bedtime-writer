@@ -5,7 +5,7 @@ import { StoryRequestV1 } from "./story_request_v1";
 import { StoryRequestV1FirestoreConverter } from "./story_request_v1_firestore_converter";
 import { StoryRequestV1JsonConverter } from "./story_request_v1_json_converter";
 
-export class FirebaseStoryRequestV1Manager
+export class StoryRequestV1Manager
   implements StoryRequestManager<StoryRequestV1>
 {
   private firestoreConverter: StoryRequestV1FirestoreConverter;
