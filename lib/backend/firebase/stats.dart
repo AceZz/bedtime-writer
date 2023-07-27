@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'collection.dart';
 import 'firebase.dart';
 import '../concrete.dart';
 import '../stats.dart';
