@@ -1,5 +1,6 @@
 import { beforeAll, expect, test } from "@jest/globals";
 import { getFirestore } from "firebase-admin/firestore";
+import { FirestorePaths } from "../src/firebase/firestore_paths";
 import { initFirebase } from "../src/firebase/utils";
 
 beforeAll(() => {
@@ -14,6 +15,10 @@ test("Can connect to Firebase", () => {
 
 test("Can connect to Firestore", async () => {
   const firestore = getFirestore();
-  const query = await firestore.collection("stories").count().get();
+  const firestorePaths = new FirestorePaths("test");
+  const query = await firestore
+    .collection(firestorePaths.story.realtime)
+    .count()
+    .get();
   expect(query.data().count).toBeGreaterThanOrEqual(0);
 });
