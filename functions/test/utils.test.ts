@@ -13,11 +13,13 @@ test("compressToPng", async () => {
 
 test("sleep for the specified duration", async () => {
   const sleepDuration = 1000;
-  const errorMargin = 500;
+
   const before = Date.now();
   await sleep(sleepDuration);
   const after = Date.now();
   const duration = after - before;
+
+  const errorMargin = 200;
   expect(duration).toBeGreaterThanOrEqual(sleepDuration);
   expect(duration).toBeLessThanOrEqual(sleepDuration + errorMargin);
 });
@@ -54,35 +56,69 @@ describe("retryAsyncFunction", () => {
   test("should succeed if the function succeeds on the first attempt", async () => {
     const mockFn = jest.fn(() => Promise.resolve("success"));
 
-    const result = await retryAsyncFunction(mockFn);
+    const { awaited, retries } = await retryAsyncFunction(mockFn);
 
-    expect(result).toBe("success");
+    expect(awaited).toBe("success");
+    expect(retries).toBe(0);
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
   test("should succeed if the function fails on the first attempt but succeeds on retry", async () => {
-    const retries = 2;
+    const maxRetries = 2;
     const mockFn = jest
       .fn<() => Promise<string>>()
       .mockRejectedValueOnce(new Error("failed"))
       .mockResolvedValueOnce("success");
 
-    const result = await retryAsyncFunction(mockFn, retries);
+    const { awaited, retries } = await retryAsyncFunction(mockFn, maxRetries);
 
-    expect(result).toBe("success");
+    expect(awaited).toBe("success");
+    expect(retries).toBe(1);
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
   test("should throw an error if the function fails on all attempts", async () => {
-    const retries = 2;
+    const maxRetries = 2;
     const delay = 1000;
     const mockFn = jest
       .fn<() => Promise<string>>()
       .mockRejectedValue(new Error("failed"));
 
-    await expect(retryAsyncFunction(mockFn, retries, delay)).rejects.toThrow(
-      "failed"
-    );
+    await expect(
+      retryAsyncFunction(mockFn, maxRetries, undefined, delay)
+    ).rejects.toThrow();
     expect(mockFn).toHaveBeenCalledTimes(3);
+  });
+
+  test("should apply delayIterator function correctly", async () => {
+    const mockFn = jest
+      .fn<() => Promise<string>>()
+      .mockRejectedValue(new Error("Test error"));
+
+    const maxRetries = 3;
+    const timeout = 0;
+    const delay = 500;
+    const delayIterator = (x: number) => 2 * x;
+
+    const before = Date.now();
+    try {
+      await retryAsyncFunction(
+        mockFn,
+        maxRetries,
+        timeout,
+        delay,
+        delayIterator
+      );
+    } catch (e) {
+      // We expect an error, since the mock function always throws one
+    }
+    const after = Date.now();
+    const duration = after - before;
+
+    const expectedDuration =
+      delay + delayIterator(delay) + delayIterator(delayIterator(delay));
+    const errorMargin = 200;
+    expect(duration).toBeGreaterThanOrEqual(expectedDuration);
+    expect(duration).toBeLessThanOrEqual(expectedDuration + errorMargin);
   });
 });
