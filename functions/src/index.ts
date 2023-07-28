@@ -1,5 +1,3 @@
-import process from "node:process";
-
 import { initializeApp } from "firebase-admin/app";
 import { region } from "firebase-functions";
 import { setGlobalOptions } from "firebase-functions/v2";
@@ -10,23 +8,17 @@ import { onSchedule } from "firebase-functions/v2/scheduler";
 import { getUid } from "./auth";
 import { logger } from "./logger";
 import {
-  OpenAiTextApi,
-  OpenAiImageApi,
-  FakeTextApi,
-  FakeImageApi,
   FirebaseStoryWriter,
   NPartStoryGenerator,
   StoryMetadata,
-  ImageApi,
-  TextApi,
   CLASSIC_LOGIC,
 } from "./story/";
-import { getOpenAiApi } from "./open_ai";
 import { StoryRequestV1Manager, StoryRequestV1 } from "./story/request";
 import { BucketRateLimiter, RateLimiter } from "./rate_limiter";
 import { FirestoreBucketRateLimiterStorage } from "./rate_limiter/bucket_rate_limiter/firestore_bucket_rate_limiter_storage";
 import { parseEnvAsNumber as parseEnvNumber } from "./utils";
 import { FirestoreUserStatsManager, UserStats } from "./user";
+import { getImageApi, getTextApi } from "./api";
 
 initializeApp();
 
@@ -150,27 +142,4 @@ function getRateLimiter(limit: number): RateLimiter {
     new Map([["story", limit]]),
     new Map([["story", 24 * 3600]])
   );
-}
-
-function getTextApi(): TextApi {
-  if (process.env.TEXT_API?.toLowerCase() === "fake") {
-    logger.info("using FakeTextApi");
-    return new FakeTextApi();
-  }
-
-  logger.info("using OpenAiTextApi");
-  return new OpenAiTextApi(
-    getOpenAiApi(process.env.OPENAI_API_KEY),
-    "gpt-3.5-turbo"
-  );
-}
-
-function getImageApi(): ImageApi {
-  if (process.env.IMAGE_API?.toLowerCase() === "fake") {
-    logger.info("using FakeImageApi");
-    return new FakeImageApi();
-  }
-
-  logger.info("using OpenAiImageApi");
-  return new OpenAiImageApi(getOpenAiApi(process.env.OPENAI_API_KEY));
 }
