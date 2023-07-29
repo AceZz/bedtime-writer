@@ -90,35 +90,51 @@ export async function promiseTimeout<T>(
  */
 export async function retryAsyncFunction<T>(
   fn: () => Promise<T>,
-  maxRetries = 2,
-  timeout = 60000,
-  delay = 1000,
-  delayIterator = (x: number) => x
-): Promise<{ awaited: T; retries: number }> {
+  params: {
+    maxTries: number;
+    timeout: number;
+    delay: number;
+    delayIterator?: (x: number) => number;
+  }
+): Promise<{ result: T; tries: number }> {
+  // Unpacks parameters
+  const maxTries = params.maxTries;
+  const timeout = params.timeout;
+  let delay = params.delay;
+  const delayIterator = params.delayIterator ?? ((x: number) => x); // Default value is identity function
+
   // Adds a safety for incorrect or dangerous retries specifications
-  if (maxRetries < 0 || maxRetries > 10 || !Number.isInteger(maxRetries)) {
+  if (maxTries < 1 || maxTries > 10 || !Number.isInteger(maxTries)) {
     throw new Error(
       "retryAsyncFunction: arg retries must be a positive integer between 0 and 10"
     );
   }
-  for (let retry = 0; retry <= maxRetries; retry++) {
+
+  let finalError: unknown;
+  for (let try_ = 1; try_ <= maxTries; try_++) {
     try {
       const timedFn = () => promiseTimeout(fn(), timeout);
-      const awaited = await timedFn();
-      return { awaited: awaited, retries: retry };
+      const result = await timedFn();
+      return { result: result, tries: try_ };
     } catch (error) {
-      if (retry === maxRetries) {
-        logger.error(`retryAsyncFunction: ${error}`);
-      } else {
+      if (try_ < maxTries) {
         logger.warn(
-          `retryAsyncFunction: retrying after retry ${retry} caught error: ${error}`
+          `retryAsyncFunction: error on try ${try_} / ${maxTries}: ${error}`
         );
         await sleep(delay);
         delay = delayIterator(delay);
+      } else {
+        logger.warn(
+          `retryAsyncFunction: error on try ${try_} / ${maxTries}: ${error}`
+        );
+        logger.error(
+          `retryAsyncFunction: maximum number of retries reached after ${maxTries} tries`
+        );
+        finalError = error;
       }
     }
   }
-  throw new Error(`Maximum number of retries reached after ${maxRetries}`);
+  throw finalError;
 }
 
 /**

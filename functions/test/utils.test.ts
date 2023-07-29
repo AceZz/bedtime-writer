@@ -12,22 +12,22 @@ test("compressToPng", async () => {
 });
 
 test("sleep for the specified duration", async () => {
-  const sleepDuration = 1000;
+  const sleepDuration = 300;
 
   const before = Date.now();
   await sleep(sleepDuration);
   const after = Date.now();
   const duration = after - before;
 
-  const errorMargin = 200;
+  const errorMargin = 100;
   expect(duration).toBeGreaterThanOrEqual(sleepDuration);
   expect(duration).toBeLessThanOrEqual(sleepDuration + errorMargin);
 });
 
 describe("promiseTimeout function", () => {
   test("resolves the promise before the timeout", async () => {
-    const promiseDelay = 500;
-    const timeout = 1000;
+    const promiseDelay = 200;
+    const timeout = 300;
     const promise = new Promise<string>((resolve) => {
       setTimeout(() => resolve("resolved"), promiseDelay);
     });
@@ -38,8 +38,8 @@ describe("promiseTimeout function", () => {
   });
 
   test("rejects the promise after the timeout", async () => {
-    const promiseDelay = 1500;
-    const timeout = 1000;
+    const promiseDelay = 300;
+    const timeout = 200;
     const promise = new Promise<string>((resolve) => {
       setTimeout(() => resolve("resolved"), promiseDelay);
     });
@@ -55,38 +55,51 @@ describe("promiseTimeout function", () => {
 describe("retryAsyncFunction", () => {
   test("should succeed if the function succeeds on the first attempt", async () => {
     const mockFn = jest.fn(() => Promise.resolve("success"));
+    const params = {
+      maxTries: 3,
+      timeout: 100,
+      delay: 100,
+    };
 
-    const { awaited, retries } = await retryAsyncFunction(mockFn);
+    const { result: awaited, tries: tries } = await retryAsyncFunction(
+      mockFn,
+      params
+    );
 
     expect(awaited).toBe("success");
-    expect(retries).toBe(0);
+    expect(tries).toBe(1);
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
   test("should succeed if the function fails on the first attempt but succeeds on retry", async () => {
-    const maxRetries = 2;
     const mockFn = jest
       .fn<() => Promise<string>>()
       .mockRejectedValueOnce(new Error("failed"))
       .mockResolvedValueOnce("success");
+    const params = {
+      maxTries: 2,
+      timeout: 100,
+      delay: 100,
+    };
 
-    const { awaited, retries } = await retryAsyncFunction(mockFn, maxRetries);
+    const { result, tries: tries } = await retryAsyncFunction(mockFn, params);
 
-    expect(awaited).toBe("success");
-    expect(retries).toBe(1);
+    expect(result).toBe("success");
+    expect(tries).toBe(2);
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
   test("should throw an error if the function fails on all attempts", async () => {
-    const maxRetries = 2;
-    const delay = 1000;
     const mockFn = jest
       .fn<() => Promise<string>>()
       .mockRejectedValue(new Error("failed"));
+    const params = {
+      maxTries: 3,
+      timeout: 100,
+      delay: 100,
+    };
 
-    await expect(
-      retryAsyncFunction(mockFn, maxRetries, undefined, delay)
-    ).rejects.toThrow();
+    await expect(retryAsyncFunction(mockFn, params)).rejects.toThrow();
     expect(mockFn).toHaveBeenCalledTimes(3);
   });
 
@@ -95,20 +108,20 @@ describe("retryAsyncFunction", () => {
       .fn<() => Promise<string>>()
       .mockRejectedValue(new Error("Test error"));
 
-    const maxRetries = 3;
+    const maxTries = 4;
     const timeout = 0;
-    const delay = 500;
+    const delay = 100;
     const delayIterator = (x: number) => 2 * x;
+    const params = {
+      maxTries: maxTries,
+      timeout: timeout,
+      delay: delay,
+      delayIterator: delayIterator,
+    };
 
     const before = Date.now();
     try {
-      await retryAsyncFunction(
-        mockFn,
-        maxRetries,
-        timeout,
-        delay,
-        delayIterator
-      );
+      await retryAsyncFunction(mockFn, params);
     } catch (e) {
       // We expect an error, since the mock function always throws one
     }
@@ -117,7 +130,7 @@ describe("retryAsyncFunction", () => {
 
     const expectedDuration =
       delay + delayIterator(delay) + delayIterator(delayIterator(delay));
-    const errorMargin = 200;
+    const errorMargin = 100;
     expect(duration).toBeGreaterThanOrEqual(expectedDuration);
     expect(duration).toBeLessThanOrEqual(expectedDuration + errorMargin);
   });
