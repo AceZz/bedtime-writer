@@ -58,3 +58,85 @@ export async function compressToPng(
 ) {
   return await sharp(input).png(parameters).toBuffer();
 }
+
+/**
+ * Associate a timeout to a promise. Reject if the timeout is reached. Return the race
+ * promise between the given promise and the timeout.
+ */
+export async function promiseTimeout<T>(
+  promise: Promise<T>,
+  ms: number
+): Promise<T> {
+  let timeoutId: NodeJS.Timeout;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(`promiseTimeout: Promise timed out after ${ms} ms`);
+    }, ms);
+  });
+  return Promise.race([
+    promise.finally(() => clearTimeout(timeoutId)),
+    timeoutPromise,
+  ]);
+}
+
+/**
+ * Try once the given async function with specified timeout, and then retry the given number of times with a delay.
+ *
+ * WARNING: When retrying, previous calls of the function are not cancelled.
+ *
+ * Retries is bounded from 0 to 10 for safety. The delay iterator allows to implement variable types of delaying
+ * strategies, like exponential delay. It should have a default value when called with no args. Then it takes the
+ * previous delay and computes the new one.
+ */
+export async function retryAsyncFunction<T>(
+  fn: () => Promise<T>,
+  params: {
+    maxTries: number;
+    timeout: number;
+    delay: number;
+    delayIterator?: (x: number) => number;
+  }
+): Promise<{ result: T; tries: number }> {
+  // Unpacks parameters
+  const maxTries = params.maxTries;
+  const timeout = params.timeout;
+  let delay = params.delay;
+  const delayIterator = params.delayIterator ?? ((x: number) => x); // Default value is identity function
+
+  // Adds a safety for incorrect or dangerous retries specifications
+  if (maxTries < 1 || maxTries > 10 || !Number.isInteger(maxTries)) {
+    throw new Error(
+      "retryAsyncFunction: arg maxTries must be a positive integer between 0 and 10"
+    );
+  }
+
+  let finalError: unknown;
+  for (let try_ = 1; try_ <= maxTries; try_++) {
+    try {
+      const timedFn = () => promiseTimeout(fn(), timeout);
+      const result = await timedFn();
+      return { result: result, tries: try_ };
+    } catch (error) {
+      logger.warn(
+        `retryAsyncFunction: error on try ${try_} / ${maxTries}: ${error}`
+      );
+      if (try_ < maxTries) {
+        await sleep(delay);
+        delay = delayIterator(delay);
+      } else {
+        logger.error(
+          `retryAsyncFunction: maximum number of retries reached after ${maxTries} tries`
+        );
+        finalError = error;
+      }
+    }
+  }
+  throw finalError;
+}
+
+/**
+ * Wait for the given duration in milliseconds.
+ */
+export async function sleep(ms: number): Promise<void> {
+  await new Promise((r) => setTimeout(r, ms));
+}
