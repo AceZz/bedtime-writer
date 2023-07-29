@@ -8,7 +8,6 @@ import '../story.dart';
 import '../story_form.dart';
 import '../story_status.dart';
 import '../user.dart';
-import 'collection.dart';
 import 'firebase.dart';
 import 'story_part.dart';
 

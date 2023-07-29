@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
 import '../story_part.dart';
-import 'collection.dart';
 import 'firebase.dart';
 
 /// Streams a specific [StoryPart].
