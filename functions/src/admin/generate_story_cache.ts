@@ -7,7 +7,7 @@ import {
 } from "../firebase/utils";
 import { prompt } from "../utils";
 
-import { FirestoreStoryCacheManager } from "../story/cache/firestore_story_cache_manager";
+import { StoryCacheV1Manager } from "../story/cache/v1/firestore_story_cache_manager";
 import { getImageApi, getTextApi } from "../api";
 
 main().then(() => process.exit(0));
@@ -28,7 +28,7 @@ async function main() {
     const textApi = getTextApi();
     const imageApi = getImageApi();
 
-    const storyCacheManager = new FirestoreStoryCacheManager(
+    const storyCacheManager = new StoryCacheV1Manager(
       formWithId.docId,
       textApi,
       imageApi

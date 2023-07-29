@@ -8,8 +8,8 @@ import { expect } from "@jest/globals";
 import { FirestorePaths } from "../../../src/firebase/firestore_paths";
 import {
   CACHE_AUTHOR,
-  FirestoreStoryCacheManager,
-} from "../../../src/story/cache/firestore_story_cache_manager";
+  StoryCacheV1Manager,
+} from "../../../src/story/cache/v1/firestore_story_cache_manager";
 import { FirestoreStoryCache } from "../../../src/firebase/firestore_story_cache";
 import { StoryRequestV1 } from "../../../src/story/request/v1";
 import { CLASSIC_LOGIC } from "../../../src/story/logic";
@@ -73,8 +73,8 @@ const FAKE_IMAGE_API = new FakeImageApi();
 export class FirestoreCacheTestUtils {
   constructor(readonly paths: FirestorePaths) {}
 
-  get manager(): FirestoreStoryCacheManager {
-    return new FirestoreStoryCacheManager(
+  get manager(): StoryCacheV1Manager {
+    return new StoryCacheV1Manager(
       FORM_ID_0,
       FAKE_TEXT_API,
       FAKE_IMAGE_API,

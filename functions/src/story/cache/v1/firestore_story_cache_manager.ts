@@ -1,25 +1,27 @@
-import { ImageApi, NPartStoryGenerator, TextApi } from "../generator";
-import { CLASSIC_LOGIC } from "../logic";
-import { StoryRequestV1, StoryRequestV1Manager } from "../request";
-import { StoryRequestV1JsonConverter } from "../request/v1/story_request_v1_json_converter";
-import { StoryForm } from "../story_form";
-import { StoryMetadata } from "../story_metadata";
-import { FirebaseStoryWriter } from "../writer";
-import { StoryCacheManager } from "./story_cache_manager";
-import { cartesianProduct } from "./utils";
-import { getRandomDuration, getRandomStyle } from "../story_utils";
-import { FirestoreStoryCache } from "../../firebase/firestore_story_cache";
-import { FirestorePaths } from "../../firebase/firestore_paths";
-import { FirestoreStoryForms } from "../../firebase/firestore_story_forms";
-import { retryAsyncFunction } from "../../utils";
+import { ImageApi, NPartStoryGenerator, TextApi } from "../../generator";
+import { CLASSIC_LOGIC } from "../../logic";
+import { StoryRequestV1, StoryRequestV1Manager } from "../../request";
+import { StoryForm } from "../../story_form";
+import { StoryMetadata } from "../../story_metadata";
+import { FirebaseStoryWriter } from "../../writer";
+import { StoryCacheManager } from "../story_cache_manager";
+import { cartesianProduct } from "../utils";
+import { getRandomDuration, getRandomStyle } from "../../story_utils";
+import { FirestoreStoryCache } from "../../../firebase/firestore_story_cache";
+import { FirestorePaths } from "../../../firebase/firestore_paths";
+import { FirestoreStoryForms } from "../../../firebase/firestore_story_forms";
+import { retryAsyncFunction } from "../../../utils";
 
 export const CACHE_AUTHOR = "@CACHE_MANAGER";
+
+//TODO: handle better request versioning, specify request manager
 
 /**
  * Interface to manage caching of stories.
  */
-export class FirestoreStoryCacheManager implements StoryCacheManager {
+export class StoryCacheV1Manager implements StoryCacheManager {
   private formId: string;
+  private requestManager: StoryRequestV1Manager;
   private textApi: TextApi;
   private imageApi: ImageApi;
   private stories: FirestoreStoryCache;
@@ -36,6 +38,7 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
     this.imageApi = imageApi;
     this.stories = new FirestoreStoryCache(paths);
     this.forms = new FirestoreStoryForms(paths);
+    this.requestManager = new StoryRequestV1Manager(this.stories); //TODO: update below using this new property
   }
 
   generateRequestsFromForm(form: StoryForm): StoryRequestV1[] {
@@ -70,7 +73,7 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
       const requestData = { formId: this.formId, ...logicObject };
 
       // Ensure our story request is valid
-      const request = StoryRequestV1JsonConverter.convertFromJson(
+      const request = this.requestManager.jsonConverter.fromJson(
         CLASSIC_LOGIC,
         requestData
       );
@@ -96,7 +99,10 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
       // Checks existence of request doc
       await this.checkStoryRequest(doc.id);
       // Selects story docs with right form ids
-      const requestDoc = await this.stories.storyRequestRef(doc.id).get();
+      const version = this.requestManager.getVersion();
+      const requestDoc = await this.stories
+        .storyRequestRef(doc.id, version)
+        .get();
       const requestData = requestDoc.data();
       if (requestData !== undefined && requestData.formId == this.formId) {
         storyDocs.push(doc.id);
@@ -116,8 +122,10 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
   //TODO: write test
   private async cacheStory(request: StoryRequestV1): Promise<void> {
     const promiseFn = async () => {
-      const requestManager = new StoryRequestV1Manager(this.stories);
-      const storyId = await requestManager.create(CLASSIC_LOGIC, request.data);
+      const storyId = await this.requestManager.create(
+        CLASSIC_LOGIC,
+        request.data
+      );
 
       // Set the logic
       const logic = request.toClassicStoryLogic();
@@ -206,8 +214,9 @@ export class FirestoreStoryCacheManager implements StoryCacheManager {
   }
 
   private async checkStoryRequest(storyDocId: string) {
+    const version = this.requestManager.getVersion();
     const storyRequestDoc = await this.stories
-      .storyRequestRef(storyDocId)
+      .storyRequestRef(storyDocId, version)
       .get();
     if (!storyRequestDoc.exists) {
       throw new Error(
