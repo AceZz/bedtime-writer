@@ -106,7 +106,7 @@ export async function retryAsyncFunction<T>(
   // Adds a safety for incorrect or dangerous retries specifications
   if (maxTries < 1 || maxTries > 10 || !Number.isInteger(maxTries)) {
     throw new Error(
-      "retryAsyncFunction: arg retries must be a positive integer between 0 and 10"
+      "retryAsyncFunction: arg maxTries must be a positive integer between 0 and 10"
     );
   }
 
@@ -117,16 +117,13 @@ export async function retryAsyncFunction<T>(
       const result = await timedFn();
       return { result: result, tries: try_ };
     } catch (error) {
+      logger.warn(
+        `retryAsyncFunction: error on try ${try_} / ${maxTries}: ${error}`
+      );
       if (try_ < maxTries) {
-        logger.warn(
-          `retryAsyncFunction: error on try ${try_} / ${maxTries}: ${error}`
-        );
         await sleep(delay);
         delay = delayIterator(delay);
       } else {
-        logger.warn(
-          `retryAsyncFunction: error on try ${try_} / ${maxTries}: ${error}`
-        );
         logger.error(
           `retryAsyncFunction: maximum number of retries reached after ${maxTries} tries`
         );
