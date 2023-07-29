@@ -18,3 +18,7 @@ Future<DocumentSnapshot<Map<String, dynamic>>> getCacheThenServer(
     return await ref.get(GetOptions(source: Source.serverAndCache));
   }
 }
+
+/// Sets the Firebase collection names
+const STORY_REALTIME = 'story__realtime';
+const USER_STATS = 'user__stats';

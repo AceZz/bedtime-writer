@@ -10,16 +10,17 @@ import { FirestoreStories } from "../../../firebase/firestore_stories";
 
 /**
  * Schema:
- *   <story collection>/
- *     <story_id>:
- *       request/
- *         v1:
- *           logic
- *           [StoryRequest fields]
- *       author
- *       timestamp
- *       status
- *       form_id
+ *
+ * <story collection>/
+ *   <story_id>:
+ *     request/
+ *       v1:
+ *         logic
+ *         [StoryRequest fields]
+ *     author
+ *     timestamp
+ *     status
+ *     form_id
  */
 export class StoryRequestV1FirestoreConverter
   implements StoryRequestFirestoreConverter<StoryRequestV1>
