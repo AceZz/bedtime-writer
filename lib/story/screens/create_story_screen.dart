@@ -166,7 +166,12 @@ class _StoryScreen extends ConsumerWidget {
 
 /// Displays a loading screen.
 class _LoadingScreen extends StatelessWidget {
-  const _LoadingScreen({Key? key}) : super(key: key);
+  final String firstText;
+
+  const _LoadingScreen({
+    Key? key,
+    this.firstText = 'Your fairy tale will appear in a few seconds',
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -175,14 +180,14 @@ class _LoadingScreen extends StatelessWidget {
       showAppBar: false,
       child: Padding(
         padding: EdgeInsets.only(top: 0.3 * screenHeight),
-        child: const Column(
+        child: Column(
           children: [
-            LottieLoading(),
+            const LottieLoading(),
             SizedBox(
               height: 200,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                child: _LoadingTexts(),
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: _LoadingTexts(firstText: firstText),
               ),
             )
           ],
@@ -200,17 +205,16 @@ class _LoadingTexts extends StatelessWidget {
   static const int maxNumLoadingTexts = 10;
 
   /// The first text that is shown. To avoid duplicates, it should not appear in
-  /// [assetFile],
-  static const String defaultText =
-      'Your fairy tale will appear in a few seconds';
+  /// [assetFile].
+  final String firstText;
 
-  const _LoadingTexts({Key? key}) : super(key: key);
+  const _LoadingTexts({Key? key, required this.firstText}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _texts(context),
-      initialData: const [defaultText],
+      initialData: [firstText],
       builder: (
         BuildContext context,
         AsyncSnapshot<Iterable<String>> snapshot,
@@ -230,7 +234,7 @@ class _LoadingTexts extends StatelessWidget {
     var texts = data.split('\n');
     texts = texts.where((string) => string.isNotEmpty).toList();
     texts.shuffle();
-    return [defaultText, ...texts.take(maxNumLoadingTexts)];
+    return [firstText, ...texts.take(maxNumLoadingTexts)];
   }
 
   Widget _animatedTexts(Iterable<String> texts, TextStyle? textStyle) {
@@ -345,7 +349,7 @@ class _ChoiceButton extends ConsumerWidget {
               child: Row(
                 children: [
                   if (choice.image != null)
-                    Container(
+                    SizedBox(
                       width: buttonWidth,
                       child: ClipOval(child: Image.memory(choice.image!)),
                     ),
