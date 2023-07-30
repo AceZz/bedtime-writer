@@ -53,9 +53,8 @@ export class FirebaseStoryWriter implements StoryWriter {
     this.parts = [];
   }
 
-  //TODO: write test
-  async writeFromGenerator(generator: StoryGenerator): Promise<void> {
-    await this.writeMetadata();
+  async writeFromGenerator(generator: StoryGenerator): Promise<string> {
+    const storyId = await this.writeMetadata();
 
     try {
       // Write story to database part after part
@@ -72,6 +71,7 @@ export class FirebaseStoryWriter implements StoryWriter {
         `FirebaseStoryWriter: story ${this.storyId} created by user ${this.metadata.author} encountered an error: ${error}`
       );
     }
+    return storyId;
   }
 
   async writeMetadata(): Promise<string> {

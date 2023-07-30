@@ -59,7 +59,6 @@ export async function compressToPng(
   return await sharp(input).png(parameters).toBuffer();
 }
 
-//TODO: write tests
 /**
  * Associate a timeout to a promise. Reject if the timeout is reached. Return the race
  * promise between the given promise and the timeout.
@@ -83,40 +82,56 @@ export async function promiseTimeout<T>(
 /**
  * Try once the given async function with specified timeout, and then retry the given number of times with a delay.
  *
- * The delay iterator allows to implement variable types of delaying strategies, like exponential delay.
+ * WARNING: When retrying, previous calls of the function are not cancelled.
+ *
+ * Retries is bounded from 0 to 10 for safety. The delay iterator allows to implement variable types of delaying
+ * strategies, like exponential delay. It should have a default value when called with no args. Then it takes the
+ * previous delay and computes the new one.
  */
 export async function retryAsyncFunction<T>(
   fn: () => Promise<T>,
-  retries = 2,
-  delay = 1000,
-  timeout = 60000,
-  delayIterator = (x: number) => x
-): Promise<T> {
-  if (retries < 0 || retries > 10 || !Number.isInteger(retries)) {
+  params: {
+    maxTries: number;
+    timeout: number;
+    delay: number;
+    delayIterator?: (x: number) => number;
+  }
+): Promise<{ result: T; tries: number }> {
+  // Unpacks parameters
+  const maxTries = params.maxTries;
+  const timeout = params.timeout;
+  let delay = params.delay;
+  const delayIterator = params.delayIterator ?? ((x: number) => x); // Default value is identity function
+
+  // Adds a safety for incorrect or dangerous retries specifications
+  if (maxTries < 1 || maxTries > 10 || !Number.isInteger(maxTries)) {
     throw new Error(
-      "retryAsyncFunction: arg retries must be a positive integer between 0 and 10"
+      "retryAsyncFunction: arg maxTries must be a positive integer between 0 and 10"
     );
   }
-  if (delay < 1 || !Number.isInteger(delay)) {
-    throw new Error("retryAsyncFunction: arg delay must be a positive integer");
-  }
-  if (timeout < 1000 || !Number.isInteger(timeout)) {
-    throw new Error(
-      "retryAsyncFunction: arg timeout should be a positive integer and bigger than 1000ms"
-    );
-  }
-  try {
-    const timedFn = () => promiseTimeout(fn(), timeout);
-    return await timedFn();
-  } catch (error) {
-    if (retries >= 1) {
-      await sleep(delay);
-      return retryAsyncFunction(fn, retries - 1, delayIterator(delay), timeout);
-    } else {
-      logger.error("retry: Maximum number of retries reached");
-      throw error;
+
+  let finalError: unknown;
+  for (let try_ = 1; try_ <= maxTries; try_++) {
+    try {
+      const timedFn = () => promiseTimeout(fn(), timeout);
+      const result = await timedFn();
+      return { result: result, tries: try_ };
+    } catch (error) {
+      logger.warn(
+        `retryAsyncFunction: error on try ${try_} / ${maxTries}: ${error}`
+      );
+      if (try_ < maxTries) {
+        await sleep(delay);
+        delay = delayIterator(delay);
+      } else {
+        logger.error(
+          `retryAsyncFunction: maximum number of retries reached after ${maxTries} tries`
+        );
+        finalError = error;
+      }
     }
   }
+  throw finalError;
 }
 
 /**
