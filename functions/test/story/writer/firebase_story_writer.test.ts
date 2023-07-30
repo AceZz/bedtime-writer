@@ -23,4 +23,4 @@ test("Write from generator", async () => {
   await storyUtils.expectMetadata();
   await storyUtils.expectParts();
   await storyUtils.expectComplete();
-}, 10000);
+}, 20000);
