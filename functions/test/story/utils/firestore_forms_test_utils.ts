@@ -34,6 +34,11 @@ const SERIALIZED_FORM_0 = {
   question1Choices: ["choice1"],
 };
 
+const CHOICES_COMBINATIONS_0 = [
+  ["choice1", "choice1"],
+  ["choice2", "choice1"],
+];
+
 /**
  * Works with QUESTIONS_0.
  */
@@ -76,6 +81,10 @@ export const FORM_3 = new StoryForm(
 export class FirestoreFormsTestUtils {
   constructor(readonly paths: FirestorePaths) {}
 
+  get collection(): FirestoreStoryForms {
+    return new FirestoreStoryForms(this.paths);
+  }
+
   get reader(): FirestoreFormReader {
     return new FirestoreFormReader(this.paths);
   }
@@ -95,6 +104,10 @@ export class FirestoreFormsTestUtils {
   collectionRef(): CollectionReference {
     const forms = new FirestoreStoryForms(this.paths);
     return forms.formsRef();
+  }
+
+  choicesCombinations(): string[][] {
+    return CHOICES_COMBINATIONS_0;
   }
 
   /**
