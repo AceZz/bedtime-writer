@@ -143,10 +143,8 @@ export class StoryCacheV1Manager implements StoryCacheManager {
     };
 
     //TODO: make this env variables
-    const retries = 2;
-    const delay = 1000;
-    const timeout = 120000;
-    await retryAsyncFunction(promiseFn, retries, delay, timeout);
+    const params = { maxTries: 2, timeout: 120000, delay: 1000 };
+    await retryAsyncFunction(promiseFn, params);
   }
 
   private async checkStoriesNumber(storyDocs: string[]): Promise<void> {
