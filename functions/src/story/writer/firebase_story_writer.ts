@@ -8,6 +8,8 @@ import { StoryWriter } from "./story_writer";
 import { StoryStatus } from "../story_status";
 import { valueOrNull } from "./utils";
 import { FirestoreStories } from "../../firebase/firestore_stories";
+import { StoryGenerator } from "../generator";
+import { logger } from "../../logger";
 
 /**
  * The Firestore document has the following schema:
@@ -49,6 +51,27 @@ export class FirebaseStoryWriter implements StoryWriter {
   ) {
     this.stories = stories;
     this.parts = [];
+  }
+
+  async writeFromGenerator(generator: StoryGenerator): Promise<string> {
+    const storyId = await this.writeMetadata();
+
+    try {
+      // Write story to database part after part
+      for await (const part of generator.storyParts()) {
+        await this.writePart(part);
+      }
+      await this.writeComplete();
+      logger.info(
+        `FirebaseStoryWriter: story ${this.storyId} was generated and added to Firestore`
+      );
+    } catch (error) {
+      await this.writeError();
+      logger.error(
+        `FirebaseStoryWriter: story ${this.storyId} created by user ${this.metadata.author} encountered an error: ${error}`
+      );
+    }
+    return storyId;
   }
 
   async writeMetadata(): Promise<string> {

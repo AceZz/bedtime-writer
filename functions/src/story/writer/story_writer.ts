@@ -1,9 +1,15 @@
+import { StoryGenerator } from "../generator";
 import { StoryPart } from "../story_part";
 
 /**
  * Interface to write stories to some output.
  */
 export interface StoryWriter {
+  /**
+   * Write end-to-end a story from a generator and return its id.
+   */
+  writeFromGenerator(generator: StoryGenerator): Promise<string>;
+
   /**
    * Write the metadata of a new story and return its id.
    */
