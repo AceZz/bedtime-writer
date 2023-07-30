@@ -20,6 +20,7 @@ test("Write from generator", async () => {
 
   await writer.writeFromGenerator(generator);
 
-  await storyUtils.expectComplete();
+  await storyUtils.expectMetadata();
   await storyUtils.expectParts();
+  await storyUtils.expectComplete();
 });

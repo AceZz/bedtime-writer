@@ -87,6 +87,12 @@ export class FirestoreStoryTestUtils {
     expect(data?.parts.length).toBeGreaterThanOrEqual(1);
   }
 
+  async expectMetadata(): Promise<void> {
+    const data = await this.getStoryData();
+    expect(data?.isFavorite).toBe(METADATA_1.isFavorite);
+    expect(data?.title).toBe(METADATA_1.title);
+  }
+
   /**
    * Delete the collection.
    *
