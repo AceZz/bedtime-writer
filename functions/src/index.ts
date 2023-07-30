@@ -127,26 +127,10 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
     storyId
   );
 
-  await writer.writeMetadata();
+  await writer.writeFromGenerator(generator);
 
-  try {
-    // Write story to database part after part
-    for await (const part of generator.storyParts()) {
-      await writer.writePart(part);
-    }
-    await writer.writeComplete();
-    logger.info(
-      `createClassicStory: story ${storyId} was generated and added to Firestore`
-    );
-
-    const userStatsManager = new FirestoreUserStatsManager();
-    userStatsManager.updateStatsAfterStory(request.author);
-  } catch (error) {
-    await writer.writeError();
-    logger.error(
-      `createClassicStory: story ${storyId} created by user ${request.author} encountered an error: ${error}`
-    );
-  }
+  const userStatsManager = new FirestoreUserStatsManager();
+  userStatsManager.updateStatsAfterStory(request.author);
 }
 
 function getRateLimiter(limit: number): RateLimiter {
