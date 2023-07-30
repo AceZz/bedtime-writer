@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../backend/concrete.dart';
 import '../../backend/index.dart';
 
 const List<String> _styles = [
@@ -17,18 +18,18 @@ final _getRandomStyle = () => _styles[Random().nextInt(_styles.length)];
 /// A state that contains a [StoryForm] and a [StoryAnswers].
 @immutable
 class CreateStoryState {
-  final StoryForm storyForm;
+  final StoryForm? _storyForm;
   final StoryAnswers storyAnswers;
   final int currentQuestionIndex;
 
   CreateStoryState._internal(
-    this.storyForm,
+    this._storyForm,
     this.storyAnswers,
     this.currentQuestionIndex,
   );
 
   factory CreateStoryState({
-    required StoryForm storyForm,
+    required StoryForm? storyForm,
     required int duration,
   }) {
     final Map<String, dynamic> answers = {
@@ -43,6 +44,11 @@ class CreateStoryState {
     );
   }
 
+  StoryForm get storyForm => _storyForm!;
+
+  /// If true, the story form has been loaded and can be used.
+  bool get hasStoryForm => _storyForm != null;
+
   bool get hasRemainingQuestions =>
       currentQuestionIndex < storyForm.questions.length;
 
@@ -55,7 +61,7 @@ class CreateStoryState {
     if (!hasRemainingQuestions) return this;
 
     return CreateStoryState._internal(
-      storyForm,
+      _storyForm,
       storyAnswers.answer(currentQuestion, choice),
       currentQuestionIndex + 1,
     );
@@ -66,16 +72,19 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
   final Ref ref;
 
   CreateStoryStateNotifier({required this.ref})
-      : super(CreateStoryState(
-          storyForm: ref.read(storyFormProvider),
-          duration: 5,
-        ));
+      : super(CreateStoryState(storyForm: null, duration: 5));
 
   void reset() {
     final Preferences preferences = ref.read(preferencesProvider);
 
+    state = CreateStoryState(storyForm: null, duration: preferences.duration);
+  }
+
+  Future<void> loadStoryForm() async {
+    final Preferences preferences = ref.read(preferencesProvider);
+
     state = CreateStoryState(
-      storyForm: ref.read(storyFormProvider),
+      storyForm: await getCurrentStoryForm(),
       duration: preferences.duration,
     );
   }

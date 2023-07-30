@@ -13,14 +13,6 @@ import 'firebase_options.dart';
 import 'router.dart';
 import 'theme.dart';
 
-/// Temporary class.
-class _StoryForm implements StoryForm {
-  @override
-  final List<Question> questions;
-
-  _StoryForm({required this.questions});
-}
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -51,12 +43,10 @@ void main() async {
 
   // Load the overridable providers.
   final sharedPreferences = await SharedPreferences.getInstance();
-  final storyForm = _StoryForm(questions: []);
   runApp(
     ProviderScope(
       overrides: [
         sharedPreferencesBaseProvider.overrideWithValue(sharedPreferences),
-        storyFormProvider.overrideWithValue(storyForm),
       ],
       child: MyApp(),
     ),

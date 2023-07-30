@@ -1,13 +1,21 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../story_form.dart';
 import 'firebase.dart';
 
-final storyFormProvider =
-    Provider<FirebaseStoryForm>((ref) => throw UnimplementedError());
+Future<FirebaseStoryForm> firebaseGetCurrentStoryForm() async {
+  // The last story form that has started.
+  final documents = await firebaseFirestore
+      .collection(STORY_FORMS)
+      .orderBy('start')
+      .where('start', isLessThanOrEqualTo: DateTime.now())
+      .limitToLast(1)
+      .get();
+  final id = documents.docs[0].id;
+  return FirebaseStoryForm.get(id);
+}
 
 /// Firebase implementation of [StoryForm].
 class FirebaseStoryForm implements StoryForm {

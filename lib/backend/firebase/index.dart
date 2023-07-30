@@ -7,5 +7,6 @@ export 'story.dart'
         firebaseStoryProvider,
         firebaseStoryStatusProvider,
         firebaseUserStoriesProvider;
+export 'story_form.dart' show firebaseGetCurrentStoryForm;
 export 'story_part.dart' show firebaseStoryPartProvider;
 export 'user.dart' show getFirebaseUser, firebaseResetPassword;

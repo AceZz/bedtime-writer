@@ -37,6 +37,18 @@ class CreateStoryScreen extends ConsumerWidget {
         ? "Your storytelling magic has reached its limit. Sign in to discover a new set of stories."
         : "Your storytelling magic has reached its limit. Come back to Dreamy Tales tomorrow to discover a new set of stories.";
 
+    // Loads the [StoryForm] if needed.
+    if (!state.hasStoryForm) {
+      return FutureBuilder(
+        future: ref.read(createStoryStateProvider.notifier).loadStoryForm(),
+        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+          return _LoadingScreen(
+            firstText: "Please wait while we are crafting magical questions...",
+          );
+        },
+      );
+    }
+
     // Checks on stories limit and displays a question
     if (state.hasRemainingQuestions) {
       nextScreen = _QuestionScreen(question: state.currentQuestion);
