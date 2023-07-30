@@ -130,7 +130,7 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
   await writer.writeFromGenerator(generator);
 
   const userStatsManager = new FirestoreUserStatsManager();
-  userStatsManager.updateStatsAfterStory(request.author);
+  await userStatsManager.updateStatsAfterStory(request.author);
 }
 
 function getRateLimiter(limit: number): RateLimiter {
