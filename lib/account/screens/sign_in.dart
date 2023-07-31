@@ -1,3 +1,4 @@
+import 'package:bedtime_writer/widgets/app_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -348,27 +349,24 @@ void _showResetPasswordConfirmationAlertDialog({
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      double deviceWidth = MediaQuery.of(context).size.width;
-
-      return AlertDialog(
-        title: Text('Success'),
-        backgroundColor: Theme.of(context).colorScheme.background,
-        content: Container(
-          width: 0.6 * deviceWidth,
+      String titleText = 'Success';
+      Widget content = Text(
+        'We sent you an email to reset your password.',
+        style: Theme.of(context).primaryTextTheme.bodySmall,
+      );
+      List<Widget> actions = <Widget>[
+        TextButton(
+          onPressed: context.pop,
           child: Text(
-            'We sent you an email to reset your password.',
+            'Ok',
             style: Theme.of(context).primaryTextTheme.bodySmall,
           ),
         ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: context.pop,
-            child: Text(
-              'Ok',
-              style: Theme.of(context).primaryTextTheme.bodySmall,
-            ),
-          ),
-        ],
+      ];
+      return AppAlertDialog(
+        titleText: titleText,
+        content: content,
+        actions: actions,
       );
     },
   );
@@ -392,8 +390,6 @@ class _AlertDialogResetPasswordState extends State<_AlertDialogResetPassword> {
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-
     Widget alertTextWidget = Text(
       _alertText,
       textAlign: TextAlign.center,
@@ -426,37 +422,37 @@ class _AlertDialogResetPasswordState extends State<_AlertDialogResetPassword> {
       }
     }
 
-    return AlertDialog(
-      title: Text('Reset your password'),
-      backgroundColor: Theme.of(context).colorScheme.background,
-      content: Container(
-        width: 0.6 * deviceWidth,
-        child: SingleChildScrollView(
-          child: ListBody(
-            children: [
-              alertTextWidget,
-              SizedBox(height: 10),
-              emailTextField,
-            ],
-          ),
+    String titleText = 'Reset your password';
+    Widget content = SingleChildScrollView(
+      child: ListBody(
+        children: [
+          alertTextWidget,
+          SizedBox(height: 10),
+          emailTextField,
+        ],
+      ),
+    );
+    List<Widget> actions = <Widget>[
+      TextButton(
+        onPressed: _submitResetPassword,
+        child: Text(
+          'Submit',
+          style: Theme.of(context).primaryTextTheme.bodySmall,
         ),
       ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: _submitResetPassword,
-          child: Text(
-            'Submit',
-            style: Theme.of(context).primaryTextTheme.bodySmall,
-          ),
+      TextButton(
+        onPressed: context.pop,
+        child: Text(
+          'Cancel',
+          style: Theme.of(context).primaryTextTheme.bodySmall,
         ),
-        TextButton(
-          onPressed: context.pop,
-          child: Text(
-            'Cancel',
-            style: Theme.of(context).primaryTextTheme.bodySmall,
-          ),
-        ),
-      ],
+      ),
+    ];
+
+    return AppAlertDialog(
+      titleText: titleText,
+      content: content,
+      actions: actions,
     );
   }
 }
