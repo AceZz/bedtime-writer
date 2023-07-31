@@ -17,7 +17,8 @@
     "deploy_hosting_dev": "firebase hosting:channel:deploy preview --expires 7d",
     "set_story_questions": "node lib/src/admin/set_story_questions.js",
     "add_story_form": "node lib/src/admin/add_story_form.js",
-    "compress_story_images": "node lib/src/admin/compress_story_images.js"
+    "compress_story_images": "node lib/src/admin/compress_story_images.js",
+    "generate_story_cache": "node lib/src/admin/generate_story_cache.js"
   },
   "main": "lib/src/index.js",
   "dependencies": {

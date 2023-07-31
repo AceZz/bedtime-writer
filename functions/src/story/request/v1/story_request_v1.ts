@@ -3,6 +3,7 @@ import { StoryRequest } from "../story_request";
 
 export interface StoryRequestV1Data {
   readonly author: string;
+  readonly formId?: string;
   readonly duration: number;
   readonly style: string;
   readonly characterName: string;

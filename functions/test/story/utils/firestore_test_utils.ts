@@ -1,4 +1,5 @@
 import { FirestorePaths } from "../../../src/firebase/firestore_paths";
+import { FirestoreCacheTestUtils } from "./firestore_cache_test_utils";
 import { FirestoreFormsTestUtils } from "./firestore_forms_test_utils";
 import { FirestoreQuestionsTestUtils } from "./firestore_questions_test_utils";
 import { FirestoreStoryTestUtils } from "./firestore_story_test_utils";
@@ -15,11 +16,13 @@ export class FirestoreTestUtils {
   questions: FirestoreQuestionsTestUtils;
   forms: FirestoreFormsTestUtils;
   story: FirestoreStoryTestUtils;
+  cache: FirestoreCacheTestUtils;
 
   constructor(readonly id: string) {
     this.paths = new FirestorePaths(`test_${id}`);
     this.questions = new FirestoreQuestionsTestUtils(this.paths);
     this.forms = new FirestoreFormsTestUtils(this.paths);
     this.story = new FirestoreStoryTestUtils(this.paths);
+    this.cache = new FirestoreCacheTestUtils(this.paths);
   }
 }

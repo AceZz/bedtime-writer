@@ -9,7 +9,7 @@ export class StoryRequestV1Manager
   implements StoryRequestManager<StoryRequestV1>
 {
   private firestoreConverter: StoryRequestV1FirestoreConverter;
-  private jsonConverter: StoryRequestV1JsonConverter;
+  readonly jsonConverter: StoryRequestV1JsonConverter;
 
   constructor(stories: FirestoreStories) {
     this.firestoreConverter = new StoryRequestV1FirestoreConverter(stories);
@@ -18,6 +18,10 @@ export class StoryRequestV1Manager
 
   async get(id: string): Promise<StoryRequestV1> {
     return this.firestoreConverter.get(id);
+  }
+
+  getVersion(): string {
+    return "v1";
   }
 
   create(logic: string, data: object): Promise<string> {
