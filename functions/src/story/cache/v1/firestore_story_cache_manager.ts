@@ -9,10 +9,9 @@ import { cartesianProduct } from "../utils";
 import { getRandomDuration, getRandomStyle } from "../../story_utils";
 import { FirestoreStoryCache } from "../../../firebase/firestore_story_cache";
 import { FirestorePaths } from "../../../firebase/firestore_paths";
-import { FirestoreStoryForms } from "../../../firebase/firestore_story_forms";
-import { retryAsyncFunction } from "../../../utils";
+import { parseEnvAsNumber, retryAsyncFunction } from "../../../utils";
 
-export const CACHE_AUTHOR = "@CACHE_MANAGER";
+export const CACHE_AUTHOR = "@CACHE_V1_MANAGER";
 
 /**
  * Interface to manage caching of stories.
@@ -23,7 +22,6 @@ export class StoryCacheV1Manager implements StoryCacheManager {
   private textApi: TextApi;
   private imageApi: ImageApi;
   private stories: FirestoreStoryCache;
-  private forms: FirestoreStoryForms;
 
   constructor(
     formId: string,
@@ -35,7 +33,6 @@ export class StoryCacheV1Manager implements StoryCacheManager {
     this.textApi = textApi;
     this.imageApi = imageApi;
     this.stories = new FirestoreStoryCache(paths);
-    this.forms = new FirestoreStoryForms(paths);
     this.requestManager = new StoryRequestV1Manager(this.stories); //TODO: update below using this new property
   }
 
@@ -88,7 +85,6 @@ export class StoryCacheV1Manager implements StoryCacheManager {
     await Promise.all(promises);
   }
 
-  //TODO: write test
   private async cacheStory(request: StoryRequestV1): Promise<void> {
     const promiseFn = async () => {
       const storyId = await this.requestManager.create(
@@ -111,8 +107,10 @@ export class StoryCacheV1Manager implements StoryCacheManager {
       await writer.writeFromGenerator(generator);
     };
 
-    //TODO: make this env variables
-    const params = { maxTries: 2, timeout: 120000, delay: 1000 };
+    const maxTries = parseEnvAsNumber("CACHE_RETRY_MAX_TRIES", 3);
+    const timeout = parseEnvAsNumber("CACHE_RETRY_TIMEOUT", 120000);
+    const delay = parseEnvAsNumber("CACHE_RETRY_DELAY", 1000);
+    const params = { maxTries: maxTries, timeout: timeout, delay: delay };
     await retryAsyncFunction(promiseFn, params);
   }
-  
+}
