@@ -4,7 +4,7 @@ import {
   Firestore,
   getFirestore,
 } from "firebase-admin/firestore";
-import { cartesianProduct } from "../story/cache/utils";
+import { StoryForm } from "../story/story_form";
 import { FirestorePaths } from "./firestore_paths";
 
 /**
