@@ -1,4 +1,3 @@
-import 'package:bedtime_writer/widgets/app_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +8,7 @@ import '../../backend/user.dart';
 import '../../widgets/index.dart';
 import '../../backend/index.dart';
 import '../../widgets/sign_in.dart';
+import '../../widgets/app_alert_dialog.dart';
 import '../../widgets/app_text_field.dart';
 
 /// Asks the user to sign in and redirects to [redirect].
@@ -349,7 +349,7 @@ void _showResetPasswordConfirmationAlertDialog({
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      String titleText = 'Success';
+      const title = 'Success';
       Widget content = Text(
         'We sent you an email to reset your password.',
         style: Theme.of(context).primaryTextTheme.bodySmall,
@@ -364,7 +364,7 @@ void _showResetPasswordConfirmationAlertDialog({
         ),
       ];
       return AppAlertDialog(
-        titleText: titleText,
+        title: title,
         content: content,
         actions: actions,
       );
@@ -422,7 +422,7 @@ class _AlertDialogResetPasswordState extends State<_AlertDialogResetPassword> {
       }
     }
 
-    String titleText = 'Reset your password';
+    const titleText = 'Reset your password';
     Widget content = SingleChildScrollView(
       child: ListBody(
         children: [
@@ -450,7 +450,7 @@ class _AlertDialogResetPasswordState extends State<_AlertDialogResetPassword> {
     ];
 
     return AppAlertDialog(
-      titleText: titleText,
+      title: titleText,
       content: content,
       actions: actions,
     );
