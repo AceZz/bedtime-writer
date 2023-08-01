@@ -51,7 +51,6 @@ export class StoryCacheV1Manager implements StoryCacheManager {
     await Promise.all(promises);
   }
 
-  //TODO: write test
   private generateRequest(
     questions: string[],
     formResponse: string[]
