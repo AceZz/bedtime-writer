@@ -11,13 +11,16 @@ beforeAll(() => {
 
 beforeEach(async () => await utils.deleteCollection());
 
-test("FirestoreStoryForms: ChoicesCombinations", async () => {
+test("FirestoreStoryForms returns all possible form responses", async () => {
   const serializedSamples = utils.serializedSamples();
 
   const docRef = await utils.collectionRef().add(serializedSamples[0]);
 
-  const actual = await utils.collection.getChoicesCombinations(docRef.id);
+  const { questions: actualQuestions, formResponses: actualFormResponses } =
+    await utils.collection.getAllFormResponses(docRef.id);
 
-  const expected = utils.choicesCombinations();
-  expect(actual.sort()).toEqual(expected.sort());
+  const expectedQuestions = utils.questions();
+  const expectedFormResponses = utils.formResponses();
+  expect(actualQuestions).toEqual(expectedQuestions);
+  expect(actualFormResponses).toEqual(expectedFormResponses);
 });
