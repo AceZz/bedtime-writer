@@ -18,12 +18,11 @@ const DEFAULT_YAML_PATH = "admin_data/story/questions.yaml";
 main().then(() => process.exit(0));
 
 async function main() {
+  initFirebase();
   const paths = new FirestorePaths();
   const yamlPath = getYamlPath();
 
   if (await confirm(paths, yamlPath)) {
-    initFirebase();
-
     const reader = new YAMLQuestionReader(yamlPath);
     const questions = await reader.read();
 
