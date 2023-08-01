@@ -8,11 +8,7 @@ import { StoryCacheManager } from "../story_cache_manager";
 import { getRandomDuration, getRandomStyle } from "../../story_utils";
 import { FirestoreStoryCache } from "../../../firebase/firestore_story_cache";
 import { FirestorePaths } from "../../../firebase/firestore_paths";
-import {
-  cartesianProduct,
-  parseEnvAsNumber,
-  retryAsyncFunction,
-} from "../../../utils";
+import { parseEnvAsNumber, retryAsyncFunction } from "../../../utils";
 
 export const CACHE_AUTHOR = "@CACHE_V1_MANAGER";
 
@@ -40,44 +36,11 @@ export class StoryCacheV1Manager implements StoryCacheManager {
   }
 
   generateRequests(form: StoryForm): StoryRequestV1[] {
-    const questionsToChoices = form.questionsToChoices;
+    const { questions, formResponses } = form.getAllFormResponses();
 
-    // Unpack the questions map to arrays for convenience
-    const choicesArrays: string[][] = [];
-    const questionsArray: string[] = [];
-    for (const [question, choices] of questionsToChoices) {
-      questionsArray.push(question);
-      choicesArrays.push(choices);
-    }
-
-    // Compute all possibilities of choices
-    const choicesCombinations = cartesianProduct(choicesArrays);
-
-    // Pick one possible choices combination
-    const requests = choicesCombinations.map((choicesCombination) => {
-      const entriesChoicesCombination = questionsArray.map(
-        (question, index) => [question, choicesCombination[index]]
-      );
-
-      const choicesObject = Object.fromEntries(entriesChoicesCombination);
-
-      const logicObject = {
-        author: CACHE_AUTHOR,
-        duration: getRandomDuration(),
-        style: getRandomStyle(),
-        ...choicesObject,
-      };
-
-      const requestData = { formId: this.formId, ...logicObject };
-
-      // Ensure our story request is valid
-      const request = this.requestManager.jsonConverter.fromJson(
-        CLASSIC_LOGIC,
-        requestData
-      );
-      return request;
+    const requests = formResponses.map((formResponse) => {
+      return this.generateRequest(questions, formResponse);
     });
-
     return requests;
   }
 
@@ -86,6 +49,35 @@ export class StoryCacheV1Manager implements StoryCacheManager {
       await this.cacheStory(request);
     });
     await Promise.all(promises);
+  }
+
+  //TODO: write test
+  private generateRequest(
+    questions: string[],
+    formResponse: string[]
+  ): StoryRequestV1 {
+    const requestData: { [key: string]: string | number } = {
+      formId: this.formId,
+      author: CACHE_AUTHOR,
+      duration: getRandomDuration(),
+      style: getRandomStyle(),
+    };
+    if (questions.length !== formResponse.length) {
+      throw new Error(
+        "generateRequest: length of questions and formResponse must be the same"
+      );
+    }
+
+    for (let i = 0; i < questions.length; i++) {
+      requestData[questions[i]] = formResponse[i];
+    }
+
+    // Ensure our story request is valid
+    const request = this.requestManager.jsonConverter.fromJson(
+      CLASSIC_LOGIC,
+      requestData
+    );
+    return request;
   }
 
   private async cacheStory(request: StoryRequestV1): Promise<void> {
