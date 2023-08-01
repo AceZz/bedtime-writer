@@ -1,22 +1,22 @@
 /**
- * Create the cartesian product of an array of string arrays. Throw an error if one array is empty.
+ * Create the cartesian product of an array of <T> arrays. Throw an error if one array is empty.
  */
-export function cartesianProduct(arrays: string[][]): string[][] {
+export function cartesianProduct<T>(arrays: T[][]): T[][] {
   if (arrays.length === 0) {
     throw new Error(
-      "generateStoriesCache: No string array was provided for the cartesian product of choices."
+      "cartesianProduct: No string array was provided for the cartesian product of choices."
     );
   }
 
   if (arrays.some((subArray) => subArray.length === 0)) {
     throw new Error(
-      "generateStoriesCache: Empty arrays are not allowed for the cartesian product of choices."
+      "cartesianProduct: Empty arrays are not allowed for the cartesian product of choices."
     );
   }
 
-  return arrays.reduce<string[][]>(
-    (a: string[][], b: string[]) => {
-      return a.flatMap((d: string[]) => b.map((e: string) => [...d, e]));
+  return arrays.reduce<T[][]>(
+    (a: T[][], b: T[]) => {
+      return a.flatMap((d: T[]) => b.map((e: T) => [...d, e]));
     },
     [[]]
   );
