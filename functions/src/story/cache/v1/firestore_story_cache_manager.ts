@@ -33,10 +33,10 @@ export class StoryCacheV1Manager implements StoryCacheManager {
     this.textApi = textApi;
     this.imageApi = imageApi;
     this.stories = new FirestoreStoryCache(paths);
-    this.requestManager = new StoryRequestV1Manager(this.stories); //TODO: update below using this new property
+    this.requestManager = new StoryRequestV1Manager(this.stories);
   }
 
-  generateRequestsFromForm(form: StoryForm): StoryRequestV1[] {
+  generateRequests(form: StoryForm): StoryRequestV1[] {
     const questions = form.questions;
 
     // Unpack the questions map to arrays for convenience

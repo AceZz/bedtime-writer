@@ -67,7 +67,7 @@ tests and the admin tools.
     * If unspecified or not `true`, the tests will fail and the admin tools will write to the remote
       database.
 * `CACHE_RETRY_MAX_TRIES`
-  * between `1` and `10`
+  * between `1` and `10` (default `3`)
   * The maximum number of tries (api calls) the cache manager makes for a given story, as one may
     fail due to a network or other issues.
 * `CACHE_RETRY_TIMEOUT`

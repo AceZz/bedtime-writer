@@ -33,9 +33,7 @@ async function main() {
       textApi,
       imageApi
     );
-    const requests = storyCacheManager.generateRequestsFromForm(
-      formWithId.storyForm
-    );
+    const requests = storyCacheManager.generateRequests(formWithId.storyForm);
 
     await storyCacheManager.cacheStories(requests);
   }

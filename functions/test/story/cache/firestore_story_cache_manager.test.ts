@@ -19,7 +19,7 @@ describe("Firestore story cache manager", () => {
     const expected = cache.requestsSample();
     const storyCacheManager = cache.manager;
 
-    const actual = storyCacheManager.generateRequestsFromForm(input);
+    const actual = storyCacheManager.generateRequests(input);
 
     cache.expectSameRequestsNoRandom(actual, expected);
   });
