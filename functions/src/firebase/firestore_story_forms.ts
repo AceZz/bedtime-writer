@@ -48,17 +48,16 @@ export class FirestoreStoryForms {
     const formDoc = await this.formRef(formId).get();
     const formData = formDoc.data();
 
-    const questions: string[] = [];
-    const choices: string[][] = [];
+    const questionsToChoices: Map<string, string[]> = new Map();
     if (formData != undefined) {
       const numQuestions = formData.numQuestions;
       for (let i = 0; i < numQuestions; i++) {
-        questions.push(formData[`question${i}`]);
-        choices.push(formData[`question${i}Choices`]);
+        const question = formData[`question${i}`];
+        const choices = formData[`question${i}Choices`];
+        questionsToChoices.set(question, choices);
       }
     }
 
-    const formResponses = cartesianProduct(choices);
-    return { questions: questions, formResponses: formResponses };
+    return StoryForm.getAllFormResponses(questionsToChoices);
   }
 }

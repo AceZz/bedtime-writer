@@ -34,7 +34,7 @@ export class FirebaseFormWriter implements Writer<StoryForm> {
 
     // Check and write the questions.
     let index = 0;
-    for (const [questionId, choices] of form.questions) {
+    for (const [questionId, choices] of form.questionsToChoices) {
       this.checkQuestionForm(questionId, choices, questions);
 
       data[`question${index}`] = questionId;
