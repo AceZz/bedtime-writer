@@ -350,12 +350,12 @@ void _showAgeConfirmAlertDialog({
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          String titleText = 'Friendly disclaimer';
-          Widget content = Text(
+          const title = 'Friendly disclaimer';
+          final content = Text(
             'Dreamy Tales is a magical place for all ages, but the email linked to your account should be owned by an adult. Thanks for confirming!',
             style: Theme.of(context).primaryTextTheme.bodySmall,
           );
-          List<Widget> actions = <Widget>[
+          final actions = <Widget>[
             TextButton(
               onPressed: () async {
                 ref.read(preferencesProvider.notifier).updateAgeConfirmed(true);
@@ -377,7 +377,7 @@ void _showAgeConfirmAlertDialog({
             ),
           ];
           return AppAlertDialog(
-            titleText: titleText,
+            title: title,
             content: content,
             actions: actions,
           );
@@ -414,7 +414,7 @@ void _showResetPasswordConfirmationAlertDialog({
           child: Text(
             'Ok',
             style: Theme.of(context).primaryTextTheme.bodySmall,
-          ),
+          )
         ),
       ];
       return AppAlertDialog(
