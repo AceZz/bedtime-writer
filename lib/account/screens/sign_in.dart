@@ -414,7 +414,7 @@ void _showResetPasswordConfirmationAlertDialog({
           child: Text(
             'Ok',
             style: Theme.of(context).primaryTextTheme.bodySmall,
-          )
+          ),
         ),
       ];
       return AppAlertDialog(
