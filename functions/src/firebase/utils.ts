@@ -16,6 +16,13 @@ export function initFirebase(forceEmulators = false) {
 }
 
 /**
+ * Load the local environment variables.
+ */
+export function initEnv() {
+  config({ path: ".env.local" });
+}
+
+/**
  * Configure the Firebase emulators if USE_FIREBASE_EMULATORS is set to true.
  *
  * This function must be called before `initializeApp()` of `firebase-admin`.
@@ -37,11 +44,8 @@ function configureFirebaseEmulators(forceEmulators: boolean) {
 /**
  * Return true if Firebase emulators are used (i.e. the environment variable
  * `USE_FIREBASE_EMULATORS` is set to `true`).
- *
- * If there is a `env.local` file, it is loaded first.
  */
 export function firebaseEmulatorsAreUsed(): boolean {
-  config({ path: ".env.local" });
   return process.env.USE_FIREBASE_EMULATORS?.toLowerCase() === "true";
 }
 
