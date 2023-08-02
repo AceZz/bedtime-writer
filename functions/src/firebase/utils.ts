@@ -8,7 +8,6 @@ import { applicationDefault, initializeApp } from "firebase-admin/app";
  * Initialize the Firebase application, configuring the emulators if needed.
  */
 export function initFirebase(forceEmulators = false) {
-  initEnv();
   configureFirebaseEmulators(forceEmulators);
   checkFirebaseCredentialsEnv();
   initializeApp({
@@ -17,13 +16,10 @@ export function initFirebase(forceEmulators = false) {
 }
 
 /**
- * Load the environment variables.
- *
- * Local variables are loaded first from .env.local, then .env fills the rest.
+ * Load the local environment variables.
  */
-function initEnv() {
+export function initEnv() {
   config({ path: ".env.local" });
-  config({ path: ".env" }); // does not override previously loaded env values
 }
 
 /**
@@ -48,8 +44,6 @@ function configureFirebaseEmulators(forceEmulators: boolean) {
 /**
  * Return true if Firebase emulators are used (i.e. the environment variable
  * `USE_FIREBASE_EMULATORS` is set to `true`).
- *
- * If there is a `env.local` file, it is loaded first.
  */
 export function firebaseEmulatorsAreUsed(): boolean {
   return process.env.USE_FIREBASE_EMULATORS?.toLowerCase() === "true";
