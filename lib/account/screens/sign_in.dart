@@ -350,11 +350,11 @@ void _showResetPasswordConfirmationAlertDialog({
     context: context,
     builder: (BuildContext context) {
       const title = 'Success';
-      Widget content = Text(
+      final content = Text(
         'We sent you an email to reset your password.',
         style: Theme.of(context).primaryTextTheme.bodySmall,
       );
-      List<Widget> actions = <Widget>[
+      final actions = <Widget>[
         TextButton(
           onPressed: context.pop,
           child: Text(
@@ -423,7 +423,7 @@ class _AlertDialogResetPasswordState extends State<_AlertDialogResetPassword> {
     }
 
     const titleText = 'Reset your password';
-    Widget content = SingleChildScrollView(
+    final content = SingleChildScrollView(
       child: ListBody(
         children: [
           alertTextWidget,
@@ -432,7 +432,7 @@ class _AlertDialogResetPasswordState extends State<_AlertDialogResetPassword> {
         ],
       ),
     );
-    List<Widget> actions = <Widget>[
+    final actions = <Widget>[
       TextButton(
         onPressed: _submitResetPassword,
         child: Text(
