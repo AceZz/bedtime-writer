@@ -4,11 +4,34 @@ import {
   promiseTimeout,
   sleep,
   retryAsyncFunction,
+  cartesianProduct,
 } from "../src/utils";
 import { FAKE_IMAGE_BYTES } from "../src/story/generator/image_api/fake_image_api";
 
 test("compressToPng", async () => {
   await compressToPng(FAKE_IMAGE_BYTES, {});
+});
+
+test("Should return the cartesian product", () => {
+  const input = [
+    ["a", "b"],
+    ["c", "d"],
+  ];
+  const expected = [
+    ["a", "c"],
+    ["a", "d"],
+    ["b", "c"],
+    ["b", "d"],
+  ];
+
+  const actual = cartesianProduct(input);
+
+  expect(actual.sort()).toEqual(expected.sort());
+});
+
+test("Should throw an error about the cartesian product", () => {
+  const input = [[], ["a"]];
+  expect(() => cartesianProduct(input)).toThrow();
 });
 
 test("sleep for the specified duration", async () => {
