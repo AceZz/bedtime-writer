@@ -3,6 +3,7 @@ import { FirestoreFormReader } from "../story/reader/firestore_form_reader";
 import {
   firebaseEmulatorsAreUsed,
   getFirebaseProject,
+  initEnv,
   initFirebase,
 } from "../firebase/utils";
 import { prompt } from "../utils";
@@ -16,6 +17,7 @@ main().then(() => process.exit(0));
  * Generate a classic story and add it to Firestore.
  */
 async function main() {
+  initEnv();
   const firestorePaths = new FirestorePaths();
   if (await confirm(firestorePaths)) {
     initFirebase();
