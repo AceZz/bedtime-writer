@@ -37,15 +37,11 @@ export function setsAreEqual<T>(set1: Set<T>, set2: Set<T>): boolean {
  */
 export function cartesianProduct<T>(arrays: T[][]): T[][] {
   if (arrays.length === 0) {
-    throw new Error(
-      "cartesianProduct: No string array was provided for the cartesian product of choices."
-    );
+    throw new Error("cartesianProduct: no array provided.");
   }
 
   if (arrays.some((subArray) => subArray.length === 0)) {
-    throw new Error(
-      "cartesianProduct: Empty arrays are not allowed for the cartesian product of choices."
-    );
+    throw new Error("cartesianProduct: empty arrays are not allowed.");
   }
 
   return arrays.reduce<T[][]>(

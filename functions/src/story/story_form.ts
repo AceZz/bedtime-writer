@@ -3,7 +3,7 @@ import { cartesianProduct } from "../../src/utils";
 /**
  * Stores questions and choices that should be displayed to the user.
  *
- * `questions` maps a question ID to choices IDs.
+ * `questionsToChoices` maps a question ID to its choices IDs.
  */
 export class StoryForm {
   readonly start: Date;
@@ -15,21 +15,21 @@ export class StoryForm {
     this.start = start ?? new Date();
   }
 
-  getAllFormResponses(): {
+  static getAllFormResponses(questionsToChoices: Map<string, string[]>): {
     questions: string[];
     formResponses: string[][];
   } {
-    const questions = Array.from(this.questionsToChoices.keys());
-    const choices = Array.from(this.questionsToChoices.values());
+    const questions = Array.from(questionsToChoices.keys());
+    const choices = Array.from(questionsToChoices.values());
 
     const formResponses = cartesianProduct(choices);
     return { questions: questions, formResponses: formResponses };
   }
 
-  static getAllFormResponses(questionsToChoices: Map<string, string[]>): {
+  getAllFormResponses(): {
     questions: string[];
     formResponses: string[][];
   } {
-    return new StoryForm(questionsToChoices).getAllFormResponses();
+    return StoryForm.getAllFormResponses(this.questionsToChoices);
   }
 }
