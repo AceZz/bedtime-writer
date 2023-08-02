@@ -7,6 +7,7 @@ import { prompt } from "../utils";
 import {
   firebaseEmulatorsAreUsed,
   getFirebaseProject,
+  initEnv,
   initFirebase,
 } from "../firebase/utils";
 import { FirebaseFormWriter, YAMLFormReader } from "../story";
