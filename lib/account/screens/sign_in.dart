@@ -32,6 +32,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showAgeConfirmAlertDialog(
+        context: context,
+        ref: ref,
+        cancelRedirect: '/',
+      );
+    });
   }
 
   final emailController = TextEditingController();
@@ -328,6 +335,53 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         ),
       ),
     );
+  }
+}
+
+void _showAgeConfirmAlertDialog({
+  required BuildContext context,
+  required WidgetRef ref,
+  required String cancelRedirect,
+}) {
+  // Checks if the user has already confirmed email owner age
+  final Preferences preferences = ref.read(preferencesProvider);
+  if (!preferences.ageConfirmed) {
+    // Asks to confirm
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          const title = 'Friendly disclaimer';
+          final content = Text(
+            'Dreamy Tales is a magical place for all ages, but the email linked to your account should be owned by an adult. Thanks for confirming!',
+            style: Theme.of(context).primaryTextTheme.bodySmall,
+          );
+          final actions = <Widget>[
+            TextButton(
+              onPressed: () async {
+                ref.read(preferencesProvider.notifier).updateAgeConfirmed(true);
+                context.pop();
+              },
+              child: Text(
+                'Confirm',
+                style: Theme.of(context).primaryTextTheme.bodySmall,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                context.pushReplacement(cancelRedirect);
+              },
+              child: Text(
+                'Cancel',
+                style: Theme.of(context).primaryTextTheme.bodySmall,
+              ),
+            ),
+          ];
+          return AppAlertDialog(
+            title: title,
+            content: content,
+            actions: actions,
+          );
+        });
   }
 }
 
