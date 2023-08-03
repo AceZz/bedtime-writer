@@ -8,13 +8,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class Preferences {
   static const List<int> allowedDurations = [2, 5];
 
+  final bool ageConfirmed;
   final int duration;
   final bool hasLoggedOut;
 
-  const Preferences({required this.duration, required this.hasLoggedOut});
+  const Preferences(
+      {required this.ageConfirmed,
+      required this.duration,
+      required this.hasLoggedOut});
 
-  Preferences copyWith({int? duration, bool? hasLoggedOut}) {
+  Preferences copyWith(
+      {bool? ageConfirmed, int? duration, bool? hasLoggedOut}) {
     return Preferences(
+        ageConfirmed: ageConfirmed ?? this.ageConfirmed,
         duration: duration ?? this.duration,
         hasLoggedOut: hasLoggedOut ?? this.hasLoggedOut);
   }
@@ -22,6 +28,7 @@ class Preferences {
 
 /// Used to interact with a [Preferences] object.
 abstract class PreferencesNotifier implements Notifier<Preferences> {
+  Future<void> updateAgeConfirmed(bool newAgeConfirmed);
   Future<void> updateDuration(int newDuration);
   Future<void> updateHasLoggedOut(bool hasLoggedOut);
 }
