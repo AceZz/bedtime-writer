@@ -28,9 +28,8 @@ same SHA1 fingerprint.
 5. If `.env` at project root specifies remote backend, run `npm run deploy_functions_<dev|prod>`.
 6. Delete the `build` folder.
 7. Wipe the data/cache of your device emulator.
-8. Finally run (or build) the app: `flutter run --flavor <env> -d <device-id>`.
-
-The `device-id` can be found in the second column of the output of `flutter devices`.
+8. Find the `device-id` in the second column of the output of `flutter devices`.
+9. Finally run (or build) the app: `flutter run --flavor <env> -d <device-id>`.
 
 ### Create and maintain an environment
 
