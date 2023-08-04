@@ -12,6 +12,7 @@ const SCHEMA: JSONSchemaType<StoryRequestV1Data> = {
   type: "object",
   properties: {
     author: { type: "string", maxLength: 50 },
+    formId: { type: "string", nullable: true, maxLength: 50 },
     duration: { type: "integer", exclusiveMinimum: 0, maximum: MAX_DURATION },
     style: { type: "string", maxLength: MAX_STRING_LENGTH },
     characterName: { type: "string", maxLength: MAX_STRING_LENGTH },

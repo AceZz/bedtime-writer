@@ -10,6 +10,11 @@ export interface StoryRequestManager<T extends StoryRequest> {
   get(id: string): Promise<T>;
 
   /**
+   * Retrieve requestManager version.
+   */
+  getVersion(): string;
+
+  /**
    * Create a request and return its id.
    *
    * By default, the request has a `PENDING` status.
