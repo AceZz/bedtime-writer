@@ -44,13 +44,6 @@ export class StoryCacheV1Manager implements StoryCacheManager {
     return requests;
   }
 
-  async cacheStories(requests: StoryRequestV1[]): Promise<void> {
-    const promises = requests.map(async (request) => {
-      await this.cacheStory(request);
-    });
-    await Promise.all(promises);
-  }
-
   private generateRequest(
     questions: string[],
     formResponse: string[]
@@ -77,6 +70,13 @@ export class StoryCacheV1Manager implements StoryCacheManager {
       requestData
     );
     return request;
+  }
+
+  async cacheStories(requests: StoryRequestV1[]): Promise<void> {
+    const promises = requests.map(async (request) => {
+      await this.cacheStory(request);
+    });
+    await Promise.all(promises);
   }
 
   private async cacheStory(request: StoryRequestV1): Promise<void> {

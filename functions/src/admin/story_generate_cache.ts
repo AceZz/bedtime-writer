@@ -31,7 +31,7 @@ async function main() {
     const imageApi = getImageApi();
 
     const storyCacheManager = new StoryCacheV1Manager(
-      formWithId.docId,
+      formWithId.id,
       textApi,
       imageApi
     );

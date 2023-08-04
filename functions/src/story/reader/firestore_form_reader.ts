@@ -21,18 +21,18 @@ export class FirestoreFormReader implements Reader<StoryForm[]> {
     );
   }
 
-  async readWithIds(): Promise<{ docId: string; storyForm: StoryForm }[]> {
+  async readWithIds(): Promise<{ id: string; storyForm: StoryForm }[]> {
     const snapshots = await this.collection.formsRef().get();
     return Promise.all(
       snapshots.docs.map((snapshot) => {
-        return { docId: snapshot.id, storyForm: this.readForm(snapshot) };
+        return { id: snapshot.id, storyForm: this.readForm(snapshot) };
       })
     );
   }
 
   async readMostRecentWithIds(
     n: number
-  ): Promise<{ docId: string; storyForm: StoryForm }[]> {
+  ): Promise<{ id: string; storyForm: StoryForm }[]> {
     const snapshots = await this.collection
       .formsRef()
       .orderBy("start", "desc")
@@ -40,7 +40,7 @@ export class FirestoreFormReader implements Reader<StoryForm[]> {
       .get();
     return Promise.all(
       snapshots.docs.map((snapshot) => {
-        return { docId: snapshot.id, storyForm: this.readForm(snapshot) };
+        return { id: snapshot.id, storyForm: this.readForm(snapshot) };
       })
     );
   }
