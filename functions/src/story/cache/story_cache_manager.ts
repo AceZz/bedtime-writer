@@ -8,7 +8,7 @@ export interface StoryCacheManager {
   /**
    * Get all possible requests from a given story form.
    */
-  generateRequestsFromForm(form: StoryForm): StoryRequestV1[];
+  generateRequests(form: StoryForm): StoryRequestV1[];
 
   /**
    * Cache the stories corresponding to the given requests.

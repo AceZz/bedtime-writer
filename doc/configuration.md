@@ -66,3 +66,16 @@ tests and the admin tools.
       tests (either locally or on the CI) and using the [admin](./admin.md) tools locally.
     * If unspecified or not `true`, the tests will fail and the admin tools will write to the remote
       database.
+* `CACHE_RETRY_MAX_TRIES`
+  * between `1` and `10` (default `3`)
+  * The maximum number of tries (api calls) the cache manager makes for a given story, as one may
+    fail due to a network or other issues.
+* `CACHE_RETRY_TIMEOUT`
+  * positive integer (default `120000`)
+  * The timeout in milliseconds after which the cache manager will consider a story generation to
+    be timed out.
+* `CACHE_RETRY_DELAY`
+  * positive integer (default `1000`)
+  * The delay in milliseconds between the end of the last unsuccessful story generation and the new 
+    try.
+

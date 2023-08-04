@@ -1,5 +1,5 @@
 import { describe, test, beforeAll, beforeEach } from "@jest/globals";
-import { initFirebase } from "../../../src/firebase/utils";
+import { initEnv, initFirebase } from "../../../src/firebase/utils";
 
 import { FirestoreTestUtils } from "../utils/firestore_test_utils";
 
@@ -7,6 +7,7 @@ const cache = new FirestoreTestUtils("firestore_story_cache_manager").cache;
 
 describe("Firestore story cache manager", () => {
   beforeAll(() => {
+    initEnv();
     initFirebase(true);
   });
 
@@ -19,7 +20,7 @@ describe("Firestore story cache manager", () => {
     const expected = cache.requestsSample();
     const storyCacheManager = cache.manager;
 
-    const actual = storyCacheManager.generateRequestsFromForm(input);
+    const actual = storyCacheManager.generateRequests(input);
 
     cache.expectSameRequestsNoRandom(actual, expected);
   });

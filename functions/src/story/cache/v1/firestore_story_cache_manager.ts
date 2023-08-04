@@ -5,16 +5,12 @@ import { StoryForm } from "../../story_form";
 import { StoryMetadata } from "../../story_metadata";
 import { FirebaseStoryWriter } from "../../writer";
 import { StoryCacheManager } from "../story_cache_manager";
-import { cartesianProduct } from "../utils";
 import { getRandomDuration, getRandomStyle } from "../../story_utils";
 import { FirestoreStoryCache } from "../../../firebase/firestore_story_cache";
 import { FirestorePaths } from "../../../firebase/firestore_paths";
-import { FirestoreStoryForms } from "../../../firebase/firestore_story_forms";
-import { retryAsyncFunction } from "../../../utils";
+import { parseEnvAsNumber, retryAsyncFunction } from "../../../utils";
 
-export const CACHE_AUTHOR = "@CACHE_MANAGER";
-
-//TODO: handle better request versioning, specify request manager
+export const CACHE_AUTHOR = "@CACHE_V1_MANAGER";
 
 /**
  * Interface to manage caching of stories.
@@ -25,7 +21,6 @@ export class StoryCacheV1Manager implements StoryCacheManager {
   private textApi: TextApi;
   private imageApi: ImageApi;
   private stories: FirestoreStoryCache;
-  private forms: FirestoreStoryForms;
 
   constructor(
     formId: string,
@@ -37,50 +32,44 @@ export class StoryCacheV1Manager implements StoryCacheManager {
     this.textApi = textApi;
     this.imageApi = imageApi;
     this.stories = new FirestoreStoryCache(paths);
-    this.forms = new FirestoreStoryForms(paths);
-    this.requestManager = new StoryRequestV1Manager(this.stories); //TODO: update below using this new property
+    this.requestManager = new StoryRequestV1Manager(this.stories);
   }
 
-  generateRequestsFromForm(form: StoryForm): StoryRequestV1[] {
-    const questions = form.questions;
+  generateRequests(form: StoryForm): StoryRequestV1[] {
+    const { questions, formResponses } = form.getAllFormResponses();
 
-    // Unpack the questions map to arrays for convenience
-    const choicesArrays: string[][] = [];
-    const questionsArray: string[] = [];
-    for (const [question, choices] of questions) {
-      questionsArray.push(question);
-      choicesArrays.push(choices);
+    const requests = formResponses.map((formResponse) => {
+      return this.generateRequest(questions, formResponse);
+    });
+    return requests;
+  }
+
+  private generateRequest(
+    questions: string[],
+    formResponse: string[]
+  ): StoryRequestV1 {
+    const requestData: { [key: string]: string | number } = {
+      formId: this.formId,
+      author: CACHE_AUTHOR,
+      duration: getRandomDuration(),
+      style: getRandomStyle(),
+    };
+    if (questions.length !== formResponse.length) {
+      throw new Error(
+        "generateRequest: length of questions and formResponse must be the same"
+      );
     }
 
-    // Compute all possibilities of choices
-    const choicesCombinations = cartesianProduct(choicesArrays);
+    for (let i = 0; i < questions.length; i++) {
+      requestData[questions[i]] = formResponse[i];
+    }
 
-    // Pick one possible choices combination
-    const requests = choicesCombinations.map((choicesCombination) => {
-      const entriesChoicesCombination = questionsArray.map(
-        (question, index) => [question, choicesCombination[index]]
-      );
-
-      const choicesObject = Object.fromEntries(entriesChoicesCombination);
-
-      const logicObject = {
-        author: CACHE_AUTHOR,
-        duration: getRandomDuration(),
-        style: getRandomStyle(),
-        ...choicesObject,
-      };
-
-      const requestData = { formId: this.formId, ...logicObject };
-
-      // Ensure our story request is valid
-      const request = this.requestManager.jsonConverter.fromJson(
-        CLASSIC_LOGIC,
-        requestData
-      );
-      return request;
-    });
-
-    return requests;
+    // Ensure our story request is valid
+    const request = this.requestManager.jsonConverter.fromJson(
+      CLASSIC_LOGIC,
+      requestData
+    );
+    return request;
   }
 
   async cacheStories(requests: StoryRequestV1[]): Promise<void> {
@@ -119,7 +108,6 @@ export class StoryCacheV1Manager implements StoryCacheManager {
     await Promise.all(promises);
   }
 
-  //TODO: write test
   private async cacheStory(request: StoryRequestV1): Promise<void> {
     const promiseFn = async () => {
       const storyId = await this.requestManager.create(
@@ -142,8 +130,10 @@ export class StoryCacheV1Manager implements StoryCacheManager {
       await writer.writeFromGenerator(generator);
     };
 
-    //TODO: make this env variables
-    const params = { maxTries: 2, timeout: 120000, delay: 1000 };
+    const maxTries = parseEnvAsNumber("CACHE_RETRY_MAX_TRIES", 3);
+    const timeout = parseEnvAsNumber("CACHE_RETRY_TIMEOUT", 120000);
+    const delay = parseEnvAsNumber("CACHE_RETRY_DELAY", 1000);
+    const params = { maxTries: maxTries, timeout: timeout, delay: delay };
     await retryAsyncFunction(promiseFn, params);
   }
 

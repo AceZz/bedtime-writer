@@ -1,11 +1,12 @@
 import { beforeAll, expect, beforeEach, test } from "@jest/globals";
-import { initFirebase } from "../../../src/firebase/utils";
+import { initEnv, initFirebase } from "../../../src/firebase/utils";
 import { FirestoreTestUtils } from "../utils/firestore_test_utils";
 
 const utils = new FirestoreTestUtils("form_writer");
 
 // Check we are running in emulator mode before initializing Firebase.
 beforeAll(() => {
+  initEnv();
   initFirebase(true);
 });
 

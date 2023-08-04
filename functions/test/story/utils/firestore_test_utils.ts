@@ -17,6 +17,7 @@ export class FirestoreTestUtils {
   paths: FirestorePaths;
   questions: FirestoreQuestionsTestUtils;
   story: FirestoreStoryTestUtils;
+  cache: FirestoreCacheTestUtils;
 
   constructor(readonly id: string) {
     this.paths = new FirestorePaths(`test_${id}`);
@@ -24,5 +25,6 @@ export class FirestoreTestUtils {
     this.forms = new FirestoreFormsTestUtils(this.paths);
     this.questions = new FirestoreQuestionsTestUtils(this.paths);
     this.story = new FirestoreStoryTestUtils(this.paths);
+    this.cache = new FirestoreCacheTestUtils(this.paths);
   }
 }

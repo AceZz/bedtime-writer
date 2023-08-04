@@ -33,6 +33,26 @@ export function setsAreEqual<T>(set1: Set<T>, set2: Set<T>): boolean {
 }
 
 /**
+ * Create the cartesian product of an array of <T> arrays. Throw an error if one array is empty.
+ */
+export function cartesianProduct<T>(arrays: T[][]): T[][] {
+  if (arrays.length === 0) {
+    throw new Error("cartesianProduct: no array provided.");
+  }
+
+  if (arrays.some((subArray) => subArray.length === 0)) {
+    throw new Error("cartesianProduct: empty arrays are not allowed.");
+  }
+
+  return arrays.reduce<T[][]>(
+    (a: T[][], b: T[]) => {
+      return a.flatMap((d: T[]) => b.map((e: T) => [...d, e]));
+    },
+    [[]]
+  );
+}
+
+/**
  * Ask a question to the user and return the answer.
  */
 export async function prompt(query: string): Promise<string> {

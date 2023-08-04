@@ -7,6 +7,7 @@ import { prompt } from "../utils";
 import {
   firebaseEmulatorsAreUsed,
   getFirebaseProject,
+  initEnv,
   initFirebase,
 } from "../firebase/utils";
 import { FirebaseFormWriter, YAMLFormReader } from "../story";
@@ -18,12 +19,12 @@ const DEFAULT_YAML_PATH = "admin_data/story/form.yaml";
 main().then(() => process.exit(0));
 
 async function main() {
+  initEnv();
   const paths = new FirestorePaths();
   const yamlPath = getYamlPath();
 
   if (await confirm(paths, yamlPath)) {
     initFirebase();
-
     const reader = new YAMLFormReader(yamlPath);
     const form = await reader.read();
 

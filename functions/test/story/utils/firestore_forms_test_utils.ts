@@ -34,7 +34,9 @@ const SERIALIZED_FORM_0 = {
   question1Choices: ["choice1"],
 };
 
-const CHOICES_COMBINATIONS_0 = [
+const QUESTIONS_0 = ["question1", "question2"];
+
+const FORM_RESPONSES_0 = [
   ["choice1", "choice1"],
   ["choice2", "choice1"],
 ];
@@ -106,8 +108,12 @@ export class FirestoreFormsTestUtils {
     return forms.formsRef();
   }
 
-  choicesCombinations(): string[][] {
-    return CHOICES_COMBINATIONS_0;
+  questions(): string[] {
+    return QUESTIONS_0;
+  }
+
+  formResponses(): string[][] {
+    return FORM_RESPONSES_0;
   }
 
   /**
