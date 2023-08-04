@@ -13,6 +13,7 @@ import { FirestoreStories } from "../../../firebase/firestore_stories";
  *
  * <story collection>/
  *   <story_id>:
+ *     requestVersion
  *     request {}
  *     author
  *     timestamp
@@ -52,10 +53,10 @@ export class StoryRequestV1FirestoreConverter
       author: request.author,
       timestamp: Timestamp.now(),
       status: StoryStatus.PENDING,
+      requestVersion: request.version,
       request: {
         ...request.data,
         logic: request.logic,
-        version: request.version,
       },
     };
     const document = await this.storiesRef.add(payload);

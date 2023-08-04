@@ -21,6 +21,7 @@ import { logger } from "../../logger";
  *     status
  *     timestamp (already set)
  *     title
+ *     requestVersion
  *     request {}
  *     parts = [part1_id, part2_id]
  *     images/
