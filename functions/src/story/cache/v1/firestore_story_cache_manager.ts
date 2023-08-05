@@ -111,71 +111,75 @@ export class StoryCacheV1Manager implements StoryCacheManager {
     await retryAsyncFunction(promiseFn, params);
   }
 
-  async cleanStories(): Promise<void> {}
+  //TODO: write tests
+  async cleanStories(): Promise<void> {
+    const { questions, formResponses } = await this.forms.getAllFormResponses(
+      this.formId
+    );
 
+    formResponses.forEach((formResponse) => {
+      // Only keep (at most) one story per form response.
+      let query = this.stories
+        .storiesRef()
+        .where("request.formId", "==", this.formId);
+      questions.forEach((question, i) => {
+        query = query.where(`request.${question}`, "==", formResponse[i]);
+      });
+    });
+    return new Promise((r) => r); //TODO: change
+  }
+
+  //TODO: write tests
   async checkStories(): Promise<void> {
-    const allStoryDocs = await this.stories.storiesRef().get();
-
-    const storyDocs: string[] = [];
-
-    for (const doc of allStoryDocs.docs) {
-      // Checks existence of request doc
-      await this.checkStoryRequest(doc.id);
-      // Selects story docs with right form ids
-      const version = this.requestManager.getVersion();
-      const requestDoc = await this.stories
-        .storyRequestRef(doc.id, version)
-        .get();
-      const requestData = requestDoc.data();
-      if (requestData !== undefined && requestData.formId == this.formId) {
-        storyDocs.push(doc.id);
-      }
-    }
+    const { docs } = await this.stories
+      .storiesRef()
+      .where("request.id", "==", this.formId)
+      .get();
 
     // Checks right number of stories is generated
-    this.checkStoriesNumber(storyDocs);
+    this.checkStoriesNumber(docs);
 
     // Checks story docs are valid
-    const promises = storyDocs.map(async (docId) => {
-      await this.checkStory(docId);
+    const promises = docs.map(async (docs) => {
+      await this.checkStory(docs.id);
     });
     await Promise.all(promises);
   }
 
-  private async checkStoriesNumber(storyDocs: string[]): Promise<void> {
-    // Checks we have the right number of story docs
+  private async checkStoriesNumber(
+    docs: FirebaseFirestore.QueryDocumentSnapshot[]
+  ): Promise<void> {
+    // Checks we have as many docs as possible form responses
     const { questions: expectedFormResponses } =
       await this.forms.getAllFormResponses(this.formId);
-    if (storyDocs.length != expectedFormResponses.length) {
+    if (docs.length != expectedFormResponses.length) {
       throw new Error(
         `FirestoreStoryCacheManager: the cache collection does not have the right number of stories for form ${this.formId}`
       );
     }
   }
 
-  private async checkStory(docId: string): Promise<void> {
-    this.checkStoryRequest(docId);
+  private async checkStory(id: string): Promise<void> {
+    this.checkStoryRequest(id);
 
-    const storyDoc = await this.stories.storyRef(docId).get();
+    const storyDoc = await this.stories.storyRef(id).get();
     if (!storyDoc.exists) {
       throw new Error(
-        `FirestoreStoryCacheManager: Cannot check story ${docId} because it does not exist`
+        `FirestoreStoryCacheManager: cannot check story ${id} because it does not exist`
       );
     }
 
     if (!storyDoc.exists) {
       throw new Error(
-        `FirestoreStoryCacheManager: Story ${docId} has no request doc`
+        `FirestoreStoryCacheManager: story ${id} has no request doc`
       );
     }
 
     const storyData = storyDoc.data();
     if (storyData === undefined) {
-      throw new Error(
-        `FirestoreStoryCacheManager: story ${docId} has empty data`
-      );
+      throw new Error(`FirestoreStoryCacheManager: story ${id} has empty data`);
     } else {
-      this.checkStoryData(storyData, docId);
+      this.checkStoryData(storyData, id);
     }
   }
 
