@@ -10,12 +10,12 @@ export class ClassicStoryLogic implements StoryLogic {
   constructor(
     private readonly duration: number,
     private readonly style: string,
-    readonly characterName: string,
-    readonly place?: string,
-    readonly object?: string,
-    readonly characterFlaw?: string,
-    readonly characterPower?: string,
-    readonly characterChallenge?: string
+    private readonly characterName: string,
+    private readonly place?: string,
+    private readonly object?: string,
+    private readonly characterFlaw?: string,
+    private readonly characterPower?: string,
+    private readonly characterChallenge?: string
   ) {}
 
   /**

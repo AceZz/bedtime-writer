@@ -9,6 +9,7 @@ import { getRandomDuration, getRandomStyle } from "../../story_utils";
 import { FirestoreStoryCache } from "../../../firebase/firestore_story_cache";
 import { FirestorePaths } from "../../../firebase/firestore_paths";
 import { parseEnvAsNumber, retryAsyncFunction } from "../../../utils";
+import { FirestoreStoryForms } from "../../../firebase/firestore_story_forms";
 
 export const CACHE_AUTHOR = "@CACHE_V1_MANAGER";
 
@@ -21,6 +22,7 @@ export class StoryCacheV1Manager implements StoryCacheManager {
   private textApi: TextApi;
   private imageApi: ImageApi;
   private stories: FirestoreStoryCache;
+  private forms: FirestoreStoryForms;
 
   constructor(
     formId: string,
@@ -33,6 +35,7 @@ export class StoryCacheV1Manager implements StoryCacheManager {
     this.imageApi = imageApi;
     this.stories = new FirestoreStoryCache(paths);
     this.requestManager = new StoryRequestV1Manager(this.stories);
+    this.forms = new FirestoreStoryForms(paths);
   }
 
   generateRequests(form: StoryForm): StoryRequestV1[] {
@@ -79,35 +82,6 @@ export class StoryCacheV1Manager implements StoryCacheManager {
     await Promise.all(promises);
   }
 
-  async checkStories(): Promise<void> {
-    const allStoryDocs = await this.stories.storiesRef().get();
-
-    const storyDocs: string[] = [];
-
-    for (const doc of allStoryDocs.docs) {
-      // Checks existence of request doc
-      await this.checkStoryRequest(doc.id);
-      // Selects story docs with right form ids
-      const version = this.requestManager.getVersion();
-      const requestDoc = await this.stories
-        .storyRequestRef(doc.id, version)
-        .get();
-      const requestData = requestDoc.data();
-      if (requestData !== undefined && requestData.formId == this.formId) {
-        storyDocs.push(doc.id);
-      }
-    }
-
-    // Checks right number of stories is generated
-    this.checkStoriesNumber(storyDocs);
-
-    // Checks story docs are valid
-    const promises = storyDocs.map(async (docId) => {
-      await this.checkStory(docId);
-    });
-    await Promise.all(promises);
-  }
-
   private async cacheStory(request: StoryRequestV1): Promise<void> {
     const promiseFn = async () => {
       const storyId = await this.requestManager.create(
@@ -137,14 +111,44 @@ export class StoryCacheV1Manager implements StoryCacheManager {
     await retryAsyncFunction(promiseFn, params);
   }
 
+  async cleanStories(): Promise<void> {}
+
+  async checkStories(): Promise<void> {
+    const allStoryDocs = await this.stories.storiesRef().get();
+
+    const storyDocs: string[] = [];
+
+    for (const doc of allStoryDocs.docs) {
+      // Checks existence of request doc
+      await this.checkStoryRequest(doc.id);
+      // Selects story docs with right form ids
+      const version = this.requestManager.getVersion();
+      const requestDoc = await this.stories
+        .storyRequestRef(doc.id, version)
+        .get();
+      const requestData = requestDoc.data();
+      if (requestData !== undefined && requestData.formId == this.formId) {
+        storyDocs.push(doc.id);
+      }
+    }
+
+    // Checks right number of stories is generated
+    this.checkStoriesNumber(storyDocs);
+
+    // Checks story docs are valid
+    const promises = storyDocs.map(async (docId) => {
+      await this.checkStory(docId);
+    });
+    await Promise.all(promises);
+  }
+
   private async checkStoriesNumber(storyDocs: string[]): Promise<void> {
     // Checks we have the right number of story docs
-    const expectedChoicesCombinations = await this.forms.getChoicesCombinations(
-      this.formId
-    );
-    if (storyDocs.length != expectedChoicesCombinations.length) {
+    const { questions: expectedFormResponses } =
+      await this.forms.getAllFormResponses(this.formId);
+    if (storyDocs.length != expectedFormResponses.length) {
       throw new Error(
-        `FirestoreStoryCacheManager: The cache collection does not have the right number of stories for form ${this.formId}`
+        `FirestoreStoryCacheManager: the cache collection does not have the right number of stories for form ${this.formId}`
       );
     }
   }

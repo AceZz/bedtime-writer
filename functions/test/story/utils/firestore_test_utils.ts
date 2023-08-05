@@ -12,18 +12,16 @@ import { FirestoreStoryTestUtils } from "./firestore_story_test_utils";
  * is concerned).
  */
 export class FirestoreTestUtils {
-  cache: FirestoreCacheTestUtils;
-  forms: FirestoreFormsTestUtils;
   paths: FirestorePaths;
   questions: FirestoreQuestionsTestUtils;
+  forms: FirestoreFormsTestUtils;
   story: FirestoreStoryTestUtils;
   cache: FirestoreCacheTestUtils;
 
   constructor(readonly id: string) {
     this.paths = new FirestorePaths(`test_${id}`);
-    this.cache = new FirestoreCacheTestUtils(this.paths);
-    this.forms = new FirestoreFormsTestUtils(this.paths);
     this.questions = new FirestoreQuestionsTestUtils(this.paths);
+    this.forms = new FirestoreFormsTestUtils(this.paths);
     this.story = new FirestoreStoryTestUtils(this.paths);
     this.cache = new FirestoreCacheTestUtils(this.paths);
   }
