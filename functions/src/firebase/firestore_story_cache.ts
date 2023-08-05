@@ -36,8 +36,4 @@ export class FirestoreStoryCache implements FirestoreStories {
   storiesRef(): CollectionReference {
     return this.firestore.collection(this.paths.story.cache);
   }
-
-  storyRequestRef(storyId: string, requestVersion: string): DocumentReference {
-    return this.storyRef(storyId).collection("request").doc(requestVersion);
-  }
 }
