@@ -16,9 +16,9 @@ export interface StoryCacheManager {
   cacheStories(requests: StoryRequestV1[]): Promise<void>;
 
   /**
-   * Clean the possible excess of stories generated.
+   * Delete the possible excess of stories generated.
    */
-  cleanStories(): Promise<void>;
+  deleteExcessStories(): Promise<void>;
 
   /**
    * Check the stories generated and throw an error if a check does not pass.

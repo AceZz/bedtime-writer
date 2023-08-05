@@ -29,11 +29,50 @@ export class FirestoreStoryCache implements FirestoreStories {
     this.firestore = firestore ?? getFirestore();
   }
 
-  storyRef(storyId: string): DocumentReference {
-    return this.storiesRef().doc(storyId);
+  storyRef(id: string): DocumentReference {
+    return this.storiesRef().doc(id);
   }
 
   storiesRef(): CollectionReference {
     return this.firestore.collection(this.paths.story.cache);
+  }
+
+  async deleteStory(id: string): Promise<void> {
+    await this.storiesRef().doc(id).delete();
+  }
+
+  /**
+   * Get all stories corresponding to the formId, even if incomplete or
+   * erroneous.
+   */
+  async getFormIdStories(
+    formId: string
+  ): Promise<FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>> {
+    return await this.storiesRef().where("request.formId", "==", formId).get();
+  }
+
+  /**
+   * Get all stories corresponding to the formResponse, filtering by the story
+   * status only if provided.
+   */
+  async getFormResponseStories(
+    formId: string,
+    questions: string[],
+    formResponse: string[],
+    status?: string
+  ): Promise<FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>> {
+    if (questions.length != formResponse.length) {
+      throw new Error(
+        "getFormResponseStories: questions and formReponse have different lengths."
+      );
+    }
+    let query = this.storiesRef().where("request.formId", "==", formId);
+    questions.forEach((question, i) => {
+      query = query.where(`request.${question}`, "==", formResponse[i]);
+    });
+    if (status !== undefined) {
+      query = query.where("status", "==", status);
+    }
+    return await this.storiesRef().where("request.formId", "==", formId).get();
   }
 }

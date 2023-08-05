@@ -29,11 +29,15 @@ export class FirestoreStoryRealtime implements FirestoreStories {
     this.firestore = firestore ?? getFirestore();
   }
 
-  storyRef(docId: string): DocumentReference {
-    return this.storiesRef().doc(docId);
+  storyRef(id: string): DocumentReference {
+    return this.storiesRef().doc(id);
   }
 
   storiesRef(): CollectionReference {
     return this.firestore.collection(this.paths.story.realtime);
+  }
+
+  async deleteStory(id: string): Promise<void> {
+    await this.storiesRef().doc(id).delete();
   }
 }

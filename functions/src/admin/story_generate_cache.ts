@@ -38,7 +38,8 @@ async function main() {
     const requests = storyCacheManager.generateRequests(formWithId.storyForm);
 
     await storyCacheManager.cacheStories(requests);
-    await storyCacheManager.checkStories();
+    await storyCacheManager.deleteExcessStories();
+    //await storyCacheManager.checkStories();
   }
 }
 

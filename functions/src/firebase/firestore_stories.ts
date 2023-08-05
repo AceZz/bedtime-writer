@@ -4,6 +4,7 @@ import {
 } from "firebase-admin/firestore";
 
 export interface FirestoreStories {
-  storyRef(storyId: string): DocumentReference;
+  storyRef(id: string): DocumentReference;
   storiesRef(): CollectionReference;
+  deleteStory(id: string): Promise<void>;
 }

@@ -10,6 +10,7 @@ import { FirestoreStoryCache } from "../../../firebase/firestore_story_cache";
 import { FirestorePaths } from "../../../firebase/firestore_paths";
 import { parseEnvAsNumber, retryAsyncFunction } from "../../../utils";
 import { FirestoreStoryForms } from "../../../firebase/firestore_story_forms";
+import { StoryStatus } from "../../story_status";
 
 export const CACHE_AUTHOR = "@CACHE_V1_MANAGER";
 
@@ -112,29 +113,49 @@ export class StoryCacheV1Manager implements StoryCacheManager {
   }
 
   //TODO: write tests
-  async cleanStories(): Promise<void> {
+  async deleteExcessStories(): Promise<void> {
     const { questions, formResponses } = await this.forms.getAllFormResponses(
       this.formId
     );
-
-    formResponses.forEach((formResponse) => {
-      // Only keep (at most) one story per form response.
-      let query = this.stories
-        .storiesRef()
-        .where("request.formId", "==", this.formId);
-      questions.forEach((question, i) => {
-        query = query.where(`request.${question}`, "==", formResponse[i]);
-      });
+    const deletePromises = formResponses.map(async (formResponse) => {
+      this.deleteExcessFormResponseStories(questions, formResponse);
     });
-    return new Promise((r) => r); //TODO: change
+    await Promise.all(deletePromises);
+  }
+
+  async deleteExcessFormResponseStories(
+    questions: string[],
+    formResponse: string[]
+  ): Promise<void> {
+    const { docs: stories } = await this.stories.getFormResponseStories(
+      this.formId,
+      questions,
+      formResponse
+    );
+    const { docs: completeStories } = await this.stories.getFormResponseStories(
+      this.formId,
+      questions,
+      formResponse,
+      StoryStatus.COMPLETE
+    );
+
+    if (completeStories.length == 0) {
+      throw new Error(
+        `deleteExcessFormResponseStories: no complete story was found for formId ${this.formId} and formResponse ${formResponse}.`
+      );
+    }
+
+    // Keep one complete story per form response and delete the rest
+    const completeStoryId = completeStories[0].id;
+    const deletePromises = stories
+      .filter((story) => story.id != completeStoryId)
+      .map((story) => this.stories.deleteStory(story.id));
+    await Promise.all(deletePromises);
   }
 
   //TODO: write tests
   async checkStories(): Promise<void> {
-    const { docs } = await this.stories
-      .storiesRef()
-      .where("request.id", "==", this.formId)
-      .get();
+    const { docs } = await this.stories.getFormIdStories(this.formId);
 
     // Checks right number of stories is generated
     this.checkStoriesNumber(docs);
@@ -154,30 +175,27 @@ export class StoryCacheV1Manager implements StoryCacheManager {
       await this.forms.getAllFormResponses(this.formId);
     if (docs.length != expectedFormResponses.length) {
       throw new Error(
-        `FirestoreStoryCacheManager: the cache collection does not have the right number of stories for form ${this.formId}`
+        `checkStoriesNumber: the cache collection does not have the right number of stories for form ${this.formId}.` +
+          `${docs.length} stories were found instead of ${expectedFormResponses.length} expected.`
       );
     }
   }
 
   private async checkStory(id: string): Promise<void> {
-    this.checkStoryRequest(id);
-
     const storyDoc = await this.stories.storyRef(id).get();
     if (!storyDoc.exists) {
       throw new Error(
-        `FirestoreStoryCacheManager: cannot check story ${id} because it does not exist`
+        `checkStory: cannot check story ${id} because it does not exist`
       );
     }
 
     if (!storyDoc.exists) {
-      throw new Error(
-        `FirestoreStoryCacheManager: story ${id} has no request doc`
-      );
+      throw new Error(`checkStory: story ${id} has no request doc`);
     }
 
     const storyData = storyDoc.data();
     if (storyData === undefined) {
-      throw new Error(`FirestoreStoryCacheManager: story ${id} has empty data`);
+      throw new Error(`checkStory: story ${id} has empty data`);
     } else {
       this.checkStoryData(storyData, id);
     }
@@ -189,42 +207,19 @@ export class StoryCacheV1Manager implements StoryCacheManager {
   ) {
     if (storyData.author !== CACHE_AUTHOR) {
       throw new Error(
-        `FirestoreStoryCacheManager: story ${docId} does not have the right author name ${CACHE_AUTHOR}`
+        `checkStoryData: story ${docId} does not have the right author name ${CACHE_AUTHOR}`
       );
     }
     if (storyData.status !== "complete") {
-      throw new Error(
-        `FirestoreStoryCacheManager: story ${docId} has incorrect values`
-      );
+      throw new Error(`checkStoryData: story ${docId} has incorrect values`);
     }
     if (storyData.parts.length === 0) {
       throw new Error(
-        `FirestoreStoryCacheManager: story ${docId} has no parts for the story`
+        `checkStoryData: story ${docId} has no parts for the story`
       );
     }
     if (storyData.title == undefined || storyData.title == "") {
-      throw new Error(
-        `FirestoreStoryCacheManager: story ${docId} has no story title`
-      );
-    }
-  }
-
-  private async checkStoryRequest(storyDocId: string) {
-    const version = this.requestManager.getVersion();
-    const storyRequestDoc = await this.stories
-      .storyRequestRef(storyDocId, version)
-      .get();
-    if (!storyRequestDoc.exists) {
-      throw new Error(
-        `FirestoreStoryCacheManager: Story ${storyDocId} has no request doc`
-      );
-    }
-
-    const storyData = storyRequestDoc.data();
-    if (storyData === undefined) {
-      throw new Error(
-        `FirestoreStoryCacheManager: story ${storyDocId} has empty request data`
-      );
+      throw new Error(`checkStoryData: story ${docId} has no story title`);
     }
   }
 }
