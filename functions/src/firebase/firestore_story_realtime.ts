@@ -36,8 +36,4 @@ export class FirestoreStoryRealtime implements FirestoreStories {
   storiesRef(): CollectionReference {
     return this.firestore.collection(this.paths.story.realtime);
   }
-
-  storyRequestRef(storyId: string, requestVersion: string): DocumentReference {
-    return this.storyRef(storyId).collection("request").doc(requestVersion);
-  }
 }
