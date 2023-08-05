@@ -167,14 +167,14 @@ export class FirebaseStoryWriter implements StoryWriter {
   }
 
   private get imagesRef(): CollectionReference {
-    return this.storyRef.collection("images");
+    return this.stories.imagesRef(this.storyId);
   }
 
   private get partsRef(): CollectionReference {
-    return this.storyRef.collection("parts");
+    return this.stories.partsRef(this.storyId);
   }
 
   private get promptsRef(): CollectionReference {
-    return this.storyRef.collection("prompts");
+    return this.stories.promptsRef(this.storyId);
   }
 }

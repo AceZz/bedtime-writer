@@ -1,9 +1,4 @@
-import {
-  CollectionReference,
-  DocumentReference,
-  Firestore,
-  getFirestore,
-} from "firebase-admin/firestore";
+import { Firestore } from "firebase-admin/firestore";
 import { FirestorePaths } from "./firestore_paths";
 import { FirestoreStories } from "./firestore_stories";
 
@@ -22,18 +17,8 @@ import { FirestoreStories } from "./firestore_stories";
  *   ...
  * ```
  */
-export class FirestoreStoryRealtime implements FirestoreStories {
-  private firestore: Firestore;
-
+export class FirestoreStoryRealtime extends FirestoreStories {
   constructor(readonly paths = new FirestorePaths(), firestore?: Firestore) {
-    this.firestore = firestore ?? getFirestore();
-  }
-
-  storyRef(docId: string): DocumentReference {
-    return this.storiesRef().doc(docId);
-  }
-
-  storiesRef(): CollectionReference {
-    return this.firestore.collection(this.paths.story.realtime);
+    super(paths.story.realtime, firestore);
   }
 }
