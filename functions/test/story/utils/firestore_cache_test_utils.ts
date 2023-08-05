@@ -167,8 +167,7 @@ export class FirestoreCacheTestUtils {
     });
 
     const promises = query.docs.map(async (doc) => {
-      const requestDoc = await doc.ref.collection("request").doc("v1").get();
-      return requestDoc.data();
+      return await doc.data().request;
     });
     const actual = await Promise.all(promises);
 
