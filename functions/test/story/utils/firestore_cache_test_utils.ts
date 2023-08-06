@@ -6,10 +6,7 @@ import { CollectionReference, getFirestore } from "firebase-admin/firestore";
 import { StoryForm } from "../../../src/story/story_form";
 import { expect } from "@jest/globals";
 import { FirestorePaths } from "../../../src/firebase/firestore_paths";
-import {
-  CACHE_AUTHOR,
-  StoryCacheV1Manager,
-} from "../../../src/story/cache/v1/firestore_story_cache_manager";
+import { CACHE_AUTHOR, StoryCacheV1Manager } from "../../../src/story/cache";
 import { FirestoreStoryCache } from "../../../src/firebase/firestore_story_cache";
 import { StoryRequestV1 } from "../../../src/story/request/v1";
 import { CLASSIC_LOGIC } from "../../../src/story/logic";
