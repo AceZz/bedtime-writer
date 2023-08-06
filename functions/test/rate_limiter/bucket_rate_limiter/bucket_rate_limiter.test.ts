@@ -3,9 +3,9 @@ import {
   BucketRateLimiter,
   RateLimiter,
   RateLimiterError,
+  BucketRateLimiterEntry,
 } from "../../../src/rate_limiter";
 import { FakeBucketRateLimiterStorage } from "./fake_bucket_rate_limiter_storage";
-import { BucketRateLimiterEntry } from "../../../src/rate_limiter/bucket_rate_limiter/bucket_rate_limiter_storage";
 
 const MAX_TOKENS = new Map([
   ["classic", 10],
