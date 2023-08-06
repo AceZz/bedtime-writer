@@ -1,7 +1,7 @@
 import {
   BucketRateLimiterEntry,
   BucketRateLimiterStorage,
-} from "../../../src/rate_limiter/bucket_rate_limiter/bucket_rate_limiter_storage";
+} from "../../../src/rate_limiter";
 
 /**
  * In-memory storage used for testing the `BucketRateLimiter`.
