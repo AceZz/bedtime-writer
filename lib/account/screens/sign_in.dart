@@ -1,3 +1,4 @@
+import 'package:bedtime_writer/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../backend/user.dart';
+import '../../utils.dart';
 import '../../widgets/index.dart';
 import '../../backend/index.dart';
 import '../../widgets/sign_in.dart';
@@ -135,13 +137,16 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     }
 
     try {
+      _checkAccountCreationAllowed(ref);
       if (user is UnauthUser) {
         await user.createUserWithEmailAndPassword(
             email: email, password: password);
+        await _updateAccountCreationLastDate(ref);
         context.pushReplacement(redirect);
       } else if (user is AnonymousUser) {
         await user.createUserWithEmailAndPassword(
             email: email, password: password);
+        await _updateAccountCreationLastDate(ref);
         context.pushReplacement(redirect);
       }
     } on Exception catch (e) {
@@ -540,6 +545,9 @@ String _convertExceptionToText({required Exception e}) {
       case 'credential-already-in-use':
         text = 'Account already exists. Please sign in.';
         break;
+      case 'limit-account-creation':
+        text = 'Only one account can be created every 24 hours.';
+        break;
     }
   } else if (e is FormatException) {
     switch (e.code) {
@@ -557,4 +565,26 @@ String _convertExceptionToText({required Exception e}) {
   }
 
   return text;
+}
+
+void _checkAccountCreationAllowed(WidgetRef ref) {
+  if (debugAuthNoAccountLimit()) {
+    return;
+  }
+  final Preferences preferences = ref.read(preferencesProvider);
+  final storedDate = preferences.accountCreationLastDate;
+
+  final creationDate = DateTime.parse(storedDate);
+  final currentDate = DateTime.now();
+  final difference = currentDate.difference(creationDate);
+
+  final accountCreationLimitDays =
+      parseEnvAsInt('ACCOUNT_CREATION_LIMIT_DAYS', 1);
+  if (difference.inDays < accountCreationLimitDays) {
+    throw new AuthException(code: 'limit-account-creation');
+  }
+}
+
+Future<void> _updateAccountCreationLastDate(WidgetRef ref) async {
+  await ref.read(preferencesProvider.notifier).updateAccountCreationLastDate();
 }
