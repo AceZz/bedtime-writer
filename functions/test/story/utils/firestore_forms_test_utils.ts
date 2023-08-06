@@ -9,10 +9,9 @@ import {
 } from "firebase-admin/firestore";
 import { StoryForm } from "../../../src/story/story_form";
 import { FirebaseFormReader } from "../../../src/story/reader";
-import { FirestoreStoryForms } from "../../../src/firebase/firestore_story_forms";
+import { FirestoreStoryForms, FirestorePaths } from "../../../src/firebase";
 import { FirebaseFormWriter } from "../../../src/story/writer/firebase_form_writer";
 import { expect } from "@jest/globals";
-import { FirestorePaths } from "../../../src/firebase/firestore_paths";
 
 /**
  * Works with QUESTIONS_0.

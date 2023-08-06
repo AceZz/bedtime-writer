@@ -6,7 +6,7 @@ import {
 import { StoryRequestV1, StoryRequestV1Data } from "./story_request_v1";
 import { StoryRequestFirestoreConverter } from "../story_request_firestore_converter";
 import { StoryStatus } from "../../story_status";
-import { FirestoreStories } from "../../../firebase/firestore_stories";
+import { FirestoreStories } from "../../../firebase";
 
 /**
  * Schema:

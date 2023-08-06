@@ -1,9 +1,8 @@
 import { Writer } from "./writer";
 import { StoryForm } from "../story_form";
-import { FirestoreStoryForms } from "../../firebase/firestore_story_forms";
+import { FirestoreStoryForms, FirestorePaths } from "../../firebase";
 import { FirebaseQuestionReader, FirebaseFormReader, Reader } from "../reader/";
 import { StoryQuestion } from "../story_question";
-import { FirestorePaths } from "../../firebase/firestore_paths";
 
 /**
  * This class writes a Form object to Firebase.

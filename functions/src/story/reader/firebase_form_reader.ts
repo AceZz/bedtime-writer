@@ -1,8 +1,7 @@
 import { StoryForm } from "../story_form";
 import { Reader } from "./reader";
-import { FirestoreStoryForms } from "../../firebase/firestore_story_forms";
+import { FirestoreStoryForms, FirestorePaths } from "../../firebase";
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
-import { FirestorePaths } from "../../firebase/firestore_paths";
 
 /**
  * Read a list of Forms from Firebase.

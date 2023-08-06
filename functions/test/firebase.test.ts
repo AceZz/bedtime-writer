@@ -1,7 +1,6 @@
 import { beforeAll, expect, test } from "@jest/globals";
 import { getFirestore } from "firebase-admin/firestore";
-import { FirestorePaths } from "../src/firebase/firestore_paths";
-import { initEnv, initFirebase } from "../src/firebase/utils";
+import { FirestorePaths, initEnv, initFirebase } from "../src/firebase";
 
 beforeAll(() => {
   initEnv();
