@@ -119,6 +119,12 @@ repository](https://docs.github.com/en/get-started/getting-started-with-git/conf
     * `router.dart`: the routes of the application
     * `theme.dart`: the theme for the entire application
 
+### Backend architecture diagram
+
+You can find the backend architecture diagram at `doc/backend_architecture.drawio`. This file can be
+opened with the apps at <https://www.drawio.com/> (there is an online editor as well as desktop
+apps). This file should reflect the architecture changes, so please keep it updated.
+
 ## Frequent bugs
 
 ### Global tips
