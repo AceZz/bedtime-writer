@@ -8,7 +8,7 @@ import {
 } from "../firebase/utils";
 import { prompt } from "../utils";
 
-import { StoryCacheV1Manager } from "../story/cache/v1/firestore_story_cache_manager";
+import { StoryCacheV1Manager } from "../story/cache";
 import { getImageApi, getTextApi } from "../api";
 
 main().then(() => process.exit(0));
