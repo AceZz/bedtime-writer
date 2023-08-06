@@ -1,6 +1,7 @@
 import { beforeAll, beforeEach, expect, test } from "@jest/globals";
 import { initEnv, initFirebase } from "../../src/firebase/utils";
 import { FirestoreTestUtils } from "../story/utils/firestore_test_utils";
+import { StoryForm } from "../../src/story/story_form";
 
 const utils = new FirestoreTestUtils("story_forms").forms;
 
@@ -17,9 +18,11 @@ test("FirestoreStoryForms returns all possible form responses", async () => {
 
   const docRef = await utils.collectionRef().add(serializedSamples[0]);
 
+  const questionsToChoices = await utils.collection.getQuestionsToChoices(
+    docRef.id
+  );
   const { questions: actualQuestions, formResponses: actualFormResponses } =
-    await utils.collection.getAllFormResponses(docRef.id);
-
+    StoryForm.getAllFormResponses(questionsToChoices);
   const expectedQuestions = utils.questions();
   const expectedFormResponses = utils.formResponses();
   expect(actualQuestions).toEqual(expectedQuestions);
