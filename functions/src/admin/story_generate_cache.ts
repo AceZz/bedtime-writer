@@ -1,4 +1,4 @@
-import { FirebaseFormReader } from "../story/";
+import { FirebaseFormReader, StoryCacheV1Manager } from "../story";
 import {
   FirestorePaths,
   firebaseEmulatorsAreUsed,
@@ -8,7 +8,6 @@ import {
 } from "../firebase";
 import { prompt } from "../utils";
 
-import { StoryCacheV1Manager } from "../story/cache";
 import { getImageApi, getTextApi } from "../api";
 
 main().then(() => process.exit(0));
