@@ -8,7 +8,7 @@ import {
   getFirestore,
 } from "firebase-admin/firestore";
 import { StoryForm } from "../../../src/story/story_form";
-import { FirestoreFormReader } from "../../../src/story/reader/firestore_form_reader";
+import { FirestoreFormReader } from "../../../src/story/reader";
 import { FirestoreStoryForms } from "../../../src/firebase/firestore_story_forms";
 import { FirebaseFormWriter } from "../../../src/story/writer/firebase_form_writer";
 import { expect } from "@jest/globals";

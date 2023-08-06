@@ -1,6 +1,6 @@
 import { DocumentReference, getFirestore } from "firebase-admin/firestore";
 import { FirebaseQuestionWriter } from "../../../src/story";
-import { FirestoreQuestionReader } from "../../../src/story/reader/firestore_question_reader";
+import { FirestoreQuestionReader } from "../../../src/story/reader";
 import { StoryQuestion } from "../../../src/story/story_question";
 import { StoryChoice } from "../../../src/story/story_choice";
 import { expect } from "@jest/globals";

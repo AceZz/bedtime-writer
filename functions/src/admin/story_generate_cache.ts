@@ -1,5 +1,5 @@
 import { FirestorePaths } from "../firebase/firestore_paths";
-import { FirestoreFormReader } from "../story/reader/firestore_form_reader";
+import { FirestoreFormReader } from "../story/reader";
 import {
   firebaseEmulatorsAreUsed,
   getFirebaseProject,
