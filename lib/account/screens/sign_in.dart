@@ -349,7 +349,8 @@ void _showAgeConfirmAlertDialog({
     // Asks to confirm
     showDialog(
         context: context,
-        barrierDismissible: false, // Prevents dialog be escaped by clicking elsewhere
+        barrierDismissible:
+            false, // Prevents dialog be escaped by clicking elsewhere
         builder: (BuildContext context) {
           const title = 'Friendly disclaimer';
           final content = Text(
