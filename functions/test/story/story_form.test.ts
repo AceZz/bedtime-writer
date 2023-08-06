@@ -1,5 +1,5 @@
 import { test, expect } from "@jest/globals";
-import { StoryForm } from "../../src/story/story_form";
+import { StoryForm } from "../../src/story";
 
 test("StoryForm: getAllFormResponses should return correct questions and formResponses", () => {
   const questionsToChoices = new Map([

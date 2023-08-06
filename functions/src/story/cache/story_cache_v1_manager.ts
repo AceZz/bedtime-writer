@@ -1,7 +1,7 @@
 import { ImageApi, NPartStoryGenerator, TextApi } from "../generator";
 import { CLASSIC_LOGIC } from "../logic";
 import { StoryRequestV1, StoryRequestV1Manager } from "../request";
-import { StoryForm } from "../story_form";
+import { StoryForm } from "../form";
 import { StoryMetadata } from "../story_metadata";
 import { FirebaseStoryWriter } from "../writer";
 import { StoryCacheManager } from "./story_cache_manager";

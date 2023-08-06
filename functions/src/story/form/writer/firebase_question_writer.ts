@@ -1,7 +1,7 @@
 import { StoryQuestion } from "../story_question";
 import { Writer } from "./writer";
 import { StoryChoice } from "../story_choice";
-import { FirestoreStoryQuestions, FirestorePaths } from "../../firebase";
+import { FirestorePaths, FirestoreStoryQuestions } from "../../../firebase";
 
 /**
  * This class writes a list of StoryQuestion objects to Firebase.

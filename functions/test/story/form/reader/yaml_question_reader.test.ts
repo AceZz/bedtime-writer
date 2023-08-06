@@ -1,7 +1,9 @@
 import { expect, test } from "@jest/globals";
-import { YAMLQuestionReader } from "../../../src/story/reader";
-import { StoryQuestion } from "../../../src/story/story_question";
-import { StoryChoice } from "../../../src/story/story_choice";
+import {
+  StoryChoice,
+  StoryQuestion,
+  YAMLQuestionReader,
+} from "../../../../src/story";
 
 test("read questions", async () => {
   const reader = new YAMLQuestionReader("test/story/data/questions.yaml");

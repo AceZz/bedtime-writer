@@ -3,13 +3,12 @@
  */
 
 import { CollectionReference, getFirestore } from "firebase-admin/firestore";
-import { StoryForm } from "../../../src/story/story_form";
+import { StoryForm, FakeImageApi, FakeTextApi } from "../../../src/story";
 import { expect } from "@jest/globals";
 import { FirestorePaths, FirestoreStoryCache } from "../../../src/firebase";
 import { CACHE_AUTHOR, StoryCacheV1Manager } from "../../../src/story/cache";
 import { StoryRequestV1 } from "../../../src/story/request/v1";
 import { CLASSIC_LOGIC } from "../../../src/story/logic";
-import { FakeImageApi, FakeTextApi } from "../../../src/story";
 
 /**
  * Initializes a dummy form_id. Should be the form doc ref in real case.
