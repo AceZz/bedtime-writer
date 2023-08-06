@@ -1,5 +1,5 @@
 import { expect, test, jest } from "@jest/globals";
-import { YAMLFormReader } from "../../../src/story/reader/yaml_form_reader";
+import { YAMLFormReader } from "../../../src/story/reader";
 import { StoryForm } from "../../../src/story/story_form";
 
 test("parse form with date", async () => {

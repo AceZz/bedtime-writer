@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import { YAMLQuestionReader } from "../../../src/story/reader/yaml_question_reader";
+import { YAMLQuestionReader } from "../../../src/story/reader";
 import { StoryQuestion } from "../../../src/story/story_question";
 import { StoryChoice } from "../../../src/story/story_choice";
 
