@@ -6,10 +6,7 @@ import {
   expect,
   test,
 } from "@jest/globals";
-import {
-  copyStory,
-  FirestoreStories,
-} from "../../src/firebase/firestore_stories";
+import { FirestoreStories } from "../../src/firebase/firestore_stories";
 import { initEnv, initFirebase } from "../../src/firebase/utils";
 
 describe("copyStory", () => {
@@ -50,7 +47,7 @@ describe("copyStory", () => {
     await source.promptsRef(storyId).add(subcollectionData2);
 
     // Run the copy function
-    await copyStory(source, destination, storyId);
+    await source.copyStory(storyId, destination);
 
     // Check that the story data is copied
     const copiedStoryData = (await destination.storyRef(storyId).get()).data();
@@ -82,5 +79,17 @@ describe("copyStory", () => {
         sourceData.docs.map((doc) => doc.data())
       );
     }
+  });
+
+  test("should throw an error if the destination already has a story with the same id", async () => {
+    // Initialize test data
+    const storyData = { title: "Test Story" };
+
+    // Set up a test story in both the source and destination
+    await source.storyRef(storyId).set(storyData);
+    await destination.storyRef(storyId).set(storyData);
+
+    // Expect the copy method to throw an error
+    await expect(source.copyStory(storyId, destination)).rejects.toThrow();
   });
 });
