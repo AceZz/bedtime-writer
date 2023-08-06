@@ -4,7 +4,7 @@ import { FirebaseQuestionReader } from "../../../src/story/reader";
 import { StoryQuestion } from "../../../src/story/story_question";
 import { StoryChoice } from "../../../src/story/story_choice";
 import { expect } from "@jest/globals";
-import { FirestorePaths } from "../../../src/firebase/firestore_paths";
+import { FirestorePaths } from "../../../src/firebase";
 
 const QUESTIONS_0 = async () => [
   new StoryQuestion("question1", "Question 1", [

@@ -1,5 +1,5 @@
 import { beforeAll, beforeEach, expect, test } from "@jest/globals";
-import { initEnv, initFirebase } from "../../src/firebase/utils";
+import { initEnv, initFirebase } from "../../src/firebase";
 import { FirestoreTestUtils } from "../story/utils/firestore_test_utils";
 import { StoryForm } from "../../src/story/story_form";
 

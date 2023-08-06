@@ -19,8 +19,7 @@ import { FirestoreBucketRateLimiterStorage } from "./rate_limiter/bucket_rate_li
 import { parseEnvAsNumber as parseEnvNumber } from "./utils";
 import { FirestoreUserStatsManager, UserStats } from "./user";
 import { getImageApi, getTextApi } from "./api";
-import { FirestorePaths } from "./firebase/firestore_paths";
-import { FirestoreStoryRealtime } from "./firebase/firestore_story_realtime";
+import { FirestorePaths, FirestoreStoryRealtime } from "./firebase";
 
 initializeApp();
 

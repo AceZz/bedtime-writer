@@ -1,11 +1,11 @@
-import { FirestorePaths } from "../firebase/firestore_paths";
-import { FirebaseFormReader } from "../story/reader";
 import {
+  FirestorePaths,
   firebaseEmulatorsAreUsed,
   getFirebaseProject,
   initEnv,
   initFirebase,
-} from "../firebase/utils";
+} from "../firebase";
+import { FirebaseFormReader } from "../story/reader";
 import { prompt } from "../utils";
 
 import { StoryCacheV1Manager } from "../story/cache";

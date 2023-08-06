@@ -6,8 +6,7 @@ import { StoryMetadata } from "../story_metadata";
 import { FirebaseStoryWriter } from "../writer";
 import { StoryCacheManager } from "./story_cache_manager";
 import { getRandomDuration, getRandomStyle } from "../story_utils";
-import { FirestoreStoryCache } from "../../firebase/firestore_story_cache";
-import { FirestorePaths } from "../../firebase/firestore_paths";
+import { FirestoreStoryCache, FirestorePaths } from "../../firebase";
 import { parseEnvAsNumber, retryAsyncFunction } from "../../utils";
 
 export const CACHE_AUTHOR = "@CACHE_V1_MANAGER";
