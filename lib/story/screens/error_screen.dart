@@ -5,10 +5,16 @@ import '../../widgets/app_scaffold.dart';
 
 class ErrorScreen extends StatelessWidget {
   final String text;
+  final String buttonText;
+  final String destination;
+  final Color? buttonColor;
 
   const ErrorScreen({
     Key? key,
     required this.text,
+    required this.buttonText,
+    required this.destination,
+    this.buttonColor,
   }) : super(key: key);
 
   @override
@@ -28,7 +34,11 @@ class ErrorScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20), // Add some space
-          _ErrorScreenButton(text: 'Back to Home', destination: 'home')
+          _ErrorScreenButton(
+            text: this.buttonText,
+            destination: this.destination,
+            buttonColor: this.buttonColor,
+          )
         ],
       ),
     );
@@ -38,11 +48,13 @@ class ErrorScreen extends StatelessWidget {
 class _ErrorScreenButton extends StatelessWidget {
   final String text;
   final String destination;
+  final Color? buttonColor;
 
   const _ErrorScreenButton({
     Key? key,
     required this.text,
     required this.destination,
+    this.buttonColor,
   }) : super(key: key);
 
   @override
@@ -56,12 +68,14 @@ class _ErrorScreenButton extends StatelessWidget {
       width: 0.8 * MediaQuery.of(context).size.width,
       height: 40,
       child: Material(
-        color: Colors.grey.shade600,
+        color: this.buttonColor ?? Colors.grey.shade600,
         elevation: 10,
         borderRadius: BorderRadius.circular(10),
         clipBehavior: Clip.antiAliasWithSaveLayer,
         child: InkWell(
           onTap: () {
+            context.pushReplacementNamed(
+                'home'); // Allows users to go back to home with back in app bar in the destination screen.
             context.pushNamed(destination);
           },
           child: Ink(
