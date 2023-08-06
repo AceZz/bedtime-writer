@@ -9,6 +9,10 @@ import {
 import { FirestoreStories } from "../../src/firebase/firestore_stories";
 import { initEnv, initFirebase } from "../../src/firebase/utils";
 
+class TestFirestoreStories extends FirestoreStories {
+  // All methods are inherited, and no abstract methods need to be implemented
+}
+
 describe("copyStory", () => {
   let storyId: string;
   let source: FirestoreStories;
@@ -21,8 +25,8 @@ describe("copyStory", () => {
   beforeEach(async () => {
     // Clean up the test data
     storyId = "testStoryId";
-    source = new FirestoreStories("test_source_stories");
-    destination = new FirestoreStories("test_destination_stories");
+    source = new TestFirestoreStories("test_source_stories");
+    destination = new TestFirestoreStories("test_destination_stories");
   });
 
   afterEach(async () => {

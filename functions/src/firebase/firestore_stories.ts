@@ -8,7 +8,7 @@ import {
 /**
  * A parent class with helpers for a collection which contains stories.
  */
-export class FirestoreStories {
+export abstract class FirestoreStories {
   private collection: string;
   readonly firestore: Firestore;
 
