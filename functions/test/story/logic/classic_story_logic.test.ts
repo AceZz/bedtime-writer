@@ -1,7 +1,7 @@
 import { expect, test } from "@jest/globals";
 
 import { PARTIAL_CLASSIC_STORY_LOGIC, FULL_CLASSIC_STORY_LOGIC } from "./data";
-import { ClassicStoryLogic } from "../../../src/story/logic/classic_story_logic";
+import { ClassicStoryLogic } from "../../../src/story";
 
 test("copyWith", () => {
   expect(

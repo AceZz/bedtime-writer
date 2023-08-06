@@ -12,8 +12,9 @@ import {
   NPartStoryGenerator,
   StoryMetadata,
   CLASSIC_LOGIC,
-} from "./story/";
-import { StoryRequestV1Manager, StoryRequestV1 } from "./story/request";
+  StoryRequestV1Manager,
+  StoryRequestV1,
+} from "./story";
 import {
   BucketRateLimiter,
   RateLimiter,
