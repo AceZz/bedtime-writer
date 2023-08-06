@@ -12,7 +12,7 @@ beforeAll(() => {
 
 beforeEach(async () => await utils.deleteCollection());
 
-test("FirestoreFormReader", async () => {
+test("FirebaseFormReader", async () => {
   const serializedSamples = utils.serializedSamples();
 
   await utils.collectionRef().add(serializedSamples[0]);

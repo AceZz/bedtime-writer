@@ -1,5 +1,5 @@
 import { FirestorePaths } from "../firebase/firestore_paths";
-import { FirestoreFormReader } from "../story/reader";
+import { FirebaseFormReader } from "../story/reader";
 import {
   firebaseEmulatorsAreUsed,
   getFirebaseProject,
@@ -22,7 +22,7 @@ async function main() {
   if (await confirm(firestorePaths)) {
     initFirebase();
 
-    const reader = new FirestoreFormReader(firestorePaths);
+    const reader = new FirebaseFormReader(firestorePaths);
     const formsWithId = await reader.readMostRecentWithIds(1);
 
     const formWithId = formsWithId[0];

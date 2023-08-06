@@ -1,11 +1,7 @@
 import { Writer } from "./writer";
 import { StoryForm } from "../story_form";
 import { FirestoreStoryForms } from "../../firebase/firestore_story_forms";
-import {
-  FirestoreQuestionReader,
-  FirestoreFormReader,
-  Reader,
-} from "../reader/";
+import { FirebaseQuestionReader, FirebaseFormReader, Reader } from "../reader/";
 import { StoryQuestion } from "../story_question";
 import { FirestorePaths } from "../../firebase/firestore_paths";
 
@@ -20,8 +16,8 @@ export class FirebaseFormWriter implements Writer<StoryForm> {
 
   constructor(paths?: FirestorePaths) {
     this.formsCollection = new FirestoreStoryForms(paths);
-    this.formReader = new FirestoreFormReader(paths);
-    this.questionReader = new FirestoreQuestionReader(paths);
+    this.formReader = new FirebaseFormReader(paths);
+    this.questionReader = new FirebaseQuestionReader(paths);
   }
 
   async write(form: StoryForm): Promise<void> {

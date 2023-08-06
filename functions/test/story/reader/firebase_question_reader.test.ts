@@ -14,7 +14,7 @@ beforeEach(async () => {
   await utils.deleteCollection();
 });
 
-test("FirestoreQuestionReader", async () => {
+test("FirebaseQuestionReader", async () => {
   const samples = await utils.samples();
 
   const expected = samples[0];
