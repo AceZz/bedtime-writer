@@ -2,7 +2,7 @@ import { StoryQuestion } from "../story_question";
 import { Reader } from "./reader";
 import { StoryChoice } from "../story_choice";
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
-import { FirestoreStoryQuestions, FirestorePaths } from "../../firebase";
+import { FirestorePaths, FirestoreStoryQuestions } from "../../../firebase";
 
 /**
  * Read a list of Questions from Firebase.

@@ -1,6 +1,6 @@
 import { StoryForm } from "../story_form";
 import { Reader } from "./reader";
-import { FirestoreStoryForms, FirestorePaths } from "../../firebase";
+import { FirestoreStoryForms, FirestorePaths } from "../../../firebase";
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
 
 /**

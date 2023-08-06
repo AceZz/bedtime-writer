@@ -1,7 +1,7 @@
 import { Writer } from "./writer";
 import { StoryForm } from "../story_form";
-import { FirestoreStoryForms, FirestorePaths } from "../../firebase";
-import { FirebaseQuestionReader, FirebaseFormReader, Reader } from "../reader/";
+import { FirestorePaths, FirestoreStoryForms } from "../../../firebase";
+import { FirebaseQuestionReader, FirebaseFormReader, Reader } from "../reader";
 import { StoryQuestion } from "../story_question";
 
 /**

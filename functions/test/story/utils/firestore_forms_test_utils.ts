@@ -7,10 +7,12 @@ import {
   Timestamp,
   getFirestore,
 } from "firebase-admin/firestore";
-import { StoryForm } from "../../../src/story/story_form";
-import { FirebaseFormReader } from "../../../src/story/reader";
 import { FirestoreStoryForms, FirestorePaths } from "../../../src/firebase";
-import { FirebaseFormWriter } from "../../../src/story/writer/firebase_form_writer";
+import {
+  StoryForm,
+  FirebaseFormReader,
+  FirebaseFormWriter,
+} from "../../../src/story";
 import { expect } from "@jest/globals";
 
 /**
