@@ -1,5 +1,5 @@
 import { readFile } from "fs/promises";
-import { compressToPng } from "../utils";
+import { compressToPng } from "../../utils";
 
 const IMAGE_COMPRESSION_PARAMETERS = {
   cpuEffort: 10,

@@ -4,7 +4,6 @@ import {
   Firestore,
   getFirestore,
 } from "firebase-admin/firestore";
-import { StoryForm } from "../story/story_form";
 import { FirestorePaths } from "./firestore_paths";
 
 /**
@@ -37,14 +36,13 @@ export class FirestoreStoryForms {
   }
 
   /**
-   * Return the form's questions and all possible associated form responses.
+   * Return the form's questions and all possible associated choices.
    *
-   * The order of the questions match the order of the choices in a form response.
+   * The order of the questions matches the order of the choices in a form
+   * response.
    * A form response is defined by the complete series of choices a user made.
    */
-  async getAllFormResponses(
-    formId: string
-  ): Promise<{ questions: string[]; formResponses: string[][] }> {
+  async getQuestionsToChoices(formId: string): Promise<Map<string, string[]>> {
     const formDoc = await this.formRef(formId).get();
     const formData = formDoc.data();
 
@@ -58,6 +56,6 @@ export class FirestoreStoryForms {
       }
     }
 
-    return StoryForm.getAllFormResponses(questionsToChoices);
+    return questionsToChoices;
   }
 }

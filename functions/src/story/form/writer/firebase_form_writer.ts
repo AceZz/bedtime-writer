@@ -1,11 +1,8 @@
 import { Writer } from "./writer";
 import { StoryForm } from "../story_form";
-import { FirestoreStoryForms } from "../../firebase/firestore_story_forms";
-import { Reader } from "../reader/reader";
+import { FirestorePaths, FirestoreStoryForms } from "../../../firebase";
+import { FirebaseQuestionReader, FirebaseFormReader, Reader } from "../reader";
 import { StoryQuestion } from "../story_question";
-import { FirestoreQuestionReader } from "../reader/firestore_question_reader";
-import { FirestoreFormReader } from "../reader/firestore_form_reader";
-import { FirestorePaths } from "../../firebase/firestore_paths";
 
 /**
  * This class writes a Form object to Firebase.
@@ -18,8 +15,8 @@ export class FirebaseFormWriter implements Writer<StoryForm> {
 
   constructor(paths?: FirestorePaths) {
     this.formsCollection = new FirestoreStoryForms(paths);
-    this.formReader = new FirestoreFormReader(paths);
-    this.questionReader = new FirestoreQuestionReader(paths);
+    this.formReader = new FirebaseFormReader(paths);
+    this.questionReader = new FirebaseQuestionReader(paths);
   }
 
   async write(form: StoryForm): Promise<void> {

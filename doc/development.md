@@ -23,12 +23,13 @@ same SHA1 fingerprint.
 2. Select the right Firebase project (`bedtime-writer` for production, `bedtime-writer-dev` for
    development): `firebase use <project-id>`.
 3. Build the functions: `npm run build:watch`.
-4. If needed, run the local backend `npm run local_backend`. Note: run the Firebase emulators
+4. If `.env` at project root specifies local backend, run `npm run local_backend`. Note: run the Firebase emulators
    before launching the Android emulator, as some ports may conflict.
-5. If you want to deploy to the remote servers, use `npm run deploy_functions_<dev|prod>`.
+5. If `.env` at project root specifies remote backend, run `npm run deploy_functions_<dev|prod>`.
 6. Delete the `build` folder.
 7. Wipe the data/cache of your device emulator.
-8. Finally run (or build) the app: `flutter run --flavor <env> -d <device-emulator-id>`.
+8. Find the `device-id` in the second column of the output of `flutter devices`.
+9. Finally run (or build) the app: `flutter run --flavor <env> -d <device-id>`.
 
 ### Create and maintain an environment
 
@@ -117,6 +118,12 @@ repository](https://docs.github.com/en/get-started/getting-started-with-git/conf
     * `main.dart`: entry point of the application
     * `router.dart`: the routes of the application
     * `theme.dart`: the theme for the entire application
+
+### Backend architecture diagram
+
+You can find the backend architecture diagram at `doc/backend_architecture.drawio`. This file can be
+opened with the apps at <https://www.drawio.com/> (there is an online editor as well as desktop
+apps). This file should reflect the architecture changes, so please keep it updated.
 
 ## Frequent bugs
 

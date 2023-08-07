@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, expect, test } from "@jest/globals";
-import { initEnv, initFirebase } from "../../../src/firebase/utils";
-import { FirestoreTestUtils } from "../utils/firestore_test_utils";
+import { initEnv, initFirebase } from "../../../../src/firebase";
+import { FirestoreTestUtils } from "../../utils/firestore_test_utils";
 
 const utils = new FirestoreTestUtils("question_writer").questions;
 
@@ -14,7 +14,7 @@ beforeEach(async () => {
   await utils.deleteCollection();
 });
 
-test("FirestoreQuestionReader", async () => {
+test("FirebaseQuestionReader", async () => {
   const samples = await utils.samples();
 
   const expected = samples[0];

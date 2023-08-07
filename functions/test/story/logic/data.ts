@@ -1,4 +1,4 @@
-import { ClassicStoryLogic } from "../../../src/story/logic/classic_story_logic";
+import { ClassicStoryLogic } from "../../../src/story";
 
 export const PARTIAL_CLASSIC_STORY_LOGIC = new ClassicStoryLogic(
   3,

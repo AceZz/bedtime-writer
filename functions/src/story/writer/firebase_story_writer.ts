@@ -7,7 +7,7 @@ import { StoryPart } from "../story_part";
 import { StoryWriter } from "./story_writer";
 import { StoryStatus } from "../story_status";
 import { valueOrNull } from "./utils";
-import { FirestoreStories } from "../../firebase/firestore_stories";
+import { FirestoreStories } from "../../firebase";
 import { StoryGenerator } from "../generator";
 import { logger } from "../../logger";
 

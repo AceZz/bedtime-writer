@@ -1,4 +1,4 @@
-import { cartesianProduct } from "../../src/utils";
+import { cartesianProduct } from "../../../src/utils";
 
 /**
  * Stores questions and choices that should be displayed to the user.

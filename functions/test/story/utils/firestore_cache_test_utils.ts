@@ -2,18 +2,19 @@
  * Contains fixtures and utils for `Cache`-related tests.
  */
 
-import { CollectionReference, getFirestore } from "firebase-admin/firestore";
-import { StoryForm } from "../../../src/story/story_form";
 import { expect } from "@jest/globals";
-import { FirestorePaths } from "../../../src/firebase/firestore_paths";
+import { CollectionReference, getFirestore } from "firebase-admin/firestore";
+
 import {
+  StoryForm,
+  FakeImageApi,
+  FakeTextApi,
+  StoryRequestV1,
+  CLASSIC_LOGIC,
   CACHE_AUTHOR,
   StoryCacheV1Manager,
-} from "../../../src/story/cache/v1/firestore_story_cache_manager";
-import { FirestoreStoryCache } from "../../../src/firebase/firestore_story_cache";
-import { StoryRequestV1 } from "../../../src/story/request/v1";
-import { CLASSIC_LOGIC } from "../../../src/story/logic";
-import { FakeImageApi, FakeTextApi } from "../../../src/story";
+} from "../../../src/story";
+import { FirestorePaths, FirestoreStoryCache } from "../../../src/firebase";
 
 /**
  * Initializes a dummy form_id. Should be the form doc ref in real case.

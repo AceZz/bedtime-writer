@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, expect, test } from "@jest/globals";
-import { initEnv, initFirebase } from "../../../src/firebase/utils";
-import { FirestoreTestUtils } from "../utils/firestore_test_utils";
+import { initEnv, initFirebase } from "../../../../src/firebase";
+import { FirestoreTestUtils } from "../../utils/firestore_test_utils";
 
 const utils = new FirestoreTestUtils("form_reader").forms;
 
@@ -12,7 +12,7 @@ beforeAll(() => {
 
 beforeEach(async () => await utils.deleteCollection());
 
-test("FirestoreFormReader", async () => {
+test("FirebaseFormReader", async () => {
   const serializedSamples = utils.serializedSamples();
 
   await utils.collectionRef().add(serializedSamples[0]);
