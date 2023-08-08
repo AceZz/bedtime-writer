@@ -6,12 +6,14 @@ class AppTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool obscureText;
+  final int maxLines;
 
   const AppTextField({
     Key? key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
+    this.maxLines = 1,
   }) : super(key: key);
 
   @override
@@ -29,19 +31,21 @@ class AppTextField extends StatelessWidget {
     );
 
     return TextField(
-        controller: controller,
-        obscureText: obscureText,
-        style: inputTextStyle,
-        decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.shade800)),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
-          ),
-          fillColor: Colors.grey.shade200,
-          filled: true,
-          hintText: hintText,
-          hintStyle: hintStyle,
-        ));
+      controller: controller,
+      obscureText: obscureText,
+      style: inputTextStyle,
+      decoration: InputDecoration(
+        enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey.shade800)),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+        fillColor: Colors.grey.shade200,
+        filled: true,
+        hintText: hintText,
+        hintStyle: hintStyle,
+      ),
+      maxLines: maxLines,
+    );
   }
 }

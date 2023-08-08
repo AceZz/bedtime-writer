@@ -1,6 +1,7 @@
 /// This file is where the concrete implementation of all abstract classes and
 /// generic functions are chosen.
 
+import 'package:bedtime_writer/backend/user_feedback.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
@@ -23,6 +24,10 @@ final userProvider = Provider<User>((ref) => getFirebaseUser(ref));
 
 /// Resets password for given email
 Future<void> Function(String email) resetPassword = firebaseResetPassword;
+
+/// Creates a story request, and returns the id of the story.
+Future<void> Function(UserFeedback feedback) collectUserFeedback =
+    firebaseCollectUserFeedback;
 
 /**
  * STORY

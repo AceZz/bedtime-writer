@@ -1,3 +1,4 @@
+import 'package:bedtime_writer/widgets/feedback_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -61,6 +62,8 @@ class HomeScreen extends ConsumerWidget {
           .toList(),
     );
 
+    final feedbackButton = FeedbackButton(text: 'Send feedback');
+
     return AppScaffold(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -74,6 +77,8 @@ class HomeScreen extends ConsumerWidget {
           _DisplayRemainingStories(),
           SizedBox(height: 20),
           menuWidget,
+          SizedBox(height: 20),
+          feedbackButton,
           if (debugAuth())
             const _CustomCenterAtBottom(child: const HomeScreenDebugAuth()),
           if (debugStats())

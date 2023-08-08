@@ -9,3 +9,4 @@ export 'story.dart'
         firebaseUserStoriesProvider;
 export 'story_part.dart' show firebaseStoryPartProvider;
 export 'user.dart' show getFirebaseUser, firebaseResetPassword;
+export 'user_feedback.dart' show firebaseCollectUserFeedback;

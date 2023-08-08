@@ -3,6 +3,7 @@ export 'concrete.dart'
         createClassicStory,
         favoriteUserStoriesProvider,
         preferencesProvider,
+        registerUserFeedback,
         resetPassword,
         storyProvider,
         storyPartProvider,
@@ -25,3 +26,4 @@ export 'user.dart'
         RegisteredUser,
         UnauthUser,
         GoogleAuthMixin;
+export 'user_feedback.dart' show UserFeedback;
