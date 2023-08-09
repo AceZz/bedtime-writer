@@ -74,8 +74,8 @@ class _ErrorScreenButton extends StatelessWidget {
         clipBehavior: Clip.antiAliasWithSaveLayer,
         child: InkWell(
           onTap: () {
-            context.pushReplacementNamed(
-                'home'); // Allows users to go back to home with back in app bar in the destination screen.
+            // Allows users to go back to home with back in app bar in the destination screen.
+            context.pushReplacementNamed('home');
             context.pushNamed(destination);
           },
           child: Ink(

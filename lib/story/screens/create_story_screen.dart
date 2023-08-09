@@ -33,14 +33,13 @@ class CreateStoryScreen extends ConsumerWidget {
     final isAnonymousBlocked =
         (user is AnonymousUser) && preferences.hasLoggedOut;
     final isUnauth = (user is UnauthUser);
-    final shouldSignIn = (isAnonymousBlocked || isUnauth);
-    final errorScreenText = shouldSignIn
+    final isBlockedOrUnauth = (isAnonymousBlocked || isUnauth);
+    final errorScreenText = isBlockedOrUnauth
         ? 'Your storytelling magic has reached its limit. Sign in to discover new stories.'
-        : 'Your storytelling magic has reached its limit. Come back to Dreamy Tales tomorrow to discover new stories.';
-    final errorScreenButtonText = shouldSignIn ? 'Sign In' : 'Back to Home';
-    final errorScreenDestination = shouldSignIn ? 'sign_in' : 'home';
-    final errorScreenButtonColor =
-        shouldSignIn ? Theme.of(context).colorScheme.primary : null;
+        : 'Come back to Dreamy Tales tomorrow to discover new stories. Make sure to sign-in to find your stories in the magical library.';
+    final errorScreenButtonText = 'Sign In';
+    final errorScreenDestination = 'sign_in';
+    final errorScreenButtonColor = Theme.of(context).colorScheme.primary;
 
     // Checks on stories limit and displays a question
     if (state.hasRemainingQuestions) {
