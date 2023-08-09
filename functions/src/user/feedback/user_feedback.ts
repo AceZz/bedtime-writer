@@ -4,8 +4,10 @@
 export interface UserFeedbackManager {
   /**
    * Write the user feedback to the database.
+   *
+   * Returns the feedback id.
    */
-  write(feedback: UserFeedback): Promise<void>;
+  write(feedback: UserFeedback): Promise<string>;
 }
 
 export class UserFeedback {

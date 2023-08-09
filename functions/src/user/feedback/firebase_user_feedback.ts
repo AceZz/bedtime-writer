@@ -3,19 +3,21 @@ import { logger } from "../../logger";
 import { UserFeedback, UserFeedbackManager } from "./user_feedback";
 
 /**
- * Update stories stats
+ * Collect user feedback
  */
 export class FirebaseUserFeedbackManager implements UserFeedbackManager {
   constructor(readonly feedback: FirestoreUserFeedback) {}
 
-  //TODO: write tests
   async write(feedback: UserFeedback) {
     const feedbackRef = this.feedback.newFeedbackRef();
     await feedbackRef.create(feedback.toJson());
+
+    const feedbackId = feedbackRef.id;
     logger.info(
-      `FirebaseUserFeedbackManager: feedback ${feedbackRef.id} from user ${
+      `FirebaseUserFeedbackManager: feedback ${feedbackId} from user ${
         feedback.uid ?? "unknown"
       } was written to Firestore`
     );
+    return feedbackId;
   }
 }
