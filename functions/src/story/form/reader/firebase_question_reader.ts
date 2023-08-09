@@ -2,13 +2,12 @@ import { StoryQuestion } from "../story_question";
 import { Reader } from "./reader";
 import { StoryChoice } from "../story_choice";
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
-import { FirestoreStoryQuestions } from "../../firebase/firestore_story_questions";
-import { FirestorePaths } from "../../firebase/firestore_paths";
+import { FirestorePaths, FirestoreStoryQuestions } from "../../../firebase";
 
 /**
- * Read a list of Questions from a Firestore collection.
+ * Read a list of Questions from Firebase.
  */
-export class FirestoreQuestionReader implements Reader<StoryQuestion[]> {
+export class FirebaseQuestionReader implements Reader<StoryQuestion[]> {
   private collection: FirestoreStoryQuestions;
 
   constructor(paths?: FirestorePaths) {

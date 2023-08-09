@@ -1,6 +1,8 @@
 import { expect, test } from "@jest/globals";
-import { StoryRequestV1 } from "../../../../src/story/request/v1/story_request_v1";
-import { StoryRequestV1JsonConverter } from "../../../../src/story/request/v1/story_request_v1_json_converter";
+import {
+  StoryRequestV1,
+  StoryRequestV1JsonConverter,
+} from "../../../../src/story";
 
 const PARTIAL_DATA = {
   author: "an author",

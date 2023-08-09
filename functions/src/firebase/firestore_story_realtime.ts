@@ -15,11 +15,7 @@ import { FirestoreStories } from "./firestore_stories";
  * story__realtime:
  *     <story_1>:
  *        ...
- *        request:
- *           <version>:
- *              formId: string
- *              <question>: <choice>
- *              ...
+ *        request {}
  *     <story_2>:
  *        ...
  *     ...
@@ -39,9 +35,5 @@ export class FirestoreStoryRealtime implements FirestoreStories {
 
   storiesRef(): CollectionReference {
     return this.firestore.collection(this.paths.story.realtime);
-  }
-
-  storyRequestRef(storyId: string, requestVersion: string): DocumentReference {
-    return this.storyRef(storyId).collection("request").doc(requestVersion);
   }
 }

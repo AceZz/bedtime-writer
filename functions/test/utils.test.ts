@@ -6,7 +6,7 @@ import {
   retryAsyncFunction,
   cartesianProduct,
 } from "../src/utils";
-import { FAKE_IMAGE_BYTES } from "../src/story/generator/image_api/fake_image_api";
+import { FAKE_IMAGE_BYTES } from "../src/story";
 
 test("compressToPng", async () => {
   await compressToPng(FAKE_IMAGE_BYTES, {});

@@ -2,8 +2,7 @@ import { readFile } from "fs/promises";
 
 import { test } from "@jest/globals";
 
-import { StoryChoice } from "../../src/story/story_choice";
-import { StoryQuestion } from "../../src/story/story_question";
+import { StoryChoice, StoryQuestion } from "../../src/story";
 
 test("Can create a StoryQuestion", async () => {
   const image = await readFile("test/story/data/choice.jpg");

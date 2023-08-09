@@ -1,4 +1,4 @@
-import { FirestorePaths } from "../../../src/firebase/firestore_paths";
+import { FirestorePaths } from "../../../src/firebase";
 import { FirestoreCacheTestUtils } from "./firestore_cache_test_utils";
 import { FirestoreFormsTestUtils } from "./firestore_forms_test_utils";
 import { FirestoreQuestionsTestUtils } from "./firestore_questions_test_utils";

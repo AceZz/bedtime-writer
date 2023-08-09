@@ -1,5 +1,5 @@
 import { beforeAll, beforeEach, test } from "@jest/globals";
-import { initEnv, initFirebase } from "../../../src/firebase/utils";
+import { initEnv, initFirebase } from "../../../src/firebase";
 import { FirestoreTestUtils } from "../utils/firestore_test_utils";
 
 const storyUtils = new FirestoreTestUtils("story_writer").story;

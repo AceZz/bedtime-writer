@@ -1,10 +1,12 @@
 import { DocumentReference, getFirestore } from "firebase-admin/firestore";
-import { FirebaseQuestionWriter } from "../../../src/story";
-import { FirestoreQuestionReader } from "../../../src/story/reader/firestore_question_reader";
-import { StoryQuestion } from "../../../src/story/story_question";
-import { StoryChoice } from "../../../src/story/story_choice";
+import {
+  FirebaseQuestionReader,
+  FirebaseQuestionWriter,
+  StoryQuestion,
+  StoryChoice,
+} from "../../../src/story";
 import { expect } from "@jest/globals";
-import { FirestorePaths } from "../../../src/firebase/firestore_paths";
+import { FirestorePaths } from "../../../src/firebase";
 
 const QUESTIONS_0 = async () => [
   new StoryQuestion("question1", "Question 1", [
@@ -75,8 +77,8 @@ export class FirestoreQuestionsTestUtils {
     return new FirebaseQuestionWriter(this.paths);
   }
 
-  get reader(): FirestoreQuestionReader {
-    return new FirestoreQuestionReader(this.paths);
+  get reader(): FirebaseQuestionReader {
+    return new FirebaseQuestionReader(this.paths);
   }
 
   async samples(): Promise<StoryQuestion[][]> {

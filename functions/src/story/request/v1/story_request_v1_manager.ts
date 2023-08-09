@@ -1,4 +1,4 @@
-import { FirestoreStories } from "../../../firebase/firestore_stories";
+import { FirestoreStories } from "../../../firebase";
 import { CLASSIC_LOGIC } from "../../logic";
 import { StoryRequestManager } from "../story_request_manager";
 import { StoryRequestV1 } from "./story_request_v1";
