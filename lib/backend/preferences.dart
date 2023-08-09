@@ -20,11 +20,12 @@ class Preferences {
     required this.accountCreationLastDate,
   });
 
-  Preferences copyWith(
-      {bool? ageConfirmed,
-      int? duration,
-      bool? hasLoggedOut,
-      String? lastAccountCreationDate}) {
+  Preferences copyWith({
+    bool? ageConfirmed,
+    int? duration,
+    bool? hasLoggedOut,
+    String? lastAccountCreationDate,
+  }) {
     return Preferences(
       ageConfirmed: ageConfirmed ?? this.ageConfirmed,
       duration: duration ?? this.duration,

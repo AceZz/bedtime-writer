@@ -8,9 +8,6 @@ The values are case-insensitive.
 
 In `bedtime-writer/.env`:
 
-* `ACCOUNT_CREATION_LIMIT_DAYS`
-  * positive integer (default `1`)
-  * wait the specify number of days before allowing another account creation.
 * `BACKEND`
     * `remote` (default): use the Cloud Function backend.
     * `local`: use the local backend.
@@ -20,7 +17,7 @@ In `bedtime-writer/.env`:
       log in / log out easily.
 * `DEBUG_AUTH_NO_ACCOUNT_LIMIT`
   * `false` (default)
-  * `true`: do not implement the account creation limit, so many accounts can be created in short timeframe.
+  * `true`: do not implement the account creation limit, so many accounts can be created in a short timeframe.
 * `DEBUG_STATS`
     * `false` (default)
     * `true`: display helpful info about user stats, like the number of generated stories overall and today.

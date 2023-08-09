@@ -1,17 +1,18 @@
-import 'package:bedtime_writer/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../backend/user.dart';
-import '../../utils.dart';
-import '../../widgets/index.dart';
 import '../../backend/index.dart';
+import '../../backend/user.dart';
+import '../../config.dart';
+import '../../widgets/index.dart';
 import '../../widgets/sign_in.dart';
 import '../../widgets/app_alert_dialog.dart';
 import '../../widgets/app_text_field.dart';
+
+const accountCreationLimitDays = 1;
 
 /// Asks the user to sign in and redirects to [redirect].
 class SignInScreen extends ConsumerStatefulWidget {
@@ -578,8 +579,6 @@ void _checkAccountCreationAllowed(WidgetRef ref) {
   final currentDate = DateTime.now();
   final difference = currentDate.difference(creationDate);
 
-  final accountCreationLimitDays =
-      parseEnvAsInt('ACCOUNT_CREATION_LIMIT_DAYS', 1);
   if (difference.inDays < accountCreationLimitDays) {
     throw new AuthException(code: 'limit-account-creation');
   }
