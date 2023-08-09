@@ -6,5 +6,4 @@ import {
 export interface FirestoreStories {
   storyRef(storyId: string): DocumentReference;
   storiesRef(): CollectionReference;
-  storyRequestRef(storyId: string, requestVersion: string): DocumentReference;
 }

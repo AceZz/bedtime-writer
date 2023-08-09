@@ -21,6 +21,10 @@ export class StoryRequestV1 implements StoryRequest {
     return this.data.author;
   }
 
+  get version(): string {
+    return "v1";
+  }
+
   toClassicStoryLogic(): ClassicStoryLogic {
     return new ClassicStoryLogic(
       this.data.duration,

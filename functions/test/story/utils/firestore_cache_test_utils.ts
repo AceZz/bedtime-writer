@@ -164,12 +164,15 @@ export class FirestoreCacheTestUtils {
     const cache = firestore.collection(this.paths.story.cache);
     const query = await cache.get();
     const expected = requests.map((request) => {
-      return { logic: request.logic, ...request.data };
+      return {
+        logic: request.logic,
+        version: request.version,
+        ...request.data,
+      };
     });
 
     const promises = query.docs.map(async (doc) => {
-      const requestDoc = await doc.ref.collection("request").doc("v1").get();
-      return requestDoc.data();
+      return await doc.data().request;
     });
     const actual = await Promise.all(promises);
 
