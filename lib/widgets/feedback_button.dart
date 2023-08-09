@@ -84,6 +84,35 @@ _feedbackOnPressed(
   final feedback =
       UserFeedback(text: feedbackText, datetime: DateTime.now().toUtc());
   collectUserFeedback(feedback); // Async is voluntarily not awaited
-  //TODO: show snackbar and say feedback has been well received
   context.pop();
+  _showFeedbackConfirmationAlertDialog(context: context);
+}
+
+void _showFeedbackConfirmationAlertDialog({
+  required BuildContext context,
+}) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      const title = 'Success';
+      final content = Text(
+        'We believe in crafting a unique story experience at Dreamy Tales. With your feedback, we\'re already one step closer.\n\nThank you for your contribution!',
+        style: Theme.of(context).primaryTextTheme.bodySmall,
+      );
+      final actions = <Widget>[
+        TextButton(
+          onPressed: context.pop,
+          child: Text(
+            'Keep dreaming',
+            style: Theme.of(context).primaryTextTheme.bodySmall,
+          ),
+        ),
+      ];
+      return AppAlertDialog(
+        title: title,
+        content: content,
+        actions: actions,
+      );
+    },
+  );
 }
