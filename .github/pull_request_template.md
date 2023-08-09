@@ -4,6 +4,7 @@
 
 -----
 
-- Better reviewed commit by commit? Y/N
-- Requires deployment of Cloud Functions? Y/N
-- Requires deployment of Firestore rules? Y/N
+- Better reviewed commit by commit?
+- Requires deployment of Cloud Functions?
+- Requires deployment of Firestore rules?
+- Backend architecture diagram updated?

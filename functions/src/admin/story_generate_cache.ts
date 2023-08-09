@@ -1,14 +1,13 @@
-import { FirestorePaths } from "../firebase/firestore_paths";
-import { FirestoreFormReader } from "../story/reader/firestore_form_reader";
+import { FirebaseFormReader, StoryCacheV1Manager } from "../story";
 import {
+  FirestorePaths,
   firebaseEmulatorsAreUsed,
   getFirebaseProject,
   initEnv,
   initFirebase,
-} from "../firebase/utils";
+} from "../firebase";
 import { prompt } from "../utils";
 
-import { StoryCacheV1Manager } from "../story/cache/v1/firestore_story_cache_manager";
 import { getImageApi, getTextApi } from "../api";
 
 main().then(() => process.exit(0));
@@ -22,7 +21,7 @@ async function main() {
   if (await confirm(firestorePaths)) {
     initFirebase();
 
-    const reader = new FirestoreFormReader(firestorePaths);
+    const reader = new FirebaseFormReader(firestorePaths);
     const formsWithId = await reader.readMostRecentWithIds(1);
 
     const formWithId = formsWithId[0];

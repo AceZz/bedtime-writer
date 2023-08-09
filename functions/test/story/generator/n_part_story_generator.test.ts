@@ -6,12 +6,10 @@ import {
   FAKE_IMAGE_BYTES,
   FakeImageApi,
   OpenAiImageApi,
-} from "../../../src/story/generator/image_api";
-import { NPartStoryGenerator } from "../../../src/story/generator/n_part_story_generator";
-import {
+  NPartStoryGenerator,
   FakeTextApi,
   OpenAiTextApi,
-} from "../../../src/story/generator/text_api";
+} from "../../../src/story";
 import { FULL_CLASSIC_STORY_LOGIC } from "../logic/data";
 
 describe("with fake APIs", () => {

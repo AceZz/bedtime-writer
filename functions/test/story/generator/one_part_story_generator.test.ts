@@ -2,17 +2,15 @@ import { mkdir, writeFile } from "node:fs/promises";
 
 import { beforeAll, describe, expect, test } from "@jest/globals";
 
-import { OnePartStoryGenerator } from "../../../src/story/generator/one_part_story_generator";
-import { FULL_CLASSIC_STORY_LOGIC } from "../logic/data";
 import {
+  OnePartStoryGenerator,
   OpenAiTextApi,
   FakeTextApi,
-} from "../../../src/story/generator/text_api";
-import {
   FAKE_IMAGE_BYTES,
   FakeImageApi,
   OpenAiImageApi,
-} from "../../../src/story/generator/image_api";
+} from "../../../src/story";
+import { FULL_CLASSIC_STORY_LOGIC } from "../logic/data";
 import { getOpenAiApi } from "../../../src/open_ai";
 
 describe("with fake APIs", () => {

@@ -7,12 +7,14 @@ import {
   NPartStoryGenerator,
   StoryGenerator,
   StoryMetadata,
+  StoryStatus,
 } from "../../../src/story";
-import { FirestorePaths } from "../../../src/firebase/firestore_paths";
-import { FirestoreStories } from "../../../src/firebase/firestore_stories";
-import { FirestoreStoryRealtime } from "../../../src/firebase/firestore_story_realtime";
+import {
+  FirestorePaths,
+  FirestoreStories,
+  FirestoreStoryRealtime,
+} from "../../../src/firebase";
 import { expect } from "@jest/globals";
-import { StoryStatus } from "../../../src/story/story_status";
 
 /**
  * A dummy story logic.
