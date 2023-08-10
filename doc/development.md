@@ -87,7 +87,15 @@ Configure Firestore to use the "Native mode". Do not forget to update the rules 
 
 See [Deployment](./deployment.md) to deploy them.
 
-## CI (GitHub actions)
+## CI
+
+### Backend tests
+
+To avoid cluttering the tests output, logger calls (`functions/src/logger.ts`) are silenced. This is
+done in `functions/test/setup.ts`, which is run automatically before every test file
+(as configured in `functions/jest.config.js`).
+
+### Github actions
 
 To generate the `GOOGLE_SERVICE_ACCOUNT` secret (used in `backend_ci.yml`), generate a service
 account file for the CI (see [admin](./admin.md)), name it `service-account-ci.json` and run the
