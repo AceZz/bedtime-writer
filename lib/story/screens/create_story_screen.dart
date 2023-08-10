@@ -33,15 +33,24 @@ class CreateStoryScreen extends ConsumerWidget {
     final isAnonymousBlocked =
         (user is AnonymousUser) && preferences.hasLoggedOut;
     final isUnauth = (user is UnauthUser);
-    final String limitReachedText = (isAnonymousBlocked || isUnauth)
-        ? "Your storytelling magic has reached its limit. Sign in to discover a new set of stories."
-        : "Your storytelling magic has reached its limit. Come back to Dreamy Tales tomorrow to discover a new set of stories.";
+    final isBlockedOrUnauth = (isAnonymousBlocked || isUnauth);
+    final errorScreenText = isBlockedOrUnauth
+        ? 'Your storytelling magic has reached its limit. Sign in to discover new stories.'
+        : 'Come back to Dreamy Tales tomorrow to discover new stories. Make sure to sign-in to find your stories in the magical library.';
+    final errorScreenButtonText = 'Sign In';
+    final errorScreenDestination = 'sign_in';
+    final errorScreenButtonColor = Theme.of(context).colorScheme.primary;
 
     // Checks on stories limit and displays a question
     if (state.hasRemainingQuestions) {
       nextScreen = _QuestionScreen(question: state.currentQuestion);
       return _LimitCheckScreen(
-        limitReachedScreen: ErrorScreen(text: limitReachedText),
+        limitReachedScreen: ErrorScreen(
+          text: errorScreenText,
+          buttonText: errorScreenButtonText,
+          destination: errorScreenDestination,
+          buttonColor: errorScreenButtonColor,
+        ),
         nextScreen: nextScreen,
       );
     }
@@ -74,8 +83,10 @@ class _LimitCheckScreen extends ConsumerWidget {
     Widget limitCheckWidget = stats.when(
       loading: () => const CircularProgressIndicator(),
       error: (err, stack) => ErrorScreen(
-          text:
-              'An error happened during limit check: $err. Please try again.'),
+        text: 'An error happened during limit check: $err. Please try again.',
+        buttonText: 'Back to Home',
+        destination: 'home',
+      ),
       data: (stats) {
         // If user has enough remaining stories, proceed with story creation
         if (stats.remainingStories >= 1) {
@@ -127,13 +138,21 @@ class _StoryScreen extends ConsumerWidget {
                 final errorText = debugStory()
                     ? 'Error: StoryStatus.error'
                     : failedLoadingText;
-                return ErrorScreen(text: errorText);
+                return ErrorScreen(
+                  text: errorText,
+                  buttonText: 'Back to Home',
+                  destination: 'home',
+                );
             }
           },
           error: (error, stackTrace) {
             final errorText =
                 debugStory() ? 'Error: $error' : failedLoadingText;
-            return ErrorScreen(text: errorText);
+            return ErrorScreen(
+              text: errorText,
+              buttonText: 'Back to Home',
+              destination: 'home',
+            );
           },
           loading: () => loadingScreen,
           skipLoadingOnReload: true,
