@@ -9,9 +9,9 @@ import {
   getFirebaseProject,
   initEnv,
   initFirebase,
-} from "../firebase/utils";
+  FirestorePaths,
+} from "../firebase";
 import { FirebaseFormWriter, YAMLFormReader } from "../story";
-import { FirestorePaths } from "../firebase/firestore_paths";
 
 const DEFAULT_COLLECTION_NAME = "story__forms";
 const DEFAULT_YAML_PATH = "admin_data/story/form.yaml";

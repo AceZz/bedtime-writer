@@ -7,8 +7,7 @@
 
 import { describe, expect, test } from "@jest/globals";
 import { getOpenAiApi } from "../../../../src/open_ai";
-import { OpenAiTextApi } from "../../../../src/story/generator/text_api";
-import { SystemTextPrompt } from "../../../../src/story/generator/text_api/text_api";
+import { OpenAiTextApi, SystemTextPrompt } from "../../../../src/story";
 
 describe.skip("OpenAiTextApi", () => {
   const KEY = "...";

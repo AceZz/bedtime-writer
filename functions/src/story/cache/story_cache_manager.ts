@@ -1,5 +1,5 @@
 import { StoryRequestV1 } from "../request";
-import { StoryForm } from "../story_form";
+import { StoryForm } from "../form";
 
 /**
  * Interface to manage caching of stories.

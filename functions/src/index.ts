@@ -12,15 +12,18 @@ import {
   NPartStoryGenerator,
   StoryMetadata,
   CLASSIC_LOGIC,
-} from "./story/";
-import { StoryRequestV1Manager, StoryRequestV1 } from "./story/request";
-import { BucketRateLimiter, RateLimiter } from "./rate_limiter";
-import { FirestoreBucketRateLimiterStorage } from "./rate_limiter/bucket_rate_limiter/firestore_bucket_rate_limiter_storage";
+  StoryRequestV1Manager,
+  StoryRequestV1,
+} from "./story";
+import {
+  BucketRateLimiter,
+  RateLimiter,
+  FirestoreBucketRateLimiterStorage,
+} from "./rate_limiter";
 import { parseEnvAsNumber as parseEnvNumber } from "./utils";
 import { FirestoreUserStatsManager, UserStats } from "./user";
 import { getImageApi, getTextApi } from "./api";
-import { FirestorePaths } from "./firebase/firestore_paths";
-import { FirestoreStoryRealtime } from "./firebase/firestore_story_realtime";
+import { FirestorePaths, FirestoreStoryRealtime } from "./firebase";
 
 initializeApp();
 

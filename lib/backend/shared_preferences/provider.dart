@@ -31,6 +31,9 @@ class SharedPreferencesNotifier extends Notifier<Preferences>
       ageConfirmed: sharedPreferences.getBool('ageConfirmed') ?? false,
       duration: sharedPreferences.getInt('duration') ?? 2,
       hasLoggedOut: sharedPreferences.getBool('hasLoggedOut') ?? false,
+      accountCreationLastDate:
+          sharedPreferences.getString('accountCreationLastDate') ??
+              '1900-01-01T00:00:00.000',
     );
   }
 
@@ -50,6 +53,14 @@ class SharedPreferencesNotifier extends Notifier<Preferences>
     final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
     await sharedPreferences.setBool('hasLoggedOut', hasLoggedOut);
     state = state.copyWith(hasLoggedOut: hasLoggedOut);
+  }
+
+  Future<void> updateAccountCreationLastDate() async {
+    final creationDate =
+        DateTime.now().toIso8601String(); // Stores the date in ISO8601 format
+    final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
+    await sharedPreferences.setString('accountCreationLastDate', creationDate);
+    state = state.copyWith(lastAccountCreationDate: creationDate);
   }
 }
 

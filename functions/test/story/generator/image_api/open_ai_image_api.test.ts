@@ -7,7 +7,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 
 import { beforeAll, describe, test } from "@jest/globals";
-import { OpenAiImageApi } from "../../../../src/story/generator/image_api/open_ai_image_api";
+import { OpenAiImageApi } from "../../../../src/story";
 import { getOpenAiApi } from "../../../../src/open_ai";
 
 describe.skip("OpenAiImageApi", () => {

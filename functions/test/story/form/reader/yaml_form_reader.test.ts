@@ -1,6 +1,5 @@
 import { expect, test, jest } from "@jest/globals";
-import { YAMLFormReader } from "../../../src/story/reader/yaml_form_reader";
-import { StoryForm } from "../../../src/story/story_form";
+import { StoryForm, YAMLFormReader } from "../../../../src/story";
 
 test("parse form with date", async () => {
   const reader = new YAMLFormReader("test/story/data/form.yaml");

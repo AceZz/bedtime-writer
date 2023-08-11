@@ -7,12 +7,13 @@ import {
   Timestamp,
   getFirestore,
 } from "firebase-admin/firestore";
-import { StoryForm } from "../../../src/story/story_form";
-import { FirestoreFormReader } from "../../../src/story/reader/firestore_form_reader";
-import { FirestoreStoryForms } from "../../../src/firebase/firestore_story_forms";
-import { FirebaseFormWriter } from "../../../src/story/writer/firebase_form_writer";
+import { FirestoreStoryForms, FirestorePaths } from "../../../src/firebase";
+import {
+  StoryForm,
+  FirebaseFormReader,
+  FirebaseFormWriter,
+} from "../../../src/story";
 import { expect } from "@jest/globals";
-import { FirestorePaths } from "../../../src/firebase/firestore_paths";
 
 /**
  * Works with QUESTIONS_0.
@@ -87,8 +88,8 @@ export class FirestoreFormsTestUtils {
     return new FirestoreStoryForms(this.paths);
   }
 
-  get reader(): FirestoreFormReader {
-    return new FirestoreFormReader(this.paths);
+  get reader(): FirebaseFormReader {
+    return new FirebaseFormReader(this.paths);
   }
 
   get writer(): FirebaseFormWriter {
