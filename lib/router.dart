@@ -49,7 +49,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'account',
         path: '/account',
-        builder: (context, state) => UserAccountScreen(redirect: '/'),
+        builder: (context, state) => const UserAccountScreen(redirect: '/'),
       ),
       GoRoute(
         name: 'sign_in',
@@ -72,7 +72,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'library',
         path: '/story/library',
-        builder: (context, state) => LibraryScreen(),
+        builder: (context, state) => const LibraryScreen(),
         redirect: (context, state) => _unregisteredRedirect(ref, state),
       ),
       GoRoute(
@@ -89,7 +89,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'preferences',
         path: '/preferences',
-        builder: (context, state) => PreferencesScreen(),
+        builder: (context, state) => const PreferencesScreen(),
         redirect: (context, state) => _unregisteredRedirect(ref, state),
       ),
     ],

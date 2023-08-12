@@ -33,7 +33,7 @@ class AppScaffold extends StatelessWidget {
       style: Theme.of(context).primaryTextTheme.headlineSmall,
     );
 
-    Widget screenBodyWidget = Container(
+    Widget screenBodyWidget = SizedBox(
       width: MediaQuery.of(context).size.width,
       child: child,
     );
@@ -43,7 +43,7 @@ class AppScaffold extends StatelessWidget {
       bottom: bottom,
     );
 
-    Widget _scrollView = _ScrollView(
+    Widget scrollView = _ScrollView(
       title: titleWidget,
       actions: actions,
       body: screenBodyWidget,
@@ -54,7 +54,7 @@ class AppScaffold extends StatelessWidget {
       // Must specify app bar only in the non-scrollable case
       appBar: (showAppBar & !scrollableAppBar) ? appBar : null,
       body: (showAppBar & scrollableAppBar)
-          ? SafeArea(child: _scrollView)
+          ? SafeArea(child: scrollView)
           : SafeArea(child: screenBodyWidget),
       floatingActionButton:
           showAccountButton ? const FloatingAccountButton() : null,
@@ -70,7 +70,7 @@ class _ScrollView extends StatefulWidget {
   final List<Widget>? actions;
   final Widget body;
 
-  _ScrollView({
+  const _ScrollView({
     required this.title,
     required this.actions,
     required this.body,
@@ -87,17 +87,17 @@ class _ScrollViewState extends State<_ScrollView> {
 
   @override
   Widget build(BuildContext context) {
-    final ScrollController _scrollController = ScrollController();
+    final ScrollController scrollController = ScrollController();
 
-    void _onScroll() {
-      if (_scrollController.position.atEdge) {
-        if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent) {
+    void onScroll() {
+      if (scrollController.position.atEdge) {
+        if (scrollController.position.pixels ==
+            scrollController.position.maxScrollExtent) {
           setState(() {
             _pinnedAppBar = true;
           });
         }
-      } else if (_scrollController.position.userScrollDirection ==
+      } else if (scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         setState(() {
           _pinnedAppBar = false;
@@ -105,10 +105,10 @@ class _ScrollViewState extends State<_ScrollView> {
       }
     }
 
-    _scrollController.addListener(_onScroll);
+    scrollController.addListener(onScroll);
 
     return CustomScrollView(
-      controller: _scrollController,
+      controller: scrollController,
       slivers: [
         SliverAppBar(
           floating: true,

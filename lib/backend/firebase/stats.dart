@@ -30,10 +30,10 @@ final firebaseStatsProvider = StreamProvider<Stats>((ref) {
       );
     });
   } else {
-    return Stream.value(Stats(numStories: 0, remainingStories: 0));
+    return Stream.value(const Stats(numStories: 0, remainingStories: 0));
   }
 });
 
 /// A query that returns stats for [user].
 DocumentReference<Map<String, dynamic>> _userStatsDocument(AuthUser user) =>
-    firebaseFirestore.collection(USER_STATS).doc(user.uid);
+    firebaseFirestore.collection(userStats).doc(user.uid);

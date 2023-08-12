@@ -37,8 +37,8 @@ class CreateStoryScreen extends ConsumerWidget {
     final errorScreenText = isBlockedOrUnauth
         ? 'Your storytelling magic has reached its limit. Sign in to discover new stories.'
         : 'Come back to Dreamy Tales tomorrow to discover new stories. Make sure to sign-in to find your stories in the magical library.';
-    final errorScreenButtonText = 'Sign In';
-    final errorScreenDestination = 'sign_in';
+    const errorScreenButtonText = 'Sign In';
+    const errorScreenDestination = 'sign_in';
     final errorScreenButtonColor = Theme.of(context).colorScheme.primary;
 
     // Checks on stories limit and displays a question
@@ -72,9 +72,11 @@ class _LimitCheckScreen extends ConsumerWidget {
   final Widget limitReachedScreen;
   final Widget nextScreen;
 
-  const _LimitCheckScreen(
-      {Key? key, required this.limitReachedScreen, required this.nextScreen})
-      : super(key: key);
+  const _LimitCheckScreen({
+    Key? key,
+    required this.limitReachedScreen,
+    required this.nextScreen,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -90,11 +92,11 @@ class _LimitCheckScreen extends ConsumerWidget {
       data: (stats) {
         // If user has enough remaining stories, proceed with story creation
         if (stats.remainingStories >= 1) {
-          return this.nextScreen;
+          return nextScreen;
         }
         // Else display limitReachScreen
         else {
-          return this.limitReachedScreen;
+          return limitReachedScreen;
         }
       },
     );
@@ -114,10 +116,10 @@ class _StoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _requestId = requestId;
-    const loadingScreen = const _LoadingScreen();
+    final requestId_ = requestId;
+    const loadingScreen = _LoadingScreen();
 
-    if (_requestId == null) {
+    if (requestId_ == null) {
       return loadingScreen;
     }
 
@@ -125,13 +127,13 @@ class _StoryScreen extends ConsumerWidget {
         'A mystical force seems to have interrupted your story.\n\nLet\'s try creating your dreamy tale again:';
 
     return ref.watch(
-      storyStatusProvider(_requestId).select(
+      storyStatusProvider(requestId_).select(
         (status) => status.when(
           data: (StoryStatus status) {
             switch (status) {
               case StoryStatus.generating:
               case StoryStatus.complete:
-                return DisplayStoryScreen(id: _requestId);
+                return DisplayStoryScreen(id: requestId_);
               case StoryStatus.pending:
                 return loadingScreen;
               case StoryStatus.error:
@@ -173,14 +175,14 @@ class _LoadingScreen extends StatelessWidget {
       showAppBar: false,
       child: Padding(
         padding: EdgeInsets.only(top: 0.3 * screenHeight),
-        child: Column(
+        child: const Column(
           children: [
-            const LottieLoading(),
+            LottieLoading(),
             SizedBox(
               height: 200,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: const _LoadingTexts(),
+                padding: EdgeInsets.symmetric(horizontal: 30),
+                child: _LoadingTexts(),
               ),
             )
           ],
@@ -208,7 +210,7 @@ class _LoadingTexts extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _texts(context),
-      initialData: [defaultText],
+      initialData: const [defaultText],
       builder: (
         BuildContext context,
         AsyncSnapshot<Iterable<String>> snapshot,
@@ -217,7 +219,7 @@ class _LoadingTexts extends StatelessWidget {
         final textStyle = Theme.of(context).primaryTextTheme.bodyLarge;
         return texts != null
             ? _animatedTexts(texts, textStyle)
-            : SizedBox.shrink();
+            : const SizedBox.shrink();
       },
     );
   }
@@ -311,7 +313,7 @@ class _ChoiceButton extends ConsumerWidget {
     double buttonWidth = 0.3 * size.width;
     double textWidth = 0.5 * size.width;
 
-    var text = Container(
+    var text = SizedBox(
       width: textWidth,
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -325,7 +327,7 @@ class _ChoiceButton extends ConsumerWidget {
 
     return Padding(
       padding: const EdgeInsets.all(15),
-      child: Container(
+      child: SizedBox(
         width: buttonWidth + textWidth,
         child: Material(
           color: Theme.of(context).colorScheme.primary,
@@ -341,7 +343,7 @@ class _ChoiceButton extends ConsumerWidget {
             child: Ink(
               child: Row(
                 children: [
-                  Container(
+                  SizedBox(
                     width: buttonWidth,
                     child: ClipOval(child: choice.image),
                   ),

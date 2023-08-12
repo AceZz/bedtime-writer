@@ -61,7 +61,9 @@ _showFeedbackAlertDialog({required BuildContext context}) {
       final actions = <Widget>[
         TextButton(
           onPressed: () => _feedbackOnPressed(
-              context: context, feedbackText: controller.text),
+            context: context,
+            feedbackText: controller.text,
+          ),
           child: Text(
             'Send',
             style: Theme.of(context).primaryTextTheme.bodySmall,
@@ -78,8 +80,10 @@ _showFeedbackAlertDialog({required BuildContext context}) {
   );
 }
 
-_feedbackOnPressed(
-    {required BuildContext context, required String feedbackText}) {
+_feedbackOnPressed({
+  required BuildContext context,
+  required String feedbackText,
+}) {
   final feedback =
       UserFeedback(text: feedbackText, datetime: DateTime.now().toUtc());
   collectUserFeedback(feedback); // Async is voluntarily not awaited

@@ -34,9 +34,11 @@ class _PreferenceCategory extends StatelessWidget {
   final String name;
   final List<_PreferenceOption> preferenceOptions;
 
-  const _PreferenceCategory(
-      {Key? key, required this.name, required this.preferenceOptions})
-      : super(key: key);
+  const _PreferenceCategory({
+    Key? key,
+    required this.name,
+    required this.preferenceOptions,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +64,11 @@ class _PreferenceOption extends StatelessWidget {
   final String text;
   final Widget dropdown;
 
-  const _PreferenceOption(
-      {Key? key, required this.text, required this.dropdown})
-      : super(key: key);
+  const _PreferenceOption({
+    Key? key,
+    required this.text,
+    required this.dropdown,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -72,15 +76,17 @@ class _PreferenceOption extends StatelessWidget {
       color: Theme.of(context).colorScheme.primary,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-        child: Row(children: [
-          Expanded(
-            child: Text(
-              text,
-              style: Theme.of(context).primaryTextTheme.bodySmall,
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                text,
+                style: Theme.of(context).primaryTextTheme.bodySmall,
+              ),
             ),
-          ),
-          dropdown,
-        ]),
+            dropdown,
+          ],
+        ),
       ),
     );
   }

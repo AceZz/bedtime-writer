@@ -113,7 +113,7 @@ class _StoryTitle extends ConsumerWidget {
       storyProvider(storyId).select((story) => story.valueOrNull?.title ?? ''),
     );
 
-    final _storyTitleStyle =
+    final storyTitleStyle =
         GoogleFonts.amaticSc(fontWeight: FontWeight.bold, fontSize: 52.sp);
 
     return Padding(
@@ -121,7 +121,7 @@ class _StoryTitle extends ConsumerWidget {
       child: Text(
         title,
         textAlign: TextAlign.center,
-        style: _storyTitleStyle,
+        style: storyTitleStyle,
       ),
     );
   }
@@ -194,8 +194,11 @@ class _StoryPartWidget extends ConsumerWidget {
     );
   }
 
-  Widget _textWidget(BuildContext context, String text,
-      {required bool withBigFirstLetter}) {
+  Widget _textWidget(
+    BuildContext context,
+    String text, {
+    required bool withBigFirstLetter,
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 30.sp),
       child: RichText(
@@ -216,7 +219,7 @@ class _StoryPartWidget extends ConsumerWidget {
   }
 
   TextSpan _textWithBigFirstLetter(BuildContext context, String text) {
-    final TextStyle _firstLetterStyle = GoogleFonts.croissantOne(
+    final TextStyle firstLetterStyle = GoogleFonts.croissantOne(
       fontWeight: FontWeight.bold,
       fontSize: 42.sp,
       color: Theme.of(context).primaryTextTheme.bodyMedium?.color,
@@ -225,7 +228,7 @@ class _StoryPartWidget extends ConsumerWidget {
     return TextSpan(
       // Sets a big first letter
       text: text.trim()[0],
-      style: _firstLetterStyle,
+      style: firstLetterStyle,
       // Writes the rest of the text
       children: <TextSpan>[
         TextSpan(
@@ -266,14 +269,14 @@ class _BottomRow extends ConsumerWidget {
     final storyId = ref.watch(_currentStoryId);
     final status = ref.watch(storyStatusProvider(storyId)).value;
 
-    final _theEndStyle = GoogleFonts.amaticSc(
+    final theEndStyle = GoogleFonts.amaticSc(
       fontWeight: FontWeight.bold,
       fontSize: 46.sp,
     );
 
     final theEndWidget = Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.sp),
-      child: Text('The End', textAlign: TextAlign.center, style: _theEndStyle),
+      child: Text('The End', textAlign: TextAlign.center, style: theEndStyle),
     );
 
     return Padding(
@@ -296,7 +299,7 @@ class _BottomRow extends ConsumerWidget {
 
 SnackBar _favoriteSnackBar(BuildContext context, bool isFavorite) {
   final text =
-      isFavorite ? "Story added to favorites" : "Story removed from favorites";
+      isFavorite ? 'Story added to favorites' : 'Story removed from favorites';
 
   return SnackBar(
     content: Center(
@@ -304,6 +307,6 @@ SnackBar _favoriteSnackBar(BuildContext context, bool isFavorite) {
     ),
     backgroundColor: Theme.of(context).colorScheme.primary,
     behavior: SnackBarBehavior.floating,
-    duration: Duration(seconds: 3),
+    duration: const Duration(seconds: 3),
   );
 }

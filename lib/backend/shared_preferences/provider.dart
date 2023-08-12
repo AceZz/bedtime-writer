@@ -37,24 +37,28 @@ class SharedPreferencesNotifier extends Notifier<Preferences>
     );
   }
 
+  @override
   Future<void> updateAgeConfirmed(bool newAgeConfirmed) async {
     final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
     await sharedPreferences.setBool('ageConfirmed', newAgeConfirmed);
     state = state.copyWith(ageConfirmed: newAgeConfirmed);
   }
 
+  @override
   Future<void> updateDuration(int newDuration) async {
     final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
     await sharedPreferences.setInt('duration', newDuration);
     state = state.copyWith(duration: newDuration);
   }
 
+  @override
   Future<void> updateHasLoggedOut(bool hasLoggedOut) async {
     final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
     await sharedPreferences.setBool('hasLoggedOut', hasLoggedOut);
     state = state.copyWith(hasLoggedOut: hasLoggedOut);
   }
 
+  @override
   Future<void> updateAccountCreationLastDate() async {
     final creationDate =
         DateTime.now().toIso8601String(); // Stores the date in ISO8601 format
@@ -66,4 +70,5 @@ class SharedPreferencesNotifier extends Notifier<Preferences>
 
 final sharedPreferencesProvider =
     NotifierProvider<SharedPreferencesNotifier, Preferences>(
-        () => SharedPreferencesNotifier());
+  () => SharedPreferencesNotifier(),
+);

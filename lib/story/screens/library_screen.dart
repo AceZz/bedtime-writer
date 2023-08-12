@@ -27,7 +27,7 @@ class _StoryTile extends StatelessWidget {
     return ListTile(
       // Has a preset non-modifiable height
       key: ValueKey(story.id),
-      contentPadding: EdgeInsets.all(8),
+      contentPadding: const EdgeInsets.all(8),
       tileColor: tileColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -60,7 +60,7 @@ class _StoryTile extends StatelessWidget {
 }
 
 class LibraryScreen extends StatelessWidget {
-  LibraryScreen({Key? key}) : super(key: key);
+  const LibraryScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -80,15 +80,17 @@ class LibraryScreen extends StatelessWidget {
   }
 }
 
-const _libraryTabBar = const TabBar(tabs: [
-  const Text('All'),
-  const Text('Favorites'),
-]);
+const _libraryTabBar = TabBar(
+  tabs: [
+    Text('All'),
+    Text('Favorites'),
+  ],
+);
 
 class _LibraryTab extends ConsumerWidget {
   final AutoDisposeStreamProvider<List<Story>> provider;
 
-  _LibraryTab({
+  const _LibraryTab({
     Key? key,
     required this.provider,
   }) : super(key: key);

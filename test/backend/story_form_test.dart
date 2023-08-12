@@ -22,7 +22,7 @@ const question_2 = Question(
 void main() {
   group('StoryAnswers', () {
     test('.answer()', () {
-      var answers = StoryAnswers(answers: {});
+      var answers = const StoryAnswers(answers: {});
 
       answers = answers.answer(question_1, question_1.choices[0]);
 
@@ -30,7 +30,7 @@ void main() {
     });
 
     test('.serialize()', () {
-      var answers = StoryAnswers(answers: {});
+      var answers = const StoryAnswers(answers: {});
 
       answers = answers.answer(question_1, question_1.choices[0]);
       answers = answers.answer(question_2, question_2.choices[1]);

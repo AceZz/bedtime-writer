@@ -26,18 +26,19 @@ class ErrorScreen extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: 0.1 * MediaQuery.of(context).size.width),
+              horizontal: 0.1 * MediaQuery.of(context).size.width,
+            ),
             child: Text(
-              this.text,
+              text,
               textAlign: TextAlign.center,
               style: Theme.of(context).primaryTextTheme.bodyMedium,
             ),
           ),
-          SizedBox(height: 20), // Add some space
+          const SizedBox(height: 20), // Add some space
           _ErrorScreenButton(
-            text: this.buttonText,
-            destination: this.destination,
-            buttonColor: this.buttonColor,
+            text: buttonText,
+            destination: destination,
+            buttonColor: buttonColor,
           )
         ],
       ),
@@ -64,11 +65,11 @@ class _ErrorScreenButton extends StatelessWidget {
       style: Theme.of(context).primaryTextTheme.bodyMedium,
     );
 
-    return Container(
+    return SizedBox(
       width: 0.8 * MediaQuery.of(context).size.width,
       height: 40,
       child: Material(
-        color: this.buttonColor ?? Colors.grey.shade600,
+        color: buttonColor ?? Colors.grey.shade600,
         elevation: 10,
         borderRadius: BorderRadius.circular(10),
         clipBehavior: Clip.antiAliasWithSaveLayer,

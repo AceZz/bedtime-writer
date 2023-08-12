@@ -10,7 +10,7 @@ import 'firebase.dart';
 /// Streams a specific [StoryPart].
 final firebaseStoryPartProvider = StreamProvider.autoDispose
     .family<StoryPart, Tuple2<String, String>>((ref, ids) {
-  final storyRef = firebaseFirestore.collection(STORY_REALTIME).doc(ids.item1);
+  final storyRef = firebaseFirestore.collection(storyRealtime).doc(ids.item1);
   final imagesRef = storyRef.collection('images');
   final snapshots = storyRef.collection('parts').doc(ids.item2).snapshots();
   return snapshots
@@ -32,6 +32,7 @@ class FirebaseStoryPart implements StoryPart {
 
   const FirebaseStoryPart(this.id, this._imagesRef, this._data) : super();
 
+  @override
   String toString() => '_FirebaseStoryPart(${text.substring(0, 20)}...)';
 
   @override
@@ -48,5 +49,6 @@ class FirebaseStoryPart implements StoryPart {
     return _imagesRef.doc(imageId);
   }
 
+  @override
   String get text => _data['text'];
 }

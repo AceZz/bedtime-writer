@@ -15,7 +15,7 @@ final StoryForm storyForm = StoryForm(
 
 final characterName = Question(
   id: 'characterName',
-  text: "Who is the hero of tonight\'s story?",
+  text: "Who is the hero of tonight's story?",
   choices: [
     Choice(
       id: 'blaze',

@@ -20,7 +20,8 @@ class HomeScreen extends ConsumerWidget {
       delay: const Duration(milliseconds: 500),
       child: Padding(
         padding: EdgeInsets.symmetric(
-            horizontal: 0.2 * MediaQuery.of(context).size.width),
+          horizontal: 0.2 * MediaQuery.of(context).size.width,
+        ),
         child: Text(
           'Dreamy\nTales',
           textAlign: TextAlign.center,
@@ -29,7 +30,7 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
 
-    Widget newStoryButton = _HomeScreenButton(
+    Widget newStoryButton = const _HomeScreenButton(
       text: 'New story',
       destination: 'create_story',
       resetStoryState: true,
@@ -37,10 +38,12 @@ class HomeScreen extends ConsumerWidget {
     );
 
     Widget libraryButton =
-        _HomeScreenButton(text: 'Library', destination: 'library');
+        const _HomeScreenButton(text: 'Library', destination: 'library');
 
-    Widget preferencesButton =
-        _HomeScreenButton(text: 'Preferences', destination: 'preferences');
+    Widget preferencesButton = const _HomeScreenButton(
+      text: 'Preferences',
+      destination: 'preferences',
+    );
 
     Widget menuWidget = Column(
       children: [newStoryButton, libraryButton, preferencesButton]
@@ -48,45 +51,46 @@ class HomeScreen extends ConsumerWidget {
           .map(
             // The buttons will fade in one after the other
             (i, button) => MapEntry(
-                i,
-                FadeIn(
-                  duration: const Duration(milliseconds: 500),
-                  delay: Duration(milliseconds: 500 + 500 * (i + 1)),
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: button,
-                  ),
-                )),
+              i,
+              FadeIn(
+                duration: const Duration(milliseconds: 500),
+                delay: Duration(milliseconds: 500 + 500 * (i + 1)),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: button,
+                ),
+              ),
+            ),
           )
           .values
           .toList(),
     );
 
-    final feedbackButton = FeedbackButton(text: 'Send feedback');
+    const feedbackButton = FeedbackButton(text: 'Send feedback');
 
     return AppScaffold(
+      showAppBar: false,
+      showAccountButton: true,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 60),
+          const SizedBox(height: 60),
           FittedBox(
             fit: BoxFit.scaleDown,
             child: titleWidget,
           ),
-          SizedBox(height: 20),
-          _DisplayRemainingStories(),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
+          const _DisplayRemainingStories(),
+          const SizedBox(height: 20),
           menuWidget,
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           feedbackButton,
           if (debugAuth())
-            const _CustomCenterAtBottom(child: const HomeScreenDebugAuth()),
+            const _CustomCenterAtBottom(child: HomeScreenDebugAuth()),
           if (debugStats())
-            const _CustomCenterAtBottom(child: const HomeScreenDebugStats()),
+            const _CustomCenterAtBottom(child: HomeScreenDebugStats()),
         ],
       ),
-      showAppBar: false,
-      showAccountButton: true,
     );
   }
 }
@@ -116,9 +120,9 @@ class _HomeScreenButton extends ConsumerWidget {
     // Stats are fetched from Firestore which can have some latency. We handle this delay by showing a CircularProgressIndicator
     final stats = ref.watch(statsProvider);
     final statsIsLoadingOrError = stats is AsyncLoading || stats is AsyncError;
-    final waitingStats = this.dependsOnStats && statsIsLoadingOrError;
+    final waitingStats = dependsOnStats && statsIsLoadingOrError;
 
-    return Container(
+    return SizedBox(
       width: 0.7 * MediaQuery.of(context).size.width,
       height: 60,
       child: Material(
@@ -138,11 +142,12 @@ class _HomeScreenButton extends ConsumerWidget {
                 },
           child: Ink(
             child: Center(
-                child: waitingStats
-                    ? CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.onSurface,
-                      )
-                    : buttonTextWidget),
+              child: waitingStats
+                  ? CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    )
+                  : buttonTextWidget,
+            ),
           ),
         ),
       ),
@@ -162,7 +167,7 @@ class _CustomCenterAtBottom extends StatelessWidget {
       child: Align(
         alignment: Alignment.bottomCenter,
         child: Padding(
-          padding: EdgeInsets.only(bottom: 30),
+          padding: const EdgeInsets.only(bottom: 30),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [Flexible(child: child)],
@@ -189,7 +194,8 @@ class _DisplayRemainingStories extends ConsumerWidget {
           delay: const Duration(milliseconds: 500),
           child: Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: 0.2 * MediaQuery.of(context).size.width),
+              horizontal: 0.2 * MediaQuery.of(context).size.width,
+            ),
             child: Text(
               'Remaining stories: ${stats.remainingStories}',
               textAlign: TextAlign.center,

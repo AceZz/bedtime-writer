@@ -22,7 +22,7 @@ class AppAlertDialog extends StatelessWidget {
         style: Theme.of(context).primaryTextTheme.bodySmall,
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
-      content: Container(width: 0.6 * deviceWidth, child: content),
+      content: SizedBox(width: 0.6 * deviceWidth, child: content),
       actions: actions,
     );
   }
