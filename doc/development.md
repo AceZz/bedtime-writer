@@ -89,6 +89,18 @@ See [Deployment](./deployment.md) to deploy them.
 
 ## CI
 
+### Frontend
+
+GitHub actions run the following CI steps against the frontend code
+(see `.github/workflows/frontend_ci.yml`):
+
+1. `flutter analyze`
+2. `dart format`
+3. `flutter test`
+
+If issues are brought up by `flutter analyze`, you can automatically fix some of them with
+`dart fix --apply` (a commit is advised before, since it will write directly on your files).
+
 ### Backend tests
 
 To avoid cluttering the tests output, logger calls (`functions/src/logger.ts`) are silenced. This is
