@@ -11,11 +11,11 @@ class SignOutButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: onPressed,
-      child: Text(text),
       style: FilledButton.styleFrom(
         foregroundColor: Colors.black,
         backgroundColor: Colors.white,
       ),
+      child: Text(text),
     );
   }
 }

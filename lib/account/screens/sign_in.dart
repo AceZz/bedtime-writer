@@ -7,10 +7,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../backend/index.dart';
 import '../../backend/user.dart';
 import '../../config.dart';
-import '../../widgets/index.dart';
-import '../../widgets/sign_in.dart';
 import '../../widgets/app_alert_dialog.dart';
 import '../../widgets/app_text_field.dart';
+import '../../widgets/index.dart';
+import '../../widgets/sign_in.dart';
 
 const accountCreationLimitDays = 1;
 
@@ -19,7 +19,7 @@ class SignInScreen extends ConsumerStatefulWidget {
   final String redirect;
   final String signInText;
 
-  SignInScreen({
+  const SignInScreen({
     required this.redirect,
     required this.signInText,
     Key? key,
@@ -47,14 +47,15 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void _googleOnPressed(
-      {required BuildContext context,
-      required WidgetRef ref,
-      required String redirect}) async {
+  void _googleOnPressed({
+    required BuildContext context,
+    required WidgetRef ref,
+    required String redirect,
+  }) async {
     showDialog(
       context: context,
       builder: (context) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       },
@@ -68,21 +69,24 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       await user.linkToGoogle();
     } else if (user is RegisteredUser) {
       throw Exception(
-          'User is already signed in and should not be able to sign in with Google');
+        'User is already signed in and should not be able to sign in with Google',
+      );
     }
+
     context.pushReplacement(redirect);
   }
 
-  void _signInOnTap(
-      {required BuildContext context,
-      required WidgetRef ref,
-      required String email,
-      required String password,
-      required String redirect}) async {
+  void _signInOnTap({
+    required BuildContext context,
+    required WidgetRef ref,
+    required String email,
+    required String password,
+    required String redirect,
+  }) async {
     showDialog(
       context: context,
       builder: (context) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       },
@@ -92,7 +96,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     if (user is RegisteredUser) {
       throw Exception(
-          'User is already signed-in and should not be able to re sign in');
+        'User is already signed-in and should not be able to re sign in',
+      );
     }
 
     try {
@@ -125,7 +130,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       },
@@ -141,12 +146,16 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       _checkAccountCreationAllowed(ref);
       if (user is UnauthUser) {
         await user.createUserWithEmailAndPassword(
-            email: email, password: password);
+          email: email,
+          password: password,
+        );
         await _updateAccountCreationLastDate(ref);
         context.pushReplacement(redirect);
       } else if (user is AnonymousUser) {
         await user.createUserWithEmailAndPassword(
-            email: email, password: password);
+          email: email,
+          password: password,
+        );
         await _updateAccountCreationLastDate(ref);
         context.pushReplacement(redirect);
       }
@@ -270,24 +279,22 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       child: Row(
         children: [
           Expanded(
-            child: Container(
-              child: Divider(
-                thickness: 0.5,
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
+            child: Divider(
+              thickness: 0.5,
+              color: Theme.of(context).colorScheme.onBackground,
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Text('or continue with',
-                style: Theme.of(context).primaryTextTheme.bodySmall),
+            child: Text(
+              'or continue with',
+              style: Theme.of(context).primaryTextTheme.bodySmall,
+            ),
           ),
           Expanded(
-            child: Container(
-              child: Divider(
-                thickness: 0.5,
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
+            child: Divider(
+              thickness: 0.5,
+              color: Theme.of(context).colorScheme.onBackground,
             ),
           )
         ],
@@ -303,7 +310,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             child: GoogleSignInButton(
               text: 'Google Sign in',
               onPressed: () => _googleOnPressed(
-                  context: context, ref: ref, redirect: widget.redirect),
+                context: context,
+                ref: ref,
+                redirect: widget.redirect,
+              ),
             ),
           ),
         ],
@@ -316,27 +326,27 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             image,
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             text,
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             alertTextWidget,
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             emailTextField,
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             passwordTextField,
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             forgotPasswordButton,
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             signInButton,
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             createAccountButton,
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             divider,
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             googleSignInButton,
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
           ],
         ),
       ),
@@ -354,42 +364,43 @@ void _showAgeConfirmAlertDialog({
   if (!preferences.ageConfirmed) {
     // Asks to confirm
     showDialog(
-        context: context,
-        barrierDismissible:
-            false, // Prevents dialog be escaped by clicking elsewhere
-        builder: (BuildContext context) {
-          const title = 'Friendly disclaimer';
-          final content = Text(
-            'Dreamy Tales is a magical place for all ages, but the email linked to your account should be owned by an adult. Thanks for confirming!',
-            style: Theme.of(context).primaryTextTheme.bodySmall,
-          );
-          final actions = <Widget>[
-            TextButton(
-              onPressed: () async {
-                ref.read(preferencesProvider.notifier).updateAgeConfirmed(true);
-                context.pop();
-              },
-              child: Text(
-                'Confirm',
-                style: Theme.of(context).primaryTextTheme.bodySmall,
-              ),
+      context: context,
+      barrierDismissible:
+          false, // Prevents dialog be escaped by clicking elsewhere
+      builder: (BuildContext context) {
+        const title = 'Friendly disclaimer';
+        final content = Text(
+          'Dreamy Tales is a magical place for all ages, but the email linked to your account should be owned by an adult. Thanks for confirming!',
+          style: Theme.of(context).primaryTextTheme.bodySmall,
+        );
+        final actions = <Widget>[
+          TextButton(
+            onPressed: () async {
+              ref.read(preferencesProvider.notifier).updateAgeConfirmed(true);
+              context.pop();
+            },
+            child: Text(
+              'Confirm',
+              style: Theme.of(context).primaryTextTheme.bodySmall,
             ),
-            TextButton(
-              onPressed: () {
-                context.pushReplacement(cancelRedirect);
-              },
-              child: Text(
-                'Cancel',
-                style: Theme.of(context).primaryTextTheme.bodySmall,
-              ),
+          ),
+          TextButton(
+            onPressed: () {
+              context.pushReplacement(cancelRedirect);
+            },
+            child: Text(
+              'Cancel',
+              style: Theme.of(context).primaryTextTheme.bodySmall,
             ),
-          ];
-          return AppAlertDialog(
-            title: title,
-            content: content,
-            actions: actions,
-          );
-        });
+          ),
+        ];
+        return AppAlertDialog(
+          title: title,
+          content: content,
+          actions: actions,
+        );
+      },
+    );
   }
 }
 
@@ -468,19 +479,19 @@ class _AlertDialogResetPasswordState extends State<_AlertDialogResetPassword> {
       obscureText: false,
     );
 
-    void _setAlertText({required Exception e}) {
+    void setAlertText({required Exception e}) {
       setState(() {
         _alertText = _convertExceptionToText(e: e);
       });
     }
 
-    Future<void> _submitResetPassword() async {
+    Future<void> submitResetPassword() async {
       try {
         await resetPassword(widget.emailController.text);
         context.pop();
         _showResetPasswordConfirmationAlertDialog(context: context);
       } on Exception catch (e) {
-        _setAlertText(e: e);
+        setAlertText(e: e);
       }
     }
 
@@ -489,14 +500,14 @@ class _AlertDialogResetPasswordState extends State<_AlertDialogResetPassword> {
       child: ListBody(
         children: [
           alertTextWidget,
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           emailTextField,
         ],
       ),
     );
     final actions = <Widget>[
       TextButton(
-        onPressed: _submitResetPassword,
+        onPressed: submitResetPassword,
         child: Text(
           'Submit',
           style: Theme.of(context).primaryTextTheme.bodySmall,
@@ -582,7 +593,7 @@ void _checkAccountCreationAllowed(WidgetRef ref) {
   final difference = currentDate.difference(creationDate);
 
   if (difference.inDays < accountCreationLimitDays) {
-    throw new AuthException(code: 'limit-account-creation');
+    throw AuthException(code: 'limit-account-creation');
   }
 }
 

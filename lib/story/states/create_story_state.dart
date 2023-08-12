@@ -13,7 +13,7 @@ const List<String> _styles = [
   'Charles Perrault',
 ];
 
-final _getRandomStyle = () => _styles[Random().nextInt(_styles.length)];
+String _getRandomStyle() => _styles[Random().nextInt(_styles.length)];
 
 /// A state that contains a [StoryForm] and a [StoryAnswers].
 @immutable
@@ -22,7 +22,7 @@ class CreateStoryState {
   final StoryAnswers storyAnswers;
   final int currentQuestionIndex;
 
-  CreateStoryState._internal(
+  const CreateStoryState._internal(
     this.storyForm,
     this.storyAnswers,
     this.currentQuestionIndex,
@@ -67,10 +67,12 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
   final Ref ref;
 
   CreateStoryStateNotifier({required this.ref})
-      : super(CreateStoryState(
-          storyForm: StoryForm(questions: []),
-          duration: 5,
-        ));
+      : super(
+          CreateStoryState(
+            storyForm: const StoryForm(questions: []),
+            duration: 5,
+          ),
+        );
 
   void reset() {
     final Preferences preferences = ref.read(preferencesProvider);

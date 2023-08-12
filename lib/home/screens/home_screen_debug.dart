@@ -9,11 +9,11 @@ class HomeScreenDebugAuth extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
-    final _button = button(user);
+    final buttonWidget = button(user);
 
     List<Widget> children = [
       Text(user.toString()),
-      if (_button != null) _button,
+      if (buttonWidget != null) buttonWidget,
     ];
 
     return Column(
@@ -29,7 +29,7 @@ class HomeScreenDebugAuth extends ConsumerWidget {
         onPressed: () async {
           await user.signInAnonymously();
         },
-        child: Text('Anonymous log in'),
+        child: const Text('Anonymous log in'),
       );
     }
 
@@ -38,7 +38,7 @@ class HomeScreenDebugAuth extends ConsumerWidget {
         onPressed: () async {
           await user.signOut();
         },
-        child: Text('Log out'),
+        child: const Text('Log out'),
       );
     }
 
@@ -60,7 +60,8 @@ class HomeScreenDebugStats extends ConsumerWidget {
       loading: () => const CircularProgressIndicator(),
       error: (err, stack) => Text('numStories error: $err'),
       data: (stats) => Text(
-          'numStories: ${stats.numStories}\nremainingStories: ${stats.remainingStories}\nhasLoggedOut: ${preferences.hasLoggedOut}'),
+        'numStories: ${stats.numStories}\nremainingStories: ${stats.remainingStories}\nhasLoggedOut: ${preferences.hasLoggedOut}',
+      ),
     );
 
     List<Widget> children = [

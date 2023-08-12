@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'backend/index.dart';
@@ -36,7 +39,11 @@ void main() async {
       await firebaseAuth.signInAnonymously();
     }
   } catch (error) {
-    print('An error occurred during anonymous sign-in: $error');
+    log(
+      'An error occurred during anonymous sign-in: $error',
+      name: 'main',
+      level: Level.SEVERE.value,
+    );
   }
 
   Paint.enableDithering = true; // Make smoother gradient
@@ -48,12 +55,14 @@ void main() async {
       overrides: [
         sharedPreferencesBaseProvider.overrideWithValue(sharedPreferences)
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends ConsumerWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
@@ -65,12 +74,12 @@ class MyApp extends ConsumerWidget {
       builder: (context, child) {
         return MaterialApp.router(
           title: 'Dreamy Tales',
-          localizationsDelegates: [
+          localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          locale: Locale('en-US'),
+          locale: const Locale('en-US'),
           theme: AppTheme(context).theme,
           themeMode: ThemeMode.system,
           routerDelegate: router.routerDelegate,

@@ -6,14 +6,16 @@ class GoogleSignInButton extends StatelessWidget {
   final String text;
   final void Function() onPressed;
 
-  const GoogleSignInButton(
-      {Key? key, required this.text, required this.onPressed})
-      : super(key: key);
+  const GoogleSignInButton({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final logo = Image(
-      image: AssetImage('assets/logos/google_light.png'),
+      image: const AssetImage('assets/logos/google_light.png'),
       height: 42.sp,
     );
 
@@ -54,7 +56,7 @@ class SignInScreenButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(5),

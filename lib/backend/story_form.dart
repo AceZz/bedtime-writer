@@ -43,10 +43,12 @@ class StoryAnswers {
   const StoryAnswers({required this.answers});
 
   StoryAnswers answer(Question question, Choice choice) {
-    return StoryAnswers(answers: {
-      ...answers,
-      question.id: choice.id,
-    });
+    return StoryAnswers(
+      answers: {
+        ...answers,
+        question.id: choice.id,
+      },
+    );
   }
 
   Map<String, dynamic> serialize() {

@@ -11,17 +11,17 @@ class AppTheme {
 
   ThemeData get theme {
     return ThemeData(
-      colorScheme: ColorScheme(
+      colorScheme: const ColorScheme(
         brightness: Brightness.dark,
-        primary: const Color(0xFFA54657),
+        primary: Color(0xFFA54657),
         onPrimary: onPrimary,
-        secondary: const Color(0xFFFF7B00),
+        secondary: Color(0xFFFF7B00),
         onSecondary: Colors.black,
-        background: const Color(0xFF0B2545),
+        background: Color(0xFF0B2545),
         onBackground: Colors.white,
-        surface: const Color(0xFF0B2545),
+        surface: Color(0xFF0B2545),
         onSurface: Colors.white,
-        error: const Color(0xFFB3261E),
+        error: Color(0xFFB3261E),
         onError: Colors.white,
       ),
       primaryTextTheme: TextTheme(

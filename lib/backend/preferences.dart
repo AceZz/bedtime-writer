@@ -31,7 +31,7 @@ class Preferences {
       duration: duration ?? this.duration,
       hasLoggedOut: hasLoggedOut ?? this.hasLoggedOut,
       accountCreationLastDate:
-          lastAccountCreationDate ?? this.accountCreationLastDate,
+          lastAccountCreationDate ?? accountCreationLastDate,
     );
   }
 }

@@ -36,8 +36,9 @@ class AppTextField extends StatelessWidget {
       style: inputTextStyle,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade800)),
-        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade800),
+        ),
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
         fillColor: Colors.grey.shade200,

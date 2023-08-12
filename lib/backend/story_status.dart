@@ -18,5 +18,5 @@ StoryStatus tryParseStoryRequestStatus(String status) {
       return value;
     }
   }
-  throw Exception("Unrecognized StoryStatus $status");
+  throw Exception('Unrecognized StoryStatus $status');
 }

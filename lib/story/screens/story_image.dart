@@ -40,7 +40,7 @@ class StoryImage extends StatelessWidget {
             fadeColor: fadeColor,
           );
         } else if (snapshot.hasError) {
-          return Icon(FontAwesomeIcons.triangleExclamation);
+          return const Icon(FontAwesomeIcons.triangleExclamation);
         }
         return const CircularProgressIndicator();
       },
@@ -55,7 +55,7 @@ class StoryImageDecoration extends StatelessWidget {
   final double height;
   final Color fadeColor;
 
-  StoryImageDecoration({
+  const StoryImageDecoration({
     Key? key,
     required this.image,
     required this.width,
@@ -75,11 +75,12 @@ class StoryImageDecoration extends StatelessWidget {
             width: width,
             height: height,
             decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                image: DecorationImage(
-                  image: image,
-                  fit: BoxFit.fill,
-                )),
+              shape: BoxShape.rectangle,
+              image: DecorationImage(
+                image: image,
+                fit: BoxFit.fill,
+              ),
+            ),
           ),
         ),
         _LinearFadeWidget(
@@ -161,7 +162,7 @@ class _EdgesFadeWidget extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
-                  stops: [0, 0.15, 0.85, 1],
+                  stops: const [0, 0.15, 0.85, 1],
                   colors: [
                     fadeColor,
                     Colors.transparent,
@@ -178,7 +179,7 @@ class _EdgesFadeWidget extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  stops: [0, 0.15, 0.85, 1],
+                  stops: const [0, 0.15, 0.85, 1],
                   colors: [
                     fadeColor,
                     Colors.transparent,
