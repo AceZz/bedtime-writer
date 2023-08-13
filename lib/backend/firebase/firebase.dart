@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../logger.dart';
+
 final firebaseAuth = FirebaseAuth.instance;
 final firebaseFirestore = FirebaseFirestore.instance;
 final firebaseFunctions = FirebaseFunctions.instanceFor(region: 'europe-west6');
@@ -13,11 +15,13 @@ final firebaseFunctions = FirebaseFunctions.instanceFor(region: 'europe-west6');
 Future<DocumentSnapshot<Map<String, dynamic>>> getCacheThenServer(
   DocumentReference<Map<String, dynamic>> ref,
 ) async {
-  try {
-    return await ref.get(const GetOptions(source: Source.cache));
-  } on FirebaseException {
-    return await ref.get(const GetOptions(source: Source.serverAndCache));
-  }
+  return ref.get(const GetOptions(source: Source.cache)).then((value) {
+    logger.fine('getCacheThenServer: retrieve ${ref.path} with cache.');
+    return value;
+  }).onError((error, stackTrace) {
+    logger.fine('getCacheThenServer: retrieve ${ref.path} with server.');
+    return ref.get(const GetOptions(source: Source.serverAndCache));
+  });
 }
 
 /// Sets the Firebase collection names
