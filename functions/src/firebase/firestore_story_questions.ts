@@ -1,8 +1,8 @@
 import {
   CollectionReference,
   DocumentReference,
-  Firestore,
 } from "firebase-admin/firestore";
+import { FirestoreCollection } from "./firestore_collection";
 
 /**
  * Helper class to manipulate the story questions collection (usually called
@@ -18,12 +18,7 @@ import {
  *       image: bytes
  * ```
  */
-export class FirestoreStoryQuestions {
-  constructor(
-    readonly collectionPath: string,
-    private readonly firestore: Firestore
-  ) {}
-
+export class FirestoreStoryQuestions extends FirestoreCollection {
   choiceRef(questionId: string, choiceId: string): DocumentReference {
     return this.choicesRef(questionId).doc(choiceId);
   }

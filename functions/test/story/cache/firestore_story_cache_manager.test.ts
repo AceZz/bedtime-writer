@@ -2,15 +2,13 @@ import { describe, test, beforeAll, beforeEach } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../src/firebase";
 
 import { FirestoreTestUtils } from "../utils/firestore_test_utils";
-import { FirestoreCacheTestUtils } from "../utils/firestore_cache_test_utils";
 
 describe("Firestore story cache manager", () => {
-  let cache: FirestoreCacheTestUtils;
+  const cache = new FirestoreTestUtils("firestore_story_cache_manager").cache;
 
   beforeAll(() => {
     initEnv();
     initFirebase(true);
-    cache = new FirestoreTestUtils("firestore_story_cache_manager").cache;
   });
 
   beforeEach(async () => {

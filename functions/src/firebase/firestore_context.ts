@@ -33,10 +33,9 @@ const USER_STATS = "user__stats";
  *
  * Use this class by instantiating it in the caller (Firebase functions, admin
  * scripts…) and passing the appropriate helper(s) to the Firestore reader
- * and / or writer. Firebase MUST BE initialized before initializing this class.
+ * and / or writer.
  */
-export class FirestorePaths {
-  private readonly firestore: Firestore;
+export class FirestoreContext {
   readonly storyCache: FirestoreStoryCache;
   readonly storyForms: FirestoreStoryForms;
   readonly storyQuestions: FirestoreStoryQuestions;
@@ -44,25 +43,28 @@ export class FirestorePaths {
   readonly userFeedback: FirestoreUserFeedback;
   readonly userStats: FirestoreUserStats;
 
-  constructor(prefix?: string, firestore?: Firestore) {
-    this.firestore = firestore ?? getFirestore();
-
+  constructor(prefix?: string, private firestore?: Firestore) {
     const p = prefix === undefined ? "" : `${prefix}__`;
 
-    this.storyCache = new FirestoreStoryCache(p + STORY_CACHE, this.firestore);
-    this.storyForms = new FirestoreStoryForms(p + STORY_FORMS, this.firestore);
+    this.storyCache = new FirestoreStoryCache(p + STORY_CACHE, this);
+    this.storyForms = new FirestoreStoryForms(p + STORY_FORMS, this);
     this.storyQuestions = new FirestoreStoryQuestions(
       p + STORY_QUESTIONS,
-      this.firestore
+      this
     );
-    this.storyRealtime = new FirestoreStoryRealtime(
-      p + STORY_REALTIME,
-      this.firestore
-    );
-    this.userFeedback = new FirestoreUserFeedback(
-      p + USER_FEEDBACK,
-      this.firestore
-    );
-    this.userStats = new FirestoreUserStats(p + USER_STATS, this.firestore);
+    this.storyRealtime = new FirestoreStoryRealtime(p + STORY_REALTIME, this);
+    this.userFeedback = new FirestoreUserFeedback(p + USER_FEEDBACK, this);
+    this.userStats = new FirestoreUserStats(p + USER_STATS, this);
+  }
+
+  /**
+   * Implement the `FirestoreProvider` interface found in
+   * `firestore_collection`. This mechanism allows the lazy-loading of
+   * Firestore. Otherwise, Firebase has to be initialized before
+   * `FirestoreContext` is initialized, which is impractical.
+   */
+  getFirestore(): Firestore {
+    if (this.firestore === undefined) this.firestore = getFirestore();
+    return this.firestore;
   }
 }

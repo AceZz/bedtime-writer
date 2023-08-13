@@ -1,8 +1,8 @@
 import {
   CollectionReference,
   DocumentReference,
-  Firestore,
 } from "firebase-admin/firestore";
+import { FirestoreCollection } from "./firestore_collection";
 
 /**
  * Helper class to manipulate the story forms collection (usually called
@@ -18,12 +18,7 @@ import {
  *   ...
  * ```
  */
-export class FirestoreStoryForms {
-  constructor(
-    readonly collectionPath: string,
-    private readonly firestore: Firestore
-  ) {}
-
+export class FirestoreStoryForms extends FirestoreCollection {
   formsRef(): CollectionReference {
     return this.firestore.collection(this.collectionPath);
   }

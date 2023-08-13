@@ -1,15 +1,13 @@
 import { beforeAll, beforeEach, test } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../src/firebase";
 import { FirestoreTestUtils } from "../utils/firestore_test_utils";
-import { FirestoreStoryTestUtils } from "../utils/firestore_story_test_utils";
 
-let storyUtils: FirestoreStoryTestUtils;
+const storyUtils = new FirestoreTestUtils("story_writer").story;
 
 // Check we are running in emulator mode before initializing Firebase.
 beforeAll(() => {
   initEnv();
   initFirebase(true);
-  storyUtils = new FirestoreTestUtils("story_writer").story;
 });
 
 beforeEach(async () => {

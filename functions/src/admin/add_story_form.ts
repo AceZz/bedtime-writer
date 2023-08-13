@@ -9,7 +9,7 @@ import {
   getFirebaseProject,
   initEnv,
   initFirebase,
-  FirestorePaths,
+  FirestoreContext,
 } from "../firebase";
 import { FirebaseFormWriter, YAMLFormReader } from "../story";
 
@@ -19,20 +19,20 @@ main().then(() => process.exit(0));
 
 async function main() {
   initEnv();
-  const paths = new FirestorePaths();
+  const firestore = new FirestoreContext();
   const yamlPath = getYamlPath();
 
-  if (await confirm(paths, yamlPath)) {
+  if (await confirm(firestore, yamlPath)) {
     initFirebase();
     const reader = new YAMLFormReader(yamlPath);
     const form = await reader.read();
 
     const writer = new FirebaseFormWriter(
-      paths.storyForms,
-      paths.storyQuestions
+      firestore.storyForms,
+      firestore.storyQuestions
     );
     await writer.write(form);
-    console.log(`Form saved to ${paths.storyForms.collectionPath}.`);
+    console.log(`Form saved to ${firestore.storyForms.collectionPath}.`);
   } else {
     console.log("Abort");
   }
@@ -43,7 +43,7 @@ function getYamlPath(): string {
 }
 
 async function confirm(
-  paths: FirestorePaths,
+  firestore: FirestoreContext,
   yamlPath: string
 ): Promise<boolean> {
   const projectLog = firebaseEmulatorsAreUsed()
@@ -51,8 +51,8 @@ async function confirm(
     : `of project ${getFirebaseProject()}`;
 
   const answer = await prompt(
-    `The collection ${paths.storyForms.collectionPath} ${projectLog} will be ` +
-      `added the content of ${yamlPath}. Proceed? (y/N) `
+    `The collection ${firestore.storyForms.collectionPath} ${projectLog} ` +
+      `will be added the content of ${yamlPath}. Proceed? (y/N) `
   );
 
   return ["yes", "y"].includes(answer?.toLowerCase() ?? "no");

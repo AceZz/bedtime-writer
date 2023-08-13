@@ -1,4 +1,4 @@
-export { FirestorePaths } from "./firestore_paths";
+export { FirestoreContext } from "./firestore_context";
 export {
   FirestoreStories,
   FirestoreStoryCache,

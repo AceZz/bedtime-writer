@@ -1,8 +1,8 @@
 import {
   CollectionReference,
   DocumentReference,
-  Firestore,
 } from "firebase-admin/firestore";
+import { FirestoreCollection } from "./firestore_collection";
 
 /**
  * Helper class to manipulate a stories collection. It follows this schema:
@@ -16,12 +16,7 @@ import {
  *   parts/
  *   prompts/
  */
-export abstract class FirestoreStories {
-  constructor(
-    readonly collectionPath: string,
-    private readonly firestore: Firestore
-  ) {}
-
+export abstract class FirestoreStories extends FirestoreCollection {
   storyRef(id: string): DocumentReference {
     return this.storiesRef().doc(id);
   }

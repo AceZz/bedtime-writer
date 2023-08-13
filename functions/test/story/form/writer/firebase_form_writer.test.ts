@@ -2,13 +2,12 @@ import { beforeAll, expect, beforeEach, test } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../../src/firebase";
 import { FirestoreTestUtils } from "../../utils/firestore_test_utils";
 
-let utils: FirestoreTestUtils;
+const utils = new FirestoreTestUtils("form_writer");
 
 // Check we are running in emulator mode before initializing Firebase.
 beforeAll(() => {
   initEnv();
   initFirebase(true);
-  utils = new FirestoreTestUtils("form_writer");
 });
 
 // Empty the forms and questions collection, then recreate some questions.
