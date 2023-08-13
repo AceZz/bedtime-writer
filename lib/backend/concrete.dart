@@ -1,7 +1,6 @@
 /// This file is where the concrete implementation of all abstract classes and
 /// generic functions are chosen.
 
-import 'package:bedtime_writer/backend/user_feedback.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
@@ -14,6 +13,7 @@ import 'story_form.dart';
 import 'story_part.dart';
 import 'story_status.dart';
 import 'user.dart';
+import 'user_feedback.dart';
 
 /**
  * USER

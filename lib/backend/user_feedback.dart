@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 @immutable
 class UserFeedback {
   final String text;
-  final DateTime datetime; // Timestamp for when the feedback was created
+  // Creation datetime
+  final DateTime datetime;
   final String? uid;
 
   const UserFeedback({required this.text, required this.datetime, this.uid});

@@ -14,7 +14,7 @@ import {
 } from "../../../src/user/feedback"; // Import the UserFeedback type
 
 describe("FirebaseUserFeedbackManager", () => {
-  const paths = new FirestorePaths("test");
+  const paths = new FirestorePaths("test_user_feedback");
   let feedbackId: string;
   let feedbackCollection: FirestoreUserFeedback;
 
