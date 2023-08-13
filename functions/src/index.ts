@@ -21,9 +21,15 @@ import {
   FirestoreBucketRateLimiterStorage,
 } from "./rate_limiter";
 import { parseEnvAsNumber as parseEnvNumber } from "./utils";
-import { FirestoreUserStatsManager, UserStats } from "./user";
+import {
+  FirebaseUserFeedbackManager,
+  FirestoreUserStatsManager,
+  UserFeedback,
+  UserStats,
+} from "./user";
 import { getImageApi, getTextApi } from "./api";
 import { FirestorePaths, FirestoreStoryRealtime } from "./firebase";
+import { FirestoreUserFeedback } from "./firebase/firestore_user_feedback";
 
 initializeApp();
 
@@ -135,6 +141,26 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
   const userStatsManager = new FirestoreUserStatsManager();
   await userStatsManager.updateStatsAfterStory(request.author);
 }
+
+/**
+ * Collect the user feedback and write it in the database.
+ */
+export const collectUserFeedback = onCall(async (request) => {
+  const data = request.data;
+
+  const text = data.text;
+  console.log(data.datetime);
+  const datetime = new Date(data.datetime);
+  console.log(datetime);
+  const uid = getUid(request.auth);
+
+  const feedback = new UserFeedback(text, datetime, uid);
+
+  const feedbackCollection = new FirestoreUserFeedback();
+  const feedbackManager = new FirebaseUserFeedbackManager(feedbackCollection);
+
+  await feedbackManager.write(feedback);
+});
 
 function getRateLimiter(limit: number): RateLimiter {
   return new BucketRateLimiter(

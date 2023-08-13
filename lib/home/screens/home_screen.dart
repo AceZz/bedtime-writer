@@ -7,6 +7,7 @@ import '../../config.dart';
 import '../../story/index.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/fade_in.dart';
+import '../../widgets/feedback_button.dart';
 import 'home_screen_debug.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -61,6 +62,8 @@ class HomeScreen extends ConsumerWidget {
           .toList(),
     );
 
+    final feedbackButton = FeedbackButton(text: 'Send feedback');
+
     return AppScaffold(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -74,6 +77,8 @@ class HomeScreen extends ConsumerWidget {
           _DisplayRemainingStories(),
           SizedBox(height: 20),
           menuWidget,
+          SizedBox(height: 20),
+          feedbackButton,
           if (debugAuth())
             const _CustomCenterAtBottom(child: const HomeScreenDebugAuth()),
           if (debugStats())

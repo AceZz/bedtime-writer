@@ -13,6 +13,7 @@ import 'story_form.dart';
 import 'story_part.dart';
 import 'story_status.dart';
 import 'user.dart';
+import 'user_feedback.dart';
 
 /**
  * USER
@@ -23,6 +24,10 @@ final userProvider = Provider<User>((ref) => getFirebaseUser(ref));
 
 /// Resets password for given email
 Future<void> Function(String email) resetPassword = firebaseResetPassword;
+
+/// Creates a story request, and returns the id of the story.
+Future<void> Function(UserFeedback feedback) collectUserFeedback =
+    firebaseCollectUserFeedback;
 
 /**
  * STORY
