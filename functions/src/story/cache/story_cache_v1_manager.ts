@@ -6,7 +6,7 @@ import { StoryMetadata } from "../story_metadata";
 import { FirebaseStoryWriter } from "../writer";
 import { StoryCacheManager } from "./story_cache_manager";
 import { getRandomDuration, getRandomStyle } from "../story_utils";
-import { FirestoreStoryCache, FirestorePaths } from "../../firebase";
+import { FirestoreStoryCache } from "../../firebase";
 import { parseEnvAsNumber, retryAsyncFunction } from "../../utils";
 
 export const CACHE_AUTHOR = "@CACHE_V1_MANAGER";
@@ -19,18 +19,16 @@ export class StoryCacheV1Manager implements StoryCacheManager {
   private requestManager: StoryRequestV1Manager;
   private textApi: TextApi;
   private imageApi: ImageApi;
-  private stories: FirestoreStoryCache;
 
   constructor(
     formId: string,
     textApi: TextApi,
     imageApi: ImageApi,
-    paths?: FirestorePaths
+    private readonly stories: FirestoreStoryCache
   ) {
     this.formId = formId;
     this.textApi = textApi;
     this.imageApi = imageApi;
-    this.stories = new FirestoreStoryCache(paths);
     this.requestManager = new StoryRequestV1Manager(this.stories);
   }
 

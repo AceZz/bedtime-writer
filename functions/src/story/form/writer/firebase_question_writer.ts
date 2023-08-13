@@ -1,7 +1,7 @@
 import { StoryQuestion } from "../story_question";
 import { Writer } from "./writer";
 import { StoryChoice } from "../story_choice";
-import { FirestorePaths, FirestoreStoryQuestions } from "../../../firebase";
+import { FirestoreStoryQuestions } from "../../../firebase";
 
 /**
  * This class writes a list of StoryQuestion objects to Firebase.
@@ -12,11 +12,7 @@ import { FirestorePaths, FirestoreStoryQuestions } from "../../../firebase";
  * be fast, we thus chose to do sequential writes.
  */
 export class FirebaseQuestionWriter implements Writer<StoryQuestion[]> {
-  private collection: FirestoreStoryQuestions;
-
-  constructor(paths?: FirestorePaths) {
-    this.collection = new FirestoreStoryQuestions(paths);
-  }
+  constructor(private readonly collection: FirestoreStoryQuestions) {}
 
   /**
    * Write `questions` to the Firestore database.

@@ -22,11 +22,7 @@ import { FirestoreStories } from "../../../firebase/firestore_stories";
 export class StoryRequestV1FirestoreConverter
   implements StoryRequestFirestoreConverter<StoryRequestV1>
 {
-  readonly stories: FirestoreStories;
-
-  constructor(stories: FirestoreStories) {
-    this.stories = stories;
-  }
+  constructor(private readonly stories: FirestoreStories) {}
 
   async get(id: string): Promise<StoryRequestV1> {
     const storyDoc = await this.storyRef(id).get();

@@ -13,7 +13,6 @@ import {
 } from "../firebase";
 import { FirebaseFormWriter, YAMLFormReader } from "../story";
 
-const DEFAULT_COLLECTION_NAME = "story__forms";
 const DEFAULT_YAML_PATH = "admin_data/story/form.yaml";
 
 main().then(() => process.exit(0));
@@ -28,9 +27,12 @@ async function main() {
     const reader = new YAMLFormReader(yamlPath);
     const form = await reader.read();
 
-    const writer = new FirebaseFormWriter(paths);
+    const writer = new FirebaseFormWriter(
+      paths.storyForms,
+      paths.storyQuestions
+    );
     await writer.write(form);
-    console.log(`Form saved to ${DEFAULT_COLLECTION_NAME}.`);
+    console.log(`Form saved to ${paths.storyForms.collectionPath}.`);
   } else {
     console.log("Abort");
   }
@@ -49,8 +51,8 @@ async function confirm(
     : `of project ${getFirebaseProject()}`;
 
   const answer = await prompt(
-    `The collection ${paths.story.forms} ${projectLog} will be added the ` +
-      `content of ${yamlPath}. Proceed? (y/N) `
+    `The collection ${paths.storyForms.collectionPath} ${projectLog} will be ` +
+      `added the content of ${yamlPath}. Proceed? (y/N) `
   );
 
   return ["yes", "y"].includes(answer?.toLowerCase() ?? "no");

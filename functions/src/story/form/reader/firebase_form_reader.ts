@@ -1,17 +1,13 @@
 import { StoryForm } from "../story_form";
 import { Reader } from "./reader";
-import { FirestoreStoryForms, FirestorePaths } from "../../../firebase";
+import { FirestoreStoryForms } from "../../../firebase";
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
 
 /**
  * Read a list of Forms from Firebase.
  */
 export class FirebaseFormReader implements Reader<StoryForm[]> {
-  private collection: FirestoreStoryForms;
-
-  constructor(paths?: FirestorePaths) {
-    this.collection = new FirestoreStoryForms(paths);
-  }
+  constructor(private readonly collection: FirestoreStoryForms) {}
 
   async read(): Promise<StoryForm[]> {
     const snapshots = await this.collection.formsRef().get();

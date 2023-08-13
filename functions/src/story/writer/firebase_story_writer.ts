@@ -37,7 +37,6 @@ import { logger } from "../../logger";
  *         imagePromptPrompt
  */
 export class FirebaseStoryWriter implements StoryWriter {
-  readonly stories: FirestoreStories;
   private parts: string[];
   /**
    * Cache the document IDs of already inserted images. This way, an image can
@@ -46,11 +45,10 @@ export class FirebaseStoryWriter implements StoryWriter {
   private imageIds: Map<Buffer, string> = new Map();
 
   constructor(
-    stories: FirestoreStories,
+    private readonly stories: FirestoreStories,
     readonly metadata: StoryMetadata,
     readonly storyId: string
   ) {
-    this.stories = stories;
     this.parts = [];
   }
 

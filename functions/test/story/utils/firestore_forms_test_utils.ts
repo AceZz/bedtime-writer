@@ -7,7 +7,10 @@ import {
   Timestamp,
   getFirestore,
 } from "firebase-admin/firestore";
-import { FirestoreStoryForms, FirestorePaths } from "../../../src/firebase";
+import {
+  FirestoreStoryForms,
+  FirestoreStoryQuestions,
+} from "../../../src/firebase";
 import {
   StoryForm,
   FirebaseFormReader,
@@ -82,18 +85,17 @@ export const FORM_3 = new StoryForm(
  * Helper class to interact with the story forms Firestore collection.
  */
 export class FirestoreFormsTestUtils {
-  constructor(readonly paths: FirestorePaths) {}
-
-  get collection(): FirestoreStoryForms {
-    return new FirestoreStoryForms(this.paths);
-  }
+  constructor(
+    readonly firestoreForms: FirestoreStoryForms,
+    readonly firestoreQuestions: FirestoreStoryQuestions
+  ) {}
 
   get reader(): FirebaseFormReader {
-    return new FirebaseFormReader(this.paths);
+    return new FirebaseFormReader(this.firestoreForms);
   }
 
   get writer(): FirebaseFormWriter {
-    return new FirebaseFormWriter(this.paths);
+    return new FirebaseFormWriter(this.firestoreForms, this.firestoreQuestions);
   }
 
   samples(): StoryForm[] {
@@ -105,8 +107,7 @@ export class FirestoreFormsTestUtils {
   }
 
   collectionRef(): CollectionReference {
-    const forms = new FirestoreStoryForms(this.paths);
-    return forms.formsRef();
+    return this.firestoreForms.formsRef();
   }
 
   questions(): string[] {
@@ -124,7 +125,9 @@ export class FirestoreFormsTestUtils {
    */
   async deleteCollection(): Promise<void> {
     const firestore = getFirestore();
-    const forms = await firestore.collection(this.paths.story.forms).get();
+    const forms = await firestore
+      .collection(this.firestoreForms.collectionPath)
+      .get();
     await Promise.all(forms.docs.map((form) => form.ref.delete()));
   }
   /**
@@ -134,7 +137,7 @@ export class FirestoreFormsTestUtils {
    */
   async expectCountToBe(expected: number): Promise<void> {
     const firestore = getFirestore();
-    const forms = firestore.collection(this.paths.story.forms);
+    const forms = firestore.collection(this.firestoreForms.collectionPath);
     const query = await forms.count().get();
 
     expect(query.data().count).toBe(expected);
@@ -143,7 +146,7 @@ export class FirestoreFormsTestUtils {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async expectToBe(expected: any[]): Promise<void> {
     const firestore = getFirestore();
-    const forms = firestore.collection(this.paths.story.forms);
+    const forms = firestore.collection(this.firestoreForms.collectionPath);
     const snapshots = await forms.orderBy("start").get();
 
     const tested = snapshots.docs.map((snapshot) => snapshot.data());

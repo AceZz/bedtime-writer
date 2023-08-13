@@ -4,28 +4,22 @@ import {
   Firestore,
   getFirestore,
 } from "firebase-admin/firestore";
-import { FirestorePaths } from "./firestore_paths";
 
 /**
- * Helper class to manipulate the user feedback collection. It follows this
- * schema:
+ * Helper class to manipulate the user feedback collection (usually called
+ * `user__feedback`. It follows this schema:
  *
  * ```plain
- * user_feedback:
- *     <feedback_1>:
- *        text:
- *        datetime:
- *        uid:
- *     <feedback_2>:
- *        ...
- *     ...
- *   ...
+ *<feedback_id>:
+ *   text: string
+ *   datetime: datetime
+ *   uid: string
  * ```
  */
 export class FirestoreUserFeedback {
-  private firestore: Firestore;
+  private readonly firestore: Firestore;
 
-  constructor(readonly paths = new FirestorePaths(), firestore?: Firestore) {
+  constructor(readonly collectionPath: string, firestore?: Firestore) {
     this.firestore = firestore ?? getFirestore();
   }
 
@@ -38,6 +32,6 @@ export class FirestoreUserFeedback {
   }
 
   feedbacksRef(): CollectionReference {
-    return this.firestore.collection(this.paths.user.feedback);
+    return this.firestore.collection(this.collectionPath);
   }
 }

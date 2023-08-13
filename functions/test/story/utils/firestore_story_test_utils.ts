@@ -9,11 +9,7 @@ import {
   StoryMetadata,
   StoryStatus,
 } from "../../../src/story";
-import {
-  FirestorePaths,
-  FirestoreStories,
-  FirestoreStoryRealtime,
-} from "../../../src/firebase";
+import { FirestoreStories } from "../../../src/firebase";
 import { expect } from "@jest/globals";
 
 /**
@@ -57,14 +53,10 @@ const STORY_ID_1 = "story1";
  * Helper class to interact with the story questions Firestore collection.
  */
 export class FirestoreStoryTestUtils {
-  constructor(readonly paths: FirestorePaths) {}
+  constructor(private readonly stories: FirestoreStories) {}
 
   get writer(): FirebaseStoryWriter {
     return new FirebaseStoryWriter(this.stories, METADATA_1, STORY_ID_1);
-  }
-
-  get stories(): FirestoreStories {
-    return new FirestoreStoryRealtime(this.paths);
   }
 
   get generator(): StoryGenerator {
@@ -103,7 +95,7 @@ export class FirestoreStoryTestUtils {
   async deleteCollection(): Promise<void> {
     const firestore = getFirestore();
     const questions = await firestore
-      .collection(this.paths.story.realtime)
+      .collection(this.stories.collectionPath)
       .get();
     await Promise.all(
       questions.docs.map((story) => this.deleteStory(story.ref))

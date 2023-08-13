@@ -13,7 +13,6 @@ import {
 } from "../firebase";
 import { FirebaseQuestionWriter, YAMLQuestionReader } from "../story";
 
-const DEFAULT_COLLECTION_NAME = "story__questions";
 const DEFAULT_YAML_PATH = "admin_data/story/questions.yaml";
 
 main().then(() => process.exit(0));
@@ -28,10 +27,11 @@ async function main() {
     const reader = new YAMLQuestionReader(yamlPath);
     const questions = await reader.read();
 
-    const writer = new FirebaseQuestionWriter(paths);
+    const writer = new FirebaseQuestionWriter(paths.storyQuestions);
     await writer.write(questions);
     console.log(
-      `${questions.length} question(s) saved to ${DEFAULT_COLLECTION_NAME}.`
+      `${questions.length} question(s) saved to ` +
+        `${paths.storyQuestions.collectionPath}.`
     );
   } else {
     console.log("Abort");
@@ -51,8 +51,8 @@ async function confirm(
     : `of project ${getFirebaseProject()}`;
 
   const answer = await prompt(
-    `The collection ${paths.story.questions} ${projectLog} will be set to ` +
-      `the content of ${yamlPath}. Proceed? (y/N) `
+    `The collection ${paths.storyQuestions.collectionPath} ${projectLog} ` +
+      `will be set to the content of ${yamlPath}. Proceed? (y/N) `
   );
 
   return ["yes", "y"].includes(answer?.toLowerCase() ?? "no");

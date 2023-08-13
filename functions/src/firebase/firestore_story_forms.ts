@@ -4,11 +4,10 @@ import {
   Firestore,
   getFirestore,
 } from "firebase-admin/firestore";
-import { FirestorePaths } from "./firestore_paths";
 
 /**
- * Helper class to manipulate the story forms collection. It follows this
- * schema:
+ * Helper class to manipulate the story forms collection (usually called
+ * `story__forms`). It follows this schema:
  *
  * ```plain
  * <form_id>:
@@ -21,14 +20,14 @@ import { FirestorePaths } from "./firestore_paths";
  * ```
  */
 export class FirestoreStoryForms {
-  private firestore: Firestore;
+  private readonly firestore: Firestore;
 
-  constructor(readonly paths = new FirestorePaths(), firestore?: Firestore) {
+  constructor(readonly collectionPath: string, firestore?: Firestore) {
     this.firestore = firestore ?? getFirestore();
   }
 
   formsRef(): CollectionReference {
-    return this.firestore.collection(this.paths.story.forms);
+    return this.firestore.collection(this.collectionPath);
   }
 
   formRef(formId: string): DocumentReference {

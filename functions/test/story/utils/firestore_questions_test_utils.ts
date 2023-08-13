@@ -6,7 +6,7 @@ import {
   StoryChoice,
 } from "../../../src/story";
 import { expect } from "@jest/globals";
-import { FirestorePaths } from "../../../src/firebase";
+import { FirestoreStoryQuestions } from "../../../src/firebase";
 
 const QUESTIONS_0 = async () => [
   new StoryQuestion("question1", "Question 1", [
@@ -71,14 +71,14 @@ const QUESTIONS_1 = async () => [
  * Helper class to interact with the story questions Firestore collection.
  */
 export class FirestoreQuestionsTestUtils {
-  constructor(readonly paths: FirestorePaths) {}
+  constructor(private readonly questions: FirestoreStoryQuestions) {}
 
   get writer(): FirebaseQuestionWriter {
-    return new FirebaseQuestionWriter(this.paths);
+    return new FirebaseQuestionWriter(this.questions);
   }
 
   get reader(): FirebaseQuestionReader {
-    return new FirebaseQuestionReader(this.paths);
+    return new FirebaseQuestionReader(this.questions);
   }
 
   async samples(): Promise<StoryQuestion[][]> {
@@ -93,7 +93,7 @@ export class FirestoreQuestionsTestUtils {
   async deleteCollection(): Promise<void> {
     const firestore = getFirestore();
     const questions = await firestore
-      .collection(this.paths.story.questions)
+      .collection(this.questions.collectionPath)
       .get();
     await Promise.all(
       questions.docs.map((question) => this.deleteQuestion(question.ref))
@@ -122,7 +122,7 @@ export class FirestoreQuestionsTestUtils {
    */
   async expectQuestionsToBe(expected: StoryQuestion[]) {
     const firestore = getFirestore();
-    const questions = firestore.collection(this.paths.story.questions);
+    const questions = firestore.collection(this.questions.collectionPath);
 
     // Test each question.
     await Promise.all(
