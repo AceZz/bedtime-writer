@@ -96,7 +96,7 @@ export const createStory = onDocumentCreated(
 export const initializeUserStats = region("europe-west6")
   .auth.user()
   .onCreate(async (user) => {
-    const userStatsManager = new FirestoreUserStatsManager();
+    const userStatsManager = new FirestoreUserStatsManager(paths.userStats);
 
     const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
     const initialUserStats = new UserStats(0, userStoriesLimit);
@@ -111,7 +111,7 @@ export const resetDailyLimits = onSchedule("every day 01:00", async () => {
   logger.info("resetDailyLimits: started");
   const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
 
-  const userStatsManager = new FirestoreUserStatsManager();
+  const userStatsManager = new FirestoreUserStatsManager(paths.userStats);
 
   await userStatsManager.setAllRemainingStories(userStoriesLimit);
 });
@@ -136,7 +136,7 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
 
   await writer.writeFromGenerator(generator);
 
-  const userStatsManager = new FirestoreUserStatsManager();
+  const userStatsManager = new FirestoreUserStatsManager(paths.userStats);
   await userStatsManager.updateStatsAfterStory(request.author);
 }
 

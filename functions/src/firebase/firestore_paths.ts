@@ -7,6 +7,7 @@ import {
 import { FirestoreStoryForms } from "./firestore_story_forms";
 import { FirestoreStoryQuestions } from "./firestore_story_questions";
 import { FirestoreUserFeedback } from "./firestore_user_feedback";
+import { FirestoreUserStats } from "./firestore_user_stats";
 
 // The default collection paths.
 const STORY_CACHE = "story__cache";
@@ -14,6 +15,7 @@ const STORY_FORMS = "story__forms";
 const STORY_QUESTIONS = "story__questions";
 const STORY_REALTIME = "story__realtime";
 const USER_FEEDBACK = "user__feedback";
+const USER_STATS = "user__stats";
 
 /**
  * This class configures and stores all the Firestore helper classes that
@@ -40,6 +42,7 @@ export class FirestorePaths {
   readonly storyQuestions: FirestoreStoryQuestions;
   readonly storyRealtime: FirestoreStoryRealtime;
   readonly userFeedback: FirestoreUserFeedback;
+  readonly userStats: FirestoreUserStats;
 
   constructor(prefix?: string, firestore?: Firestore) {
     this.firestore = firestore ?? getFirestore();
@@ -60,5 +63,6 @@ export class FirestorePaths {
       p + USER_FEEDBACK,
       this.firestore
     );
+    this.userStats = new FirestoreUserStats(p + USER_STATS, this.firestore);
   }
 }
