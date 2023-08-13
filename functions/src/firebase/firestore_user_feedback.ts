@@ -2,7 +2,6 @@ import {
   CollectionReference,
   DocumentReference,
   Firestore,
-  getFirestore,
 } from "firebase-admin/firestore";
 
 /**
@@ -17,11 +16,10 @@ import {
  * ```
  */
 export class FirestoreUserFeedback {
-  private readonly firestore: Firestore;
-
-  constructor(readonly collectionPath: string, firestore?: Firestore) {
-    this.firestore = firestore ?? getFirestore();
-  }
+  constructor(
+    readonly collectionPath: string,
+    private readonly firestore: Firestore
+  ) {}
 
   newFeedbackRef(): DocumentReference {
     return this.feedbacksRef().doc();

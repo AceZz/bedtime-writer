@@ -1,3 +1,5 @@
+import { Firestore, getFirestore } from "firebase-admin/firestore";
+
 import {
   FirestoreStoryCache,
   FirestoreStoryRealtime,
@@ -32,19 +34,31 @@ const USER_FEEDBACK = "user__feedback";
  * and / or writer. Firebase MUST BE initialized before initializing this class.
  */
 export class FirestorePaths {
+  private readonly firestore: Firestore;
   readonly storyCache: FirestoreStoryCache;
   readonly storyForms: FirestoreStoryForms;
   readonly storyQuestions: FirestoreStoryQuestions;
   readonly storyRealtime: FirestoreStoryRealtime;
   readonly userFeedback: FirestoreUserFeedback;
 
-  constructor(prefix?: string) {
+  constructor(prefix?: string, firestore?: Firestore) {
+    this.firestore = firestore ?? getFirestore();
+
     const p = prefix === undefined ? "" : `${prefix}__`;
 
-    this.storyCache = new FirestoreStoryCache(`${p}${STORY_CACHE}`);
-    this.storyForms = new FirestoreStoryForms(`${p}${STORY_FORMS}`);
-    this.storyQuestions = new FirestoreStoryQuestions(`${p}${STORY_QUESTIONS}`);
-    this.storyRealtime = new FirestoreStoryRealtime(`${p}${STORY_REALTIME}`);
-    this.userFeedback = new FirestoreUserFeedback(`${p}${USER_FEEDBACK}`);
+    this.storyCache = new FirestoreStoryCache(p + STORY_CACHE, this.firestore);
+    this.storyForms = new FirestoreStoryForms(p + STORY_FORMS, this.firestore);
+    this.storyQuestions = new FirestoreStoryQuestions(
+      p + STORY_QUESTIONS,
+      this.firestore
+    );
+    this.storyRealtime = new FirestoreStoryRealtime(
+      p + STORY_REALTIME,
+      this.firestore
+    );
+    this.userFeedback = new FirestoreUserFeedback(
+      p + USER_FEEDBACK,
+      this.firestore
+    );
   }
 }
