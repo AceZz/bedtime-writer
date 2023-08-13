@@ -1,25 +1,18 @@
-import { getFirestore, FieldValue, Firestore } from "firebase-admin/firestore";
+import { FieldValue } from "firebase-admin/firestore";
 import { HttpsError } from "firebase-functions/v2/https";
 
 import { UserStats, UserStatsManager } from "./user_stats";
 import { logger } from "../../logger";
+import { FirestoreUserStats } from "../../firebase";
 
 /**
  * Update stories stats
  */
 export class FirestoreUserStatsManager implements UserStatsManager {
-  private firestore: Firestore;
-
-  constructor(firestore?: Firestore) {
-    this.firestore = firestore ?? getFirestore();
-  }
-
-  getUserRef(uid: string) {
-    return this.firestore.collection("user__stats").doc(uid);
-  }
+  constructor(private readonly stats: FirestoreUserStats) {}
 
   async getUserStats(uid: string): Promise<UserStats | undefined> {
-    const userRef = this.getUserRef(uid);
+    const userRef = this.stats.userRef(uid);
     const userSnapshot = await userRef.get();
     const userData = userSnapshot.data();
 
@@ -32,7 +25,7 @@ export class FirestoreUserStatsManager implements UserStatsManager {
 
   async setUserStats(uid: string, userStats: UserStats): Promise<void> {
     // Retrieve user document.
-    const userRef = this.getUserRef(uid);
+    const userRef = this.stats.userRef(uid);
     const userSnapshot = await userRef.get();
     const userSnapshotData = userSnapshot.data();
 
@@ -48,13 +41,11 @@ export class FirestoreUserStatsManager implements UserStatsManager {
 
   async setAllRemainingStories(remainingStories: number): Promise<void> {
     try {
-      const usersSnapshot = await this.firestore
-        .collection("user__stats")
-        .get();
+      const usersSnapshot = await this.stats.statsRef().get();
       const numberUsers = usersSnapshot.size;
 
       const updates = usersSnapshot.docs.map((doc) => {
-        const userRef = this.getUserRef(doc.id);
+        const userRef = this.stats.userRef(doc.id);
         return userRef.update({
           remainingStories: remainingStories,
         });
@@ -72,7 +63,7 @@ export class FirestoreUserStatsManager implements UserStatsManager {
 
   async updateStatsAfterStory(uid: string): Promise<void> {
     // Retrieve user document.
-    const userRef = this.getUserRef(uid);
+    const userRef = this.stats.userRef(uid);
     const userSnapshot = await userRef.get();
     const userSnapshotData = userSnapshot.data();
 
