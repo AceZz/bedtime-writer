@@ -17,11 +17,11 @@ main().then(() => process.exit(0));
  */
 async function main() {
   initEnv();
-  const firestorePaths = new FirestorePaths();
-  if (await confirm(firestorePaths)) {
+  const paths = new FirestorePaths();
+  if (await confirm(paths)) {
     initFirebase();
 
-    const reader = new FirebaseFormReader(firestorePaths);
+    const reader = new FirebaseFormReader(paths.storyForms);
     const formsWithId = await reader.readMostRecentWithIds(1);
 
     const formWithId = formsWithId[0];
@@ -32,7 +32,8 @@ async function main() {
     const storyCacheManager = new StoryCacheV1Manager(
       formWithId.id,
       textApi,
-      imageApi
+      imageApi,
+      paths.storyCache
     );
     const requests = storyCacheManager.generateRequests(formWithId.storyForm);
 
@@ -46,8 +47,8 @@ async function confirm(paths: FirestorePaths): Promise<boolean> {
     : `of project ${getFirebaseProject()}`;
 
   const answer = await prompt(
-    `The collection ${paths.story.cache} ${projectLog} will be populated ` +
-      `based on ${paths.story.forms}. Proceed? (y/N) `
+    `The collection ${paths.storyCache.collectionPath} ${projectLog} will be ` +
+      `populated based on ${paths.storyForms.collectionPath}. Proceed? (y/N) `
   );
 
   return ["yes", "y"].includes(answer?.toLowerCase() ?? "no");

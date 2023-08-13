@@ -1,58 +1,50 @@
+import {
+  FirestoreStoryCache,
+  FirestoreStoryRealtime,
+} from "./firestore_stories";
+import { FirestoreStoryForms } from "./firestore_story_forms";
+import { FirestoreStoryQuestions } from "./firestore_story_questions";
+import { FirestoreUserFeedback } from "./firestore_user_feedback";
+
+// The default collection paths.
+const STORY_CACHE = "story__cache";
+const STORY_FORMS = "story__forms";
+const STORY_QUESTIONS = "story__questions";
+const STORY_REALTIME = "story__realtime";
+const USER_FEEDBACK = "user__feedback";
+
 /**
- * This class unifies the names of the Firestore collections, taking a prefix as
- * an input.
+ * This class configures and stores all the Firestore helper classes that
+ * manipulate collections. You can think of it as a "context" for everything
+ * Firestore: a single instance of this class is guaranteed to provide
+ * consistent document and reference paths.
+ *
+ * You can specify a common prefix that should be put before all collection
+ * paths. This is especially useful for tests (it allows doing as if each test
+ * or group of tests had its own Firestore).
+ *
+ * As a rule of thumb, every time you find yourself hard-coding a Firestore
+ * reference outside the `firebase` package, you should rather use this
+ * class and its attributes (create the appropriate helper if needed).
+ *
+ * Use this class by instantiating it in the caller (Firebase functions, admin
+ * scripts…) and passing the appropriate helper(s) to the Firestore reader
+ * and / or writer. Firebase MUST BE initialized before initializing this class.
  */
 export class FirestorePaths {
-  story: FirestoreStoryPaths;
-  user: FirestoreUserPaths;
+  readonly storyCache: FirestoreStoryCache;
+  readonly storyForms: FirestoreStoryForms;
+  readonly storyQuestions: FirestoreStoryQuestions;
+  readonly storyRealtime: FirestoreStoryRealtime;
+  readonly userFeedback: FirestoreUserFeedback;
 
-  constructor(private readonly prefix?: string) {
-    this.story = new FirestoreStoryPaths(this.prefix);
-    this.user = new FirestoreUserPaths(this.prefix);
-  }
-}
+  constructor(prefix?: string) {
+    const p = prefix === undefined ? "" : `${prefix}__`;
 
-class FirestoreStoryPaths {
-  private static BASE_CACHE = "story__cache";
-  private static BASE_FORMS = "story__forms";
-  private static BASE_QUESTIONS = "story__questions";
-  private static BASE_REALTIME = "story__realtime";
-  cache: string;
-  forms: string;
-  questions: string;
-  realtime: string;
-
-  constructor(private readonly prefix?: string) {
-    this.cache =
-      this.prefix === undefined
-        ? FirestoreStoryPaths.BASE_CACHE
-        : `${this.prefix}__${FirestoreStoryPaths.BASE_CACHE}`;
-
-    this.forms =
-      this.prefix === undefined
-        ? FirestoreStoryPaths.BASE_FORMS
-        : `${this.prefix}__${FirestoreStoryPaths.BASE_FORMS}`;
-
-    this.questions =
-      this.prefix === undefined
-        ? FirestoreStoryPaths.BASE_QUESTIONS
-        : `${this.prefix}__${FirestoreStoryPaths.BASE_QUESTIONS}`;
-
-    this.realtime =
-      this.prefix === undefined
-        ? FirestoreStoryPaths.BASE_REALTIME
-        : `${this.prefix}__${FirestoreStoryPaths.BASE_REALTIME}`;
-  }
-}
-
-class FirestoreUserPaths {
-  private static BASE_FEEDBACK = "user__feedback";
-  feedback: string;
-
-  constructor(private readonly prefix?: string) {
-    this.feedback =
-      this.prefix === undefined
-        ? FirestoreUserPaths.BASE_FEEDBACK
-        : `${this.prefix}__${FirestoreUserPaths.BASE_FEEDBACK}`;
+    this.storyCache = new FirestoreStoryCache(`${p}${STORY_CACHE}`);
+    this.storyForms = new FirestoreStoryForms(`${p}${STORY_FORMS}`);
+    this.storyQuestions = new FirestoreStoryQuestions(`${p}${STORY_QUESTIONS}`);
+    this.storyRealtime = new FirestoreStoryRealtime(`${p}${STORY_REALTIME}`);
+    this.userFeedback = new FirestoreUserFeedback(`${p}${USER_FEEDBACK}`);
   }
 }

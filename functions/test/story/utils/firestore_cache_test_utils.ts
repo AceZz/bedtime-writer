@@ -14,7 +14,7 @@ import {
   CACHE_AUTHOR,
   StoryCacheV1Manager,
 } from "../../../src/story";
-import { FirestorePaths, FirestoreStoryCache } from "../../../src/firebase";
+import { FirestoreStoryCache } from "../../../src/firebase";
 
 /**
  * Initializes a dummy form_id. Should be the form doc ref in real case.
@@ -72,14 +72,14 @@ const FAKE_IMAGE_API = new FakeImageApi();
  * Helper class to interact with the story cache Firestore collection.
  */
 export class FirestoreCacheTestUtils {
-  constructor(readonly paths: FirestorePaths) {}
+  constructor(private readonly cache: FirestoreStoryCache) {}
 
   get manager(): StoryCacheV1Manager {
     return new StoryCacheV1Manager(
       FORM_ID_0,
       FAKE_TEXT_API,
       FAKE_IMAGE_API,
-      this.paths
+      this.cache
     );
   }
 
@@ -96,8 +96,7 @@ export class FirestoreCacheTestUtils {
   }
 
   collectionRef(): CollectionReference {
-    const cache = new FirestoreStoryCache(this.paths);
-    return cache.storiesRef();
+    return this.cache.storiesRef();
   }
 
   /**
@@ -107,7 +106,7 @@ export class FirestoreCacheTestUtils {
    */
   async deleteCollection(): Promise<void> {
     const firestore = getFirestore();
-    const cache = await firestore.collection(this.paths.story.cache).get();
+    const cache = await firestore.collection(this.cache.collectionPath).get();
     await Promise.all(cache.docs.map((story) => story.ref.delete()));
   }
   /**
@@ -117,7 +116,7 @@ export class FirestoreCacheTestUtils {
    */
   async expectCountToBe(expected: number): Promise<void> {
     const firestore = getFirestore();
-    const cache = firestore.collection(this.paths.story.cache);
+    const cache = firestore.collection(this.cache.collectionPath);
     const query = await cache.count().get();
 
     expect(query.data().count).toBe(expected);
@@ -161,7 +160,7 @@ export class FirestoreCacheTestUtils {
 
   async expectStoryRequestDocsToEqual(requests: StoryRequestV1[]) {
     const firestore = getFirestore();
-    const cache = firestore.collection(this.paths.story.cache);
+    const cache = firestore.collection(this.cache.collectionPath);
     const query = await cache.get();
     const expected = requests.map((request) => {
       return {

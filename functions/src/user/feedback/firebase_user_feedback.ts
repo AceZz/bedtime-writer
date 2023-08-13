@@ -6,7 +6,7 @@ import { UserFeedback, UserFeedbackManager } from "./user_feedback";
  * Collect user feedback
  */
 export class FirebaseUserFeedbackManager implements UserFeedbackManager {
-  constructor(readonly feedback: FirestoreUserFeedback) {}
+  constructor(private readonly feedback: FirestoreUserFeedback) {}
 
   async write(feedback: UserFeedback) {
     const feedbackRef = this.feedback.newFeedbackRef();

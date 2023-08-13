@@ -4,11 +4,10 @@ import {
   Firestore,
   getFirestore,
 } from "firebase-admin/firestore";
-import { FirestorePaths } from "./firestore_paths";
 
 /**
- * Helper class to manipulate the story questions collection. It follows this
- * schema:
+ * Helper class to manipulate the story questions collection (usually called
+ * `story__questions`). It follows this schema:
  *
  * ```plain
  * <question_id>:
@@ -21,9 +20,9 @@ import { FirestorePaths } from "./firestore_paths";
  * ```
  */
 export class FirestoreStoryQuestions {
-  private firestore: Firestore;
+  private readonly firestore: Firestore;
 
-  constructor(readonly paths = new FirestorePaths(), firestore?: Firestore) {
+  constructor(readonly collectionPath: string, firestore?: Firestore) {
     this.firestore = firestore ?? getFirestore();
   }
 
@@ -40,6 +39,6 @@ export class FirestoreStoryQuestions {
   }
 
   questionsRef(): CollectionReference {
-    return this.firestore.collection(this.paths.story.questions);
+    return this.firestore.collection(this.collectionPath);
   }
 }

@@ -1,13 +1,15 @@
 import { beforeAll, beforeEach, expect, test } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../../src/firebase";
 import { FirestoreTestUtils } from "../../utils/firestore_test_utils";
+import { FirestoreFormsTestUtils } from "../../utils/firestore_forms_test_utils";
 
-const utils = new FirestoreTestUtils("form_reader").forms;
+let utils: FirestoreFormsTestUtils;
 
 // Check we are running in emulator mode before initializing Firebase.
 beforeAll(() => {
   initEnv();
   initFirebase(true);
+  utils = new FirestoreTestUtils("form_reader").forms;
 });
 
 beforeEach(async () => await utils.deleteCollection());

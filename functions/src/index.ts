@@ -28,14 +28,12 @@ import {
   UserStats,
 } from "./user";
 import { getImageApi, getTextApi } from "./api";
-import { FirestorePaths, FirestoreStoryRealtime } from "./firebase";
-import { FirestoreUserFeedback } from "./firebase/firestore_user_feedback";
+import { FirestorePaths } from "./firebase";
 
 initializeApp();
 
-// Set Firestore paths and helpers
-const firestorePaths = new FirestorePaths();
-const firestoreStoryRealtime = new FirestoreStoryRealtime(firestorePaths);
+// Set Firestore paths.
+const paths = new FirestorePaths();
 
 // Set the default region.
 setGlobalOptions({ region: "europe-west6" });
@@ -58,7 +56,7 @@ export const createClassicStoryRequest = onCall(async (request) => {
   );
   await globalRateLimiter.addRequests("global", ["story"]);
 
-  const requestManager = new StoryRequestV1Manager(firestoreStoryRealtime);
+  const requestManager = new StoryRequestV1Manager(paths.storyRealtime);
   const id = await requestManager.create(CLASSIC_LOGIC, request.data);
 
   return id;
@@ -70,7 +68,7 @@ export const createClassicStoryRequest = onCall(async (request) => {
  */
 export const createStory = onDocumentCreated(
   {
-    document: `${firestorePaths.story.realtime}/{story_id}`,
+    document: `${paths.storyRealtime.collectionPath}/{story_id}`,
     secrets: ["OPENAI_API_KEY"],
   },
   async (event) => {
@@ -79,7 +77,7 @@ export const createStory = onDocumentCreated(
     }
     const storyId = event.data.id;
 
-    const requestManager = new StoryRequestV1Manager(firestoreStoryRealtime);
+    const requestManager = new StoryRequestV1Manager(paths.storyRealtime);
     const request = await requestManager.get(storyId);
 
     if (request.logic == CLASSIC_LOGIC) {
@@ -131,7 +129,7 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
   const generator = new NPartStoryGenerator(logic, textApi, imageApi);
   const metadata = new StoryMetadata(request.author, generator.title());
   const writer = new FirebaseStoryWriter(
-    firestoreStoryRealtime,
+    paths.storyRealtime,
     metadata,
     storyId
   );
@@ -156,8 +154,7 @@ export const collectUserFeedback = onCall(async (request) => {
 
   const feedback = new UserFeedback(text, datetime, uid);
 
-  const feedbackCollection = new FirestoreUserFeedback();
-  const feedbackManager = new FirebaseUserFeedbackManager(feedbackCollection);
+  const feedbackManager = new FirebaseUserFeedbackManager(paths.userFeedback);
 
   await feedbackManager.write(feedback);
 });

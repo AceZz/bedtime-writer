@@ -15,9 +15,9 @@ test("Can connect to Firebase", () => {
 
 test("Can connect to Firestore", async () => {
   const firestore = getFirestore();
-  const firestorePaths = new FirestorePaths("test");
+  const paths = new FirestorePaths("test");
   const query = await firestore
-    .collection(firestorePaths.story.realtime)
+    .collection(paths.storyRealtime.collectionPath)
     .count()
     .get();
   expect(query.data().count).toBeGreaterThanOrEqual(0);

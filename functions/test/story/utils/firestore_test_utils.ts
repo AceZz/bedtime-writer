@@ -20,9 +20,12 @@ export class FirestoreTestUtils {
 
   constructor(readonly id: string) {
     this.paths = new FirestorePaths(`test_${id}`);
-    this.questions = new FirestoreQuestionsTestUtils(this.paths);
-    this.forms = new FirestoreFormsTestUtils(this.paths);
-    this.story = new FirestoreStoryTestUtils(this.paths);
-    this.cache = new FirestoreCacheTestUtils(this.paths);
+    this.questions = new FirestoreQuestionsTestUtils(this.paths.storyQuestions);
+    this.forms = new FirestoreFormsTestUtils(
+      this.paths.storyForms,
+      this.paths.storyQuestions
+    );
+    this.story = new FirestoreStoryTestUtils(this.paths.storyRealtime);
+    this.cache = new FirestoreCacheTestUtils(this.paths.storyCache);
   }
 }

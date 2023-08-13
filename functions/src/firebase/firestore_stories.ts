@@ -6,14 +6,21 @@ import {
 } from "firebase-admin/firestore";
 
 /**
- * A parent class with helpers for a collection which contains stories.
+ * Helper class to manipulate a stories collection. It follows this schema:
+ *
+ * ```plain
+ * <story_id>:
+ *   ...
+ *   request: JSON
+ *
+ *   images/
+ *   parts/
+ *   prompts/
  */
 export abstract class FirestoreStories {
-  private collection: string;
-  readonly firestore: Firestore;
+  private readonly firestore: Firestore;
 
-  constructor(collection: string, firestore?: Firestore) {
-    this.collection = collection;
+  constructor(readonly collectionPath: string, firestore?: Firestore) {
     this.firestore = firestore ?? getFirestore();
   }
 
@@ -22,7 +29,7 @@ export abstract class FirestoreStories {
   }
 
   storiesRef(): CollectionReference {
-    return this.firestore.collection(this.collection);
+    return this.firestore.collection(this.collectionPath);
   }
 
   imagesRef(id: string): CollectionReference {
@@ -75,3 +82,15 @@ export abstract class FirestoreStories {
     await copySubcollection(this.promptsRef(id), destination.promptsRef(id));
   }
 }
+
+/**
+ * Helper class to manipulate the story cache collection (usually called
+ * `story__cache`).
+ */
+export class FirestoreStoryCache extends FirestoreStories {}
+
+/**
+ * Helper class to manipulate the story realtime collection (usually called
+ * `story__realtime`).
+ */
+export class FirestoreStoryRealtime extends FirestoreStories {}
