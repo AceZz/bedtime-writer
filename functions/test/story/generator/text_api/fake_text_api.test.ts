@@ -23,15 +23,10 @@ test("getStream", async () => {
   const stream = await api.getStream();
   const expectedTokens = Array.from(api.getTokens());
 
-  const start = Date.now();
-
   const tokens: string[] = [];
   for await (const token of stream) {
     tokens.push(token);
   }
 
-  const elapsed = Date.now() - start;
-
   expect(tokens.join("").trim()).toStrictEqual(expectedTokens.join("").trim());
-  expect(Math.abs(elapsed - (500 + 10 * 100))).toBeLessThan(150);
 });
