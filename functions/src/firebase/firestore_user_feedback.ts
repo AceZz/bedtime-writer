@@ -1,8 +1,8 @@
 import {
   CollectionReference,
   DocumentReference,
-  Firestore,
 } from "firebase-admin/firestore";
+import { FirestoreCollection } from "./firestore_collection";
 
 /**
  * Helper class to manipulate the user feedback collection (usually called
@@ -15,12 +15,7 @@ import {
  *   uid: string
  * ```
  */
-export class FirestoreUserFeedback {
-  constructor(
-    readonly collectionPath: string,
-    private readonly firestore: Firestore
-  ) {}
-
+export class FirestoreUserFeedback extends FirestoreCollection {
   newFeedbackRef(): DocumentReference {
     return this.feedbacksRef().doc();
   }

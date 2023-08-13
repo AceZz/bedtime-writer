@@ -1,8 +1,8 @@
 import {
   CollectionReference,
   DocumentReference,
-  Firestore,
 } from "firebase-admin/firestore";
+import { FirestoreCollection } from "./firestore_collection";
 
 /**
  * Helper class to manipulate the user stats collection (usually called
@@ -14,12 +14,7 @@ import {
  *  numStories: int
  * ```
  */
-export class FirestoreUserStats {
-  constructor(
-    readonly collectionPath: string,
-    private readonly firestore: Firestore
-  ) {}
-
+export class FirestoreUserStats extends FirestoreCollection {
   userRef(id: string): DocumentReference {
     return this.statsRef().doc(id);
   }

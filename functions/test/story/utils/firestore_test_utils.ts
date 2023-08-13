@@ -1,4 +1,4 @@
-import { FirestorePaths } from "../../../src/firebase";
+import { FirestoreContext } from "../../../src/firebase";
 import { FirestoreCacheTestUtils } from "./firestore_cache_test_utils";
 import { FirestoreFormsTestUtils } from "./firestore_forms_test_utils";
 import { FirestoreQuestionsTestUtils } from "./firestore_questions_test_utils";
@@ -12,20 +12,22 @@ import { FirestoreStoryTestUtils } from "./firestore_story_test_utils";
  * is concerned).
  */
 export class FirestoreTestUtils {
-  paths: FirestorePaths;
+  firestore: FirestoreContext;
   questions: FirestoreQuestionsTestUtils;
   forms: FirestoreFormsTestUtils;
   story: FirestoreStoryTestUtils;
   cache: FirestoreCacheTestUtils;
 
   constructor(readonly id: string) {
-    this.paths = new FirestorePaths(`test_${id}`);
-    this.questions = new FirestoreQuestionsTestUtils(this.paths.storyQuestions);
-    this.forms = new FirestoreFormsTestUtils(
-      this.paths.storyForms,
-      this.paths.storyQuestions
+    this.firestore = new FirestoreContext(`test_${id}`);
+    this.questions = new FirestoreQuestionsTestUtils(
+      this.firestore.storyQuestions
     );
-    this.story = new FirestoreStoryTestUtils(this.paths.storyRealtime);
-    this.cache = new FirestoreCacheTestUtils(this.paths.storyCache);
+    this.forms = new FirestoreFormsTestUtils(
+      this.firestore.storyForms,
+      this.firestore.storyQuestions
+    );
+    this.story = new FirestoreStoryTestUtils(this.firestore.storyRealtime);
+    this.cache = new FirestoreCacheTestUtils(this.firestore.storyCache);
   }
 }

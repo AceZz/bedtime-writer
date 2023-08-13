@@ -9,7 +9,7 @@ import {
   getFirebaseProject,
   initEnv,
   initFirebase,
-  FirestorePaths,
+  FirestoreContext,
 } from "../firebase";
 import { FirebaseQuestionWriter, YAMLQuestionReader } from "../story";
 
@@ -19,19 +19,19 @@ main().then(() => process.exit(0));
 
 async function main() {
   initEnv();
-  const paths = new FirestorePaths();
+  const firestore = new FirestoreContext();
   const yamlPath = getYamlPath();
 
-  if (await confirm(paths, yamlPath)) {
+  if (await confirm(firestore, yamlPath)) {
     initFirebase();
     const reader = new YAMLQuestionReader(yamlPath);
     const questions = await reader.read();
 
-    const writer = new FirebaseQuestionWriter(paths.storyQuestions);
+    const writer = new FirebaseQuestionWriter(firestore.storyQuestions);
     await writer.write(questions);
     console.log(
       `${questions.length} question(s) saved to ` +
-        `${paths.storyQuestions.collectionPath}.`
+        `${firestore.storyQuestions.collectionPath}.`
     );
   } else {
     console.log("Abort");
@@ -43,7 +43,7 @@ function getYamlPath(): string {
 }
 
 async function confirm(
-  paths: FirestorePaths,
+  firestore: FirestoreContext,
   yamlPath: string
 ): Promise<boolean> {
   const projectLog = firebaseEmulatorsAreUsed()
@@ -51,7 +51,7 @@ async function confirm(
     : `of project ${getFirebaseProject()}`;
 
   const answer = await prompt(
-    `The collection ${paths.storyQuestions.collectionPath} ${projectLog} ` +
+    `The collection ${firestore.storyQuestions.collectionPath} ${projectLog} ` +
       `will be set to the content of ${yamlPath}. Proceed? (y/N) `
   );
 

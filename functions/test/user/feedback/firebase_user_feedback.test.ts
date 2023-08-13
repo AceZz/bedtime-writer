@@ -1,23 +1,18 @@
 import { afterEach, beforeAll, describe, expect, test } from "@jest/globals";
-import {
-  FirestorePaths,
-  FirestoreUserFeedback,
-  initEnv,
-  initFirebase,
-} from "../../../src/firebase";
+import { FirestoreContext, initEnv, initFirebase } from "../../../src/firebase";
 import {
   FirebaseUserFeedbackManager,
   UserFeedback,
 } from "../../../src/user/feedback"; // Import the UserFeedback type
 
 describe("FirebaseUserFeedbackManager", () => {
-  let feedbackCollection: FirestoreUserFeedback;
+  const feedbackCollection = new FirestoreContext("test_user_feedback")
+    .userFeedback;
   let feedbackId: string;
 
   beforeAll(() => {
     initEnv();
     initFirebase(true);
-    feedbackCollection = new FirestorePaths("test_user_feedback").userFeedback;
   });
 
   afterEach(async () => {

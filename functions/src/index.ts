@@ -28,12 +28,12 @@ import {
   UserStats,
 } from "./user";
 import { getImageApi, getTextApi } from "./api";
-import { FirestorePaths } from "./firebase";
+import { FirestoreContext } from "./firebase";
 
 initializeApp();
 
 // Set Firestore paths.
-const paths = new FirestorePaths();
+const firestore = new FirestoreContext();
 
 // Set the default region.
 setGlobalOptions({ region: "europe-west6" });
@@ -56,7 +56,7 @@ export const createClassicStoryRequest = onCall(async (request) => {
   );
   await globalRateLimiter.addRequests("global", ["story"]);
 
-  const requestManager = new StoryRequestV1Manager(paths.storyRealtime);
+  const requestManager = new StoryRequestV1Manager(firestore.storyRealtime);
   const id = await requestManager.create(CLASSIC_LOGIC, request.data);
 
   return id;
@@ -68,7 +68,7 @@ export const createClassicStoryRequest = onCall(async (request) => {
  */
 export const createStory = onDocumentCreated(
   {
-    document: `${paths.storyRealtime.collectionPath}/{story_id}`,
+    document: `${firestore.storyRealtime.collectionPath}/{story_id}`,
     secrets: ["OPENAI_API_KEY"],
   },
   async (event) => {
@@ -77,7 +77,7 @@ export const createStory = onDocumentCreated(
     }
     const storyId = event.data.id;
 
-    const requestManager = new StoryRequestV1Manager(paths.storyRealtime);
+    const requestManager = new StoryRequestV1Manager(firestore.storyRealtime);
     const request = await requestManager.get(storyId);
 
     if (request.logic == CLASSIC_LOGIC) {
@@ -96,7 +96,7 @@ export const createStory = onDocumentCreated(
 export const initializeUserStats = region("europe-west6")
   .auth.user()
   .onCreate(async (user) => {
-    const userStatsManager = new FirestoreUserStatsManager(paths.userStats);
+    const userStatsManager = new FirestoreUserStatsManager(firestore.userStats);
 
     const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
     const initialUserStats = new UserStats(0, userStoriesLimit);
@@ -111,7 +111,7 @@ export const resetDailyLimits = onSchedule("every day 01:00", async () => {
   logger.info("resetDailyLimits: started");
   const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
 
-  const userStatsManager = new FirestoreUserStatsManager(paths.userStats);
+  const userStatsManager = new FirestoreUserStatsManager(firestore.userStats);
 
   await userStatsManager.setAllRemainingStories(userStoriesLimit);
 });
@@ -129,14 +129,14 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
   const generator = new NPartStoryGenerator(logic, textApi, imageApi);
   const metadata = new StoryMetadata(request.author, generator.title());
   const writer = new FirebaseStoryWriter(
-    paths.storyRealtime,
+    firestore.storyRealtime,
     metadata,
     storyId
   );
 
   await writer.writeFromGenerator(generator);
 
-  const userStatsManager = new FirestoreUserStatsManager(paths.userStats);
+  const userStatsManager = new FirestoreUserStatsManager(firestore.userStats);
   await userStatsManager.updateStatsAfterStory(request.author);
 }
 
@@ -154,7 +154,9 @@ export const collectUserFeedback = onCall(async (request) => {
 
   const feedback = new UserFeedback(text, datetime, uid);
 
-  const feedbackManager = new FirebaseUserFeedbackManager(paths.userFeedback);
+  const feedbackManager = new FirebaseUserFeedbackManager(
+    firestore.userFeedback
+  );
 
   await feedbackManager.write(feedback);
 });

@@ -1,6 +1,6 @@
 import { FirebaseFormReader, StoryCacheV1Manager } from "../story";
 import {
-  FirestorePaths,
+  FirestoreContext,
   firebaseEmulatorsAreUsed,
   getFirebaseProject,
   initEnv,
@@ -17,11 +17,12 @@ main().then(() => process.exit(0));
  */
 async function main() {
   initEnv();
-  const paths = new FirestorePaths();
-  if (await confirm(paths)) {
+  const firestore = new FirestoreContext();
+
+  if (await confirm(firestore)) {
     initFirebase();
 
-    const reader = new FirebaseFormReader(paths.storyForms);
+    const reader = new FirebaseFormReader(firestore.storyForms);
     const formsWithId = await reader.readMostRecentWithIds(1);
 
     const formWithId = formsWithId[0];
@@ -33,7 +34,7 @@ async function main() {
       formWithId.id,
       textApi,
       imageApi,
-      paths.storyCache
+      firestore.storyCache
     );
     const requests = storyCacheManager.generateRequests(formWithId.storyForm);
 
@@ -41,14 +42,15 @@ async function main() {
   }
 }
 
-async function confirm(paths: FirestorePaths): Promise<boolean> {
+async function confirm(firestore: FirestoreContext): Promise<boolean> {
   const projectLog = firebaseEmulatorsAreUsed()
     ? "of Firestore emulator"
     : `of project ${getFirebaseProject()}`;
 
   const answer = await prompt(
-    `The collection ${paths.storyCache.collectionPath} ${projectLog} will be ` +
-      `populated based on ${paths.storyForms.collectionPath}. Proceed? (y/N) `
+    `The collection ${firestore.storyCache.collectionPath} ${projectLog} ` +
+      `will be populated based on ${firestore.storyForms.collectionPath}. ` +
+      "Proceed? (y/N) "
   );
 
   return ["yes", "y"].includes(answer?.toLowerCase() ?? "no");
