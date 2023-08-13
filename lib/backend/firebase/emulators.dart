@@ -1,19 +1,13 @@
-import 'dart:developer';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:logging/logging.dart';
 
+import '../../logger.dart';
 import 'firebase.dart';
 
 /// Inspects the environment and configure the Firebase emulators if they should
 /// be used.
 void configureFirebaseEmulators() {
   if (_useFirebaseEmulators()) {
-    log(
-      'Use Firebase emulators',
-      name: 'backend.configureFirebaseEmulators',
-      level: Level.CONFIG.value,
-    );
+    logger.info('Use Firebase emulators');
 
     firebaseAuth.useAuthEmulator('localhost', 9099);
     firebaseFirestore.useFirestoreEmulator('localhost', 8080);
