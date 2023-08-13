@@ -13,10 +13,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'backend/index.dart';
 import 'firebase_options.dart';
+import 'logger.dart';
 import 'router.dart';
 import 'theme.dart';
 
 void main() async {
+  configureLogging();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   // Force portrait orientation for display
