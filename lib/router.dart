@@ -55,9 +55,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'sign_in',
         path: '/account/sign-in',
         builder: (context, state) {
-          final redirectPath = state.queryParams['redirectPath'] ?? '/';
-          final signInText = signInTexts[state.queryParams['redirectName']] ??
-              defaultSignInText;
+          final redirectPath = state.uri.queryParameters['redirectPath'] ?? '/';
+          final signInText =
+              signInTexts[state.uri.queryParameters['redirectName']] ??
+                  defaultSignInText;
           return SignInScreen(
             redirect: redirectPath,
             signInText: signInText,
@@ -80,11 +81,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/story/library/:id',
         redirect: (context, state) {
           final redirect = _unregisteredRedirect(ref, state);
-          final library = state.params['id'] == null ? '/story/library' : null;
+          final library =
+              state.pathParameters['id'] == null ? '/story/library' : null;
           return redirect ?? library;
         },
         builder: (context, state) =>
-            DisplayStoryScreen(id: state.params['id'] ?? ''),
+            DisplayStoryScreen(id: state.pathParameters['id'] ?? ''),
       ),
       GoRoute(
         name: 'preferences',
