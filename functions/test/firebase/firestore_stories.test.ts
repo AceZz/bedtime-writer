@@ -8,6 +8,7 @@ import {
 } from "@jest/globals";
 import { FirestoreStories } from "../../src/firebase/firestore_stories";
 import { initEnv, initFirebase } from "../../src/firebase/utils";
+import { getFirestore } from "firebase-admin/firestore";
 
 class TestFirestoreStories extends FirestoreStories {
   // All methods are inherited, and no abstract methods need to be implemented
@@ -25,8 +26,11 @@ describe("copyStory", () => {
   beforeEach(async () => {
     // Clean up the test data
     storyId = "testStoryId";
-    source = new TestFirestoreStories("test_source_stories");
-    destination = new TestFirestoreStories("test_destination_stories");
+    source = new TestFirestoreStories("test_source_stories", getFirestore());
+    destination = new TestFirestoreStories(
+      "test_destination_stories",
+      getFirestore()
+    );
   });
 
   afterEach(async () => {

@@ -2,7 +2,6 @@ import {
   CollectionReference,
   DocumentReference,
   Firestore,
-  getFirestore,
 } from "firebase-admin/firestore";
 
 /**
@@ -18,11 +17,10 @@ import {
  *   prompts/
  */
 export abstract class FirestoreStories {
-  private readonly firestore: Firestore;
-
-  constructor(readonly collectionPath: string, firestore?: Firestore) {
-    this.firestore = firestore ?? getFirestore();
-  }
+  constructor(
+    readonly collectionPath: string,
+    private readonly firestore: Firestore
+  ) {}
 
   storyRef(id: string): DocumentReference {
     return this.storiesRef().doc(id);
