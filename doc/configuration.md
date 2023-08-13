@@ -15,6 +15,9 @@ In `bedtime-writer/.env`:
     * `false` (default)
     * `true`: display helpful info about the user ID on the home screen, and a button to
       log in / log out easily.
+* `DEBUG_AUTH_NO_ACCOUNT_LIMIT`
+  * `false` (default)
+  * `true`: do not implement the account creation limit, so many accounts can be created in a short timeframe.
 * `DEBUG_STATS`
     * `false` (default)
     * `true`: display helpful info about user stats, like the number of generated stories overall and today.

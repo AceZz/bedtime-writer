@@ -5,6 +5,11 @@ bool debugAuth() {
   return debug.toLowerCase() == 'true';
 }
 
+bool debugAuthNoAccountLimit() {
+  final debug = dotenv.get('DEBUG_AUTH_NO_ACCOUNT_LIMIT', fallback: 'false');
+  return debug.toLowerCase() == 'true';
+}
+
 bool debugStats() {
   final debug = dotenv.get('DEBUG_STATS', fallback: 'false');
   return debug.toLowerCase() == 'true';
