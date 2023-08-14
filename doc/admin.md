@@ -58,16 +58,16 @@ launched!
 
 ### Tools
 
-* `npm run set_story_questions [questions.yaml]`: set the story questions for the current project
+* `npm run story_set_questions [questions.yaml]`: set the story questions for the current project
   (on the emulator if `USE_FIREBASE_EMULATORS` is `true`). By default,
   `admin_data/story/questions.yaml` is used.
-* `npm run compress_story_images [folder]`: compress the images of the story choices. By default,
+* `npm run story_compress_images [folder]`: compress the images of the story choices. By default,
   `admin_data/` is used.
-* `npm run add_story_form [form.yaml]`: add a story form. By default, `admin_data/story/form.yaml`
+* `npm run story_add_form [form.yaml]`: add a story form. By default, `admin_data/story/form.yaml`
   is used, and the form is valid now (i.e. it immediately replaces any other form). You can add
   a `start` field next to the `questions` field if you want to change the start date of the form
   (`start: "2023-05-11T00:13:32Z"`). Finally, this script will fail if any of the provided questions
-  or choices is not in `story__questions`. If necessary, run `set_story_questions` before. 
+  or choices is not in `story__questions`. If necessary, run `story_set_questions` before. 
 
 ## Start the local backend with pre-loaded data
 
@@ -79,7 +79,7 @@ Make sure to set `USE_FIREBASE_EMULATORS=true` in `.env.local` and start the loc
 backend: `npm run local_backend`
 
 Fill it with some data. You can choose whichever data you want, a good start is
-`npm run set_story_questions` and `npm run add_story_form` (run them in another terminal, you will
+`npm run story_set_questions` and `npm run story_add_form` (run them in another terminal, you will
 be likely asked to set `GOOGLE_APPLICATION_CREDENTIALS` first).
 
 Export the Firebase data with `firebase emulators:export local_backend_export`. Firebase will write

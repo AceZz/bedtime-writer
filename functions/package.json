@@ -15,9 +15,9 @@
     "deploy_functions_dev": "firebase deploy --only functions --project bedtime-writer-dev",
     "deploy_functions_prod": "firebase deploy --only functions --project bedtime-writer",
     "deploy_hosting_dev": "firebase hosting:channel:deploy preview --expires 7d",
-    "set_story_questions": "node lib/src/admin/set_story_questions.js",
-    "add_story_form": "node lib/src/admin/add_story_form.js",
-    "compress_story_images": "node lib/src/admin/compress_story_images.js",
+    "story_set_questions": "node lib/src/admin/story_set_questions",
+    "story_add_form": "node lib/src/admin/story_add_form.js",
+    "story_compress_images": "node lib/src/admin/story_compress_images.js",
     "story_generate_cache": "node lib/src/admin/story_generate_cache.js"
   },
   "main": "lib/src/index.js",
