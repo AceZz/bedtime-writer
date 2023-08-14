@@ -1,30 +1,40 @@
-characterName:
+characterNameV1:
+  promptParam: characterName
   text: "Who is the hero of tonight's story?"
   choices:
     blaze:
       text: "Blaze, the kind dragon"
-      imagePath: "test/story/data/choice.jpg"
+      prompt: "The protagonist is Blaze, the kind dragon."
+      imagePath: "admin_data/story/characterName/blaze.png"
+    frosty:
+      text: "Frosty, the penguin"
+      prompt: "The protagonist is Frosty, the penguin."
+      imagePath: "admin_data/story/characterName/frosty.png"
     sparkles:
       text: "Sparkles, the magical horse"
-      imagePath: "test/story/data/choice.jpg"
-    frosty:
-      text: "Frosty, the pinguin"
-      imagePath: "test/story/data/choice.jpg"
-characterFlaw:
+      prompt: "The protagonist is Sparkles, the magical horse."
+      imagePath: "admin_data/story/characterName/sparkles.png"
+characterFlawV1:
+  promptParam: characterFlaw
   text: "What flaw does the hero have?"
   choices:
     failure:
       text: "Being afraid of failure"
-      imagePath: "test/story/data/choice.jpg"
-    selfConfidence:
-      text: "Lacking self-confidence"
-      imagePath: "test/story/data/choice.jpg"
-    lazy:
-      text: "Being a bit lazy"
-      imagePath: "test/story/data/choice.jpg"
+      prompt: "The protagonist is afraid of failure."
+      imagePath: "admin_data/story/characterFlaw/failure.png"
     giveUp:
       text: "Giving up easily"
-      imagePath: "test/story/data/choice.jpg"
+      prompt: "The protagonist gives up easily."
+      imagePath: "admin_data/story/characterFlaw/give_up.png"
+    lazy:
+      text: "Being a bit lazy"
+      prompt: "The protagonist is a bit lazy."
+      imagePath: "admin_data/story/characterFlaw/lazy.png"
     noAdvice:
       text: "Not listening to advice"
-      imagePath: "test/story/data/choice.jpg"
+      prompt: "The protagonist does not listen to advice."
+      imagePath: "admin_data/story/characterFlaw/no_advice.png"
+    selfConfidence:
+      text: "Lacking self-confidence"
+      prompt: "The protagonist lacks self-confidence."
+      imagePath: "admin_data/story/characterFlaw/self_confidence.png"
