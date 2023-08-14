@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 import { beforeAll, test } from "@jest/globals";
-import { StoryChoice } from "../../src/story";
+import { StoryChoice } from "../../../src/story";
 
 const OUTPUT_FOLDER = "test/output";
 
