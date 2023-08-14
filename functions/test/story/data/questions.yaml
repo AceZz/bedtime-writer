@@ -5,15 +5,15 @@ characterNameV1:
     blaze:
       text: "Blaze, the kind dragon"
       prompt: "The protagonist is Blaze, the kind dragon."
-      imagePath: "admin_data/story/characterName/blaze.png"
+      imagePath: "test/story/data/choice.jpg"
     frosty:
       text: "Frosty, the penguin"
       prompt: "The protagonist is Frosty, the penguin."
-      imagePath: "admin_data/story/characterName/frosty.png"
+      imagePath: "test/story/data/choice.jpg"
     sparkles:
       text: "Sparkles, the magical horse"
       prompt: "The protagonist is Sparkles, the magical horse."
-      imagePath: "admin_data/story/characterName/sparkles.png"
+      imagePath: "test/story/data/choice.jpg"
 characterFlawV1:
   promptParam: characterFlaw
   text: "What flaw does the hero have?"
@@ -21,20 +21,20 @@ characterFlawV1:
     failure:
       text: "Being afraid of failure"
       prompt: "The protagonist is afraid of failure."
-      imagePath: "admin_data/story/characterFlaw/failure.png"
+      imagePath: "test/story/data/choice.jpg"
     giveUp:
       text: "Giving up easily"
       prompt: "The protagonist gives up easily."
-      imagePath: "admin_data/story/characterFlaw/give_up.png"
+      imagePath: "test/story/data/choice.jpg"
     lazy:
       text: "Being a bit lazy"
       prompt: "The protagonist is a bit lazy."
-      imagePath: "admin_data/story/characterFlaw/lazy.png"
+      imagePath: "test/story/data/choice.jpg"
     noAdvice:
       text: "Not listening to advice"
       prompt: "The protagonist does not listen to advice."
-      imagePath: "admin_data/story/characterFlaw/no_advice.png"
+      imagePath: "test/story/data/choice.jpg"
     selfConfidence:
       text: "Lacking self-confidence"
       prompt: "The protagonist lacks self-confidence."
-      imagePath: "admin_data/story/characterFlaw/self_confidence.png"
+      imagePath: "test/story/data/choice.jpg"

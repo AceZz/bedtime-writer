@@ -11,13 +11,14 @@ beforeAll(async () => {
 
 test("Can create a Choice", async () => {
   const image = await readFile("test/story/data/choice.jpg");
-  new StoryChoice("yesNo", "Yes and no", image);
+  new StoryChoice("yesNo", "Yes and no", "Both yes and no.", image);
 });
 
 test("StoryChoice.fromImagePath", async () => {
   const choice = await StoryChoice.fromImagePath(
     "yesNo",
     "Yes and no",
+    "Both yes and no.",
     "test/story/data/choice.jpg"
   );
 

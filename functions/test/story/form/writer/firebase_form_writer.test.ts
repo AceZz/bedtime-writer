@@ -63,7 +63,7 @@ test("Incompatible question ID", async () => {
 test("Incompatible choice ID", async () => {
   const forms = utils.forms.samples();
   await expect(utils.forms.writer.write(forms[3])).rejects.toThrow(
-    'Choice "doesnotexist" for question "question1" does not exist.'
+    'Choice "doesnotexist" for question "question1V1" does not exist.'
   );
   await utils.forms.expectCountToBe(0);
 });
