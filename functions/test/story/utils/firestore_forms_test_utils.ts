@@ -17,69 +17,16 @@ import {
   FirebaseFormWriter,
 } from "../../../src/story";
 import { expect } from "@jest/globals";
-
-/**
- * Works with QUESTIONS_0.
- */
-const FORM_0 = new StoryForm(
-  new Map([
-    ["question1V1", ["choice1", "choice2"]],
-    ["question2V1", ["choice1"]],
-  ]),
-  new Date("2020-01-01T12:00:00Z")
-);
-
-const SERIALIZED_FORM_0 = {
-  start: new Date("2020-01-01T12:00:00Z"),
-  numQuestions: 2,
-  question0: "question1V1",
-  question0Choices: ["choice1", "choice2"],
-  question1: "question2V1",
-  question1Choices: ["choice1"],
-};
-
-const QUESTIONS_0 = ["question1V1", "question2V1"];
-
-const FORM_RESPONSES_0 = [
-  ["choice1", "choice1"],
-  ["choice2", "choice1"],
-];
-
-/**
- * Works with QUESTIONS_0.
- */
-const FORM_1 = new StoryForm(
-  new Map([
-    ["question1V1", ["choice1", "choice2"]],
-    ["question2V1", ["choice2"]],
-  ]),
-  new Date("2023-01-01T12:00:00Z")
-);
-
-const SERIALIZED_FORM_1 = {
-  start: new Date("2023-01-01T12:00:00Z"),
-  numQuestions: 2,
-  question0: "question1V1",
-  question0Choices: ["choice1", "choice2"],
-  question1: "question2V1",
-  question1Choices: ["choice2"],
-};
-
-/**
- * Does not work with QUESTIONS_0 (question does not exist).
- */
-export const FORM_2 = new StoryForm(
-  new Map([["doesnotexist", ["one", "two", "three"]]]),
-  new Date("2023-01-01T12:00:00Z")
-);
-
-/**
- * Does not work with QUESTIONS_0 (choice does not exist).
- */
-export const FORM_3 = new StoryForm(
-  new Map([["question1V1", ["doesnotexist", "choice2"]]]),
-  new Date("2023-01-01T12:00:00Z")
-);
+import {
+  FORM_0,
+  FORM_1,
+  FORM_2,
+  FORM_3,
+  FORM_RESPONSES_0,
+  FORM_QUESTIONS_0,
+  SERIALIZED_FORM_0,
+  SERIALIZED_FORM_1,
+} from "../data";
 
 /**
  * Helper class to interact with the story forms Firestore collection.
@@ -111,7 +58,7 @@ export class FirestoreFormsTestUtils {
   }
 
   questions(): string[] {
-    return QUESTIONS_0;
+    return FORM_QUESTIONS_0;
   }
 
   formResponses(): string[][] {
