@@ -22,6 +22,7 @@ export class FirebaseQuestionReader implements Reader<StoryQuestion[]> {
   ): Promise<StoryQuestion> {
     return new StoryQuestion(
       snapshot.id,
+      snapshot.data().promptParam ?? "",
       snapshot.data().text ?? "",
       await this.readChoices(snapshot.id)
     );
@@ -40,6 +41,7 @@ export class FirebaseQuestionReader implements Reader<StoryQuestion[]> {
     return new StoryChoice(
       snapshot.id,
       snapshot.data().text,
+      snapshot.data().prompt,
       snapshot.data().image
     );
   }

@@ -14,6 +14,7 @@ export class StoryChoice {
   constructor(
     readonly id: string,
     readonly text: string,
+    readonly prompt: string,
     readonly image: Buffer
   ) {}
 
@@ -23,6 +24,7 @@ export class StoryChoice {
   static async fromImagePath(
     id: string,
     text: string,
+    prompt: string,
     imagePath: string
   ): Promise<StoryChoice> {
     const data = await readFile(imagePath);
@@ -34,6 +36,7 @@ export class StoryChoice {
     return new StoryChoice(
       id,
       text,
+      prompt,
       sizeBefore <= sizeAfter ? data : compressed
     );
   }
