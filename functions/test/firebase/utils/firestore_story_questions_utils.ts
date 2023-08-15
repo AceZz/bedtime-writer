@@ -66,14 +66,14 @@ export class FirestoreStoryQuestionsUtils extends FirestoreStoryQuestions {
     // Test each choice.
     const choices = document.collection("choices");
     await Promise.all(
-      expected.choices.map((expectedChoice) =>
+      Array.from(expected.choices.values()).map((expectedChoice) =>
         this.expectChoiceToBe(choices.doc(expectedChoice.id), expectedChoice)
       )
     );
 
     // Test the number of choices.
     const countQuery = await choices.count().get();
-    expect(countQuery.data().count).toBe(expected.choices.length);
+    expect(countQuery.data().count).toBe(expected.choices.size);
   }
 
   private async expectChoiceToBe(

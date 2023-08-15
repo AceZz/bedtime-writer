@@ -74,10 +74,7 @@ export async function FORM_CHARACTER(): Promise<StoryForm> {
 
   return new StoryForm(
     new Map(
-      questions.map((question) => [
-        question.promptParam,
-        question.choices.map((choice) => choice.id),
-      ])
+      questions.map((question) => [question.promptParam, question.choiceIds])
     ),
     new Date("2020-01-01T12:00:00Z")
   );

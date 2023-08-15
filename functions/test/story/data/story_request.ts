@@ -23,8 +23,8 @@ async function REQUEST_CHARACTER_0(
     formId: FORM_CHARACTER_ID,
     duration: DURATION,
     style: STYLE,
-    characterName: questionCharacterName.choices[0].id,
-    characterFlaw: questionCharacterFlaw.choices[0].id,
+    characterName: questionCharacterName.choiceIds[0],
+    characterFlaw: questionCharacterFlaw.choiceIds[0],
   });
 }
 
@@ -42,8 +42,8 @@ async function REQUEST_CHARACTER_1(
     formId: FORM_CHARACTER_ID,
     duration: DURATION,
     style: STYLE,
-    characterName: questionCharacterName.choices[1].id,
-    characterFlaw: questionCharacterFlaw.choices[0].id,
+    characterName: questionCharacterName.choiceIds[1],
+    characterFlaw: questionCharacterFlaw.choiceIds[0],
   });
 }
 
