@@ -1,7 +1,3 @@
-/**
- * Contains fixtures and utils for `Cache`-related tests.
- */
-
 import { expect } from "@jest/globals";
 
 import { StoryRequestV1 } from "../../../src/story";
@@ -10,7 +6,7 @@ import { FirestoreStoryCache } from "../../../src/firebase";
 /**
  * Helper class to interact with the story cache Firestore collection.
  */
-export class FirestoreCacheTestUtils extends FirestoreStoryCache {
+export class FirestoreStoryCacheUtils extends FirestoreStoryCache {
   /**
    * Delete the collection.
    *
