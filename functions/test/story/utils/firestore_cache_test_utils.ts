@@ -5,95 +5,14 @@
 import { expect } from "@jest/globals";
 import { CollectionReference, getFirestore } from "firebase-admin/firestore";
 
-import {
-  StoryForm,
-  FakeImageApi,
-  FakeTextApi,
-  StoryRequestV1,
-  CLASSIC_LOGIC,
-  CACHE_AUTHOR,
-  StoryCacheV1Manager,
-} from "../../../src/story";
+import { StoryRequestV1 } from "../../../src/story";
 import { FirestoreStoryCache } from "../../../src/firebase";
-
-/**
- * Initializes a dummy form_id. Should be the form doc ref in real case.
- */
-const FORM_ID_0 = "form_id_0";
-
-/**
- * Initializes other request data fields.
- */
-const AUTHOR = CACHE_AUTHOR;
-const CHARACTER_NAMES = ["name1", "name2"];
-const CHARACTER_FLAW = "flaw1";
-const DURATION = 1;
-const STYLE = "style1";
-
-/**
- * Initializes a sample story form for REQUESTS_0.
- */
-const FORM_0 = new StoryForm(
-  new Map([
-    ["characterName", CHARACTER_NAMES],
-    ["characterFlaw", [CHARACTER_FLAW]],
-  ]),
-  new Date("2020-01-01T12:00:00Z")
-);
-
-/**
- * Computes requests data from FORM_0.
- */
-const REQUESTS_DATA_0 = CHARACTER_NAMES.map((name) => {
-  return {
-    author: AUTHOR,
-    formId: FORM_ID_0,
-    duration: DURATION,
-    style: STYLE,
-    characterName: name,
-    characterFlaw: CHARACTER_FLAW,
-  };
-});
-
-/**
- * Computes requests from REQUESTS_DATA_0.
- */
-const REQUESTS_0 = REQUESTS_DATA_0.map((data) => {
-  return new StoryRequestV1(CLASSIC_LOGIC, data);
-});
-
-/**
- * Sets Api to use.
- */
-const FAKE_TEXT_API = new FakeTextApi();
-const FAKE_IMAGE_API = new FakeImageApi();
 
 /**
  * Helper class to interact with the story cache Firestore collection.
  */
 export class FirestoreCacheTestUtils {
-  constructor(private readonly cache: FirestoreStoryCache) {}
-
-  get manager(): StoryCacheV1Manager {
-    return new StoryCacheV1Manager(
-      FORM_ID_0,
-      FAKE_TEXT_API,
-      FAKE_IMAGE_API,
-      this.cache
-    );
-  }
-
-  formSample(): StoryForm {
-    return FORM_0;
-  }
-
-  formIdSample(): string {
-    return FORM_ID_0;
-  }
-
-  requestsSample(): StoryRequestV1[] {
-    return REQUESTS_0;
-  }
+  constructor(readonly cache: FirestoreStoryCache) {}
 
   collectionRef(): CollectionReference {
     return this.cache.storiesRef();

@@ -1,4 +1,5 @@
 import { StoryForm } from "../../../src/story";
+import { QUESTIONS_CHARACTER } from "./story_question";
 
 /**
  * Works with FORM_QUESTIONS_0.
@@ -62,3 +63,22 @@ export const FORM_3 = new StoryForm(
   new Map([["question1V1", ["doesnotexist", "choice2"]]]),
   new Date("2023-01-01T12:00:00Z")
 );
+
+export const FORM_CHARACTER_ID = "form_id_0";
+
+/**
+ * Works with QUESTIONS_CHARACTER.
+ */
+export async function FORM_CHARACTER(): Promise<StoryForm> {
+  const questions = await QUESTIONS_CHARACTER();
+
+  return new StoryForm(
+    new Map(
+      questions.map((question) => [
+        question.promptParam,
+        question.choices.map((choice) => choice.id),
+      ])
+    ),
+    new Date("2020-01-01T12:00:00Z")
+  );
+}
