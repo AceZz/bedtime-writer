@@ -1,37 +1,41 @@
-import { beforeAll, beforeEach, test } from "@jest/globals";
+import { beforeAll, beforeEach, describe, test } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../../src/firebase";
 import { FirestoreTestUtils } from "../../utils/firestore_test_utils";
+import { QUESTIONS_0, QUESTIONS_1 } from "../../data";
+import { FirebaseQuestionWriter } from "../../../../src/story";
 
 const questions = new FirestoreTestUtils("question_writer").questions;
 
-// Check we are running in emulator mode before initializing Firebase.
-beforeAll(() => {
-  initEnv();
-  initFirebase(true);
-});
+describe("FirebaseQuestionWriter", () => {
+  let writer: FirebaseQuestionWriter;
 
-beforeEach(async () => {
-  await questions.deleteCollection();
-});
+  // Check we are running in emulator mode before initializing Firebase.
+  beforeAll(() => {
+    initEnv();
+    initFirebase(true);
+    writer = new FirebaseQuestionWriter(questions.questions);
+  });
 
-test("Simple write", async () => {
-  const samples = await questions.samples();
-  await questions.writer.write(samples[0]);
-  await questions.expectQuestionsToBe(samples[0]);
-});
+  beforeEach(async () => {
+    await questions.deleteCollection();
+  });
 
-test("Complex write", async () => {
-  const samples = await questions.samples();
-  await questions.writer.write(samples[0]);
-  await questions.writer.write(samples[1]);
+  test("Simple write", async () => {
+    await writer.write(await QUESTIONS_0());
+    await questions.expectQuestionsToBe(await QUESTIONS_0());
+  });
 
-  await questions.expectQuestionsToBe(samples[1]);
-});
+  test("Complex write", async () => {
+    await writer.write(await QUESTIONS_0());
+    await writer.write(await QUESTIONS_1());
 
-test("Write twice", async () => {
-  const samples = await questions.samples();
-  await questions.writer.write(samples[0]);
-  await questions.writer.write(samples[0]);
+    await questions.expectQuestionsToBe(await QUESTIONS_1());
+  });
 
-  await questions.expectQuestionsToBe(samples[0]);
+  test("Write twice", async () => {
+    await writer.write(await QUESTIONS_0());
+    await writer.write(await QUESTIONS_0());
+
+    await questions.expectQuestionsToBe(await QUESTIONS_0());
+  });
 });

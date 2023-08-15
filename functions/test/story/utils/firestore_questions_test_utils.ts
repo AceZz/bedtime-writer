@@ -1,31 +1,13 @@
 import { DocumentReference, getFirestore } from "firebase-admin/firestore";
-import {
-  FirebaseQuestionReader,
-  FirebaseQuestionWriter,
-  StoryQuestion,
-  StoryChoice,
-} from "../../../src/story";
+import { StoryQuestion, StoryChoice } from "../../../src/story";
 import { expect } from "@jest/globals";
 import { FirestoreStoryQuestions } from "../../../src/firebase";
-import { QUESTIONS_0, QUESTIONS_1 } from "../data";
 
 /**
  * Helper class to interact with the story questions Firestore collection.
  */
 export class FirestoreQuestionsTestUtils {
-  constructor(private readonly questions: FirestoreStoryQuestions) {}
-
-  get writer(): FirebaseQuestionWriter {
-    return new FirebaseQuestionWriter(this.questions);
-  }
-
-  get reader(): FirebaseQuestionReader {
-    return new FirebaseQuestionReader(this.questions);
-  }
-
-  async samples(): Promise<StoryQuestion[][]> {
-    return Promise.all([QUESTIONS_0(), QUESTIONS_1()]);
-  }
+  constructor(readonly questions: FirestoreStoryQuestions) {}
 
   /**
    * Delete the collection.
