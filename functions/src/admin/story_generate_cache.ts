@@ -22,7 +22,10 @@ async function main() {
   if (await confirm(firestore)) {
     initFirebase();
 
-    const reader = new FirebaseFormReader(firestore.storyForms);
+    const reader = new FirebaseFormReader(
+      firestore.storyForms,
+      firestore.storyQuestions
+    );
     const formsWithId = await reader.readMostRecentWithIds(1);
 
     const formWithId = formsWithId[0];

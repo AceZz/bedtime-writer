@@ -1,35 +1,44 @@
-import { cartesianProduct } from "../../../src/utils";
+import { cartesianProduct, listToMapById } from "../../../src/utils";
+import { StoryChoice } from "./story_choice";
+import { StoryQuestion } from "./story_question";
 
 /**
  * Stores questions and choices that should be displayed to the user.
- *
- * `questionsToChoices` maps a question ID to its choices IDs.
  */
 export class StoryForm {
   readonly start: Date;
+  readonly questions: Map<string, StoryQuestion>;
 
-  constructor(
-    readonly questionsToChoices: Map<string, string[]>,
-    start?: Date
-  ) {
+  constructor(questions: StoryQuestion[], start?: Date) {
+    this.questions = listToMapById(questions);
     this.start = start ?? new Date();
   }
 
-  static getAllFormResponses(questionsToChoices: Map<string, string[]>): {
-    questions: string[];
-    formResponses: string[][];
+  static getAllFormResponses(questions: Map<string, StoryQuestion>): {
+    questions: StoryQuestion[];
+    formResponses: StoryChoice[][];
   } {
-    const questions = Array.from(questionsToChoices.keys());
-    const choices = Array.from(questionsToChoices.values());
+    // List of questions.
+    const questionsList = Array.from(questions.values());
 
+    // choices[question_index][choice_index]
+    const choices = questionsList.map((question) =>
+      Array.from(question.choices.values())
+    );
+
+    // choices[item_index][question_index]
     const formResponses = cartesianProduct(choices);
-    return { questions: questions, formResponses: formResponses };
+
+    return {
+      questions: questionsList,
+      formResponses: formResponses,
+    };
   }
 
   getAllFormResponses(): {
-    questions: string[];
-    formResponses: string[][];
+    questions: StoryQuestion[];
+    formResponses: StoryChoice[][];
   } {
-    return StoryForm.getAllFormResponses(this.questionsToChoices);
+    return StoryForm.getAllFormResponses(this.questions);
   }
 }
