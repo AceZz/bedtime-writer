@@ -30,7 +30,10 @@ export class FirestoreTestUtils {
       this.firestore.storyForms.collectionPath,
       this.firestore
     );
-    this.story = new FirestoreStoryTestUtils(this.firestore.storyRealtime);
+    this.story = new FirestoreStoryTestUtils(
+      this.firestore.storyRealtime.collectionPath,
+      this.firestore
+    );
     this.cache = new FirestoreCacheTestUtils(this.firestore.storyCache);
   }
 }
