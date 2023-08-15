@@ -5,7 +5,7 @@ import { expect } from "@jest/globals";
 /**
  * Helper class to interact with the story forms Firestore collection.
  */
-export class FirestoreFormsTestUtils extends FirestoreStoryForms {
+export class FirestoreStoryFormsUtils extends FirestoreStoryForms {
   /**
    * Delete the collection.
    *
