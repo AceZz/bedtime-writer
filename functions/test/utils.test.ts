@@ -6,6 +6,7 @@ import {
   retryAsyncFunction,
   cartesianProduct,
   listToMapById,
+  combinationsIndices,
 } from "../src/utils";
 import { FAKE_IMAGE_BYTES } from "../src/story";
 
@@ -34,6 +35,41 @@ describe("cartesianProduct", () => {
   test("Throws on empty input", () => {
     const input = [[], ["a"]];
     expect(() => cartesianProduct(input)).toThrow();
+  });
+});
+
+describe("combinationIndices", () => {
+  test("throws on k < 0", () => {
+    expect(() => Array.from(combinationsIndices(-3, 4))).toThrow();
+  });
+
+  test("throws on k > n", () => {
+    expect(() => Array.from(combinationsIndices(3, 2))).toThrow();
+  });
+
+  test("k = 0", () => {
+    const indices = Array.from(combinationsIndices(0, 4));
+
+    expect(indices).toEqual([[]]);
+  });
+
+  test("k = 1", () => {
+    const indices = Array.from(combinationsIndices(1, 4));
+
+    expect(indices).toEqual([[0], [1], [2], [3]]);
+  });
+
+  test("k = 2, n = 4", () => {
+    const indices = Array.from(combinationsIndices(2, 4));
+
+    expect(indices).toEqual([
+      [0, 1],
+      [0, 2],
+      [0, 3],
+      [1, 2],
+      [1, 3],
+      [2, 3],
+    ]);
   });
 });
 

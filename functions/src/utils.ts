@@ -53,6 +53,43 @@ export function cartesianProduct<T>(arrays: T[][]): T[][] {
 }
 
 /**
+ * Generate the indices corresponding to all combinations of `k` among a list of
+ * `n` items.
+ *
+ * For instance, 2 among 4 will yield
+ * [0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]
+ *
+ * This function is dedicated to le papa des Taupins #bof
+ */
+export function* combinationsIndices(
+  k: number,
+  n: number
+): Generator<number[]> {
+  if (k < 0) throw Error(`combinationsIndices: invalid k = ${k} < 0`);
+  if (k > n) throw Error(`combinationsIndices: invalid k = ${k} > n = ${n}`);
+
+  if (k === 0) {
+    yield [];
+  } else {
+    // Example: k = 2, n = 4. i goes from 0 to 2.
+    // i is the first item of each combination yielded inside this loop.
+    // For instance, if i = 1, all combinations will start with 1: [1, 2] and
+    // [1, 3].
+    for (let i = 0; i < n - k + 1; i++) {
+      // To generate the rest of the combination, we generate all k - 1
+      // combinations from i + 1 to n.
+      // To make it start at 0, we shift it by i + 1,
+      // so from 0 to n - (i + 1) = n - i - 1.
+      const subCombinations = combinationsIndices(k - 1, n - i - 1);
+      for (const indices of subCombinations) {
+        // We "cancel" the shift by adding i + 1.
+        yield [i, ...indices.map((x) => x + i + 1)];
+      }
+    }
+  }
+}
+
+/**
  * Ask a question to the user and return the answer.
  */
 export async function prompt(query: string): Promise<string> {
