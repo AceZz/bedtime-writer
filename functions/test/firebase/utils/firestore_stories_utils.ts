@@ -1,4 +1,4 @@
-import { DocumentReference, getFirestore } from "firebase-admin/firestore";
+import { DocumentReference } from "firebase-admin/firestore";
 import { StoryMetadata, StoryStatus } from "../../../src/story";
 import { FirestoreStories } from "../../../src/firebase";
 import { expect } from "@jest/globals";
@@ -6,7 +6,7 @@ import { expect } from "@jest/globals";
 /**
  * Helper class to interact with the story questions Firestore collection.
  */
-export class FirestoreStoryTestUtils extends FirestoreStories {
+export class FirestoreStoriesUtils extends FirestoreStories {
   async expectComplete(id: string): Promise<void> {
     const data = await this.getStoryData(id);
     expect(data?.status).toBe(StoryStatus.COMPLETE);
@@ -35,8 +35,7 @@ export class FirestoreStoryTestUtils extends FirestoreStories {
    * Firebase must be initialized before calling this function.
    */
   async delete(): Promise<void> {
-    const firestore = getFirestore();
-    const questions = await firestore.collection(this.collectionPath).get();
+    const questions = await this.storiesRef().get();
     await Promise.all(
       questions.docs.map((story) => this.deleteStory(story.ref))
     );
