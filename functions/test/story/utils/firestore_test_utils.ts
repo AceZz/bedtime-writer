@@ -3,8 +3,8 @@ import {
   FirestoreStoryFormsUtils,
   FirestoreStoryQuestionsUtils,
   FirestoreStoriesUtils,
+  FirestoreStoryCacheUtils,
 } from "../../firebase/utils";
-import { FirestoreCacheTestUtils } from "./firestore_cache_test_utils";
 
 /**
  * Helper class to interact with the Firestore database.
@@ -18,7 +18,7 @@ export class FirestoreTestUtils {
   questions: FirestoreStoryQuestionsUtils;
   forms: FirestoreStoryFormsUtils;
   story: FirestoreStoriesUtils;
-  cache: FirestoreCacheTestUtils;
+  cache: FirestoreStoryCacheUtils;
 
   constructor(readonly id: string) {
     this.firestore = new FirestoreContext(`test_${id}`);
@@ -34,7 +34,7 @@ export class FirestoreTestUtils {
       this.firestore.storyRealtime.collectionPath,
       this.firestore
     );
-    this.cache = new FirestoreCacheTestUtils(
+    this.cache = new FirestoreStoryCacheUtils(
       this.firestore.storyCache.collectionPath,
       this.firestore
     );
