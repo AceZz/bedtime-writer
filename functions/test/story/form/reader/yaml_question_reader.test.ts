@@ -14,6 +14,8 @@ test("read questions", async () => {
       "characterNameV1",
       "characterName",
       "Who is the hero of tonight's story?",
+      0,
+      result[0].datetime, // Strict equality check prevents from testing datetime here
       [
         await StoryChoice.fromImagePath(
           "blaze",
@@ -39,6 +41,8 @@ test("read questions", async () => {
       "characterFlawV1",
       "characterFlaw",
       "What flaw does the hero have?",
+      1,
+      result[1].datetime,
       [
         await StoryChoice.fromImagePath(
           "failure",
@@ -75,4 +79,22 @@ test("read questions", async () => {
   ];
 
   expect(result).toStrictEqual(expected);
+  expectDatetimeToRoughlyBeNow(result);
 });
+
+function expectDatetimeToRoughlyBeNow(questions: StoryQuestion[]): void {
+  const now = new Date();
+  const fiveMinutes = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+  const lowerBound = new Date(now.getTime() - fiveMinutes);
+  const upperBound = new Date(now.getTime() + fiveMinutes);
+
+  questions.forEach((question) => {
+    expect(question.datetime.getTime()).toBeGreaterThanOrEqual(
+      lowerBound.getTime()
+    );
+    expect(question.datetime.getTime()).toBeLessThanOrEqual(
+      upperBound.getTime()
+    );
+  });
+}

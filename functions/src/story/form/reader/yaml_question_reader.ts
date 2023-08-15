@@ -50,7 +50,14 @@ export class YAMLQuestionReader implements Reader<StoryQuestion[]> {
       choices.push(await this.parseChoice(choiceKey, data.choices[choiceKey]));
     }
 
-    return new StoryQuestion(key, data.promptParam, data.text, choices);
+    return new StoryQuestion(
+      key,
+      data.promptParam,
+      data.text,
+      data.priority,
+      new Date(),
+      choices
+    );
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

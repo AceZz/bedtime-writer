@@ -1,6 +1,7 @@
 characterNameV1:
   promptParam: characterName
   text: "Who is the hero of tonight's story?"
+  priority: 0
   choices:
     blaze:
       text: "Blaze, the kind dragon"
@@ -17,6 +18,7 @@ characterNameV1:
 characterFlawV1:
   promptParam: characterFlaw
   text: "What flaw does the hero have?"
+  priority: 1
   choices:
     failure:
       text: "Being afraid of failure"

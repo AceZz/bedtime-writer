@@ -42,9 +42,12 @@ export class FirebaseQuestionWriter implements Writer<StoryQuestion[]> {
   }
 
   async writeQuestion(question: StoryQuestion): Promise<void> {
-    await this.collection
-      .questionRef(question.id)
-      .set({ promptParam: question.promptParam, text: question.text });
+    await this.collection.questionRef(question.id).set({
+      promptParam: question.promptParam,
+      text: question.text,
+      priority: question.priority,
+      datetime: question.datetime,
+    });
     await this.removeExtraChoices(question);
 
     for (const choice of question.choices) {
