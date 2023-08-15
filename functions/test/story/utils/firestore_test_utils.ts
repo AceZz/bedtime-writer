@@ -21,7 +21,8 @@ export class FirestoreTestUtils {
   constructor(readonly id: string) {
     this.firestore = new FirestoreContext(`test_${id}`);
     this.questions = new FirestoreQuestionsTestUtils(
-      this.firestore.storyQuestions
+      this.firestore.storyQuestions.collectionPath,
+      this.firestore
     );
     this.forms = new FirestoreFormsTestUtils(
       this.firestore.storyForms,

@@ -13,11 +13,11 @@ describe("FirebaseQuestionWriter", () => {
   beforeAll(() => {
     initEnv();
     initFirebase(true);
-    writer = new FirebaseQuestionWriter(questions.questions);
+    writer = new FirebaseQuestionWriter(questions);
   });
 
   beforeEach(async () => {
-    await questions.deleteCollection();
+    await questions.delete();
   });
 
   test("Simple write", async () => {
