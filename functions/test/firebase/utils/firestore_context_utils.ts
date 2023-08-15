@@ -5,6 +5,7 @@ import {
   FirestoreStoriesUtils,
   FirestoreStoryCacheUtils,
 } from ".";
+import { FirestoreUserFeedbackUtils } from "./firestore_user_feedback";
 
 /**
  * Helper class to interact with the Firestore database.
@@ -20,6 +21,7 @@ export class FirestoreContextUtils {
   storyForms: FirestoreStoryFormsUtils;
   storyQuestions: FirestoreStoryQuestionsUtils;
   storyRealtime: FirestoreStoriesUtils;
+  userFeedback: FirestoreUserFeedbackUtils;
 
   constructor(readonly id: string) {
     this.firestore = new FirestoreContext(`test_${id}`);
@@ -38,6 +40,10 @@ export class FirestoreContextUtils {
     );
     this.storyRealtime = new FirestoreStoriesUtils(
       this.firestore.storyRealtime.collectionPath,
+      this.firestore
+    );
+    this.userFeedback = new FirestoreUserFeedbackUtils(
+      this.firestore.userFeedback.collectionPath,
       this.firestore
     );
   }
