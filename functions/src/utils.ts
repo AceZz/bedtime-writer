@@ -53,6 +53,28 @@ export function cartesianProduct<T>(arrays: T[][]): T[][] {
 }
 
 /**
+ * Generate sublists corresponding to all combinations of `k` among `items`.
+ *
+ * For instance, 2 among [a, b, c, d] will yield
+ * [a, b], [a, c], [a, d], [b, c], [b, d], [c, d]
+ *
+ * Note: this function does not check for duplicates. Every element of `items`
+ * is considered as unique.
+ * Note: do not make any assumption on the order of the combinations.
+ */
+export function* combinations<T>(k: number, items: T[]): Generator<T[]> {
+  if (k < 0) throw Error(`combinations: invalid k = ${k} < 0`);
+  if (k > items.length)
+    throw Error(
+      `combinations: invalid k = ${k} > items.length = ${items.length}`
+    );
+
+  for (const indices of combinationsIndices(k, items.length)) {
+    yield indices.map((i) => items[i]);
+  }
+}
+
+/**
  * Generate the indices corresponding to all combinations of `k` among a list of
  * `n` items.
  *
