@@ -1,47 +1,28 @@
-import { afterEach, beforeAll, describe, expect, test } from "@jest/globals";
-import { FirestoreContext, initEnv, initFirebase } from "../../../src/firebase";
-import {
-  FirebaseUserFeedbackManager,
-  UserFeedback,
-} from "../../../src/user/feedback"; // Import the UserFeedback type
+import { beforeAll, beforeEach, describe, test } from "@jest/globals";
+import { initEnv, initFirebase } from "../../../src/firebase";
+import { FirestoreContextUtils } from "../../firebase/utils";
+import { FirebaseUserFeedbackManager } from "../../../src/user/feedback"; // Import the UserFeedback type
+import { FEEDBACK_0 } from "../data";
+
+const utils = new FirestoreContextUtils("user_feedback");
+const userFeedback = utils.userFeedback;
 
 describe("FirebaseUserFeedbackManager", () => {
-  const feedbackCollection = new FirestoreContext("test_user_feedback")
-    .userFeedback;
-  let feedbackId: string;
+  let feedbackManager: FirebaseUserFeedbackManager;
 
   beforeAll(() => {
     initEnv();
     initFirebase(true);
+    feedbackManager = new FirebaseUserFeedbackManager(userFeedback);
   });
 
-  afterEach(async () => {
-    await feedbackCollection.feedbackRef(feedbackId).delete();
+  // Empty the feedback collection.
+  beforeEach(async () => {
+    await userFeedback.delete();
   });
 
   test("should write user feedback to Firestore", async () => {
-    const userFeedbackJson = {
-      text: "test-feedback",
-      datetime: new Date(),
-      uid: "test-user",
-    };
-    const userFeedback = new UserFeedback(
-      userFeedbackJson.text,
-      userFeedbackJson.datetime,
-      userFeedbackJson.uid
-    );
-
-    const feedbackManager = new FirebaseUserFeedbackManager(feedbackCollection);
-    feedbackId = await feedbackManager.write(userFeedback);
-
-    const actualFeedback = await feedbackCollection
-      .feedbackRef(feedbackId)
-      .get();
-    // Need to process the datetime format for comparison
-    const actualFeedbackJson = actualFeedback.data();
-    if (actualFeedbackJson != undefined) {
-      actualFeedbackJson.datetime = actualFeedbackJson?.datetime.toDate();
-    }
-    expect(actualFeedbackJson).toEqual(userFeedbackJson);
+    await feedbackManager.write(FEEDBACK_0);
+    await userFeedback.expectToStrictEqual([FEEDBACK_0]);
   });
 });
