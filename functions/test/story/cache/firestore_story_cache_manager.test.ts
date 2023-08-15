@@ -21,12 +21,12 @@ describe("Firestore story cache manager", () => {
       FORM_CHARACTER_ID,
       new FakeTextApi(),
       new FakeImageApi(),
-      cache.cache
+      cache
     );
   });
 
   beforeEach(async () => {
-    await cache.deleteCollection();
+    await cache.delete();
   });
 
   test("Should generate an array of correct StoryRequestV1 from Form", async () => {

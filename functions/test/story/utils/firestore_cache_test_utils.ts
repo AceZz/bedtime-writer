@@ -3,7 +3,6 @@
  */
 
 import { expect } from "@jest/globals";
-import { CollectionReference, getFirestore } from "firebase-admin/firestore";
 
 import { StoryRequestV1 } from "../../../src/story";
 import { FirestoreStoryCache } from "../../../src/firebase";
@@ -11,32 +10,24 @@ import { FirestoreStoryCache } from "../../../src/firebase";
 /**
  * Helper class to interact with the story cache Firestore collection.
  */
-export class FirestoreCacheTestUtils {
-  constructor(readonly cache: FirestoreStoryCache) {}
-
-  collectionRef(): CollectionReference {
-    return this.cache.storiesRef();
-  }
-
+export class FirestoreCacheTestUtils extends FirestoreStoryCache {
   /**
    * Delete the collection.
    *
    * Firebase must be initialized before calling this function.
    */
-  async deleteCollection(): Promise<void> {
-    const firestore = getFirestore();
-    const cache = await firestore.collection(this.cache.collectionPath).get();
+  async delete(): Promise<void> {
+    const cache = await this.storiesRef().get();
     await Promise.all(cache.docs.map((story) => story.ref.delete()));
   }
+
   /**
    * Checks the number of cache stories in the Firestore database.
    *
    * Firebase must be initialized before calling this function.
    */
   async expectCountToBe(expected: number): Promise<void> {
-    const firestore = getFirestore();
-    const cache = firestore.collection(this.cache.collectionPath);
-    const query = await cache.count().get();
+    const query = await this.storiesRef().count().get();
 
     expect(query.data().count).toBe(expected);
   }
@@ -78,9 +69,7 @@ export class FirestoreCacheTestUtils {
   }
 
   async expectStoryRequestDocsToEqual(requests: StoryRequestV1[]) {
-    const firestore = getFirestore();
-    const cache = firestore.collection(this.cache.collectionPath);
-    const query = await cache.get();
+    const query = await this.storiesRef().get();
     const expected = requests.map((request) => {
       return {
         logic: request.logic,
