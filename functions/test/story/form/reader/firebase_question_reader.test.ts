@@ -1,6 +1,11 @@
 import { beforeAll, beforeEach, expect, test } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../../src/firebase";
 import { FirestoreTestUtils } from "../../utils/firestore_test_utils";
+import { QUESTIONS_0 } from "../../data";
+import {
+  FirebaseQuestionReader,
+  FirebaseQuestionWriter,
+} from "../../../../src/story";
 
 const utils = new FirestoreTestUtils("question_writer").questions;
 
@@ -15,11 +20,11 @@ beforeEach(async () => {
 });
 
 test("FirebaseQuestionReader", async () => {
-  const samples = await utils.samples();
+  const expected = await QUESTIONS_0();
+  const writer = new FirebaseQuestionWriter(utils.questions);
+  await writer.write(expected);
 
-  const expected = samples[0];
-  await utils.writer.write(expected);
-
-  const questions = await utils.reader.read();
+  const reader = new FirebaseQuestionReader(utils.questions);
+  const questions = await reader.read();
   expect(questions).toStrictEqual(expected);
 });

@@ -11,22 +11,7 @@ import {
   FirestoreStoryForms,
   FirestoreStoryQuestions,
 } from "../../../src/firebase";
-import {
-  StoryForm,
-  FirebaseFormReader,
-  FirebaseFormWriter,
-} from "../../../src/story";
 import { expect } from "@jest/globals";
-import {
-  FORM_0,
-  FORM_1,
-  FORM_2,
-  FORM_3,
-  FORM_RESPONSES_0,
-  FORM_QUESTIONS_0,
-  SERIALIZED_FORM_0,
-  SERIALIZED_FORM_1,
-} from "../data";
 
 /**
  * Helper class to interact with the story forms Firestore collection.
@@ -37,32 +22,8 @@ export class FirestoreFormsTestUtils {
     readonly firestoreQuestions: FirestoreStoryQuestions
   ) {}
 
-  get reader(): FirebaseFormReader {
-    return new FirebaseFormReader(this.firestoreForms);
-  }
-
-  get writer(): FirebaseFormWriter {
-    return new FirebaseFormWriter(this.firestoreForms, this.firestoreQuestions);
-  }
-
-  samples(): StoryForm[] {
-    return [FORM_0, FORM_1, FORM_2, FORM_3];
-  }
-
-  serializedSamples(): object[] {
-    return [SERIALIZED_FORM_0, SERIALIZED_FORM_1];
-  }
-
   collectionRef(): CollectionReference {
     return this.firestoreForms.formsRef();
-  }
-
-  questions(): string[] {
-    return FORM_QUESTIONS_0;
-  }
-
-  formResponses(): string[][] {
-    return FORM_RESPONSES_0;
   }
 
   /**
