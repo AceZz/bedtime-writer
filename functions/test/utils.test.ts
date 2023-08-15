@@ -5,6 +5,7 @@ import {
   sleep,
   retryAsyncFunction,
   cartesianProduct,
+  listToMapById,
 } from "../src/utils";
 import { FAKE_IMAGE_BYTES } from "../src/story";
 
@@ -157,4 +158,19 @@ describe("retryAsyncFunction", () => {
     expect(duration).toBeGreaterThanOrEqual(expectedDuration);
     expect(duration).toBeLessThanOrEqual(expectedDuration + errorMargin);
   });
+});
+
+test("listToMapById", () => {
+  const data = [
+    { id: 1, x: 3 },
+    { id: 3, y: 4 },
+    { id: 2, z: 5 },
+  ];
+
+  const expected = new Map();
+  expected.set(data[0].id, data[0]);
+  expected.set(data[1].id, data[1]);
+  expected.set(data[2].id, data[2]);
+
+  expect(listToMapById(data)).toEqual(expected);
 });

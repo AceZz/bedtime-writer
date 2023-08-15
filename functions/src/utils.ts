@@ -160,3 +160,15 @@ export async function retryAsyncFunction<T>(
 export async function sleep(ms: number): Promise<void> {
   await new Promise((r) => setTimeout(r, ms));
 }
+
+/**
+ * Transform a list of items with an `id` attribute to a map of the same
+ * items indexed by `id`.
+ */
+export function listToMapById<K, V extends { id: K }>(list: V[]): Map<K, V> {
+  const map = new Map();
+  for (const item of list) {
+    map.set(item.id, item);
+  }
+  return map;
+}
