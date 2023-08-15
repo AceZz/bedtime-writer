@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, expect, test } from "@jest/globals";
 import { initEnv, initFirebase } from "../../src/firebase";
-import { FirestoreTestUtils } from "../story/utils/firestore_test_utils";
+import { FirestoreContextUtils } from "./utils/";
 import { StoryForm } from "../../src/story";
 import {
   FORM_QUESTIONS_0,
@@ -8,7 +8,7 @@ import {
   SERIALIZED_FORM_0,
 } from "../story/data";
 
-const firestoreForms = new FirestoreTestUtils("story_forms").forms;
+const storyForms = new FirestoreContextUtils("story_forms").storyForms;
 
 // Check we are running in emulator mode before initializing Firebase.
 beforeAll(() => {
@@ -16,14 +16,12 @@ beforeAll(() => {
   initFirebase(true);
 });
 
-beforeEach(async () => await firestoreForms.delete());
+beforeEach(async () => await storyForms.delete());
 
 test("FirestoreStoryForms returns all possible form responses", async () => {
-  const docRef = await firestoreForms.formsRef().add(SERIALIZED_FORM_0);
+  const docRef = await storyForms.formsRef().add(SERIALIZED_FORM_0);
 
-  const questionsToChoices = await firestoreForms.getQuestionsToChoices(
-    docRef.id
-  );
+  const questionsToChoices = await storyForms.getQuestionsToChoices(docRef.id);
   const { questions: actualQuestions, formResponses: actualFormResponses } =
     StoryForm.getAllFormResponses(questionsToChoices);
   expect(actualQuestions).toEqual(FORM_QUESTIONS_0);

@@ -4,7 +4,7 @@ import {
   FirestoreStoryQuestionsUtils,
   FirestoreStoriesUtils,
   FirestoreStoryCacheUtils,
-} from "../../firebase/utils";
+} from ".";
 
 /**
  * Helper class to interact with the Firestore database.
@@ -13,29 +13,31 @@ import {
  * running concurrently do not conflict with each other (as far as the database
  * is concerned).
  */
-export class FirestoreTestUtils {
+export class FirestoreContextUtils {
   firestore: FirestoreContext;
-  questions: FirestoreStoryQuestionsUtils;
-  forms: FirestoreStoryFormsUtils;
-  story: FirestoreStoriesUtils;
-  cache: FirestoreStoryCacheUtils;
+
+  storyCache: FirestoreStoryCacheUtils;
+  storyForms: FirestoreStoryFormsUtils;
+  storyQuestions: FirestoreStoryQuestionsUtils;
+  storyRealtime: FirestoreStoriesUtils;
 
   constructor(readonly id: string) {
     this.firestore = new FirestoreContext(`test_${id}`);
-    this.questions = new FirestoreStoryQuestionsUtils(
-      this.firestore.storyQuestions.collectionPath,
+
+    this.storyCache = new FirestoreStoryCacheUtils(
+      this.firestore.storyCache.collectionPath,
       this.firestore
     );
-    this.forms = new FirestoreStoryFormsUtils(
+    this.storyForms = new FirestoreStoryFormsUtils(
       this.firestore.storyForms.collectionPath,
       this.firestore
     );
-    this.story = new FirestoreStoriesUtils(
-      this.firestore.storyRealtime.collectionPath,
+    this.storyQuestions = new FirestoreStoryQuestionsUtils(
+      this.firestore.storyQuestions.collectionPath,
       this.firestore
     );
-    this.cache = new FirestoreStoryCacheUtils(
-      this.firestore.storyCache.collectionPath,
+    this.storyRealtime = new FirestoreStoriesUtils(
+      this.firestore.storyRealtime.collectionPath,
       this.firestore
     );
   }
