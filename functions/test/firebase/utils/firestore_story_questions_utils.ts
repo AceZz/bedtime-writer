@@ -1,4 +1,4 @@
-import { DocumentReference, getFirestore } from "firebase-admin/firestore";
+import { DocumentReference } from "firebase-admin/firestore";
 import { StoryQuestion, StoryChoice } from "../../../src/story";
 import { expect } from "@jest/globals";
 import { FirestoreStoryQuestions } from "../../../src/firebase";
@@ -6,15 +6,14 @@ import { FirestoreStoryQuestions } from "../../../src/firebase";
 /**
  * Helper class to interact with the story questions Firestore collection.
  */
-export class FirestoreQuestionsTestUtils extends FirestoreStoryQuestions {
+export class FirestoreStoryQuestionsUtils extends FirestoreStoryQuestions {
   /**
    * Delete the collection.
    *
    * Firebase must be initialized before calling this function.
    */
   async delete(): Promise<void> {
-    const firestore = getFirestore();
-    const questions = await firestore.collection(this.collectionPath).get();
+    const questions = await this.questionsRef().get();
     await Promise.all(
       questions.docs.map((question) => this.deleteQuestion(question.ref))
     );
@@ -41,21 +40,18 @@ export class FirestoreQuestionsTestUtils extends FirestoreStoryQuestions {
    * Firebase must be initialized before calling this function.
    */
   async expectQuestionsToBe(expected: StoryQuestion[]) {
-    const firestore = getFirestore();
-    const questions = firestore.collection(this.collectionPath);
-
     // Test each question.
     await Promise.all(
       expected.map((expectedQuestion) =>
         this.expectQuestionToBe(
-          questions.doc(expectedQuestion.id),
+          this.questionsRef().doc(expectedQuestion.id),
           expectedQuestion
         )
       )
     );
 
     // Test the number of questions.
-    const countQuery = await questions.count().get();
+    const countQuery = await this.questionsRef().count().get();
     expect(countQuery.data().count).toBe(expected.length);
   }
 
