@@ -26,16 +26,13 @@ describe("FirebaseFormWriter", () => {
     initEnv();
     initFirebase(true);
     questionsWriter = new FirebaseQuestionWriter(utils.questions);
-    formWriter = new FirebaseFormWriter(
-      utils.forms.firestoreForms,
-      utils.forms.firestoreQuestions
-    );
+    formWriter = new FirebaseFormWriter(utils.forms, utils.questions);
   });
 
   // Empty the forms and questions collection, then recreate some questions.
   beforeEach(async () => {
     await utils.questions.delete();
-    await utils.forms.deleteCollection();
+    await utils.forms.delete();
 
     await questionsWriter.write(await QUESTIONS_0());
   });

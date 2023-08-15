@@ -1,7 +1,7 @@
 import { FirestoreContext } from "../../../src/firebase";
 import { FirestoreCacheTestUtils } from "./firestore_cache_test_utils";
 import { FirestoreFormsTestUtils } from "./firestore_forms_test_utils";
-import { FirestoreQuestionsTestUtils } from "./firestore_questions_test_utils";
+import { FirestoreStoryQuestionsUtils } from "../../firebase/utils/firestore_story_questions_utils";
 import { FirestoreStoryTestUtils } from "./firestore_story_test_utils";
 
 /**
@@ -13,20 +13,20 @@ import { FirestoreStoryTestUtils } from "./firestore_story_test_utils";
  */
 export class FirestoreTestUtils {
   firestore: FirestoreContext;
-  questions: FirestoreQuestionsTestUtils;
+  questions: FirestoreStoryQuestionsUtils;
   forms: FirestoreFormsTestUtils;
   story: FirestoreStoryTestUtils;
   cache: FirestoreCacheTestUtils;
 
   constructor(readonly id: string) {
     this.firestore = new FirestoreContext(`test_${id}`);
-    this.questions = new FirestoreQuestionsTestUtils(
+    this.questions = new FirestoreStoryQuestionsUtils(
       this.firestore.storyQuestions.collectionPath,
       this.firestore
     );
     this.forms = new FirestoreFormsTestUtils(
-      this.firestore.storyForms,
-      this.firestore.storyQuestions
+      this.firestore.storyForms.collectionPath,
+      this.firestore
     );
     this.story = new FirestoreStoryTestUtils(this.firestore.storyRealtime);
     this.cache = new FirestoreCacheTestUtils(this.firestore.storyCache);
