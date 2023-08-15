@@ -81,4 +81,8 @@ tests and the admin tools.
   * positive integer (default `1000`)
   * The delay in milliseconds between the end of the last unsuccessful story generation and the new 
     try.
+* `JEST_TIMEOUT`
+  * positive integer (default `5000`)
+  * The timeout in milliseconds of Jest tests, is convenient to increase locally in case of a slow
+    computer.
 
