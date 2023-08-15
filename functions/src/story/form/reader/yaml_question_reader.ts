@@ -12,16 +12,19 @@ import { StoryChoice } from "../story_choice";
  * The YAML file should have this structure:
  *
  * ```yaml
- * question1:
+ * questionId1: loveV1
+ *   promptParam: love
  *   text: "What is love?"
  *   choices:
  *     choice1:
- *       text: "Baby don't hurt me"
- *       imagePath: "someImage.png"
+ *       text: "Baby don't hurt me."
+ *       prompt: "Love is Baby don't hurt me"
+ *       imagePath: "heart.png"
  *     choice2:
  *       text: "No more"
- *       imagePath: "anotherImage.png"
- * question2:
+ *       prompt: "Love is no more."
+ *       imagePath: "brokenHeart.png"
+ * questionId2:
  *   ...
  * ```
  */
@@ -47,11 +50,23 @@ export class YAMLQuestionReader implements Reader<StoryQuestion[]> {
       choices.push(await this.parseChoice(choiceKey, data.choices[choiceKey]));
     }
 
-    return new StoryQuestion(key, data.text, choices);
+    return new StoryQuestion(
+      key,
+      data.promptParam,
+      data.text,
+      data.priority,
+      new Date(),
+      choices
+    );
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async parseChoice(key: string, data: any): Promise<StoryChoice> {
-    return await StoryChoice.fromImagePath(key, data.text, data.imagePath);
+    return await StoryChoice.fromImagePath(
+      key,
+      data.text,
+      data.prompt,
+      data.imagePath
+    );
   }
 }
