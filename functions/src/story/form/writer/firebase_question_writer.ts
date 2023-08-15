@@ -50,13 +50,13 @@ export class FirebaseQuestionWriter implements Writer<StoryQuestion[]> {
     });
     await this.removeExtraChoices(question);
 
-    for (const choice of question.choices) {
+    for (const choice of question.choices.values()) {
       await this.writeChoice(question.id, choice);
     }
   }
 
   async removeExtraChoices(question: StoryQuestion): Promise<void> {
-    const choiceIds = question.choices.map((choice) => choice.id);
+    const choiceIds = question.choiceIds;
     const snapshot = await this.collection.choicesRef(question.id).get();
 
     // Delete every document which ID is not in `choiceIds` (i.e. not in

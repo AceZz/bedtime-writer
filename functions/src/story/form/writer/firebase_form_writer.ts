@@ -84,7 +84,7 @@ export class FirebaseFormWriter implements Writer<StoryForm> {
       throw Error(`Question "${questionId}" does not exist.`);
     }
 
-    const availableChoiceIds = question.choices.map((choice) => choice.id);
+    const availableChoiceIds = question.choiceIds;
     for (const choiceId of choiceIds) {
       if (!availableChoiceIds.includes(choiceId)) {
         throw Error(
