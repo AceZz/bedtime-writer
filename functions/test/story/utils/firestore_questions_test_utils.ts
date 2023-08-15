@@ -6,19 +6,15 @@ import { FirestoreStoryQuestions } from "../../../src/firebase";
 /**
  * Helper class to interact with the story questions Firestore collection.
  */
-export class FirestoreQuestionsTestUtils {
-  constructor(readonly questions: FirestoreStoryQuestions) {}
-
+export class FirestoreQuestionsTestUtils extends FirestoreStoryQuestions {
   /**
    * Delete the collection.
    *
    * Firebase must be initialized before calling this function.
    */
-  async deleteCollection(): Promise<void> {
+  async delete(): Promise<void> {
     const firestore = getFirestore();
-    const questions = await firestore
-      .collection(this.questions.collectionPath)
-      .get();
+    const questions = await firestore.collection(this.collectionPath).get();
     await Promise.all(
       questions.docs.map((question) => this.deleteQuestion(question.ref))
     );
@@ -46,7 +42,7 @@ export class FirestoreQuestionsTestUtils {
    */
   async expectQuestionsToBe(expected: StoryQuestion[]) {
     const firestore = getFirestore();
-    const questions = firestore.collection(this.questions.collectionPath);
+    const questions = firestore.collection(this.collectionPath);
 
     // Test each question.
     await Promise.all(

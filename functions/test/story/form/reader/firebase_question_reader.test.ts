@@ -16,15 +16,15 @@ beforeAll(() => {
 });
 
 beforeEach(async () => {
-  await utils.deleteCollection();
+  await utils.delete();
 });
 
 test("FirebaseQuestionReader", async () => {
   const expected = await QUESTIONS_0();
-  const writer = new FirebaseQuestionWriter(utils.questions);
+  const writer = new FirebaseQuestionWriter(utils);
   await writer.write(expected);
 
-  const reader = new FirebaseQuestionReader(utils.questions);
+  const reader = new FirebaseQuestionReader(utils);
   const questions = await reader.read();
   expect(questions).toStrictEqual(expected);
 });
