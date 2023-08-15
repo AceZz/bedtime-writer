@@ -13,26 +13,28 @@ test("compressToPng", async () => {
   await compressToPng(FAKE_IMAGE_BYTES, {});
 });
 
-test("Should return the cartesian product", () => {
-  const input = [
-    ["a", "b"],
-    ["c", "d"],
-  ];
-  const expected = [
-    ["a", "c"],
-    ["a", "d"],
-    ["b", "c"],
-    ["b", "d"],
-  ];
+describe("cartesianProduct", () => {
+  test("Returns the cartesian product", () => {
+    const input = [
+      ["a", "b"],
+      ["c", "d"],
+    ];
+    const expected = [
+      ["a", "c"],
+      ["a", "d"],
+      ["b", "c"],
+      ["b", "d"],
+    ];
 
-  const actual = cartesianProduct(input);
+    const actual = cartesianProduct(input);
 
-  expect(actual.sort()).toEqual(expected.sort());
-});
+    expect(actual.sort()).toEqual(expected.sort());
+  });
 
-test("Should throw an error about the cartesian product", () => {
-  const input = [[], ["a"]];
-  expect(() => cartesianProduct(input)).toThrow();
+  test("Throws on empty input", () => {
+    const input = [[], ["a"]];
+    expect(() => cartesianProduct(input)).toThrow();
+  });
 });
 
 test("sleep for the specified duration", async () => {
