@@ -34,6 +34,9 @@ export class FirestoreTestUtils {
       this.firestore.storyRealtime.collectionPath,
       this.firestore
     );
-    this.cache = new FirestoreCacheTestUtils(this.firestore.storyCache);
+    this.cache = new FirestoreCacheTestUtils(
+      this.firestore.storyCache.collectionPath,
+      this.firestore
+    );
   }
 }
