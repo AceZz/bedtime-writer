@@ -9,7 +9,7 @@ import {
 } from "../../data";
 import { FirebaseFormReader } from "../../../../src/story";
 
-const utils = new FirestoreTestUtils("form_reader").forms;
+const firestoreForms = new FirestoreTestUtils("form_reader").forms;
 
 // Check we are running in emulator mode before initializing Firebase.
 beforeAll(() => {
@@ -17,13 +17,13 @@ beforeAll(() => {
   initFirebase(true);
 });
 
-beforeEach(async () => await utils.deleteCollection());
+beforeEach(async () => await firestoreForms.delete());
 
 test("FirebaseFormReader", async () => {
-  await utils.collectionRef().add(SERIALIZED_FORM_0);
-  await utils.collectionRef().add(SERIALIZED_FORM_1);
+  await firestoreForms.formsRef().add(SERIALIZED_FORM_0);
+  await firestoreForms.formsRef().add(SERIALIZED_FORM_1);
 
-  const reader = new FirebaseFormReader(utils.firestoreForms);
+  const reader = new FirebaseFormReader(firestoreForms);
   const forms = await reader.read();
   forms.sort((a, b) => a.start.getTime() - b.start.getTime());
 

@@ -8,7 +8,7 @@ import {
   SERIALIZED_FORM_0,
 } from "../story/data";
 
-const utils = new FirestoreTestUtils("story_forms").forms;
+const firestoreForms = new FirestoreTestUtils("story_forms").forms;
 
 // Check we are running in emulator mode before initializing Firebase.
 beforeAll(() => {
@@ -16,12 +16,12 @@ beforeAll(() => {
   initFirebase(true);
 });
 
-beforeEach(async () => await utils.deleteCollection());
+beforeEach(async () => await firestoreForms.delete());
 
 test("FirestoreStoryForms returns all possible form responses", async () => {
-  const docRef = await utils.collectionRef().add(SERIALIZED_FORM_0);
+  const docRef = await firestoreForms.formsRef().add(SERIALIZED_FORM_0);
 
-  const questionsToChoices = await utils.firestoreForms.getQuestionsToChoices(
+  const questionsToChoices = await firestoreForms.getQuestionsToChoices(
     docRef.id
   );
   const { questions: actualQuestions, formResponses: actualFormResponses } =
