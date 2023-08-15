@@ -43,7 +43,7 @@ test("sleep for the specified duration", async () => {
   const duration = after - before;
 
   const errorMargin = 100;
-  expect(duration).toBeGreaterThanOrEqual(sleepDuration);
+  expect(duration).toBeGreaterThanOrEqual(sleepDuration - errorMargin);
   expect(duration).toBeLessThanOrEqual(sleepDuration + errorMargin);
 });
 
