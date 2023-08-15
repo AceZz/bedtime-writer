@@ -5,9 +5,9 @@ import {
   YAMLQuestionReader,
 } from "../../../../src/story";
 
-jest.useFakeTimers().setSystemTime(new Date("2020-01-01"));
-
 test("read questions", async () => {
+  jest.useFakeTimers().setSystemTime(new Date("2020-01-01"));
+
   const reader = new YAMLQuestionReader("test/story/data/questions.yaml");
 
   const result = await reader.read();
