@@ -1,13 +1,14 @@
 import { beforeAll, beforeEach, expect, test } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../../src/firebase";
-import { FirestoreTestUtils } from "../../utils/firestore_test_utils";
+import { FirestoreContextUtils } from "../../../firebase/utils";
 import { QUESTIONS_0 } from "../../data";
 import {
   FirebaseQuestionReader,
   FirebaseQuestionWriter,
 } from "../../../../src/story";
 
-const utils = new FirestoreTestUtils("question_writer").questions;
+const storyQuestions = new FirestoreContextUtils("question_reader")
+  .storyQuestions;
 
 // Check we are running in emulator mode before initializing Firebase.
 beforeAll(() => {
@@ -16,15 +17,15 @@ beforeAll(() => {
 });
 
 beforeEach(async () => {
-  await utils.delete();
+  await storyQuestions.delete();
 });
 
 test("FirebaseQuestionReader", async () => {
   const expected = await QUESTIONS_0();
-  const writer = new FirebaseQuestionWriter(utils);
+  const writer = new FirebaseQuestionWriter(storyQuestions);
   await writer.write(expected);
 
-  const reader = new FirebaseQuestionReader(utils);
+  const reader = new FirebaseQuestionReader(storyQuestions);
   const questions = await reader.read();
   expect(questions).toStrictEqual(expected);
 });

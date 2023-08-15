@@ -1,7 +1,7 @@
 import { describe, test, beforeAll, beforeEach } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../src/firebase";
 
-import { FirestoreTestUtils } from "../utils/firestore_test_utils";
+import { FirestoreContextUtils } from "../../firebase/utils";
 import {
   FakeImageApi,
   FakeTextApi,
@@ -11,7 +11,8 @@ import {
 import { FORM_CHARACTER, FORM_CHARACTER_ID, REQUESTS_CHARACTER } from "../data";
 
 describe("Firestore story cache manager", () => {
-  const cache = new FirestoreTestUtils("firestore_story_cache_manager").cache;
+  const storyCache = new FirestoreContextUtils("story_cache_manager")
+    .storyCache;
   let storyCacheManager: StoryCacheManager;
 
   beforeAll(() => {
@@ -21,12 +22,12 @@ describe("Firestore story cache manager", () => {
       FORM_CHARACTER_ID,
       new FakeTextApi(),
       new FakeImageApi(),
-      cache
+      storyCache
     );
   });
 
   beforeEach(async () => {
-    await cache.delete();
+    await storyCache.delete();
   });
 
   test("Should generate an array of correct StoryRequestV1 from Form", async () => {
@@ -35,7 +36,7 @@ describe("Firestore story cache manager", () => {
 
     const actual = storyCacheManager.generateRequests(input);
 
-    cache.expectSameRequestsNoRandom(actual, expected);
+    storyCache.expectSameRequestsNoRandom(actual, expected);
   });
 
   test("Should write the same number of stories as requests", async () => {
@@ -44,7 +45,7 @@ describe("Firestore story cache manager", () => {
 
     await storyCacheManager.cacheStories(requests);
 
-    cache.expectCountToBe(expected);
+    storyCache.expectCountToBe(expected);
   }, 20000);
 
   test("Should write the right request fields for stories", async () => {
@@ -52,6 +53,6 @@ describe("Firestore story cache manager", () => {
 
     await storyCacheManager.cacheStories(requests);
 
-    await cache.expectStoryRequestDocsToEqual(requests);
+    await storyCache.expectStoryRequestDocsToEqual(requests);
   }, 20000);
 });

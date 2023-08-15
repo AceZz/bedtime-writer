@@ -1,10 +1,10 @@
 import { beforeAll, beforeEach, test } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../src/firebase";
-import { FirestoreTestUtils } from "../utils/firestore_test_utils";
+import { FirestoreContextUtils } from "../../firebase/utils";
 import { FirebaseStoryWriter } from "../../../src/story";
 import { GENERATOR_0, METADATA_0, STORY_ID_0 } from "../data";
 
-const firestoreStory = new FirestoreTestUtils("story_writer").story;
+const storyRealtime = new FirestoreContextUtils("story_writer").storyRealtime;
 
 // Check we are running in emulator mode before initializing Firebase.
 beforeAll(() => {
@@ -13,21 +13,17 @@ beforeAll(() => {
 });
 
 beforeEach(async () => {
-  await firestoreStory.delete();
+  await storyRealtime.delete();
 });
 
 test("Write from generator", async () => {
   // Normally requestManager does this
-  await firestoreStory.storyRef(STORY_ID_0).create({});
+  await storyRealtime.storyRef(STORY_ID_0).create({});
 
-  const writer = new FirebaseStoryWriter(
-    firestoreStory,
-    METADATA_0,
-    STORY_ID_0
-  );
+  const writer = new FirebaseStoryWriter(storyRealtime, METADATA_0, STORY_ID_0);
   await writer.writeFromGenerator(GENERATOR_0);
 
-  await firestoreStory.expectMetadata(STORY_ID_0, METADATA_0);
-  await firestoreStory.expectParts(STORY_ID_0);
-  await firestoreStory.expectComplete(STORY_ID_0);
+  await storyRealtime.expectMetadata(STORY_ID_0, METADATA_0);
+  await storyRealtime.expectParts(STORY_ID_0);
+  await storyRealtime.expectComplete(STORY_ID_0);
 }, 20000);

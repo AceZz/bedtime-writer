@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, expect, test } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../../src/firebase";
-import { FirestoreTestUtils } from "../../utils/firestore_test_utils";
+import { FirestoreContextUtils } from "../../../firebase/utils";
 import {
   FORM_0,
   FORM_1,
@@ -9,7 +9,7 @@ import {
 } from "../../data";
 import { FirebaseFormReader } from "../../../../src/story";
 
-const firestoreForms = new FirestoreTestUtils("form_reader").forms;
+const storyForms = new FirestoreContextUtils("form_reader").storyForms;
 
 // Check we are running in emulator mode before initializing Firebase.
 beforeAll(() => {
@@ -17,13 +17,13 @@ beforeAll(() => {
   initFirebase(true);
 });
 
-beforeEach(async () => await firestoreForms.delete());
+beforeEach(async () => await storyForms.delete());
 
 test("FirebaseFormReader", async () => {
-  await firestoreForms.formsRef().add(SERIALIZED_FORM_0);
-  await firestoreForms.formsRef().add(SERIALIZED_FORM_1);
+  await storyForms.formsRef().add(SERIALIZED_FORM_0);
+  await storyForms.formsRef().add(SERIALIZED_FORM_1);
 
-  const reader = new FirebaseFormReader(firestoreForms);
+  const reader = new FirebaseFormReader(storyForms);
   const forms = await reader.read();
   forms.sort((a, b) => a.start.getTime() - b.start.getTime());
 

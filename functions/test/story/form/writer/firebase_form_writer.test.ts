@@ -1,6 +1,6 @@
 import { beforeAll, expect, beforeEach, test, describe } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../../src/firebase";
-import { FirestoreTestUtils } from "../../utils/firestore_test_utils";
+import { FirestoreContextUtils } from "../../../firebase/utils";
 import {
   FORM_0,
   FORM_1,
@@ -15,7 +15,9 @@ import {
   FirebaseQuestionWriter,
 } from "../../../../src/story";
 
-const utils = new FirestoreTestUtils("form_writer");
+const utils = new FirestoreContextUtils("form_writer");
+const storyForms = utils.storyForms;
+const storyQuestions = utils.storyQuestions;
 
 describe("FirebaseFormWriter", () => {
   let questionsWriter: FirebaseQuestionWriter;
@@ -25,14 +27,14 @@ describe("FirebaseFormWriter", () => {
   beforeAll(() => {
     initEnv();
     initFirebase(true);
-    questionsWriter = new FirebaseQuestionWriter(utils.questions);
-    formWriter = new FirebaseFormWriter(utils.forms, utils.questions);
+    questionsWriter = new FirebaseQuestionWriter(storyQuestions);
+    formWriter = new FirebaseFormWriter(storyForms, storyQuestions);
   });
 
   // Empty the forms and questions collection, then recreate some questions.
   beforeEach(async () => {
-    await utils.questions.delete();
-    await utils.forms.delete();
+    await storyQuestions.delete();
+    await storyForms.delete();
 
     await questionsWriter.write(await QUESTIONS_0());
   });
@@ -40,16 +42,16 @@ describe("FirebaseFormWriter", () => {
   test("Simple write", async () => {
     await formWriter.write(FORM_0);
 
-    await utils.forms.expectCountToBe(1);
-    await utils.forms.expectToBe([SERIALIZED_FORM_0]);
+    await storyForms.expectCountToBe(1);
+    await storyForms.expectToBe([SERIALIZED_FORM_0]);
   });
 
   test("Write two forms in right order", async () => {
     await formWriter.write(FORM_0);
     await formWriter.write(FORM_1);
 
-    await utils.forms.expectCountToBe(2);
-    await utils.forms.expectToBe([SERIALIZED_FORM_0, SERIALIZED_FORM_1]);
+    await storyForms.expectCountToBe(2);
+    await storyForms.expectToBe([SERIALIZED_FORM_0, SERIALIZED_FORM_1]);
   });
 
   test("Write two forms in wrong order", async () => {
@@ -58,21 +60,21 @@ describe("FirebaseFormWriter", () => {
       "another form starts before"
     );
 
-    await utils.forms.expectCountToBe(1);
-    await utils.forms.expectToBe([SERIALIZED_FORM_1]);
+    await storyForms.expectCountToBe(1);
+    await storyForms.expectToBe([SERIALIZED_FORM_1]);
   });
 
   test("Incompatible question ID", async () => {
     await expect(formWriter.write(FORM_2)).rejects.toThrow(
       'Question "doesnotexist" does not exist'
     );
-    await utils.forms.expectCountToBe(0);
+    await storyForms.expectCountToBe(0);
   });
 
   test("Incompatible choice ID", async () => {
     await expect(formWriter.write(FORM_3)).rejects.toThrow(
       'Choice "doesnotexist" for question "question1V1" does not exist.'
     );
-    await utils.forms.expectCountToBe(0);
+    await storyForms.expectCountToBe(0);
   });
 });
