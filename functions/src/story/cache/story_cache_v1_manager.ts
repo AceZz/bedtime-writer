@@ -1,7 +1,7 @@
 import { ImageApi, NPartStoryGenerator, TextApi } from "../generator";
 import { CLASSIC_LOGIC } from "../logic";
 import { StoryRequestV1, StoryRequestV1Manager } from "../request";
-import { StoryForm } from "../form";
+import { StoryChoice, StoryForm, StoryQuestion } from "../form";
 import { StoryMetadata } from "../story_metadata";
 import { FirebaseStoryWriter } from "../writer";
 import { StoryCacheManager } from "./story_cache_manager";
@@ -42,8 +42,8 @@ export class StoryCacheV1Manager implements StoryCacheManager {
   }
 
   private generateRequest(
-    questions: string[],
-    formResponse: string[]
+    questions: StoryQuestion[],
+    formResponse: StoryChoice[]
   ): StoryRequestV1 {
     const requestData: { [key: string]: string | number } = {
       formId: this.formId,
@@ -58,7 +58,7 @@ export class StoryCacheV1Manager implements StoryCacheManager {
     }
 
     for (let i = 0; i < questions.length; i++) {
-      requestData[questions[i]] = formResponse[i];
+      requestData[questions[i].promptParam] = formResponse[i].id;
     }
 
     // Ensure our story request is valid

@@ -6,6 +6,7 @@ import {
 } from "../../../firebase";
 import { FirebaseQuestionReader, FirebaseFormReader, Reader } from "../reader";
 import { StoryQuestion } from "../story_question";
+import { listToMapById } from "../../../utils";
 
 /**
  * This class writes a Form object to Firebase.
@@ -19,12 +20,15 @@ export class FirebaseFormWriter implements Writer<StoryForm> {
     private readonly formsCollection: FirestoreStoryForms,
     questionsCollection: FirestoreStoryQuestions
   ) {
-    this.formReader = new FirebaseFormReader(formsCollection);
+    this.formReader = new FirebaseFormReader(
+      formsCollection,
+      questionsCollection
+    );
     this.questionReader = new FirebaseQuestionReader(questionsCollection);
   }
 
   async write(form: StoryForm): Promise<void> {
-    const questions = await this.getQuestions();
+    const availableQuestions = await this.getQuestions();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data: any = {};
@@ -35,11 +39,22 @@ export class FirebaseFormWriter implements Writer<StoryForm> {
 
     // Check and write the questions.
     let index = 0;
-    for (const [questionId, choices] of form.questionsToChoices) {
-      this.checkQuestionForm(questionId, choices, questions);
+    for (const formQuestion of form.questions.values()) {
+      // Try to copy the existing question with the choices from the form. The
+      // choices are verified by `copyWithChoices`.
+      const validatedQuestion = availableQuestions
+        .get(formQuestion.id)
+        ?.copyWithChoices(formQuestion.choices.keys());
 
-      data[`question${index}`] = questionId;
-      data[`question${index}Choices`] = choices;
+      if (validatedQuestion === undefined) {
+        throw Error(
+          `FirebaseFormWriter.write: question "${formQuestion.id}" ` +
+            "does not exist."
+        );
+      }
+
+      data[`question${index}`] = formQuestion.id;
+      data[`question${index}Choices`] = formQuestion.choiceIds;
       index++;
     }
     data.numQuestions = index;
@@ -48,12 +63,7 @@ export class FirebaseFormWriter implements Writer<StoryForm> {
   }
 
   private async getQuestions(): Promise<Map<string, StoryQuestion>> {
-    const questions = new Map();
-
-    const questionsList = await this.questionReader.read();
-    questionsList.forEach((question) => questions.set(question.id, question));
-
-    return questions;
+    return listToMapById(await this.questionReader.read());
   }
 
   private async checkStart(start: Date): Promise<void> {
@@ -72,25 +82,5 @@ export class FirebaseFormWriter implements Writer<StoryForm> {
     starts.sort((a, b) => a.getTime() - b.getTime());
 
     return starts.at(-1) ?? new Date(2000, 0);
-  }
-
-  private checkQuestionForm(
-    questionId: string,
-    choiceIds: string[],
-    questions: Map<string, StoryQuestion>
-  ) {
-    const question = questions.get(questionId);
-    if (question === undefined) {
-      throw Error(`Question "${questionId}" does not exist.`);
-    }
-
-    const availableChoiceIds = question.choiceIds;
-    for (const choiceId of choiceIds) {
-      if (!availableChoiceIds.includes(choiceId)) {
-        throw Error(
-          `Choice "${choiceId}" for question "${questionId}" does not exist.`
-        );
-      }
-    }
   }
 }

@@ -1,31 +1,40 @@
-import { beforeAll, beforeEach, expect, test } from "@jest/globals";
+import { beforeAll, beforeEach, describe, expect, test } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../../src/firebase";
 import { FirestoreContextUtils } from "../../../firebase/utils";
+import { FORM_0, QUESTIONS_0, SERIALIZED_FORM_0 } from "../../data";
 import {
-  FORM_0,
-  FORM_1,
-  SERIALIZED_FORM_0,
-  SERIALIZED_FORM_1,
-} from "../../data";
-import { FirebaseFormReader } from "../../../../src/story";
+  FirebaseFormReader,
+  FirebaseQuestionWriter,
+} from "../../../../src/story";
 
-const storyForms = new FirestoreContextUtils("form_reader").storyForms;
+const context = new FirestoreContextUtils("form_reader");
+const storyForms = context.storyForms;
+const storyQuestions = context.storyQuestions;
 
-// Check we are running in emulator mode before initializing Firebase.
-beforeAll(() => {
-  initEnv();
-  initFirebase(true);
-});
+describe("FirebaseFormReader", () => {
+  // Check we are running in emulator mode before initializing Firebase.
+  beforeAll(() => {
+    initEnv();
+    initFirebase(true);
+  });
 
-beforeEach(async () => await storyForms.delete());
+  beforeEach(async () => await storyForms.delete());
 
-test("FirebaseFormReader", async () => {
-  await storyForms.formsRef().add(SERIALIZED_FORM_0);
-  await storyForms.formsRef().add(SERIALIZED_FORM_1);
+  test("read", async () => {
+    const writer = new FirebaseQuestionWriter(storyQuestions);
+    await writer.write(await QUESTIONS_0());
 
-  const reader = new FirebaseFormReader(storyForms);
-  const forms = await reader.read();
-  forms.sort((a, b) => a.start.getTime() - b.start.getTime());
+    await storyForms.formsRef().add(SERIALIZED_FORM_0);
 
-  expect(forms).toStrictEqual([FORM_0, FORM_1]);
+    const reader = new FirebaseFormReader(storyForms, storyQuestions);
+    const forms = await reader.read();
+
+    expect(forms).toEqual([await FORM_0()]);
+  });
+
+  test("read no questions throws", async () => {
+    await storyForms.formsRef().add(SERIALIZED_FORM_0);
+    const reader = new FirebaseFormReader(storyForms, storyQuestions);
+    expect(reader.read).rejects.toThrow();
+  });
 });
