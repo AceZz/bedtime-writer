@@ -1,4 +1,4 @@
-import { Timestamp, getFirestore } from "firebase-admin/firestore";
+import { Timestamp } from "firebase-admin/firestore";
 import { FirestoreStoryForms } from "../../../src/firebase";
 import { expect } from "@jest/globals";
 
@@ -12,8 +12,7 @@ export class FirestoreStoryFormsUtils extends FirestoreStoryForms {
    * Firebase must be initialized before calling this function.
    */
   async delete(): Promise<void> {
-    const firestore = getFirestore();
-    const forms = await firestore.collection(this.collectionPath).get();
+    const forms = await this.formsRef().get();
     await Promise.all(forms.docs.map((form) => form.ref.delete()));
   }
   /**
@@ -22,18 +21,14 @@ export class FirestoreStoryFormsUtils extends FirestoreStoryForms {
    * Firebase must be initialized before calling this function.
    */
   async expectCountToBe(expected: number): Promise<void> {
-    const firestore = getFirestore();
-    const forms = firestore.collection(this.collectionPath);
-    const query = await forms.count().get();
+    const query = await this.formsRef().count().get();
 
     expect(query.data().count).toBe(expected);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async expectToBe(expected: any[]): Promise<void> {
-    const firestore = getFirestore();
-    const forms = firestore.collection(this.collectionPath);
-    const snapshots = await forms.orderBy("start").get();
+    const snapshots = await this.formsRef().orderBy("start").get();
 
     const tested = snapshots.docs.map((snapshot) => snapshot.data());
     const expected_ = expected.map((item) => {
