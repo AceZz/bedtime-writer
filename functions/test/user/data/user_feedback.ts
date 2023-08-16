@@ -1,4 +1,4 @@
-import { UserFeedback } from "../../../src/user/feedback";
+import { UserFeedback } from "../../../src/user";
 
 /**
  * A dummy feedback.
