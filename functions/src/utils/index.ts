@@ -1,4 +1,5 @@
 export * from "./combinations";
+export * from "./random";
 
 import readline from "readline/promises";
 
