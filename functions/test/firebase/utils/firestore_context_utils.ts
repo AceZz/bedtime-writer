@@ -4,8 +4,8 @@ import {
   FirestoreStoryQuestionsUtils,
   FirestoreStoriesUtils,
   FirestoreStoryCacheUtils,
+  FirestoreUserFeedbackUtils,
 } from ".";
-import { FirestoreUserFeedbackUtils } from "./firestore_user_feedback";
 
 /**
  * Helper class to interact with the Firestore database.
