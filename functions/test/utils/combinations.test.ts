@@ -3,11 +3,33 @@ import {
   combinationsIndices,
   combinations,
   numCombinations,
+  sampleCombinations,
 } from "../../src/utils";
 
-describe("combinations", () => {
-  const [a, b, c, d] = [1, 2, 3, 4];
+const [a, b, c, d] = [1, 2, 3, 4];
 
+describe("sampleCombinations", () => {
+  test("throws on num < 0", () => {
+    expect(() => Array.from(sampleCombinations(-1, 3, [a, b, 3]))).toThrow();
+  });
+
+  test("num = 0", () => {
+    const sampled = Array.from(sampleCombinations(0, 2, [a, b, c, d]));
+    expect(sampled).toEqual([]);
+  });
+
+  test("0 < num < maxCombinations", () => {
+    const sampled = Array.from(sampleCombinations(3, 2, [a, b, c, d]));
+    expect(sampled.length).toBe(3);
+  });
+
+  test("num > maxCombinations", () => {
+    const sampled = Array.from(sampleCombinations(10, 2, [a, b, c, d]));
+    expect(sampled.length).toBe(6);
+  });
+});
+
+describe("combinations", () => {
   test("throws on k < 0", () => {
     expect(() => Array.from(combinations(-1, [a, b, 3]))).toThrow();
   });
