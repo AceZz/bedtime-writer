@@ -1,7 +1,7 @@
 import { beforeAll, beforeEach, describe, test } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../src/firebase";
 import { FirestoreContextUtils } from "../../firebase/utils";
-import { FirebaseUserFeedbackManager } from "../../../src/user/feedback"; // Import the UserFeedback type
+import { FirebaseUserFeedbackManager } from "../../../src/user"; // Import the UserFeedback type
 import { FEEDBACK_0 } from "../data";
 
 const utils = new FirestoreContextUtils("user_feedback");
