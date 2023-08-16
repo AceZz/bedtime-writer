@@ -11,7 +11,7 @@ import { FirestoreUserStats } from "../../firebase";
 export class FirebaseUserStatsManager implements UserStatsManager {
   constructor(private readonly stats: FirestoreUserStats) {}
 
-  async getUserStats(uid: string): Promise<UserStats | undefined> {
+  async get(uid: string): Promise<UserStats | undefined> {
     const userRef = this.stats.userRef(uid);
     const userSnapshot = await userRef.get();
     const userData = userSnapshot.data();
@@ -23,7 +23,7 @@ export class FirebaseUserStatsManager implements UserStatsManager {
     }
   }
 
-  async initUserStats(uid: string, userStats: UserStats): Promise<void> {
+  async initUser(uid: string, userStats: UserStats): Promise<void> {
     // Retrieve user document.
     const userRef = this.stats.userRef(uid);
     const userSnapshot = await userRef.get();

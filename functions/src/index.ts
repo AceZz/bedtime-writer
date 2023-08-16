@@ -101,7 +101,7 @@ export const initializeUserStats = region("europe-west6")
     const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
     const initialUserStats = new UserStats(0, userStoriesLimit);
 
-    await userStatsManager.initUserStats(user.uid, initialUserStats);
+    await userStatsManager.initUser(user.uid, initialUserStats);
   });
 
 /**
