@@ -1,5 +1,9 @@
 import { describe, expect, test } from "@jest/globals";
-import { combinationsIndices, combinations } from "../../src/utils";
+import {
+  combinationsIndices,
+  combinations,
+  numCombinations,
+} from "../../src/utils";
 
 describe("combinations", () => {
   const [a, b, c, d] = [1, 2, 3, 4];
@@ -82,5 +86,29 @@ describe("combinationIndices", () => {
       [1, 3],
       [2, 3],
     ]);
+  });
+});
+
+describe("numCombinations", () => {
+  test("throws on k < 0", () => {
+    expect(() => numCombinations(-1, 5)).toThrow();
+  });
+
+  test("throws on k > items length", () => {
+    expect(() => numCombinations(2, 0)).toThrow();
+    expect(() => numCombinations(5, 3)).toThrow();
+  });
+
+  test("k = 0", () => {
+    expect(numCombinations(0, 1)).toBe(1);
+    expect(numCombinations(0, 3)).toBe(1);
+  });
+
+  test("k = 1", () => {
+    expect(numCombinations(1, 4)).toBe(4);
+  });
+
+  test("k = 2", () => {
+    expect(numCombinations(2, 4)).toBe(6);
   });
 });
