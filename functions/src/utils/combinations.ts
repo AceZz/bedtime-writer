@@ -1,3 +1,27 @@
+import { shuffleArray } from "./random";
+
+/**
+ * Uniformly sample `num` combinations of `k` among `items`.
+ */
+export function* sampleCombinations<T>(
+  num: number,
+  k: number,
+  items: T[]
+): Generator<T[]> {
+  if (num < 0) throw `sampleCombinations: invalid num = ${num} < 0`;
+
+  const total = numCombinations(k, items.length);
+  let indices = [...Array(total).keys()];
+  shuffleArray(indices);
+  indices = indices.slice(0, num);
+
+  let index = 0;
+  for (const combination of combinations(k, items)) {
+    if (indices.includes(index)) yield combination;
+    index++;
+  }
+}
+
 /**
  * Generate sublists corresponding to all combinations of `k` among `items`.
  *
