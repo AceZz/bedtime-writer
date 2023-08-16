@@ -6,7 +6,7 @@ import { logger } from "../../logger";
 import { FirestoreUserStats } from "../../firebase";
 
 /**
- * Update stories stats
+ * Update user stats
  */
 export class FirebaseUserStatsManager implements UserStatsManager {
   constructor(private readonly stats: FirestoreUserStats) {}
@@ -23,7 +23,7 @@ export class FirebaseUserStatsManager implements UserStatsManager {
     }
   }
 
-  async setUserStats(uid: string, userStats: UserStats): Promise<void> {
+  async initUserStats(uid: string, userStats: UserStats): Promise<void> {
     // Retrieve user document.
     const userRef = this.stats.userRef(uid);
     const userSnapshot = await userRef.get();
@@ -31,11 +31,7 @@ export class FirebaseUserStatsManager implements UserStatsManager {
 
     // If no user data is found, add this user to the collection with maximal daily remaining stories.
     if (!userSnapshotData) {
-      const userData = {
-        numStories: userStats.numStories,
-        remainingStories: userStats.remainingStories,
-      };
-      await userRef.set(userData);
+      await userRef.set({ ...userStats });
     }
   }
 
@@ -54,10 +50,10 @@ export class FirebaseUserStatsManager implements UserStatsManager {
       await Promise.all(updates);
 
       logger.info(
-        `resetDailyLimit: function executed successfully, updated ${numberUsers} user(s)`
+        `setAllRemainingStories: function executed successfully, updated ${numberUsers} user(s)`
       );
     } catch (error) {
-      logger.error(`resetDailyLimit: error: ${error}`);
+      logger.error(`setAllRemainingStories: error: ${error}`);
     }
   }
 

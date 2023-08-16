@@ -10,7 +10,7 @@ export interface UserStatsManager {
   /**
    * Set the stats of the provided user to the provided values.
    */
-  setUserStats(uid: string, userStats: UserStats): Promise<void>;
+  initUserStats(uid: string, userStats: UserStats): Promise<void>;
 
   /**
    * Set remaining stories of all users to the value provided.
