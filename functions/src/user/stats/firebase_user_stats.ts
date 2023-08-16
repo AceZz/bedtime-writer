@@ -8,7 +8,7 @@ import { FirestoreUserStats } from "../../firebase";
 /**
  * Update stories stats
  */
-export class FirestoreUserStatsManager implements UserStatsManager {
+export class FirebaseUserStatsManager implements UserStatsManager {
   constructor(private readonly stats: FirestoreUserStats) {}
 
   async getUserStats(uid: string): Promise<UserStats | undefined> {
