@@ -56,3 +56,21 @@ export function* combinationsIndices(
     }
   }
 }
+
+export function numCombinations(k: number, n: number): number {
+  if (k < 0) throw Error(`numCombinations: invalid k = ${k} < 0`);
+  if (k > n) throw Error(`numCombinations: invalid k = ${k} > n = ${n}`);
+
+  // Product of `n - k + 1, n - k + 2, ..., n`.
+  // Generate the numbers from 0 to k - 1, then shift by n - k + 1.
+  const numerator = [...Array(k).keys()]
+    .map((x) => x + n - k + 1)
+    .reduce((prod, x) => prod * x, 1);
+
+  // Product of `1, 2, ..., k`.
+  const denominator = [...Array(k).keys()]
+    .map((x) => x + 1)
+    .reduce((prod, x) => prod * x, 1);
+
+  return numerator / denominator;
+}
