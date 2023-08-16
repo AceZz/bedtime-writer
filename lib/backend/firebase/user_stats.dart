@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'firebase.dart';
 import '../concrete.dart';
-import '../stats.dart';
+import '../user_stats.dart';
 import '../user.dart';
 
 /// Provides user stats based on Firebase.
