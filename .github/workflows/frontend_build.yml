@@ -33,6 +33,7 @@ jobs:
           channel: stable
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          flutter-version: '3.10.6'
 
       - name: Flutter doctor
         run: flutter doctor -v
