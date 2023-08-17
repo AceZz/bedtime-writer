@@ -1,7 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, test } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../src/firebase";
 import { FirestoreContextUtils } from "../../firebase/utils";
-import { FirebaseUserStatsManager } from "../../../src/user"; // Import the UserFeedback type
+import { FirebaseUserStatsManager } from "../../../src/user";
 import {
   UID_0,
   UID_1,
@@ -9,20 +9,19 @@ import {
   STATS_1,
   REMAINING_STORIES,
   STATS_UPDATED_0,
-  ERROR_LIMIT,
-  ERROR_NOT_FOUND,
+  USER_STATS_ERROR_LIMIT,
+  USER_STATS_ERROR_NOT_FOUND,
 } from "../data";
 
 const utils = new FirestoreContextUtils("user_stats");
 const userStats = utils.userStats;
 
 describe("FirebaseUserStatsManager", () => {
-  let statsManager: FirebaseUserStatsManager;
+  const statsManager = new FirebaseUserStatsManager(userStats);
 
   beforeAll(() => {
     initEnv();
     initFirebase(true);
-    statsManager = new FirebaseUserStatsManager(userStats);
   });
 
   // Empty the feedback collection.
@@ -57,13 +56,13 @@ describe("FirebaseUserStatsManager", () => {
   test("should throw on updating stats after limit reached", async () => {
     await userStats.create(UID_1, STATS_1);
     await expect(statsManager.updateStatsAfterStory(UID_1)).rejects.toThrow(
-      ERROR_LIMIT
+      USER_STATS_ERROR_LIMIT
     );
   });
 
   test("should throw on user not found on update", async () => {
     await expect(statsManager.updateStatsAfterStory(UID_0)).rejects.toThrow(
-      ERROR_NOT_FOUND
+      USER_STATS_ERROR_NOT_FOUND
     );
   });
 });

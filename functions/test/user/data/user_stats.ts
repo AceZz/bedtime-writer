@@ -24,8 +24,11 @@ export const REMAINING_STORIES = 42;
 /**
  * Errors expected to be thrown.
  */
-export const ERROR_LIMIT = new HttpsError(
+export const USER_STATS_ERROR_LIMIT = new HttpsError(
   "resource-exhausted",
   "Story requests for this user have reached their limit for today."
 );
-export const ERROR_NOT_FOUND = new HttpsError("not-found", "User not found.");
+export const USER_STATS_ERROR_NOT_FOUND = new HttpsError(
+  "not-found",
+  "User not found."
+);
