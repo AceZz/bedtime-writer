@@ -54,7 +54,7 @@ class HomeScreenDebugStats extends ConsumerWidget {
     final user = ref.watch(userProvider);
     final preferences = ref.watch(preferencesProvider);
 
-    AsyncValue<Stats> stats = ref.watch(statsProvider);
+    AsyncValue<UserStats> stats = ref.watch(statsProvider);
 
     Widget statsWidget = stats.when(
       loading: () => const CircularProgressIndicator(),

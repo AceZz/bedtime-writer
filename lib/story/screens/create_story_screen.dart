@@ -80,7 +80,7 @@ class _LimitCheckScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AsyncValue<Stats> stats = ref.watch(statsProvider);
+    AsyncValue<UserStats> stats = ref.watch(statsProvider);
 
     Widget limitCheckWidget = stats.when(
       loading: () => const CircularProgressIndicator(),

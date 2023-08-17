@@ -9,7 +9,7 @@ import '../user.dart';
 /// Provides user stats based on Firebase.
 
 /// Implementation of [StatsProvider] for Firebase.
-final firebaseStatsProvider = StreamProvider<Stats>((ref) {
+final firebaseStatsProvider = StreamProvider<UserStats>((ref) {
   User user = ref.watch(userProvider);
 
   if (user is AuthUser) {
@@ -24,13 +24,13 @@ final firebaseStatsProvider = StreamProvider<Stats>((ref) {
         remainingStories = 0;
       }
 
-      return Stats(
+      return UserStats(
         numStories: numStories,
         remainingStories: remainingStories,
       );
     });
   } else {
-    return Stream.value(const Stats(numStories: 0, remainingStories: 0));
+    return Stream.value(const UserStats(numStories: 0, remainingStories: 0));
   }
 });
 

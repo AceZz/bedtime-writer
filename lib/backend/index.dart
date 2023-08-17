@@ -26,4 +26,4 @@ export 'user.dart'
         UnauthUser,
         GoogleAuthMixin;
 export 'user_feedback.dart' show UserFeedback;
-export 'user_stats.dart' show Stats;
+export 'user_stats.dart' show UserStats;

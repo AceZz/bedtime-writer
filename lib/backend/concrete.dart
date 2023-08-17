@@ -70,5 +70,5 @@ final NotifierProvider<PreferencesNotifier, Preferences> preferencesProvider =
  * STATS
  */
 
-/// Provides a [Stats] object.
-final StreamProvider<Stats> statsProvider = firebaseStatsProvider;
+/// Provides a [UserStats] object.
+final StreamProvider<UserStats> statsProvider = firebaseStatsProvider;

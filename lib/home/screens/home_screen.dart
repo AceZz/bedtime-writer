@@ -183,7 +183,7 @@ class _DisplayRemainingStories extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AsyncValue<Stats> stats = ref.watch(statsProvider);
+    AsyncValue<UserStats> stats = ref.watch(statsProvider);
 
     Widget displayWidget = stats.when(
       loading: () => const CircularProgressIndicator(),
