@@ -18,7 +18,7 @@ In `bedtime-writer/.env`:
 * `DEBUG_AUTH_NO_ACCOUNT_LIMIT`
   * `false` (default)
   * `true`: do not implement the account creation limit, so many accounts can be created in a short timeframe.
-* `DEBUG_STATS`
+* `DEBUG_USER_STATS`
     * `false` (default)
     * `true`: display helpful info about user stats, like the number of generated stories overall and today.
 * `DEBUG_STORY`

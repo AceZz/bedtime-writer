@@ -67,8 +67,8 @@ final NotifierProvider<PreferencesNotifier, Preferences> preferencesProvider =
     sharedPreferencesProvider;
 
 /**
- * STATS
+ * USER STATS
  */
 
 /// Provides a [UserStats] object.
-final StreamProvider<UserStats> statsProvider = firebaseStatsProvider;
+final StreamProvider<UserStats> userStatsProvider = firebaseUserStatsProvider;

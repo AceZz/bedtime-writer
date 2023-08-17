@@ -34,7 +34,7 @@ class HomeScreen extends ConsumerWidget {
       text: 'New story',
       destination: 'create_story',
       resetStoryState: true,
-      dependsOnStats: true,
+      dependsOnUserStats: true,
     );
 
     Widget libraryButton =
@@ -87,8 +87,8 @@ class HomeScreen extends ConsumerWidget {
           feedbackButton,
           if (debugAuth())
             const _CustomCenterAtBottom(child: HomeScreenDebugAuth()),
-          if (debugStats())
-            const _CustomCenterAtBottom(child: HomeScreenDebugStats()),
+          if (debugUserStats())
+            const _CustomCenterAtBottom(child: HomeScreenDebugUserStats()),
         ],
       ),
     );
@@ -100,14 +100,14 @@ class _HomeScreenButton extends ConsumerWidget {
   final String destination;
   final bool resetStoryState;
   final bool
-      dependsOnStats; //Indicates if the button depends on user stats to be clickable.
+      dependsOnUserStats; //Indicates if the button depends on user stats to be clickable.
 
   const _HomeScreenButton({
     Key? key,
     required this.text,
     required this.destination,
     this.resetStoryState = false,
-    this.dependsOnStats = false,
+    this.dependsOnUserStats = false,
   }) : super(key: key);
 
   @override
@@ -117,10 +117,11 @@ class _HomeScreenButton extends ConsumerWidget {
       style: Theme.of(context).primaryTextTheme.headlineSmall,
     );
 
-    // Stats are fetched from Firestore which can have some latency. We handle this delay by showing a CircularProgressIndicator
-    final stats = ref.watch(statsProvider);
-    final statsIsLoadingOrError = stats is AsyncLoading || stats is AsyncError;
-    final waitingStats = dependsOnStats && statsIsLoadingOrError;
+    // User stats are fetched from Firestore which can have some latency. We handle this delay by showing a CircularProgressIndicator
+    final userStats = ref.watch(userStatsProvider);
+    final userStatsIsLoadingOrError =
+        userStats is AsyncLoading || userStats is AsyncError;
+    final waitingUserStats = dependsOnUserStats && userStatsIsLoadingOrError;
 
     return SizedBox(
       width: 0.7 * MediaQuery.of(context).size.width,
@@ -131,7 +132,7 @@ class _HomeScreenButton extends ConsumerWidget {
         borderRadius: BorderRadius.circular(10),
         clipBehavior: Clip.antiAliasWithSaveLayer,
         child: InkWell(
-          onTap: waitingStats
+          onTap: waitingUserStats
               ? null
               : () {
                   if (resetStoryState) {
@@ -142,7 +143,7 @@ class _HomeScreenButton extends ConsumerWidget {
                 },
           child: Ink(
             child: Center(
-              child: waitingStats
+              child: waitingUserStats
                   ? CircularProgressIndicator(
                       color: Theme.of(context).colorScheme.onSurface,
                     )
@@ -183,12 +184,12 @@ class _DisplayRemainingStories extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AsyncValue<UserStats> stats = ref.watch(statsProvider);
+    AsyncValue<UserStats> stats = ref.watch(userStatsProvider);
 
     Widget displayWidget = stats.when(
       loading: () => const CircularProgressIndicator(),
       error: (err, stack) => const CircularProgressIndicator(),
-      data: (stats) {
+      data: (userStats) {
         return FadeIn(
           duration: const Duration(milliseconds: 1500),
           delay: const Duration(milliseconds: 500),
@@ -197,7 +198,7 @@ class _DisplayRemainingStories extends ConsumerWidget {
               horizontal: 0.2 * MediaQuery.of(context).size.width,
             ),
             child: Text(
-              'Remaining stories: ${stats.remainingStories}',
+              'Remaining stories: ${userStats.remainingStories}',
               textAlign: TextAlign.center,
               style: Theme.of(context).primaryTextTheme.bodyMedium,
             ),
