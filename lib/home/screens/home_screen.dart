@@ -198,7 +198,7 @@ class _DisplayRemainingStories extends ConsumerWidget {
               horizontal: 0.2 * MediaQuery.of(context).size.width,
             ),
             child: Text(
-              'Remaining stories: ${userStats.remainingStories}',
+              'Daily stories: ${userStats.remainingStories}',
               textAlign: TextAlign.center,
               style: Theme.of(context).primaryTextTheme.bodyMedium,
             ),
