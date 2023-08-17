@@ -7,13 +7,13 @@ import 'package:tuple/tuple.dart';
 import 'firebase/index.dart';
 import 'preferences.dart';
 import 'shared_preferences/index.dart';
-import 'stats.dart';
 import 'story.dart';
 import 'story_form.dart';
 import 'story_part.dart';
 import 'story_status.dart';
 import 'user.dart';
 import 'user_feedback.dart';
+import 'user_stats.dart';
 
 /**
  * USER
@@ -70,5 +70,5 @@ final NotifierProvider<PreferencesNotifier, Preferences> preferencesProvider =
  * STATS
  */
 
-/// Provides a [Stats] object.
-final StreamProvider<Stats> statsProvider = firebaseStatsProvider;
+/// Provides a [UserStats] object.
+final StreamProvider<UserStats> statsProvider = firebaseStatsProvider;
