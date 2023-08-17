@@ -23,7 +23,7 @@ import {
 import { parseEnvAsNumber as parseEnvNumber } from "./utils";
 import {
   FirebaseUserFeedbackManager,
-  FirestoreUserStatsManager,
+  FirebaseUserStatsManager,
   UserFeedback,
   UserStats,
 } from "./user";
@@ -96,12 +96,12 @@ export const createStory = onDocumentCreated(
 export const initializeUserStats = region("europe-west6")
   .auth.user()
   .onCreate(async (user) => {
-    const userStatsManager = new FirestoreUserStatsManager(firestore.userStats);
+    const userStatsManager = new FirebaseUserStatsManager(firestore.userStats);
 
     const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
     const initialUserStats = new UserStats(0, userStoriesLimit);
 
-    await userStatsManager.setUserStats(user.uid, initialUserStats);
+    await userStatsManager.initUser(user.uid, initialUserStats);
   });
 
 /**
@@ -111,7 +111,7 @@ export const resetDailyLimits = onSchedule("every day 01:00", async () => {
   logger.info("resetDailyLimits: started");
   const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
 
-  const userStatsManager = new FirestoreUserStatsManager(firestore.userStats);
+  const userStatsManager = new FirebaseUserStatsManager(firestore.userStats);
 
   await userStatsManager.setAllRemainingStories(userStoriesLimit);
 });
@@ -136,7 +136,7 @@ async function createClassicStory(storyId: string, request: StoryRequestV1) {
 
   await writer.writeFromGenerator(generator);
 
-  const userStatsManager = new FirestoreUserStatsManager(firestore.userStats);
+  const userStatsManager = new FirebaseUserStatsManager(firestore.userStats);
   await userStatsManager.updateStatsAfterStory(request.author);
 }
 

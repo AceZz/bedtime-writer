@@ -2,7 +2,7 @@ import { expect } from "@jest/globals";
 import { FirestoreUserFeedback } from "../../../src/firebase";
 
 /**
- * Helper class to interact with the story questions Firestore collection.
+ * Helper class to interact with the user feedback Firestore collection.
  */
 export class FirestoreUserFeedbackUtils extends FirestoreUserFeedback {
   /**

@@ -1,19 +1,18 @@
 import { beforeAll, beforeEach, describe, test } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../src/firebase";
 import { FirestoreContextUtils } from "../../firebase/utils";
-import { FirebaseUserFeedbackManager } from "../../../src/user/feedback"; // Import the UserFeedback type
+import { FirebaseUserFeedbackManager } from "../../../src/user";
 import { FEEDBACK_0 } from "../data";
 
 const utils = new FirestoreContextUtils("user_feedback");
 const userFeedback = utils.userFeedback;
 
 describe("FirebaseUserFeedbackManager", () => {
-  let feedbackManager: FirebaseUserFeedbackManager;
+  const feedbackManager = new FirebaseUserFeedbackManager(userFeedback);
 
   beforeAll(() => {
     initEnv();
     initFirebase(true);
-    feedbackManager = new FirebaseUserFeedbackManager(userFeedback);
   });
 
   // Empty the feedback collection.

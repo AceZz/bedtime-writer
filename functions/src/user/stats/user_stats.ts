@@ -5,12 +5,12 @@ export interface UserStatsManager {
   /**
    * Get the user stats from the Firestore collection.
    */
-  getUserStats(uid: string): Promise<UserStats | undefined>;
+  get(uid: string): Promise<UserStats | undefined>;
 
   /**
    * Set the stats of the provided user to the provided values.
    */
-  setUserStats(uid: string, userStats: UserStats): Promise<void>;
+  initUser(uid: string, userStats: UserStats): Promise<void>;
 
   /**
    * Set remaining stories of all users to the value provided.
