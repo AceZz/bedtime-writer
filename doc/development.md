@@ -91,6 +91,10 @@ See [Deployment](./deployment.md) to deploy them.
 
 ### Frontend
 
+GitHub actions pins Flutter with the version specified in `.github/workflows/frontend_build.yml` and
+`.github/workflows/frontend_ci.yml`. This must be manually changed upon doing a `flutter upgrade` 
+locally to ensure compatibility.
+
 GitHub actions run the following CI steps against the frontend code
 (see `.github/workflows/frontend_ci.yml`):
 
