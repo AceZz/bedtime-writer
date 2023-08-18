@@ -45,3 +45,23 @@ access.
 If you ever publish to the live channel, delete everything inside the `bedtime-writer/build/web`
 folder, create a blank `index.html` file in it, and run `firebase deploy --only hosting` from the
 `functions` folder. This should erase everything you uploaded.
+
+## iOS
+
+### Dependencies
+
+CocoaPods is used as a dependency manager. Flutter will automatically run `pod install` to install 
+the correct pods (dependencies) for you when you are doing `flutter run` or `flutter build` for an 
+ios device.
+
+As an optimization for build duration, a fixed version of the `FirebaseFirestore` pod is directly 
+downloaded from GitHub as specified in `ios/Podfile`. This can cause dependencies issues as the 
+project evolves and needs to be manually updated.
+
+### Emulators
+
+To reset the cache of an iOS simulated device, go the iOS simulator menu: Device > Erase All
+Content And Settings.
+
+
+
