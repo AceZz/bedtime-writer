@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../config.dart';
+
 /// Displays the [image] of a story.
 class StoryImage extends StatelessWidget {
   final Future<Uint8List?> image;
@@ -40,7 +42,9 @@ class StoryImage extends StatelessWidget {
             fadeColor: fadeColor,
           );
         } else if (snapshot.hasError) {
-          return const Icon(FontAwesomeIcons.triangleExclamation);
+          return debugStory()
+              ? Text('Error: ${snapshot.error.toString()}')
+              : const Icon(FontAwesomeIcons.triangleExclamation);
         }
         return const CircularProgressIndicator();
       },
