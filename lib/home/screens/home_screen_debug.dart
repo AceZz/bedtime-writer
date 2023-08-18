@@ -46,26 +46,26 @@ class HomeScreenDebugAuth extends ConsumerWidget {
   }
 }
 
-class HomeScreenDebugStats extends ConsumerWidget {
-  const HomeScreenDebugStats({Key? key}) : super(key: key);
+class HomeScreenDebugUserStats extends ConsumerWidget {
+  const HomeScreenDebugUserStats({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
     final preferences = ref.watch(preferencesProvider);
 
-    AsyncValue<UserStats> stats = ref.watch(statsProvider);
+    AsyncValue<UserStats> userStats = ref.watch(userStatsProvider);
 
-    Widget statsWidget = stats.when(
+    Widget userStatsWidget = userStats.when(
       loading: () => const CircularProgressIndicator(),
       error: (err, stack) => Text('numStories error: $err'),
-      data: (stats) => Text(
-        'numStories: ${stats.numStories}\nremainingStories: ${stats.remainingStories}\nhasLoggedOut: ${preferences.hasLoggedOut}',
+      data: (userStats_) => Text(
+        'numStories: ${userStats_.numStories}\nremainingStories: ${userStats_.remainingStories}\nhasLoggedOut: ${preferences.hasLoggedOut}',
       ),
     );
 
     List<Widget> children = [
-      statsWidget,
+      userStatsWidget,
       Text(user.toString()),
     ];
 

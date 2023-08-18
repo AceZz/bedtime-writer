@@ -10,8 +10,8 @@ bool debugAuthNoAccountLimit() {
   return debug.toLowerCase() == 'true';
 }
 
-bool debugStats() {
-  final debug = dotenv.get('DEBUG_STATS', fallback: 'false');
+bool debugUserStats() {
+  final debug = dotenv.get('DEBUG_USER_STATS', fallback: 'false');
   return debug.toLowerCase() == 'true';
 }
 

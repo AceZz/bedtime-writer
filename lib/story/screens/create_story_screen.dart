@@ -80,18 +80,18 @@ class _LimitCheckScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AsyncValue<UserStats> stats = ref.watch(statsProvider);
+    AsyncValue<UserStats> userStats = ref.watch(userStatsProvider);
 
-    Widget limitCheckWidget = stats.when(
+    Widget limitCheckWidget = userStats.when(
       loading: () => const CircularProgressIndicator(),
       error: (err, stack) => ErrorScreen(
         text: 'An error happened during limit check: $err. Please try again.',
         buttonText: 'Back to Home',
         destination: 'home',
       ),
-      data: (stats) {
+      data: (userStats_) {
         // If user has enough remaining stories, proceed with story creation
-        if (stats.remainingStories >= 1) {
+        if (userStats_.remainingStories >= 1) {
           return nextScreen;
         }
         // Else display limitReachScreen

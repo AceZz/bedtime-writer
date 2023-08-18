@@ -9,7 +9,7 @@ import '../user.dart';
 /// Provides user stats based on Firebase.
 
 /// Implementation of [StatsProvider] for Firebase.
-final firebaseStatsProvider = StreamProvider<UserStats>((ref) {
+final firebaseUserStatsProvider = StreamProvider<UserStats>((ref) {
   User user = ref.watch(userProvider);
 
   if (user is AuthUser) {
@@ -34,6 +34,6 @@ final firebaseStatsProvider = StreamProvider<UserStats>((ref) {
   }
 });
 
-/// A query that returns stats for [user].
+/// A query that returns user stats for [user].
 DocumentReference<Map<String, dynamic>> _userStatsDocument(AuthUser user) =>
     firebaseFirestore.collection(userStats).doc(user.uid);
