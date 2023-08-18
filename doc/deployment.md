@@ -55,8 +55,8 @@ the correct pods (dependencies) for you when you are doing `flutter run` or `flu
 ios device.
 
 As an optimization for build duration, a fixed version of the `FirebaseFirestore` pod is directly 
-downloaded from GitHub as specified in `ios/Podfile`. This can cause dependencies issues as the 
-project evolves and needs to be manually updated.
+downloaded from GitHub as specified in `ios/Podfile`. SDK version needs to be updated manually if 
+issues are found, followed by a `flutter clean`.
 
 ### Emulators
 
