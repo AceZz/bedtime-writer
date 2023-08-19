@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
-import { beforeAll, test } from "@jest/globals";
+import { beforeAll, expect, test } from "@jest/globals";
 import { StoryChoice } from "../../../src/story";
 
 const OUTPUT_FOLDER = "test/output";
@@ -12,6 +12,17 @@ beforeAll(async () => {
 test("Can create a Choice", async () => {
   const image = await readFile("test/story/data/choice.jpg");
   new StoryChoice("yesNo", "Yes and no", "Both yes and no.", image);
+});
+
+test("toString", async () => {
+  const choice = new StoryChoice(
+    "choice0",
+    "Text for choice0",
+    "Prompt for choice0",
+    Buffer.from("")
+  );
+
+  expect(choice.toString()).toBe("Text for choice0");
 });
 
 test("StoryChoice.fromImagePath", async () => {

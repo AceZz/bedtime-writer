@@ -40,4 +40,8 @@ export class StoryChoice {
       sizeBefore <= sizeAfter ? data : compressed
     );
   }
+
+  toString(): string {
+    return this.text;
+  }
 }

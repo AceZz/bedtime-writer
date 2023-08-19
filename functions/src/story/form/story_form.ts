@@ -35,6 +35,12 @@ export class StoryForm {
     };
   }
 
+  toString(): string {
+    return Array.from(this.questions.values())
+      .map((question) => question.toString())
+      .join("\n");
+  }
+
   get questionIds(): string[] {
     return Array.from(this.questions.keys());
   }
