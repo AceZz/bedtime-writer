@@ -3,7 +3,39 @@ import {
   cartesianProduct,
   ithCartesianProduct,
   numCartesianProduct,
+  sampleCartesianProduct,
 } from "../../src/utils";
+
+describe("sampleCartesianProduct", () => {
+  const input = [
+    ["a", "b"],
+    ["c", "d"],
+  ];
+
+  test("throws on num < 0", () => {
+    expect(() => Array.from(sampleCartesianProduct(-1, input))).toThrow();
+  });
+
+  test("num = 0", () => {
+    const sampled = Array.from(sampleCartesianProduct(0, input));
+    expect(sampled).toEqual([]);
+  });
+
+  test("num = undefined", () => {
+    const sampled = Array.from(sampleCartesianProduct(undefined, input));
+    expect(sampled.length).toBe(4);
+  });
+
+  test("0 < num < maxCombinations", () => {
+    const sampled = Array.from(sampleCartesianProduct(3, input));
+    expect(sampled.length).toBe(3);
+  });
+
+  test("num > maxCombinations", () => {
+    const sampled = Array.from(sampleCartesianProduct(10, input));
+    expect(sampled.length).toBe(4);
+  });
+});
 
 describe("ithCartesianProduct", () => {
   test("i < 0 throws", () => {
