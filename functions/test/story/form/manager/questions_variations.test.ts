@@ -1,7 +1,7 @@
 import { test, expect, describe, beforeAll } from "@jest/globals";
 import { StoryQuestion } from "../../../../src/story";
 import { QUESTIONS } from "./questions";
-import { shuffleQuestionsVariations } from "../../../../src/story/form/manager/questions_variations";
+import { iterQuestionsVariations } from "../../../../src/story/form/manager/questions_variations";
 
 describe("choice_combinations", () => {
   let allQuestions: StoryQuestion[];
@@ -13,8 +13,8 @@ describe("choice_combinations", () => {
     q0v1 = allQuestions[1];
   });
 
-  test("shuffleQuestionsVariations", () => {
-    const combinations = Array.from(shuffleQuestionsVariations(q0v1, 2));
+  test("iterQuestionsVariations", () => {
+    const combinations = Array.from(iterQuestionsVariations(q0v1, 2));
     expect(combinations.length).toBe(6);
 
     // Check unicity.
