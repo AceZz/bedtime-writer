@@ -6,9 +6,9 @@ import {
   jest,
   test,
 } from "@jest/globals";
-import { getRandomInt, shuffleArray } from "../../src/utils";
+import { getRandomInt, shuffle, shuffleCopy } from "../../src/utils";
 
-describe("shuffleArray", () => {
+describe("shuffleCopy", () => {
   beforeAll(() => {
     // This makes the Fisher-Yates algorithm always select the last item in the
     // sublist to swap with the current item.
@@ -21,13 +21,37 @@ describe("shuffleArray", () => {
 
   test("empty", () => {
     const items: number[] = [];
-    shuffleArray(items);
+    expect(shuffleCopy(items)).toEqual([]);
+  });
+
+  test("with items", () => {
+    const items = [9, 3, 6, 1, 0];
+    const shuffled = shuffleCopy(items);
+    expect(items).toEqual([9, 3, 6, 1, 0]);
+    expect(shuffled).toEqual([0, 9, 3, 6, 1]);
+  });
+});
+
+describe("shuffle", () => {
+  beforeAll(() => {
+    // This makes the Fisher-Yates algorithm always select the last item in the
+    // sublist to swap with the current item.
+    jest.spyOn(Math, "random").mockReturnValue(0.999);
+  });
+
+  afterAll(() => {
+    jest.spyOn(Math, "random").mockRestore();
+  });
+
+  test("empty", () => {
+    const items: number[] = [];
+    shuffle(items);
     expect(items).toEqual([]);
   });
 
-  test.only("with items", () => {
+  test("with items", () => {
     const items = [9, 3, 6, 1, 0];
-    shuffleArray(items);
+    shuffle(items);
     expect(items).toEqual([0, 9, 3, 6, 1]);
   });
 });
