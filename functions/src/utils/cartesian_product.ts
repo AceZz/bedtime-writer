@@ -1,3 +1,25 @@
+import { shuffleCopy } from "./random";
+
+/**
+ * Return `num` random items (in a random order, without replacement) of
+ * `cartesianProduct(arrays)[i]`.
+ */
+export function* sampleCartesianProduct<T>(
+  num: number | undefined,
+  arrays: T[][]
+): Generator<T[]> {
+  const max = numCartesianProduct(arrays);
+
+  if (num === undefined) num = max;
+  if (num < 0) throw `sampleCartesianProduct: invalid num = ${num} < 0`;
+
+  const indices = shuffleCopy([...Array(max).keys()]).slice(0, num);
+
+  for (const index of indices) {
+    yield ithCartesianProduct(index, arrays);
+  }
+}
+
 /**
  * Return `cartesianProduct(arrays)[i]` without having to generate the whole
  * product.
