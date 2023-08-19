@@ -18,6 +18,12 @@ export class StoryQuestion {
     this.choices = listToMapById(choices);
   }
 
+  toString(): string {
+    return `${this.text} (${this.id})\n  * ${Array.from(this.choices.values())
+      .map((choice) => choice.toString())
+      .join("\n  * ")}`;
+  }
+
   get choiceIds(): string[] {
     return Array.from(this.choices.keys());
   }
