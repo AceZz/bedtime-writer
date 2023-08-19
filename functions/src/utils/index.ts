@@ -36,23 +36,38 @@ export function setsAreEqual<T>(set1: Set<T>, set2: Set<T>): boolean {
 }
 
 /**
- * Create the cartesian product of an array of <T> arrays. Throw an error if one array is empty.
+ * Create the cartesian product of an array of <T> arrays.
+ *
+ * The generated terms follow a "lexographical" order (based on the order given
+ * by the input, not the order of the _values_).
+ *
+ * If `arrays` is:
+ * [[A, B],
+ *  [Y, X]]
+ *
+ * Then the generated terms are:
+ * [A, Y]
+ * [A, X]
+ * [B, Y]
+ * [B, X]
+ *
+ * Throw an error if one array is empty.
  */
-export function cartesianProduct<T>(arrays: T[][]): T[][] {
+export function* cartesianProduct<T>(arrays: T[][]): Generator<T[]> {
   if (arrays.length === 0) {
-    throw new Error("cartesianProduct: no array provided.");
-  }
+    yield [];
+  } else {
+    if (arrays[0].length === 0) {
+      throw new Error("cartesianProduct: empty arrays are not allowed.");
+    }
 
-  if (arrays.some((subArray) => subArray.length === 0)) {
-    throw new Error("cartesianProduct: empty arrays are not allowed.");
+    const rest = arrays.slice(1);
+    for (const item of arrays[0]) {
+      for (const restItems of cartesianProduct(rest)) {
+        yield [item, ...restItems];
+      }
+    }
   }
-
-  return arrays.reduce<T[][]>(
-    (a: T[][], b: T[]) => {
-      return a.flatMap((d: T[]) => b.map((e: T) => [...d, e]));
-    },
-    [[]]
-  );
 }
 
 /**
