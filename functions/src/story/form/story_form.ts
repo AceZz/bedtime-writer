@@ -35,6 +35,10 @@ export class StoryForm {
     };
   }
 
+  get questionIds(): string[] {
+    return Array.from(this.questions.keys());
+  }
+
   getAllFormResponses(): {
     questions: StoryQuestion[];
     formResponses: StoryChoice[][];
