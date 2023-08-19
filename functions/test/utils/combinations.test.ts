@@ -4,18 +4,24 @@ import {
   combinations,
   numCombinations,
   sampleCombinations,
+  ithCombination,
 } from "../../src/utils";
 
 const [a, b, c, d] = [1, 2, 3, 4];
 
 describe("sampleCombinations", () => {
   test("throws on num < 0", () => {
-    expect(() => Array.from(sampleCombinations(-1, 3, [a, b, 3]))).toThrow();
+    expect(() => Array.from(sampleCombinations(-1, 3, [a, b, c]))).toThrow();
   });
 
   test("num = 0", () => {
     const sampled = Array.from(sampleCombinations(0, 2, [a, b, c, d]));
     expect(sampled).toEqual([]);
+  });
+
+  test("num = undefined", () => {
+    const sampled = Array.from(sampleCombinations(undefined, 2, [a, b, c, d]));
+    expect(sampled.length).toBe(6);
   });
 
   test("0 < num < maxCombinations", () => {
@@ -29,9 +35,29 @@ describe("sampleCombinations", () => {
   });
 });
 
+describe("ithCombination", () => {
+  test("throws on i < 0", () => {
+    expect(() => Array.from(ithCombination(-1, 2, [a, b, c]))).toThrow();
+  });
+
+  test("throws on i > combinations length", () => {
+    expect(() => Array.from(ithCombination(10, 2, [a, b, c, d]))).toThrow();
+  });
+
+  test("k = 1", () => {
+    expect(Array.from(ithCombination(0, 1, [a, b, c, d]))).toEqual([a]);
+    expect(Array.from(ithCombination(2, 1, [a, b, c, d]))).toEqual([c]);
+  });
+
+  test("k = 2", () => {
+    expect(Array.from(ithCombination(0, 2, [a, b, c, d]))).toEqual([a, b]);
+    expect(Array.from(ithCombination(5, 2, [a, b, c, d]))).toEqual([c, d]);
+  });
+});
+
 describe("combinations", () => {
   test("throws on k < 0", () => {
-    expect(() => Array.from(combinations(-1, [a, b, 3]))).toThrow();
+    expect(() => Array.from(combinations(-1, [a, b, c]))).toThrow();
   });
 
   test("throws on k > items length", () => {
