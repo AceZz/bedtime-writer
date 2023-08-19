@@ -16,24 +16,27 @@ test("compressToPng", async () => {
 describe("cartesianProduct", () => {
   test("Returns the cartesian product", () => {
     const input = [
-      ["a", "b"],
-      ["c", "d"],
+      ["A", "B"],
+      ["Y", "X"],
     ];
     const expected = [
-      ["a", "c"],
-      ["a", "d"],
-      ["b", "c"],
-      ["b", "d"],
+      ["A", "Y"],
+      ["A", "X"],
+      ["B", "Y"],
+      ["B", "X"],
     ];
 
-    const actual = cartesianProduct(input);
+    const actual = Array.from(cartesianProduct(input));
 
-    expect(actual.sort()).toEqual(expected.sort());
+    expect(actual).toEqual(expected);
   });
 
   test("Throws on empty input", () => {
     const input = [[], ["a"]];
-    expect(() => cartesianProduct(input)).toThrow();
+    expect(() => Array.from(cartesianProduct(input))).toThrow();
+
+    const input2 = [["a"], []];
+    expect(() => Array.from(cartesianProduct(input2))).toThrow();
   });
 });
 

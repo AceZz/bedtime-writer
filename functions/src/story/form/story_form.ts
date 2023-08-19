@@ -27,7 +27,7 @@ export class StoryForm {
     );
 
     // choices[item_index][question_index]
-    const formResponses = cartesianProduct(choices);
+    const formResponses = Array.from(cartesianProduct(choices));
 
     return {
       questions: questionsList,
