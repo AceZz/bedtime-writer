@@ -47,4 +47,60 @@ Question 1 (question1V1)
 
     expect(() => questions[0].copyWithChoices(["doesnotexist"])).toThrow();
   });
+
+  test("sortMostRecentFirst", () => {
+    const oldQuestion = new StoryQuestion(
+      "q0v0",
+      "param0",
+      "Question 0 V0",
+      0,
+      new Date(2020, 0, 1),
+      []
+    );
+
+    const newQuestion = new StoryQuestion(
+      "q0v1",
+      "param0",
+      "Question 0 V1",
+      0,
+      new Date(2021, 0, 1), // V1 hopefully comes after V0.
+      []
+    );
+
+    let array = [oldQuestion, newQuestion];
+    StoryQuestion.sortMostRecentFirst(array);
+    expect(array).toEqual([newQuestion, oldQuestion]);
+
+    array = [newQuestion, oldQuestion];
+    StoryQuestion.sortMostRecentFirst(array);
+    expect(array).toEqual([newQuestion, oldQuestion]);
+  });
+
+  test("sortPriority", () => {
+    const highPriority = new StoryQuestion(
+      "q0",
+      "param0",
+      "Question 0",
+      0,
+      new Date(2020, 0, 1),
+      []
+    );
+
+    const lowPriority = new StoryQuestion(
+      "q1",
+      "param1",
+      "Question 1",
+      10,
+      new Date(2020, 0, 1),
+      []
+    );
+
+    let array = [highPriority, lowPriority];
+    StoryQuestion.sortPriority(array);
+    expect(array).toEqual([highPriority, lowPriority]);
+
+    array = [lowPriority, highPriority];
+    StoryQuestion.sortPriority(array);
+    expect(array).toEqual([highPriority, lowPriority]);
+  });
 });

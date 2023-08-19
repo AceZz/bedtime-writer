@@ -61,4 +61,18 @@ export class StoryQuestion {
       newChoices
     );
   }
+
+  /**
+   * Sort `questions` per `datetime` in place.
+   */
+  static sortMostRecentFirst(questions: StoryQuestion[]): void {
+    questions.sort((a, b) => b.datetime.getTime() - a.datetime.getTime());
+  }
+
+  /**
+   * Sort `questions` per `priority` (lowest first) in place.
+   */
+  static sortPriority(questions: StoryQuestion[]): void {
+    questions.sort((a, b) => a.priority - b.priority);
+  }
 }
