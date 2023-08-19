@@ -35,6 +35,11 @@ Question 1 (question1V1)
     );
   });
 
+  test("fullId", async () => {
+    const questions = await ALL_QUESTIONS();
+    expect(questions[0].fullId()).toBe("question1V1:choice1,choice2,choice3");
+  });
+
   test("copyWithChoices", async () => {
     const questions = await QUESTIONS_0();
 

@@ -24,6 +24,10 @@ export class StoryQuestion {
       .join("\n  * ")}`;
   }
 
+  fullId(): string {
+    return `${this.id}:${this.choiceIds.join(",")}`;
+  }
+
   get choiceIds(): string[] {
     return Array.from(this.choices.keys());
   }
