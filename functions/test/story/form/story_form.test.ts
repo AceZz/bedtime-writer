@@ -24,6 +24,15 @@ Question 3 (question3V1)
     );
   });
 
+  test("fullId", async () => {
+    const questions = await ALL_QUESTIONS();
+    const form = new StoryForm(questions);
+
+    expect(form.fullId()).toBe(
+      "question1V1:choice1,choice2,choice3|question2V1:choice1,choice2|question3V1:choice1,choice2"
+    );
+  });
+
   test("getAllFormResponses", async () => {
     const questions = await QUESTIONS_0();
     const q0c1 = questions[0].choices.get("choice1");

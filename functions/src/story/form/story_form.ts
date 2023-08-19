@@ -41,6 +41,12 @@ export class StoryForm {
       .join("\n");
   }
 
+  fullId(): string {
+    return Array.from(this.questions.values())
+      .map((question) => question.fullId())
+      .join("|");
+  }
+
   get questionIds(): string[] {
     return Array.from(this.questions.keys());
   }
