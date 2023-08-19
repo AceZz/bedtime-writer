@@ -17,6 +17,7 @@
     "deploy_hosting_dev": "firebase hosting:channel:deploy preview --expires 7d",
     "story_set_questions": "node lib/src/admin/story_set_questions",
     "story_compress_images": "node lib/src/admin/story_compress_images.js",
+    "story_gen_forms": "node lib/src/admin/story_gen_forms.js",
     "story_generate_cache": "node lib/src/admin/story_generate_cache.js"
   },
   "main": "lib/src/index.js",

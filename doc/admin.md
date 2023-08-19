@@ -63,6 +63,7 @@ launched!
   `admin_data/story/questions.yaml` is used.
 * `npm run story_compress_images [folder]`: compress the images of the story choices. By default,
   `admin_data/` is used.
+* `npm run story_gen_forms`: generate story forms and write them to the Firestore database.
 
 ## Start the local backend with pre-loaded data
 
