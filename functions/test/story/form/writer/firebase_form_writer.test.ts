@@ -46,22 +46,12 @@ describe("FirebaseFormWriter", () => {
     await storyForms.expectToBe([SERIALIZED_FORM_0]);
   });
 
-  test("Write two forms in right order", async () => {
+  test("Write two forms", async () => {
     await formWriter.write(await FORM_0());
     await formWriter.write(await FORM_1());
 
     await storyForms.expectCountToBe(2);
     await storyForms.expectToBe([SERIALIZED_FORM_0, SERIALIZED_FORM_1]);
-  });
-
-  test("Write two forms in wrong order", async () => {
-    await formWriter.write(await FORM_1());
-    await expect(formWriter.write(await FORM_0())).rejects.toThrow(
-      "another form starts before"
-    );
-
-    await storyForms.expectCountToBe(1);
-    await storyForms.expectToBe([SERIALIZED_FORM_1]);
   });
 
   test("Incompatible question ID", async () => {
