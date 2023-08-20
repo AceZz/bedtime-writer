@@ -52,7 +52,7 @@ folder, create a blank `index.html` file in it, and run `firebase deploy --only 
 
 CocoaPods is used as a dependency manager. Flutter will automatically run `pod install` to install 
 the correct pods (dependencies) for you when you are doing `flutter run` or `flutter build` for an 
-ios device.
+iOS device.
 
 As an optimization for build duration, a fixed version of the `FirebaseFirestore` pod is directly 
 downloaded from GitHub as specified in `ios/Podfile`. SDK version needs to be updated manually if 
@@ -62,6 +62,3 @@ issues are found, followed by a `flutter clean`.
 
 To reset the cache of an iOS simulated device, go the iOS simulator menu: Device > Erase All
 Content And Settings.
-
-
-
