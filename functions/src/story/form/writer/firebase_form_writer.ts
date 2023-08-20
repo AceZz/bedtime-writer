@@ -28,8 +28,8 @@ export class FirebaseFormWriter implements Writer<StoryForm> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data: any = {};
 
-    // Check and write the start date.
-    data.start = form.start;
+    // Check and write the datetime.
+    data.datetime = form.datetime;
 
     // Check and write the questions.
     let index = 0;

@@ -28,16 +28,16 @@ export class FirestoreStoryFormsUtils extends FirestoreStoryForms {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async expectToBe(expected: any[]): Promise<void> {
-    const snapshots = await this.formsRef().orderBy("start").get();
+    const snapshots = await this.formsRef().orderBy("datetime").get();
 
     const tested = snapshots.docs.map((snapshot) => snapshot.data());
     const expected_ = expected.map((item) => {
       return {
         ...item,
-        start: new Timestamp(item.start.getTime() / 1000, 0),
+        datetime: new Timestamp(item.datetime.getTime() / 1000, 0),
       };
     });
-    expected_.sort((a, b) => a.start - b.start);
+    expected_.sort((a, b) => a.datetime - b.datetime);
 
     expect(tested).toStrictEqual(expected_);
   }

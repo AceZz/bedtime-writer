@@ -10,7 +10,7 @@ import { FirestoreCollection } from "./firestore_collection";
  *
  * ```plain
  * <form_id>:
- *   start: timestamp
+ *   datetime: timestamp
  *   numQuestions: int
  *   question0: <id>
  *   question0Choices: [<id>, <id>, ...]
