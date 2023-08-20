@@ -2,10 +2,10 @@
 
 ## Environments
 
-| Environment | Branch | Firebase project   | Android package name                    | Apple bundle ID                         |
-|-------------|--------|--------------------|-----------------------------------------|-----------------------------------------|
-| dev         | main   | bedtime-writer-dev | com.dreamstorestudios.bedtimewriter.dev | com.dreamstorestudios.bedtimewriter.dev |
-| prod        | prod   | bedtime-writer     | com.dreamstorestudios.bedtimewriter     | com.dreamstorestudios.bedtimewriter     |
+| Environment | Branch | Firebase project   | Firebase options               | Android package name                    | Apple bundle ID                         |
+|-------------|--------|--------------------|--------------------------------|-----------------------------------------|-----------------------------------------|
+| dev         | main   | bedtime-writer-dev | `firebase_options.dart` (dev)  | com.dreamstorestudios.bedtimewriter.dev | com.dreamstorestudios.bedtimewriter.dev |
+| prod        | prod   | bedtime-writer     | `firebase_options.dart` (prod) | com.dreamstorestudios.bedtimewriter     | com.dreamstorestudios.bedtimewriter     |
 
 New features are first merged into `main` and tested on the dev environment. When it's time for a
 new release, `main` is merged into `prod` and a new
@@ -16,6 +16,19 @@ has been deleted.
 
 Note: the Android package names must be different, otherwise we cannot use Firebase Auth with the
 same SHA1 fingerprint.
+
+### Flutter flavors
+
+Flutter flavors are used for Android and iOS to build different versions of the same app, using 
+different compile-time configurations and set parameters that are read at runtime to customize the 
+app behavior. Below are the differences the flavors introduce in practice in our case.
+
+#### Android
+
+The flavors are specified in `android/app/build.gradle` and they set different `applicationId` (aka 
+package name) which is especially important for Play Store listing and app identification on an
+Android device. The Firebase configuration file `android/app/src/<flavor>/google-services.json` is 
+also flavor specific, as each flavor is associated with a different Firebase project.
 
 ### Switch between environments
 
