@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>596701039771-l5583cm0tolhnn6tjapmad51akjel1k5.apps.googleusercontent.com</string>
+	<string>558387951881-pdvrogb1b430v45b2863v6ckib8p1srl.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.596701039771-l5583cm0tolhnn6tjapmad51akjel1k5</string>
+	<string>com.googleusercontent.apps.558387951881-pdvrogb1b430v45b2863v6ckib8p1srl</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>596701039771-ku2lrgmvoqcv0gbo7mon3574pnjbcg51.apps.googleusercontent.com</string>
+	<string>558387951881-fmuuljdv05e4rcn8nf8vkmh40nuo430d.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAxg_LFlr0sZrbpHe27rAqIsEfFMACSecI</string>
+	<string>AIzaSyAvbsOpnKzWpJAra6f9csZcrbRvnkkkS64</string>
 	<key>GCM_SENDER_ID</key>
-	<string>596701039771</string>
+	<string>558387951881</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.dreamstorestudios.bedtimewriter</string>
+	<string>com.dreamstorestudios.bedtimewriter.dev</string>
 	<key>PROJECT_ID</key>
-	<string>bedtime-writer</string>
+	<string>bedtime-writer-dev</string>
 	<key>STORAGE_BUCKET</key>
-	<string>bedtime-writer.appspot.com</string>
+	<string>bedtime-writer-dev.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:596701039771:ios:c7dbc0fefbb30fbc758a3e</string>
+	<string>1:558387951881:ios:9cce8dd2822e0d26bf7bd8</string>
 </dict>
 </plist>
