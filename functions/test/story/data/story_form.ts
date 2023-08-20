@@ -13,7 +13,7 @@ export async function FORM_0(): Promise<StoryForm> {
 }
 
 export const SERIALIZED_FORM_0 = {
-  start: new Date("2020-01-01T12:00:00Z"),
+  datetime: new Date("2020-01-01T12:00:00Z"),
   numQuestions: 2,
   question0: "question1V1",
   question0Choices: ["choice1", "choice2"],
@@ -36,7 +36,7 @@ export async function FORM_1(): Promise<StoryForm> {
 }
 
 export const SERIALIZED_FORM_1 = {
-  start: new Date("2023-01-01T12:00:00Z"),
+  datetime: new Date("2023-01-01T12:00:00Z"),
   numQuestions: 2,
   question0: "question1V1",
   question0Choices: ["choice1", "choice3"],

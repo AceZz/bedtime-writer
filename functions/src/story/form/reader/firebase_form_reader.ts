@@ -52,7 +52,7 @@ export class FirebaseFormReader implements Reader<StoryForm[]> {
 
     const snapshots = await this.formsCollection
       .formsRef()
-      .orderBy("start", "desc")
+      .orderBy("datetime", "desc")
       .limit(n)
       .get();
     return Promise.all(
@@ -88,6 +88,6 @@ export class FirebaseFormReader implements Reader<StoryForm[]> {
       newQuestions.push(questionWithChoices);
     }
 
-    return new StoryForm(newQuestions, data.start.toDate());
+    return new StoryForm(newQuestions, data.datetime.toDate());
   }
 }

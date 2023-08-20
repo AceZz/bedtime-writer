@@ -4,14 +4,16 @@ import { StoryQuestion } from "./story_question";
 
 /**
  * Stores questions and choices that should be displayed to the user.
+ *
+ * `datetime` is the creation datetime.
  */
 export class StoryForm {
-  readonly start: Date;
+  readonly datetime: Date;
   readonly questions: Map<string, StoryQuestion>;
 
-  constructor(questions: StoryQuestion[], start?: Date) {
+  constructor(questions: StoryQuestion[], datetime?: Date) {
     this.questions = listToMapById(questions);
-    this.start = start ?? new Date();
+    this.datetime = datetime ?? new Date();
   }
 
   static getAllFormResponses(questions: Map<string, StoryQuestion>): {
