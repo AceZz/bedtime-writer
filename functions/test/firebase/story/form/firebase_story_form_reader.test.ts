@@ -1,18 +1,18 @@
 import { beforeAll, beforeEach, describe, expect, test } from "@jest/globals";
 import {
   FirebaseStoryQuestionWriter,
+  FirebaseStoryFormReader,
   initEnv,
   initFirebase,
 } from "../../../../src/firebase";
-import { FirestoreContextUtils } from "../../../firebase/utils";
-import { FORM_0, QUESTIONS_0, SERIALIZED_FORM_0 } from "../../data";
-import { FirebaseFormReader } from "../../../../src/story";
+import { FirestoreContextUtils } from "../../utils";
+import { FORM_0, QUESTIONS_0, SERIALIZED_FORM_0 } from "../../../story/data";
 
 const context = new FirestoreContextUtils("form_reader");
 const storyForms = context.storyForms;
 const storyQuestions = context.storyQuestions;
 
-describe("FirebaseFormReader", () => {
+describe("FirebaseStoryFormReader", () => {
   // Check we are running in emulator mode before initializing Firebase.
   beforeAll(() => {
     initEnv();
@@ -21,21 +21,21 @@ describe("FirebaseFormReader", () => {
 
   beforeEach(async () => await storyForms.delete());
 
-  test("read", async () => {
+  test("readAll", async () => {
     const writer = new FirebaseStoryQuestionWriter(storyQuestions);
     await writer.write(await QUESTIONS_0());
 
     await storyForms.formsRef().add(SERIALIZED_FORM_0);
 
-    const reader = new FirebaseFormReader(storyForms, storyQuestions);
-    const forms = await reader.read();
+    const reader = new FirebaseStoryFormReader(storyForms, storyQuestions);
+    const forms = await reader.readAll();
 
     expect(forms).toEqual([await FORM_0()]);
   });
 
-  test("read no questions throws", async () => {
+  test("readAll no questions throws", async () => {
     await storyForms.formsRef().add(SERIALIZED_FORM_0);
-    const reader = new FirebaseFormReader(storyForms, storyQuestions);
-    expect(reader.read).rejects.toThrow();
+    const reader = new FirebaseStoryFormReader(storyForms, storyQuestions);
+    expect(reader.readAll).rejects.toThrow();
   });
 });

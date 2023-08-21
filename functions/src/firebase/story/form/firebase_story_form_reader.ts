@@ -1,18 +1,18 @@
-import { StoryForm } from "../story_form";
-import { Reader } from "./reader";
 import {
-  FirestoreStoryForms,
-  FirestoreStoryQuestions,
-} from "../../../firebase";
+  FirebaseQuestionReader,
+  StoryForm,
+  StoryFormReader,
+  StoryQuestion,
+} from "../../../story";
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
-import { FirebaseQuestionReader } from "./firebase_question_reader";
-import { StoryQuestion } from "../story_question";
+import { FirestoreStoryQuestions } from "./firestore_story_questions";
+import { FirestoreStoryForms } from "./firestore_story_forms";
 import { listToMapById } from "../../../utils";
 
 /**
  * Read a list of Forms from Firebase.
  */
-export class FirebaseFormReader implements Reader<StoryForm[]> {
+export class FirebaseStoryFormReader implements StoryFormReader {
   private readonly questionReader: FirebaseQuestionReader;
 
   constructor(
@@ -22,7 +22,7 @@ export class FirebaseFormReader implements Reader<StoryForm[]> {
     this.questionReader = new FirebaseQuestionReader(questionsCollection);
   }
 
-  async read(): Promise<StoryForm[]> {
+  async readAll(): Promise<StoryForm[]> {
     const questions = await this.readQuestions();
 
     const snapshots = await this.formsCollection.formsRef().get();

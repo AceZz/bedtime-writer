@@ -1,5 +1,6 @@
-import { FirebaseFormReader, StoryCacheV1Manager } from "../story";
+import { StoryCacheV1Manager } from "../story";
 import {
+  FirebaseStoryFormReader,
   FirestoreContext,
   firebaseEmulatorsAreUsed,
   getFirebaseProject,
@@ -22,7 +23,7 @@ async function main() {
   if (await confirm(firestore)) {
     initFirebase();
 
-    const reader = new FirebaseFormReader(
+    const reader = new FirebaseStoryFormReader(
       firestore.storyFormsLanding,
       firestore.storyQuestions
     );
