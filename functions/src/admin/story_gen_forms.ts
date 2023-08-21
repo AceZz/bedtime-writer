@@ -13,10 +13,10 @@ import {
   initFirebase,
   FirestoreContext,
   FirebaseStoryFormWriter,
+  FirebaseStoryFormReader,
 } from "../firebase";
 import {
   FirebaseQuestionReader,
-  FirebaseFormReader,
   StoryFormManager,
   StoryQuestion,
   StoryForm,
@@ -124,11 +124,11 @@ async function readQuestions(
 }
 
 async function readForms(firestore: FirestoreContext): Promise<StoryForm[]> {
-  const formsReader = new FirebaseFormReader(
+  const formsReader = new FirebaseStoryFormReader(
     firestore.storyFormsLanding,
     firestore.storyQuestions
   );
-  const currentForms = await formsReader.read();
+  const currentForms = await formsReader.readAll();
   console.log(
     `${currentForms.length} forms were found in ` +
       `${firestore.storyFormsLanding.collectionPath}.`
