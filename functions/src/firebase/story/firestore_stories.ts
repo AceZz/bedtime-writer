@@ -2,7 +2,7 @@ import {
   CollectionReference,
   DocumentReference,
 } from "firebase-admin/firestore";
-import { FirestoreCollection } from "./firestore_collection";
+import { FirestoreCollection } from "../firestore_collection";
 
 /**
  * Helper class to manipulate a stories collection. It follows this schema:

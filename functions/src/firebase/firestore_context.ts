@@ -3,11 +3,10 @@ import { Firestore, getFirestore } from "firebase-admin/firestore";
 import {
   FirestoreStoryCache,
   FirestoreStoryRealtime,
-} from "./firestore_stories";
-import { FirestoreStoryForms } from "./firestore_story_forms";
-import { FirestoreStoryQuestions } from "./firestore_story_questions";
-import { FirestoreUserFeedback } from "./firestore_user_feedback";
-import { FirestoreUserStats } from "./firestore_user_stats";
+  FirestoreStoryForms,
+  FirestoreStoryQuestions,
+} from "./story";
+import { FirestoreUserFeedback, FirestoreUserStats } from "./user";
 
 // The default collection paths.
 const STORY_CACHE = "story__cache";

@@ -1,4 +1,4 @@
-import { FirestoreUserFeedback } from "../../firebase/firestore_user_feedback";
+import { FirestoreUserFeedback } from "../../firebase/user/feedback/firestore_user_feedback";
 import { logger } from "../../logger";
 import { UserFeedback, UserFeedbackManager } from "./user_feedback";
 
