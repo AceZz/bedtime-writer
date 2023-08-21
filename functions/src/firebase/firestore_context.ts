@@ -11,7 +11,7 @@ import { FirestoreUserStats } from "./firestore_user_stats";
 
 // The default collection paths.
 const STORY_CACHE = "story__cache";
-const STORY_FORMS = "story__forms";
+const STORY_FORMS_LANDING = "story__forms_landing";
 const STORY_QUESTIONS = "story__questions";
 const STORY_REALTIME = "story__realtime";
 const USER_FEEDBACK = "user__feedback";
@@ -37,7 +37,7 @@ const USER_STATS = "user__stats";
  */
 export class FirestoreContext {
   readonly storyCache: FirestoreStoryCache;
-  readonly storyForms: FirestoreStoryForms;
+  readonly storyFormsLanding: FirestoreStoryForms;
   readonly storyQuestions: FirestoreStoryQuestions;
   readonly storyRealtime: FirestoreStoryRealtime;
   readonly userFeedback: FirestoreUserFeedback;
@@ -47,7 +47,10 @@ export class FirestoreContext {
     const p = prefix === undefined ? "" : `${prefix}__`;
 
     this.storyCache = new FirestoreStoryCache(p + STORY_CACHE, this);
-    this.storyForms = new FirestoreStoryForms(p + STORY_FORMS, this);
+    this.storyFormsLanding = new FirestoreStoryForms(
+      p + STORY_FORMS_LANDING,
+      this
+    );
     this.storyQuestions = new FirestoreStoryQuestions(
       p + STORY_QUESTIONS,
       this
