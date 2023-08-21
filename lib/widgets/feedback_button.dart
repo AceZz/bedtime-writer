@@ -17,9 +17,9 @@ class FeedbackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = GoogleFonts.outfit(
-      color: Theme.of(context).textTheme.bodySmall?.color!,
+      color: Theme.of(context).primaryTextTheme.bodySmall?.color!,
       fontWeight: FontWeight.normal,
-      fontSize: 14.sp,
+      fontSize: 16.sp,
       decoration: TextDecoration.underline,
     );
 
