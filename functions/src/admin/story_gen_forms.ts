@@ -12,11 +12,11 @@ import {
   initEnv,
   initFirebase,
   FirestoreContext,
+  FirebaseStoryFormWriter,
 } from "../firebase";
 import {
   FirebaseQuestionReader,
   FirebaseFormReader,
-  FirebaseFormWriter,
   StoryFormManager,
   StoryQuestion,
   StoryForm,
@@ -39,9 +39,9 @@ async function main() {
   const generatedForms = await generateForms(numForms, firestore);
 
   if (await confirm(firestore, numForms)) {
-    const writer = new FirebaseFormWriter(
+    const writer = new FirebaseStoryFormWriter(
       firestore.storyFormsLanding,
-      firestore.storyQuestions
+      new FirebaseQuestionReader(firestore.storyQuestions)
     );
 
     for (const form of generatedForms) {
