@@ -12,7 +12,7 @@ import {
   FirestoreContext,
   FirebaseStoryQuestionWriter,
 } from "../firebase";
-import { YAMLQuestionReader } from "../story";
+import { YAMLStoryQuestionReader } from "../yaml";
 
 const DEFAULT_YAML_PATH = "admin_data/story/questions.yaml";
 
@@ -25,8 +25,8 @@ async function main() {
 
   if (await confirm(firestore, yamlPath)) {
     initFirebase();
-    const reader = new YAMLQuestionReader(yamlPath);
-    const questions = await reader.read();
+    const reader = new YAMLStoryQuestionReader(yamlPath);
+    const questions = await reader.readAll();
 
     const writer = new FirebaseStoryQuestionWriter(firestore.storyQuestions);
     await writer.write(questions);

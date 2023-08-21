@@ -3,7 +3,7 @@ import {
   StoryFormWriter,
   StoryForm,
   StoryQuestion,
-  Reader,
+  StoryQuestionReader,
 } from "../../../story/";
 import { FirestoreStoryForms } from "./firestore_story_forms";
 
@@ -14,7 +14,7 @@ import { FirestoreStoryForms } from "./firestore_story_forms";
 export class FirebaseStoryFormWriter implements StoryFormWriter {
   constructor(
     private readonly formsCollection: FirestoreStoryForms,
-    private readonly questionReader: Reader<StoryQuestion[]>
+    private readonly questionReader: StoryQuestionReader
   ) {}
 
   async write(form: StoryForm): Promise<void> {
@@ -52,6 +52,6 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
   }
 
   private async getQuestions(): Promise<Map<string, StoryQuestion>> {
-    return listToMapById(await this.questionReader.read());
+    return listToMapById(await this.questionReader.readAll());
   }
 }

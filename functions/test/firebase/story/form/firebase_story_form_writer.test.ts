@@ -4,6 +4,7 @@ import {
   initFirebase,
   FirebaseStoryFormWriter,
   FirebaseStoryQuestionWriter,
+  FirebaseStoryQuestionReader,
 } from "../../../../src/firebase";
 import { FirestoreContextUtils } from "../../utils";
 import {
@@ -15,7 +16,6 @@ import {
   SERIALIZED_FORM_0,
   SERIALIZED_FORM_1,
 } from "../../../story/data";
-import { FirebaseQuestionReader } from "../../../../src/story";
 
 const utils = new FirestoreContextUtils("form_writer");
 const storyForms = utils.storyForms;
@@ -32,7 +32,7 @@ describe("FirebaseStoryFormWriter", () => {
     questionsWriter = new FirebaseStoryQuestionWriter(storyQuestions);
     formWriter = new FirebaseStoryFormWriter(
       storyForms,
-      new FirebaseQuestionReader(storyQuestions)
+      new FirebaseStoryQuestionReader(storyQuestions)
     );
   });
 

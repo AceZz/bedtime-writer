@@ -1,6 +1,7 @@
 import { StoryCacheV1Manager } from "../story";
 import {
   FirebaseStoryFormReader,
+  FirebaseStoryQuestionReader,
   FirestoreContext,
   firebaseEmulatorsAreUsed,
   getFirebaseProject,
@@ -25,7 +26,7 @@ async function main() {
 
     const reader = new FirebaseStoryFormReader(
       firestore.storyFormsLanding,
-      firestore.storyQuestions
+      new FirebaseStoryQuestionReader(firestore.storyQuestions)
     );
     const formsWithId = await reader.readMostRecentWithIds(1);
 

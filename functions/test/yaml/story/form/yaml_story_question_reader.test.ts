@@ -1,16 +1,13 @@
 import { expect, test, jest } from "@jest/globals";
-import {
-  StoryChoice,
-  StoryQuestion,
-  YAMLQuestionReader,
-} from "../../../../src/story";
+import { StoryChoice, StoryQuestion } from "../../../../src/story";
+import { YAMLStoryQuestionReader } from "../../../../src/yaml";
 
 test("read questions", async () => {
   jest.useFakeTimers().setSystemTime(new Date("2020-01-01"));
 
-  const reader = new YAMLQuestionReader("test/story/data/questions.yaml");
+  const reader = new YAMLStoryQuestionReader("test/story/data/questions.yaml");
 
-  const result = await reader.read();
+  const result = await reader.readAll();
   const expected = [
     new StoryQuestion(
       "characterNameV1",

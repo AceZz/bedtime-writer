@@ -2,9 +2,9 @@ import { readFile } from "fs/promises";
 
 import { parse } from "yaml";
 
-import { StoryQuestion } from "../story_question";
-import { Reader } from "./reader";
-import { StoryChoice } from "../story_choice";
+import { StoryQuestion } from "../../../story/form/story_question";
+import { StoryChoice } from "../../../story/form/story_choice";
+import { StoryQuestionReader } from "../../../story/form/story_question_reader";
 
 /**
  * This class reads a YAML file.
@@ -28,10 +28,10 @@ import { StoryChoice } from "../story_choice";
  *   ...
  * ```
  */
-export class YAMLQuestionReader implements Reader<StoryQuestion[]> {
+export class YAMLStoryQuestionReader implements StoryQuestionReader {
   constructor(readonly path: string) {}
 
-  async read(): Promise<StoryQuestion[]> {
+  async readAll(): Promise<StoryQuestion[]> {
     const file = await readFile(this.path, "utf8");
     const data = parse(file);
 
