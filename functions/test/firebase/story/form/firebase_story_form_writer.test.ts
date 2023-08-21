@@ -1,6 +1,10 @@
 import { beforeAll, expect, beforeEach, test, describe } from "@jest/globals";
-import { initEnv, initFirebase } from "../../../../src/firebase";
-import { FirestoreContextUtils } from "../../../firebase/utils";
+import {
+  initEnv,
+  initFirebase,
+  FirebaseStoryFormWriter,
+} from "../../../../src/firebase";
+import { FirestoreContextUtils } from "../../utils";
 import {
   ALL_QUESTIONS,
   FORM_0,
@@ -9,9 +13,9 @@ import {
   FORM_3,
   SERIALIZED_FORM_0,
   SERIALIZED_FORM_1,
-} from "../../data";
+} from "../../../story/data";
 import {
-  FirebaseFormWriter,
+  FirebaseQuestionReader,
   FirebaseQuestionWriter,
 } from "../../../../src/story";
 
@@ -19,16 +23,19 @@ const utils = new FirestoreContextUtils("form_writer");
 const storyForms = utils.storyForms;
 const storyQuestions = utils.storyQuestions;
 
-describe("FirebaseFormWriter", () => {
+describe("FirebaseStoryFormWriter", () => {
   let questionsWriter: FirebaseQuestionWriter;
-  let formWriter: FirebaseFormWriter;
+  let formWriter: FirebaseStoryFormWriter;
 
   // Check we are running in emulator mode before initializing Firebase.
   beforeAll(() => {
     initEnv();
     initFirebase(true);
     questionsWriter = new FirebaseQuestionWriter(storyQuestions);
-    formWriter = new FirebaseFormWriter(storyForms, storyQuestions);
+    formWriter = new FirebaseStoryFormWriter(
+      storyForms,
+      new FirebaseQuestionReader(storyQuestions)
+    );
   });
 
   // Empty the forms and questions collection, then recreate some questions.
@@ -56,7 +63,7 @@ describe("FirebaseFormWriter", () => {
 
   test("Incompatible question ID", async () => {
     await expect(formWriter.write(await FORM_2())).rejects.toThrow(
-      'FirebaseFormWriter.write: question "doesnotexistV1" does not exist'
+      'FirebaseStoryFormWriter.write: question "doesnotexistV1" does not exist'
     );
     await storyForms.expectCountToBe(0);
   });

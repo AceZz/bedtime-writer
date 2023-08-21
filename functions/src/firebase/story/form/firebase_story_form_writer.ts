@@ -1,26 +1,21 @@
-import { Writer } from "./writer";
-import { StoryForm } from "../story_form";
-import {
-  FirestoreStoryForms,
-  FirestoreStoryQuestions,
-} from "../../../firebase";
-import { FirebaseQuestionReader, Reader } from "../reader";
-import { StoryQuestion } from "../story_question";
 import { listToMapById } from "../../../utils";
+import {
+  StoryFormWriter,
+  StoryForm,
+  StoryQuestion,
+  Reader,
+} from "../../../story/";
+import { FirestoreStoryForms } from "./firestore_story_forms";
 
 /**
  * This class writes a Form object to Firebase.
  *
  */
-export class FirebaseFormWriter implements Writer<StoryForm> {
-  private questionReader: Reader<StoryQuestion[]>;
-
+export class FirebaseStoryFormWriter implements StoryFormWriter {
   constructor(
     private readonly formsCollection: FirestoreStoryForms,
-    questionsCollection: FirestoreStoryQuestions
-  ) {
-    this.questionReader = new FirebaseQuestionReader(questionsCollection);
-  }
+    private readonly questionReader: Reader<StoryQuestion[]>
+  ) {}
 
   async write(form: StoryForm): Promise<void> {
     const availableQuestions = await this.getQuestions();
@@ -42,7 +37,7 @@ export class FirebaseFormWriter implements Writer<StoryForm> {
 
       if (validatedQuestion === undefined) {
         throw Error(
-          `FirebaseFormWriter.write: question "${formQuestion.id}" ` +
+          `FirebaseStoryFormWriter.write: question "${formQuestion.id}" ` +
             "does not exist."
         );
       }
