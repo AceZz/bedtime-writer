@@ -1,7 +1,8 @@
 import { beforeAll, beforeEach, describe, expect, test } from "@jest/globals";
 import {
-  FirebaseStoryQuestionWriter,
   FirebaseStoryFormReader,
+  FirebaseStoryQuestionReader,
+  FirebaseStoryQuestionWriter,
   initEnv,
   initFirebase,
 } from "../../../../src/firebase";
@@ -27,7 +28,10 @@ describe("FirebaseStoryFormReader", () => {
 
     await storyForms.formsRef().add(SERIALIZED_FORM_0);
 
-    const reader = new FirebaseStoryFormReader(storyForms, storyQuestions);
+    const reader = new FirebaseStoryFormReader(
+      storyForms,
+      new FirebaseStoryQuestionReader(storyQuestions)
+    );
     const forms = await reader.readAll();
 
     expect(forms).toEqual([await FORM_0()]);
@@ -35,7 +39,10 @@ describe("FirebaseStoryFormReader", () => {
 
   test("readAll no questions throws", async () => {
     await storyForms.formsRef().add(SERIALIZED_FORM_0);
-    const reader = new FirebaseStoryFormReader(storyForms, storyQuestions);
+    const reader = new FirebaseStoryFormReader(
+      storyForms,
+      new FirebaseStoryQuestionReader(storyQuestions)
+    );
     expect(reader.readAll).rejects.toThrow();
   });
 });
