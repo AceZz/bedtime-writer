@@ -1,7 +1,9 @@
-import { StoryQuestion } from "../story_question";
-import { Writer } from "./writer";
-import { StoryChoice } from "../story_choice";
-import { FirestoreStoryQuestions } from "../../../firebase";
+import {
+  StoryQuestion,
+  StoryChoice,
+  StoryQuestionWriter,
+} from "../../../story";
+import { FirestoreStoryQuestions } from "./firestore_story_questions";
 
 /**
  * This class writes a list of StoryQuestion objects to Firebase.
@@ -11,7 +13,7 @@ import { FirestoreStoryQuestions } from "../../../firebase";
  * However, we had random bugs with this approach. As this tool does not need to
  * be fast, we thus chose to do sequential writes.
  */
-export class FirebaseQuestionWriter implements Writer<StoryQuestion[]> {
+export class FirebaseStoryQuestionWriter implements StoryQuestionWriter {
   constructor(private readonly collection: FirestoreStoryQuestions) {}
 
   /**

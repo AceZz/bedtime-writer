@@ -1,11 +1,12 @@
 import { beforeAll, beforeEach, describe, expect, test } from "@jest/globals";
-import { initEnv, initFirebase } from "../../../../src/firebase";
+import {
+  FirebaseStoryQuestionWriter,
+  initEnv,
+  initFirebase,
+} from "../../../../src/firebase";
 import { FirestoreContextUtils } from "../../../firebase/utils";
 import { FORM_0, QUESTIONS_0, SERIALIZED_FORM_0 } from "../../data";
-import {
-  FirebaseFormReader,
-  FirebaseQuestionWriter,
-} from "../../../../src/story";
+import { FirebaseFormReader } from "../../../../src/story";
 
 const context = new FirestoreContextUtils("form_reader");
 const storyForms = context.storyForms;
@@ -21,7 +22,7 @@ describe("FirebaseFormReader", () => {
   beforeEach(async () => await storyForms.delete());
 
   test("read", async () => {
-    const writer = new FirebaseQuestionWriter(storyQuestions);
+    const writer = new FirebaseStoryQuestionWriter(storyQuestions);
     await writer.write(await QUESTIONS_0());
 
     await storyForms.formsRef().add(SERIALIZED_FORM_0);
