@@ -40,7 +40,7 @@ async function main() {
 
   if (await confirm(firestore, numForms)) {
     const writer = new FirebaseFormWriter(
-      firestore.storyForms,
+      firestore.storyFormsLanding,
       firestore.storyQuestions
     );
 
@@ -49,7 +49,7 @@ async function main() {
     }
 
     console.log(
-      `${numForms} forms written to ${firestore.storyForms.collectionPath}.`
+      `${numForms} forms written to ${firestore.storyFormsLanding.collectionPath}.`
     );
   } else {
     console.log("Abort");
@@ -125,13 +125,13 @@ async function readQuestions(
 
 async function readForms(firestore: FirestoreContext): Promise<StoryForm[]> {
   const formsReader = new FirebaseFormReader(
-    firestore.storyForms,
+    firestore.storyFormsLanding,
     firestore.storyQuestions
   );
   const currentForms = await formsReader.read();
   console.log(
     `${currentForms.length} forms were found in ` +
-      `${firestore.storyForms.collectionPath}.`
+      `${firestore.storyFormsLanding.collectionPath}.`
   );
   return currentForms;
 }
@@ -145,7 +145,7 @@ async function confirm(
     : `of project ${getFirebaseProject()}`;
 
   const answer = await prompt(
-    `The collection ${firestore.storyForms.collectionPath} ${projectLog} ` +
+    `The collection ${firestore.storyFormsLanding.collectionPath} ${projectLog} ` +
       `will be added ${numForms} forms. Proceed? (y/N) `
   );
 

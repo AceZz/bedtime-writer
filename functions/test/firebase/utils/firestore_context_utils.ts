@@ -33,7 +33,7 @@ export class FirestoreContextUtils {
       this.firestore
     );
     this.storyForms = new FirestoreStoryFormsUtils(
-      this.firestore.storyForms.collectionPath,
+      this.firestore.storyFormsLanding.collectionPath,
       this.firestore
     );
     this.storyQuestions = new FirestoreStoryQuestionsUtils(

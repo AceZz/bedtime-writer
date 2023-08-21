@@ -23,7 +23,7 @@ async function main() {
     initFirebase();
 
     const reader = new FirebaseFormReader(
-      firestore.storyForms,
+      firestore.storyFormsLanding,
       firestore.storyQuestions
     );
     const formsWithId = await reader.readMostRecentWithIds(1);
@@ -52,8 +52,8 @@ async function confirm(firestore: FirestoreContext): Promise<boolean> {
 
   const answer = await prompt(
     `The collection ${firestore.storyCache.collectionPath} ${projectLog} ` +
-      `will be populated based on ${firestore.storyForms.collectionPath}. ` +
-      "Proceed? (y/N) "
+      "will be populated based on " +
+      `${firestore.storyFormsLanding.collectionPath}. Proceed? (y/N) `
   );
 
   return ["yes", "y"].includes(answer?.toLowerCase() ?? "no");
