@@ -6,7 +6,7 @@ import {
   expect,
   test,
 } from "@jest/globals";
-import { FirestoreStories } from "../../src/firebase/firestore_stories";
+import { FirestoreStories } from "../../src/firebase/story/firestore_stories";
 import { initEnv, initFirebase } from "../../src/firebase/utils";
 import { Firestore, getFirestore } from "firebase-admin/firestore";
 
