@@ -1,20 +1,23 @@
 import { beforeAll, beforeEach, describe, test } from "@jest/globals";
-import { initEnv, initFirebase } from "../../../../src/firebase";
-import { FirestoreContextUtils } from "../../../firebase/utils";
-import { QUESTIONS_0, QUESTIONS_1 } from "../../data";
-import { FirebaseQuestionWriter } from "../../../../src/story";
+import {
+  FirebaseStoryQuestionWriter,
+  initEnv,
+  initFirebase,
+} from "../../../../src/firebase";
+import { FirestoreContextUtils } from "../../utils";
+import { QUESTIONS_0, QUESTIONS_1 } from "../../../story/data";
 
 const storyQuestions = new FirestoreContextUtils("question_writer")
   .storyQuestions;
 
-describe("FirebaseQuestionWriter", () => {
-  let writer: FirebaseQuestionWriter;
+describe("FirebaseStoryQuestionWriter", () => {
+  let writer: FirebaseStoryQuestionWriter;
 
   // Check we are running in emulator mode before initializing Firebase.
   beforeAll(() => {
     initEnv();
     initFirebase(true);
-    writer = new FirebaseQuestionWriter(storyQuestions);
+    writer = new FirebaseStoryQuestionWriter(storyQuestions);
   });
 
   beforeEach(async () => {

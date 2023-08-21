@@ -3,6 +3,7 @@ import {
   initEnv,
   initFirebase,
   FirebaseStoryFormWriter,
+  FirebaseStoryQuestionWriter,
 } from "../../../../src/firebase";
 import { FirestoreContextUtils } from "../../utils";
 import {
@@ -14,24 +15,21 @@ import {
   SERIALIZED_FORM_0,
   SERIALIZED_FORM_1,
 } from "../../../story/data";
-import {
-  FirebaseQuestionReader,
-  FirebaseQuestionWriter,
-} from "../../../../src/story";
+import { FirebaseQuestionReader } from "../../../../src/story";
 
 const utils = new FirestoreContextUtils("form_writer");
 const storyForms = utils.storyForms;
 const storyQuestions = utils.storyQuestions;
 
 describe("FirebaseStoryFormWriter", () => {
-  let questionsWriter: FirebaseQuestionWriter;
+  let questionsWriter: FirebaseStoryQuestionWriter;
   let formWriter: FirebaseStoryFormWriter;
 
   // Check we are running in emulator mode before initializing Firebase.
   beforeAll(() => {
     initEnv();
     initFirebase(true);
-    questionsWriter = new FirebaseQuestionWriter(storyQuestions);
+    questionsWriter = new FirebaseStoryQuestionWriter(storyQuestions);
     formWriter = new FirebaseStoryFormWriter(
       storyForms,
       new FirebaseQuestionReader(storyQuestions)

@@ -1,11 +1,12 @@
 import { beforeAll, beforeEach, expect, test } from "@jest/globals";
-import { initEnv, initFirebase } from "../../../../src/firebase";
+import {
+  FirebaseStoryQuestionWriter,
+  initEnv,
+  initFirebase,
+} from "../../../../src/firebase";
 import { FirestoreContextUtils } from "../../../firebase/utils";
 import { QUESTIONS_0 } from "../../data";
-import {
-  FirebaseQuestionReader,
-  FirebaseQuestionWriter,
-} from "../../../../src/story";
+import { FirebaseQuestionReader } from "../../../../src/story";
 
 const storyQuestions = new FirestoreContextUtils("question_reader")
   .storyQuestions;
@@ -22,7 +23,7 @@ beforeEach(async () => {
 
 test("FirebaseQuestionReader", async () => {
   const expected = await QUESTIONS_0();
-  const writer = new FirebaseQuestionWriter(storyQuestions);
+  const writer = new FirebaseStoryQuestionWriter(storyQuestions);
   await writer.write(expected);
 
   const reader = new FirebaseQuestionReader(storyQuestions);
