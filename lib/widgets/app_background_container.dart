@@ -10,7 +10,7 @@ class AppBackgroundContainer extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF392F4B), Color(0xFF0B2545)],
+          colors: [Color(0xFF743C51), Color(0xFF0B2545)],
         ),
       ),
       child: child,
