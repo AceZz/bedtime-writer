@@ -4,13 +4,7 @@ import {
   StoryForm,
   StoryFormAnswerError,
 } from "../../../src/story";
-import {
-  DUMMY_QUESTIONS,
-  DUMMY_FORM_0,
-  DUMMY_QUESTIONS_0,
-  REAL_FORM_0,
-} from "../data";
-import { listToMapById } from "../../../src/utils";
+import { DUMMY_QUESTIONS, DUMMY_FORM_0, REAL_FORM_0 } from "../data";
 import * as random from "../../../src/utils/random";
 
 describe("StoryForm", () => {
@@ -43,23 +37,25 @@ Question 3 (question3V1)
     );
   });
 
-  test("getAllFormResponses", () => {
-    const questions = DUMMY_QUESTIONS_0;
-    const q0c1 = questions[0].choices.get("choice1");
-    const q0c2 = questions[0].choices.get("choice2");
-    const q1c1 = questions[1].choices.get("choice1");
-    const q1c2 = questions[1].choices.get("choice2");
-
-    const expectedFormResponses = [
-      [q0c1, q1c1],
-      [q0c1, q1c2],
-      [q0c2, q1c1],
-      [q0c2, q1c2],
-    ];
-
-    const actual = StoryForm.getAllFormResponses(listToMapById(questions));
-    expect(actual.questions).toEqual(questions);
-    expect(actual.formResponses).toEqual(expectedFormResponses);
+  test("getAllAnswers", () => {
+    expect(DUMMY_FORM_0.getAllAnswers()).toEqual([
+      new Map([
+        ["question1V1", "choice1"],
+        ["question2V1", "choice1"],
+      ]),
+      new Map([
+        ["question1V1", "choice1"],
+        ["question2V1", "choice2"],
+      ]),
+      new Map([
+        ["question1V1", "choice2"],
+        ["question2V1", "choice1"],
+      ]),
+      new Map([
+        ["question1V1", "choice2"],
+        ["question2V1", "choice2"],
+      ]),
+    ]);
   });
 
   test("toClassicLogic", () => {
