@@ -4,7 +4,6 @@ import {
   pickRandom,
 } from "../../../src/utils";
 import { ClassicStoryLogic } from "../logic";
-import { StoryChoice } from "./story_choice";
 import { StoryQuestion } from "./story_question";
 
 export class StoryFormAnswerError extends Error {}
@@ -31,27 +30,6 @@ export class StoryForm {
     this.datetime = datetime ?? new Date();
   }
 
-  static getAllFormResponses(questions: Map<string, StoryQuestion>): {
-    questions: StoryQuestion[];
-    formResponses: StoryChoice[][];
-  } {
-    // List of questions.
-    const questionsList = Array.from(questions.values());
-
-    // choices[question_index][choice_index]
-    const choices = questionsList.map((question) =>
-      Array.from(question.choices.values())
-    );
-
-    // choices[item_index][question_index]
-    const formResponses = Array.from(cartesianProduct(choices));
-
-    return {
-      questions: questionsList,
-      formResponses: formResponses,
-    };
-  }
-
   toString(): string {
     return Array.from(this.questions.values())
       .map((question) => question.toString())
@@ -68,11 +46,24 @@ export class StoryForm {
     return Array.from(this.questions.keys());
   }
 
-  getAllFormResponses(): {
-    questions: StoryQuestion[];
-    formResponses: StoryChoice[][];
-  } {
-    return StoryForm.getAllFormResponses(this.questions);
+  getAllAnswers(): Map<string, string>[] {
+    const questions = Array.from(this.questions.values());
+
+    // choices[question_index][choice_index]
+    const choices = questions.map((question) =>
+      Array.from(question.choices.values())
+    );
+
+    // answers[answer_index][question_index]
+    const answers = Array.from(cartesianProduct(choices));
+
+    return answers.map((answer) => {
+      const map = new Map<string, string>();
+      for (const [questionIndex, choice] of answer.entries()) {
+        map.set(questions[questionIndex].id, choice.id);
+      }
+      return map;
+    });
   }
 
   /**

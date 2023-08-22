@@ -33,10 +33,10 @@ export class StoryCacheV1Manager implements StoryCacheManager {
   }
 
   generateRequests(form: StoryForm): StoryRequestV1[] {
-    const { questions, formResponses } = form.getAllFormResponses();
+    const answers = form.getAllAnswers();
 
-    const requests = formResponses.map((formResponse) => {
-      return this.generateRequest(questions, formResponse);
+    const requests = answers.map(() => {
+      return this.generateRequest([], []);
     });
     return requests;
   }
