@@ -2,6 +2,8 @@ import { cartesianProduct, listToMapById } from "../../../src/utils";
 import { StoryChoice } from "./story_choice";
 import { StoryQuestion } from "./story_question";
 
+export class StoryFormAnswerError extends Error {}
+
 /**
  * Stores questions and choices that should be displayed to the user.
  *
@@ -58,5 +60,43 @@ export class StoryForm {
     formResponses: StoryChoice[][];
   } {
     return StoryForm.getAllFormResponses(this.questions);
+  }
+
+  /**
+   * Check that `answer` answers all the questions with valid choices.
+   * Throw a `StoryFormAnswerError` if there is a validation error.
+   */
+  validateAnswer(answer: Map<string, string>): void {
+    const missingQuestions = Array.from(this.questions.keys()).filter(
+      (questionId) => !answer.has(questionId)
+    );
+    if (missingQuestions.length > 0) {
+      throw new StoryFormAnswerError(
+        `Missing questions: [${missingQuestions.join(", ")}].`
+      );
+    }
+
+    const invalidQuestions = [];
+
+    for (const [questionId, choiceId] of answer.entries()) {
+      const question = this.questions.get(questionId);
+
+      if (question === undefined) {
+        invalidQuestions.push(questionId);
+      } else {
+        const choice = question.choices.get(choiceId);
+        if (choice === undefined) {
+          throw new StoryFormAnswerError(
+            `Invalid choice for question ${questionId}: ${choiceId}.`
+          );
+        }
+      }
+    }
+
+    if (invalidQuestions.length > 0) {
+      throw new StoryFormAnswerError(
+        `Invalid questions: [${invalidQuestions.join(", ")}].`
+      );
+    }
   }
 }
