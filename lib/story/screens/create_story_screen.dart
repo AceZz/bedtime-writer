@@ -291,6 +291,7 @@ class _QuestionScreen extends StatelessWidget {
           children: [
             questionText,
             Column(children: choiceButtons),
+            const SizedBox(height: 30),
           ],
         ),
       ),
