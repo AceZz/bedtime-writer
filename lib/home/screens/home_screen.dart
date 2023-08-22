@@ -71,25 +71,27 @@ class HomeScreen extends ConsumerWidget {
     return AppScaffold(
       showAppBar: false,
       showAccountButton: true,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(height: 60),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: titleWidget,
-          ),
-          const SizedBox(height: 20),
-          const _DisplayRemainingStories(),
-          const SizedBox(height: 20),
-          menuWidget,
-          const SizedBox(height: 20),
-          feedbackButton,
-          if (debugAuth())
-            const _CustomCenterAtBottom(child: HomeScreenDebugAuth()),
-          if (debugUserStats())
-            const _CustomCenterAtBottom(child: HomeScreenDebugUserStats()),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 60),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: titleWidget,
+            ),
+            const SizedBox(height: 20),
+            const _DisplayRemainingStories(),
+            const SizedBox(height: 20),
+            menuWidget,
+            const SizedBox(height: 10),
+            feedbackButton,
+            if (debugAuth())
+              const _CustomCenterAtBottom(child: HomeScreenDebugAuth()),
+            if (debugUserStats())
+              const _CustomCenterAtBottom(child: HomeScreenDebugUserStats()),
+          ],
+        ),
       ),
     );
   }
@@ -164,15 +166,13 @@ class _CustomCenterAtBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 30),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Flexible(child: child)],
-          ),
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 30),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [Flexible(child: child)],
         ),
       ),
     );
