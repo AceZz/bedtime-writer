@@ -1,6 +1,6 @@
 import { test, expect, describe } from "@jest/globals";
-import { StoryForm } from "../../../src/story";
-import { ALL_QUESTIONS, QUESTIONS_0 } from "../data";
+import { StoryForm, StoryFormAnswerError } from "../../../src/story";
+import { ALL_QUESTIONS, FORM_0, QUESTIONS_0 } from "../data";
 import { listToMapById } from "../../../src/utils";
 
 describe("StoryForm", () => {
@@ -50,5 +50,57 @@ Question 3 (question3V1)
     const actual = StoryForm.getAllFormResponses(listToMapById(questions));
     expect(actual.questions).toEqual(questions);
     expect(actual.formResponses).toEqual(expectedFormResponses);
+  });
+
+  test("validateAnswer", async () => {
+    const form = await FORM_0();
+
+    expect(
+      form.validateAnswer(
+        new Map([
+          ["question1V1", "choice1"],
+          ["question2V1", "choice2"],
+        ])
+      )
+    );
+  });
+
+  test("validateAnswer missing question", async () => {
+    const form = await FORM_0();
+
+    expect(() =>
+      form.validateAnswer(new Map([["question1V1", "choice1"]]))
+    ).toThrow(new StoryFormAnswerError("Missing questions: [question2V1]."));
+  });
+
+  test("validateAnswer invalid question", async () => {
+    const form = await FORM_0();
+
+    expect(() =>
+      form.validateAnswer(
+        new Map([
+          ["question1V1", "choice1"],
+          ["question2V1", "choice1"],
+          ["unknown", "choice2"],
+        ])
+      )
+    ).toThrow(new StoryFormAnswerError("Invalid questions: [unknown]."));
+  });
+
+  test("validateAnswer invalid choice", async () => {
+    const form = await FORM_0();
+
+    expect(() =>
+      form.validateAnswer(
+        new Map([
+          ["question1V1", "choice3"],
+          ["question2V1", "choice1"],
+        ])
+      )
+    ).toThrow(
+      new StoryFormAnswerError(
+        "Invalid choice for question question1V1: choice3."
+      )
+    );
   });
 });
