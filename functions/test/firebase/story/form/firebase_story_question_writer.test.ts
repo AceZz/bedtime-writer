@@ -5,7 +5,7 @@ import {
   initFirebase,
 } from "../../../../src/firebase";
 import { FirestoreContextUtils } from "../../utils";
-import { QUESTIONS_0, QUESTIONS_1 } from "../../../story/data";
+import { DUMMY_QUESTIONS_0, DUMMY_QUESTIONS_1 } from "../../../story/data";
 
 const storyQuestions = new FirestoreContextUtils("question_writer")
   .storyQuestions;
@@ -25,21 +25,21 @@ describe("FirebaseStoryQuestionWriter", () => {
   });
 
   test("Simple write", async () => {
-    await writer.write(QUESTIONS_0);
-    await storyQuestions.expectQuestionsToBe(QUESTIONS_0);
+    await writer.write(DUMMY_QUESTIONS_0);
+    await storyQuestions.expectQuestionsToBe(DUMMY_QUESTIONS_0);
   });
 
   test("Complex write", async () => {
-    await writer.write(QUESTIONS_0);
-    await writer.write(QUESTIONS_1);
+    await writer.write(DUMMY_QUESTIONS_0);
+    await writer.write(DUMMY_QUESTIONS_1);
 
-    await storyQuestions.expectQuestionsToBe(QUESTIONS_1);
+    await storyQuestions.expectQuestionsToBe(DUMMY_QUESTIONS_1);
   });
 
   test("Write twice", async () => {
-    await writer.write(QUESTIONS_0);
-    await writer.write(QUESTIONS_0);
+    await writer.write(DUMMY_QUESTIONS_0);
+    await writer.write(DUMMY_QUESTIONS_0);
 
-    await storyQuestions.expectQuestionsToBe(QUESTIONS_0);
+    await storyQuestions.expectQuestionsToBe(DUMMY_QUESTIONS_0);
   });
 });

@@ -6,7 +6,7 @@ import {
   initFirebase,
 } from "../../../../src/firebase";
 import { FirestoreContextUtils } from "../../utils";
-import { QUESTIONS_0 } from "../../../story/data";
+import { DUMMY_QUESTIONS_0 } from "../../../story/data";
 
 const storyQuestions = new FirestoreContextUtils("question_reader")
   .storyQuestions;
@@ -22,7 +22,7 @@ beforeEach(async () => {
 });
 
 test("FirebaseStoryQuestionReader", async () => {
-  const expected = QUESTIONS_0;
+  const expected = DUMMY_QUESTIONS_0;
   const writer = new FirebaseStoryQuestionWriter(storyQuestions);
   await writer.write(expected);
 

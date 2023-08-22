@@ -19,7 +19,7 @@ export function dummyStoryChoice(id: string): StoryChoice {
   );
 }
 
-export const ALL_QUESTIONS = [
+export const DUMMY_QUESTIONS = [
   new StoryQuestion(
     "question1V1",
     "question1",
@@ -46,14 +46,14 @@ export const ALL_QUESTIONS = [
   ),
 ];
 
-export const QUESTIONS_0 = [
-  ALL_QUESTIONS[0].copyWithChoices(["choice1", "choice2"]),
-  ALL_QUESTIONS[1],
+export const DUMMY_QUESTIONS_0 = [
+  DUMMY_QUESTIONS[0].copyWithChoices(["choice1", "choice2"]),
+  DUMMY_QUESTIONS[1],
 ];
 
-export const QUESTIONS_1 = [
-  ALL_QUESTIONS[0].copyWithChoices(["choice1", "choice3"]),
-  ALL_QUESTIONS[2],
+export const DUMMY_QUESTIONS_1 = [
+  DUMMY_QUESTIONS[0].copyWithChoices(["choice1", "choice3"]),
+  DUMMY_QUESTIONS[2],
 ];
 
 export const QUESTIONS_CHARACTER = [

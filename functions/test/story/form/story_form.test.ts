@@ -1,11 +1,11 @@
 import { test, expect, describe } from "@jest/globals";
 import { StoryForm, StoryFormAnswerError } from "../../../src/story";
-import { ALL_QUESTIONS, FORM_0, QUESTIONS_0 } from "../data";
+import { DUMMY_QUESTIONS, DUMMY_FORM_0, DUMMY_QUESTIONS_0 } from "../data";
 import { listToMapById } from "../../../src/utils";
 
 describe("StoryForm", () => {
   test("toString", () => {
-    const questions = ALL_QUESTIONS;
+    const questions = DUMMY_QUESTIONS;
     const form = new StoryForm(questions);
 
     expect(form.toString()).toBe(
@@ -25,7 +25,7 @@ Question 3 (question3V1)
   });
 
   test("fullId", () => {
-    const questions = ALL_QUESTIONS;
+    const questions = DUMMY_QUESTIONS;
     const form = new StoryForm(questions);
 
     expect(form.fullId()).toBe(
@@ -34,7 +34,7 @@ Question 3 (question3V1)
   });
 
   test("getAllFormResponses", () => {
-    const questions = QUESTIONS_0;
+    const questions = DUMMY_QUESTIONS_0;
     const q0c1 = questions[0].choices.get("choice1");
     const q0c2 = questions[0].choices.get("choice2");
     const q1c1 = questions[1].choices.get("choice1");
@@ -53,7 +53,7 @@ Question 3 (question3V1)
   });
 
   test("validateAnswer", () => {
-    const form = FORM_0;
+    const form = DUMMY_FORM_0;
 
     expect(
       form.validateAnswer(
@@ -66,7 +66,7 @@ Question 3 (question3V1)
   });
 
   test("validateAnswer missing question", () => {
-    const form = FORM_0;
+    const form = DUMMY_FORM_0;
 
     expect(() =>
       form.validateAnswer(new Map([["question1V1", "choice1"]]))
@@ -74,7 +74,7 @@ Question 3 (question3V1)
   });
 
   test("validateAnswer invalid question", () => {
-    const form = FORM_0;
+    const form = DUMMY_FORM_0;
 
     expect(() =>
       form.validateAnswer(
@@ -88,7 +88,7 @@ Question 3 (question3V1)
   });
 
   test("validateAnswer invalid choice", () => {
-    const form = FORM_0;
+    const form = DUMMY_FORM_0;
 
     expect(() =>
       form.validateAnswer(

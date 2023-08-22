@@ -8,13 +8,13 @@ import {
 } from "../../../../src/firebase";
 import { FirestoreContextUtils } from "../../utils";
 import {
-  ALL_QUESTIONS,
-  FORM_0,
-  FORM_1,
-  FORM_2,
-  FORM_3,
-  SERIALIZED_FORM_0,
-  SERIALIZED_FORM_1,
+  DUMMY_QUESTIONS,
+  DUMMY_FORM_0,
+  DUMMY_FORM_1,
+  DUMMY_FORM_2,
+  DUMMY_FORM_3,
+  SERIALIZED_DUMMY_FORM_0,
+  SERIALIZED_DUMMY_FORM_1,
 } from "../../../story/data";
 
 const utils = new FirestoreContextUtils("form_writer");
@@ -41,33 +41,36 @@ describe("FirebaseStoryFormWriter", () => {
     await storyQuestions.delete();
     await storyForms.delete();
 
-    await questionsWriter.write(ALL_QUESTIONS);
+    await questionsWriter.write(DUMMY_QUESTIONS);
   });
 
   test("Simple write", async () => {
-    await formWriter.write(FORM_0);
+    await formWriter.write(DUMMY_FORM_0);
 
     await storyForms.expectCountToBe(1);
-    await storyForms.expectToBe([SERIALIZED_FORM_0]);
+    await storyForms.expectToBe([SERIALIZED_DUMMY_FORM_0]);
   });
 
   test("Write two forms", async () => {
-    await formWriter.write(FORM_0);
-    await formWriter.write(FORM_1);
+    await formWriter.write(DUMMY_FORM_0);
+    await formWriter.write(DUMMY_FORM_1);
 
     await storyForms.expectCountToBe(2);
-    await storyForms.expectToBe([SERIALIZED_FORM_0, SERIALIZED_FORM_1]);
+    await storyForms.expectToBe([
+      SERIALIZED_DUMMY_FORM_0,
+      SERIALIZED_DUMMY_FORM_1,
+    ]);
   });
 
   test("Incompatible question ID", async () => {
-    await expect(formWriter.write(FORM_2)).rejects.toThrow(
+    await expect(formWriter.write(DUMMY_FORM_2)).rejects.toThrow(
       'FirebaseStoryFormWriter.write: question "doesnotexistV1" does not exist'
     );
     await storyForms.expectCountToBe(0);
   });
 
   test("Incompatible choice ID", async () => {
-    await expect(formWriter.write(FORM_3)).rejects.toThrow(
+    await expect(formWriter.write(DUMMY_FORM_3)).rejects.toThrow(
       "StoryQuestion.copyWithChoices: invalid choice IDs provided: doesnotexist"
     );
     await storyForms.expectCountToBe(0);

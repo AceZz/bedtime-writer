@@ -7,7 +7,11 @@ import {
   initFirebase,
 } from "../../../../src/firebase";
 import { FirestoreContextUtils } from "../../utils";
-import { FORM_0, QUESTIONS_0, SERIALIZED_FORM_0 } from "../../../story/data";
+import {
+  DUMMY_FORM_0,
+  DUMMY_QUESTIONS_0,
+  SERIALIZED_DUMMY_FORM_0,
+} from "../../../story/data";
 
 const context = new FirestoreContextUtils("form_reader");
 const storyForms = context.storyForms;
@@ -24,9 +28,9 @@ describe("FirebaseStoryFormReader", () => {
 
   test("readAll", async () => {
     const writer = new FirebaseStoryQuestionWriter(storyQuestions);
-    await writer.write(QUESTIONS_0);
+    await writer.write(DUMMY_QUESTIONS_0);
 
-    await storyForms.formsRef().add(SERIALIZED_FORM_0);
+    await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
 
     const reader = new FirebaseStoryFormReader(
       storyForms,
@@ -34,11 +38,11 @@ describe("FirebaseStoryFormReader", () => {
     );
     const forms = await reader.readAll();
 
-    expect(forms).toEqual([FORM_0]);
+    expect(forms).toEqual([DUMMY_FORM_0]);
   });
 
   test("readAll no questions throws", async () => {
-    await storyForms.formsRef().add(SERIALIZED_FORM_0);
+    await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
     const reader = new FirebaseStoryFormReader(
       storyForms,
       new FirebaseStoryQuestionReader(storyQuestions)
