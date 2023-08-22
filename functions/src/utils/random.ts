@@ -1,4 +1,14 @@
 /**
+ * Pick a random item in `items`.
+ */
+export function pickRandom<T>(items: T[]): T {
+  if (items.length === 0) {
+    throw new Error("pickRandom: empty lists are not allowed.");
+  }
+  return items[getRandomInt(0, items.length)];
+}
+
+/**
  * Make a copy of `items`, shuffle and return it.
  */
 export function shuffleCopy<T>(items: T[]): T[] {
