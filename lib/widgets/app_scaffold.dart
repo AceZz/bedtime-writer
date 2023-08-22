@@ -29,34 +29,39 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget titleWidget = Text(
+    final titleWidget = Text(
       appBarTitle,
       style: Theme.of(context).primaryTextTheme.headlineSmall,
     );
 
-    Widget screenBodyWidget = SizedBox(
+    final screenBodyWidget = SizedBox(
       width: MediaQuery.of(context).size.width,
-      child: AppBackgroundContainer(child: child),
+      child: child,
     );
 
-    AppBar appBar = AppBar(
+    final appBar = AppBar(
       title: titleWidget,
       bottom: bottom,
     );
 
-    Widget scrollView = _ScrollView(
+    final scrollView = _ScrollView(
       title: titleWidget,
       actions: actions,
       body: screenBodyWidget,
+    );
+
+    final stack = Stack(
+      children: [
+        const AppBackgroundContainer(),
+        scrollableAppBar ? scrollView : screenBodyWidget,
+      ],
     );
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       // Must specify app bar only in the non-scrollable case
       appBar: (showAppBar & !scrollableAppBar) ? appBar : null,
-      body: (showAppBar & scrollableAppBar)
-          ? SafeArea(child: scrollView)
-          : SafeArea(child: screenBodyWidget),
+      body: stack,
       floatingActionButton:
           showAccountButton ? const FloatingAccountButton() : null,
       floatingActionButtonLocation:

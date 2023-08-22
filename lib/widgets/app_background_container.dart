@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class AppBackgroundContainer extends StatelessWidget {
-  final Widget child;
-  const AppBackgroundContainer({Key? key, required this.child})
-      : super(key: key);
+  const AppBackgroundContainer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +11,6 @@ class AppBackgroundContainer extends StatelessWidget {
           colors: [Color(0xFF743C51), Color(0xFF0B2545)],
         ),
       ),
-      child: child,
     );
   }
 }
