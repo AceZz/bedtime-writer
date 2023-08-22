@@ -3,7 +3,7 @@ import { readFile } from "fs/promises";
 import { describe, expect, test } from "@jest/globals";
 
 import { StoryChoice, StoryQuestion } from "../../../src/story";
-import { ALL_QUESTIONS, QUESTIONS_0 } from "../data";
+import { DUMMY_QUESTIONS, DUMMY_QUESTIONS_0 } from "../data";
 
 describe("StoryQuestion", () => {
   test("constructor", async () => {
@@ -23,7 +23,7 @@ describe("StoryQuestion", () => {
   });
 
   test("toString", () => {
-    const questions = ALL_QUESTIONS;
+    const questions = DUMMY_QUESTIONS;
 
     expect(questions[0].toString()).toBe(
       `
@@ -36,19 +36,19 @@ Question 1 (question1V1)
   });
 
   test("fullId", () => {
-    const questions = ALL_QUESTIONS;
+    const questions = DUMMY_QUESTIONS;
     expect(questions[0].fullId()).toBe("question1V1:choice1,choice2,choice3");
   });
 
   test("copyWithChoices", () => {
-    const questions = QUESTIONS_0;
+    const questions = DUMMY_QUESTIONS_0;
 
     const copy = questions[0].copyWithChoices(["choice1"]);
     expect(Array.from(copy.choices.keys())).toEqual(["choice1"]);
   });
 
   test("copyWithChoicesThrows", () => {
-    const questions = QUESTIONS_0;
+    const questions = DUMMY_QUESTIONS_0;
 
     expect(() => questions[0].copyWithChoices(["doesnotexist"])).toThrow();
   });
