@@ -22,8 +22,8 @@ describe("StoryQuestion", () => {
     );
   });
 
-  test("toString", async () => {
-    const questions = await ALL_QUESTIONS();
+  test("toString", () => {
+    const questions = ALL_QUESTIONS;
 
     expect(questions[0].toString()).toBe(
       `
@@ -35,20 +35,20 @@ Question 1 (question1V1)
     );
   });
 
-  test("fullId", async () => {
-    const questions = await ALL_QUESTIONS();
+  test("fullId", () => {
+    const questions = ALL_QUESTIONS;
     expect(questions[0].fullId()).toBe("question1V1:choice1,choice2,choice3");
   });
 
-  test("copyWithChoices", async () => {
-    const questions = await QUESTIONS_0();
+  test("copyWithChoices", () => {
+    const questions = QUESTIONS_0;
 
     const copy = questions[0].copyWithChoices(["choice1"]);
     expect(Array.from(copy.choices.keys())).toEqual(["choice1"]);
   });
 
-  test("copyWithChoicesThrows", async () => {
-    const questions = await QUESTIONS_0();
+  test("copyWithChoicesThrows", () => {
+    const questions = QUESTIONS_0;
 
     expect(() => questions[0].copyWithChoices(["doesnotexist"])).toThrow();
   });

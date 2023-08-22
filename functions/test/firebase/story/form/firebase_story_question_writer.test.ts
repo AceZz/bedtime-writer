@@ -25,21 +25,21 @@ describe("FirebaseStoryQuestionWriter", () => {
   });
 
   test("Simple write", async () => {
-    await writer.write(await QUESTIONS_0());
-    await storyQuestions.expectQuestionsToBe(await QUESTIONS_0());
+    await writer.write(QUESTIONS_0);
+    await storyQuestions.expectQuestionsToBe(QUESTIONS_0);
   });
 
   test("Complex write", async () => {
-    await writer.write(await QUESTIONS_0());
-    await writer.write(await QUESTIONS_1());
+    await writer.write(QUESTIONS_0);
+    await writer.write(QUESTIONS_1);
 
-    await storyQuestions.expectQuestionsToBe(await QUESTIONS_1());
+    await storyQuestions.expectQuestionsToBe(QUESTIONS_1);
   });
 
   test("Write twice", async () => {
-    await writer.write(await QUESTIONS_0());
-    await writer.write(await QUESTIONS_0());
+    await writer.write(QUESTIONS_0);
+    await writer.write(QUESTIONS_0);
 
-    await storyQuestions.expectQuestionsToBe(await QUESTIONS_0());
+    await storyQuestions.expectQuestionsToBe(QUESTIONS_0);
   });
 });

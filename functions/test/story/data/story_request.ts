@@ -12,11 +12,8 @@ const STYLE = "style1";
 /**
  * Works with FORM_CHARACTER.
  */
-async function REQUEST_CHARACTER_0(
-  author: string = CACHE_AUTHOR
-): Promise<StoryRequestV1> {
-  const [questionCharacterName, questionCharacterFlaw] =
-    await QUESTIONS_CHARACTER();
+function REQUEST_CHARACTER_0(author: string = CACHE_AUTHOR): StoryRequestV1 {
+  const [questionCharacterName, questionCharacterFlaw] = QUESTIONS_CHARACTER;
 
   return new StoryRequestV1(CLASSIC_LOGIC, {
     author: author,
@@ -31,11 +28,8 @@ async function REQUEST_CHARACTER_0(
 /**
  * Works with FORM_CHARACTER.
  */
-async function REQUEST_CHARACTER_1(
-  author: string = CACHE_AUTHOR
-): Promise<StoryRequestV1> {
-  const [questionCharacterName, questionCharacterFlaw] =
-    await QUESTIONS_CHARACTER();
+function REQUEST_CHARACTER_1(author: string = CACHE_AUTHOR): StoryRequestV1 {
+  const [questionCharacterName, questionCharacterFlaw] = QUESTIONS_CHARACTER;
 
   return new StoryRequestV1(CLASSIC_LOGIC, {
     author: author,
@@ -50,8 +44,8 @@ async function REQUEST_CHARACTER_1(
 /**
  * Works with FORM_CHARACTER.
  */
-export async function REQUESTS_CHARACTER(
+export function REQUESTS_CHARACTER(
   author: string = CACHE_AUTHOR
-): Promise<StoryRequestV1[]> {
-  return [await REQUEST_CHARACTER_0(author), await REQUEST_CHARACTER_1(author)];
+): StoryRequestV1[] {
+  return [REQUEST_CHARACTER_0(author), REQUEST_CHARACTER_1(author)];
 }

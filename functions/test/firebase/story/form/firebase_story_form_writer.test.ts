@@ -41,33 +41,33 @@ describe("FirebaseStoryFormWriter", () => {
     await storyQuestions.delete();
     await storyForms.delete();
 
-    await questionsWriter.write(await ALL_QUESTIONS());
+    await questionsWriter.write(ALL_QUESTIONS);
   });
 
   test("Simple write", async () => {
-    await formWriter.write(await FORM_0());
+    await formWriter.write(FORM_0);
 
     await storyForms.expectCountToBe(1);
     await storyForms.expectToBe([SERIALIZED_FORM_0]);
   });
 
   test("Write two forms", async () => {
-    await formWriter.write(await FORM_0());
-    await formWriter.write(await FORM_1());
+    await formWriter.write(FORM_0);
+    await formWriter.write(FORM_1);
 
     await storyForms.expectCountToBe(2);
     await storyForms.expectToBe([SERIALIZED_FORM_0, SERIALIZED_FORM_1]);
   });
 
   test("Incompatible question ID", async () => {
-    await expect(formWriter.write(await FORM_2())).rejects.toThrow(
+    await expect(formWriter.write(FORM_2)).rejects.toThrow(
       'FirebaseStoryFormWriter.write: question "doesnotexistV1" does not exist'
     );
     await storyForms.expectCountToBe(0);
   });
 
   test("Incompatible choice ID", async () => {
-    await expect(formWriter.write(await FORM_3())).rejects.toThrow(
+    await expect(formWriter.write(FORM_3)).rejects.toThrow(
       "StoryQuestion.copyWithChoices: invalid choice IDs provided: doesnotexist"
     );
     await storyForms.expectCountToBe(0);

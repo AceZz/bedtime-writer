@@ -4,8 +4,8 @@ import { ALL_QUESTIONS, FORM_0, QUESTIONS_0 } from "../data";
 import { listToMapById } from "../../../src/utils";
 
 describe("StoryForm", () => {
-  test("toString", async () => {
-    const questions = await ALL_QUESTIONS();
+  test("toString", () => {
+    const questions = ALL_QUESTIONS;
     const form = new StoryForm(questions);
 
     expect(form.toString()).toBe(
@@ -24,8 +24,8 @@ Question 3 (question3V1)
     );
   });
 
-  test("fullId", async () => {
-    const questions = await ALL_QUESTIONS();
+  test("fullId", () => {
+    const questions = ALL_QUESTIONS;
     const form = new StoryForm(questions);
 
     expect(form.fullId()).toBe(
@@ -33,8 +33,8 @@ Question 3 (question3V1)
     );
   });
 
-  test("getAllFormResponses", async () => {
-    const questions = await QUESTIONS_0();
+  test("getAllFormResponses", () => {
+    const questions = QUESTIONS_0;
     const q0c1 = questions[0].choices.get("choice1");
     const q0c2 = questions[0].choices.get("choice2");
     const q1c1 = questions[1].choices.get("choice1");
@@ -52,8 +52,8 @@ Question 3 (question3V1)
     expect(actual.formResponses).toEqual(expectedFormResponses);
   });
 
-  test("validateAnswer", async () => {
-    const form = await FORM_0();
+  test("validateAnswer", () => {
+    const form = FORM_0;
 
     expect(
       form.validateAnswer(
@@ -65,16 +65,16 @@ Question 3 (question3V1)
     );
   });
 
-  test("validateAnswer missing question", async () => {
-    const form = await FORM_0();
+  test("validateAnswer missing question", () => {
+    const form = FORM_0;
 
     expect(() =>
       form.validateAnswer(new Map([["question1V1", "choice1"]]))
     ).toThrow(new StoryFormAnswerError("Missing questions: [question2V1]."));
   });
 
-  test("validateAnswer invalid question", async () => {
-    const form = await FORM_0();
+  test("validateAnswer invalid question", () => {
+    const form = FORM_0;
 
     expect(() =>
       form.validateAnswer(
@@ -87,8 +87,8 @@ Question 3 (question3V1)
     ).toThrow(new StoryFormAnswerError("Invalid questions: [unknown]."));
   });
 
-  test("validateAnswer invalid choice", async () => {
-    const form = await FORM_0();
+  test("validateAnswer invalid choice", () => {
+    const form = FORM_0;
 
     expect(() =>
       form.validateAnswer(
