@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'account_button.dart';
+import 'app_background_container.dart';
 
 /// Augmented [Scaffold] that comes with a full-width [Container].
 ///
@@ -35,7 +36,7 @@ class AppScaffold extends StatelessWidget {
 
     Widget screenBodyWidget = SizedBox(
       width: MediaQuery.of(context).size.width,
-      child: child,
+      child: AppBackgroundContainer(child: child),
     );
 
     AppBar appBar = AppBar(
