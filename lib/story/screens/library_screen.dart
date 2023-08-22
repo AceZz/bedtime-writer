@@ -24,34 +24,37 @@ class _StoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color tileColor = Theme.of(context).colorScheme.primary;
 
-    return ListTile(
-      // Has a preset non-modifiable height
-      key: ValueKey(story.id),
-      contentPadding: const EdgeInsets.all(8),
-      tileColor: tileColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      leading: SizedBox(
-        height: 55,
-        width: 55,
-        child: Center(
-          child: StoryImage(
-            image: story.thumbnail,
-            width: 55,
-            height: 55,
-            fadeColor: tileColor,
+    return Material(
+      type: MaterialType.transparency,
+      child: ListTile(
+        // Has a preset non-modifiable height
+        key: ValueKey(story.id),
+        contentPadding: const EdgeInsets.all(8),
+        tileColor: tileColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        leading: SizedBox(
+          height: 55,
+          width: 55,
+          child: Center(
+            child: StoryImage(
+              image: story.thumbnail,
+              width: 55,
+              height: 55,
+              fadeColor: tileColor,
+            ),
           ),
         ),
+        title: Text(
+          story.title,
+          style: Theme.of(context).primaryTextTheme.titleSmall,
+        ),
+        subtitle: Text('Created on $_formattedDateTime'),
+        onTap: () {
+          context.pushNamed('display_story', pathParameters: {'id': story.id});
+        },
       ),
-      title: Text(
-        story.title,
-        style: Theme.of(context).primaryTextTheme.titleSmall,
-      ),
-      subtitle: Text('Created on $_formattedDateTime'),
-      onTap: () {
-        context.pushNamed('display_story', pathParameters: {'id': story.id});
-      },
     );
   }
 
