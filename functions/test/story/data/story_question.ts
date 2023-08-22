@@ -56,6 +56,57 @@ export const DUMMY_QUESTIONS_1 = [
   DUMMY_QUESTIONS[2],
 ];
 
+/**
+ * These questions should be used to generate StoryForms.
+ */
+export const REAL_QUESTIONS = [
+  new StoryQuestion(
+    "characterNameV1",
+    "characterName",
+    "Who is the hero of tonight's story?",
+    0,
+    new Date(2023, 7, 15),
+    dummyStoryChoices(["blaze", "frosty", "sparkles"])
+  ),
+  new StoryQuestion(
+    "characterChallengeV1",
+    "characterChallenge",
+    "What challenge awaits the hero?",
+    1,
+    new Date(2023, 7, 10),
+    dummyStoryChoices(["animal", "friend", "lost", "riddle", "witch"])
+  ),
+  new StoryQuestion(
+    "characterFlawV1",
+    "characterFlaw",
+    "What flaw does the hero have?",
+    1,
+    new Date(2023, 6, 10),
+    dummyStoryChoices([
+      "failure",
+      "giveUp",
+      "lazy",
+      "noAdvice",
+      "selfConfidence",
+    ])
+  ),
+  new StoryQuestion(
+    "characterPowerV1",
+    "characterPower",
+    "What Power does the hero have?",
+    1,
+    new Date(2023, 6, 10),
+    dummyStoryChoices([
+      "animals",
+      "fly",
+      "heal",
+      "invisible",
+      "minds",
+      "weather",
+    ])
+  ),
+];
+
 export const QUESTIONS_CHARACTER = [
   new StoryQuestion(
     "characterNameV1",

@@ -1,8 +1,21 @@
-import { cartesianProduct, listToMapById } from "../../../src/utils";
+import {
+  cartesianProduct,
+  listToMapById,
+  pickRandom,
+} from "../../../src/utils";
+import { ClassicStoryLogic } from "../logic";
 import { StoryChoice } from "./story_choice";
 import { StoryQuestion } from "./story_question";
 
 export class StoryFormAnswerError extends Error {}
+
+const DURATIONS = [3, 4, 5];
+const STYLES = [
+  "the Arabian Nights",
+  "Hans Christian Andersen",
+  "the Brothers Grimm",
+  "Charles Perrault",
+];
 
 /**
  * Stores questions and choices that should be displayed to the user.
@@ -63,7 +76,76 @@ export class StoryForm {
   }
 
   /**
+   * Transform `answer` into a classic `StoryLogic`.
+   *
+   * Throw a `StoryFormAnswerError` if there is a validation error.
+   */
+  toClassicLogic(answer: Map<string, string>): ClassicStoryLogic {
+    this.validateAnswer(answer);
+    const prompts = this.convertAnswer(answer);
+
+    const duration = pickRandom(DURATIONS);
+    const style = pickRandom(STYLES);
+
+    const characterName = prompts.get("characterName");
+    if (characterName === undefined) {
+      throw new StoryFormAnswerError(
+        "Missing questions from form: [characterName]"
+      );
+    }
+
+    const logic = new ClassicStoryLogic(
+      duration,
+      style,
+      characterName,
+      prompts.get("place"),
+      prompts.get("object"),
+      prompts.get("characterFlaw"),
+      prompts.get("characterPower"),
+      prompts.get("characterChallenge")
+    );
+
+    if (!logic.isValid()) {
+      throw new StoryFormAnswerError("Invalid logic");
+    }
+
+    return logic;
+  }
+
+  /**
+   * Convert `answer`, which is a `Map` `StoryQuestion.id -> StoryChoice.id`,
+   * to a `Map` `StoryQuestion.promptParam -> StoryChoice.prompt`.
+   *
+   * Assume that `answer` has already been validated.
+   */
+  private convertAnswer(answer: Map<string, string>): Map<string, string> {
+    const map = new Map();
+
+    for (const [questionId, choiceId] of answer.entries()) {
+      const question = this.questions.get(questionId);
+      if (question === undefined) {
+        throw new Error(
+          `convertAnswer: question ${questionId} does not exist.`
+        );
+      }
+
+      const choice = question.choices.get(choiceId);
+      if (choice === undefined) {
+        throw new Error(
+          `convertAnswer: question ${questionId} choice ${choiceId} ` +
+            "does not exist."
+        );
+      }
+
+      map.set(question.promptParam, choice.prompt);
+    }
+
+    return map;
+  }
+
+  /**
    * Check that `answer` answers all the questions with valid choices.
+   *
    * Throw a `StoryFormAnswerError` if there is a validation error.
    */
   validateAnswer(answer: Map<string, string>): void {
