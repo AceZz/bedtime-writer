@@ -1,7 +1,17 @@
-import { test, expect, describe } from "@jest/globals";
-import { StoryForm, StoryFormAnswerError } from "../../../src/story";
-import { DUMMY_QUESTIONS, DUMMY_FORM_0, DUMMY_QUESTIONS_0 } from "../data";
+import { test, expect, describe, jest } from "@jest/globals";
+import {
+  ClassicStoryLogic,
+  StoryForm,
+  StoryFormAnswerError,
+} from "../../../src/story";
+import {
+  DUMMY_QUESTIONS,
+  DUMMY_FORM_0,
+  DUMMY_QUESTIONS_0,
+  REAL_FORM_0,
+} from "../data";
 import { listToMapById } from "../../../src/utils";
+import * as random from "../../../src/utils/random";
 
 describe("StoryForm", () => {
   test("toString", () => {
@@ -50,6 +60,34 @@ Question 3 (question3V1)
     const actual = StoryForm.getAllFormResponses(listToMapById(questions));
     expect(actual.questions).toEqual(questions);
     expect(actual.formResponses).toEqual(expectedFormResponses);
+  });
+
+  test("toClassicLogic", () => {
+    jest
+      .spyOn(random, "pickRandom")
+      .mockReturnValueOnce(7)
+      .mockReturnValueOnce("my style");
+
+    const logic = REAL_FORM_0.toClassicLogic(
+      new Map([
+        ["characterNameV1", "frosty"],
+        ["characterChallengeV1", "animal"],
+        ["characterFlawV1", "failure"],
+      ])
+    );
+
+    expect(logic).toEqual(
+      new ClassicStoryLogic(
+        7,
+        "my style",
+        "Prompt for frosty",
+        undefined,
+        undefined,
+        "Prompt for failure",
+        undefined,
+        "Prompt for animal"
+      )
+    );
   });
 
   test("validateAnswer", () => {

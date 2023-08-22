@@ -3,6 +3,7 @@ import {
   DUMMY_QUESTIONS_0,
   DUMMY_QUESTIONS_1,
   QUESTIONS_CHARACTER,
+  REAL_QUESTIONS,
   dummyStoryChoice,
 } from "./story_question";
 
@@ -72,6 +73,15 @@ export const DUMMY_FORM_3 = new StoryForm(
     ),
   ],
   new Date("2023-01-01T12:00:00Z")
+);
+
+export const REAL_FORM_0 = new StoryForm(
+  [
+    REAL_QUESTIONS[0],
+    REAL_QUESTIONS[1].copyWithChoices(["animal", "friend", "lost"]),
+    REAL_QUESTIONS[2].copyWithChoices(["failure", "giveUp", "lazy"]),
+  ],
+  undefined
 );
 
 export const FORM_CHARACTER_ID = "form_id_0";
