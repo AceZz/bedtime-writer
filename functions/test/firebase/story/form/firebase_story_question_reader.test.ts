@@ -22,7 +22,7 @@ beforeEach(async () => {
 });
 
 test("FirebaseStoryQuestionReader", async () => {
-  const expected = await QUESTIONS_0();
+  const expected = QUESTIONS_0;
   const writer = new FirebaseStoryQuestionWriter(storyQuestions);
   await writer.write(expected);
 

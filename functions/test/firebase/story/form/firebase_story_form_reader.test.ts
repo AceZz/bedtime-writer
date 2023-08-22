@@ -24,7 +24,7 @@ describe("FirebaseStoryFormReader", () => {
 
   test("readAll", async () => {
     const writer = new FirebaseStoryQuestionWriter(storyQuestions);
-    await writer.write(await QUESTIONS_0());
+    await writer.write(QUESTIONS_0);
 
     await storyForms.formsRef().add(SERIALIZED_FORM_0);
 
@@ -34,7 +34,7 @@ describe("FirebaseStoryFormReader", () => {
     );
     const forms = await reader.readAll();
 
-    expect(forms).toEqual([await FORM_0()]);
+    expect(forms).toEqual([FORM_0]);
   });
 
   test("readAll no questions throws", async () => {
