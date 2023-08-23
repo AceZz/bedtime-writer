@@ -1,5 +1,5 @@
-import { StoryGenerator } from "../generator";
-import { StoryPart } from "../story_part";
+import { StoryGenerator } from "./generator";
+import { StoryPart } from "./story_part";
 
 /**
  * Interface to write stories to some output.
