@@ -5,11 +5,27 @@ import { StoryChoice, StoryForm, StoryQuestion } from "../form";
 import { StoryMetadata } from "../story_metadata";
 import { FirebaseStoryWriter } from "../writer";
 import { StoryCacheManager } from "./story_cache_manager";
-import { getRandomDuration, getRandomStyle } from "../story_utils";
 import { FirestoreStoryCache } from "../../firebase";
 import { parseEnvAsNumber, retryAsyncFunction } from "../../utils";
 
 export const CACHE_AUTHOR = "@CACHE_V1_MANAGER";
+
+const styles: string[] = [
+  "the Arabian Nights",
+  "Hans Christian Andersen",
+  "the Brothers Grimm",
+  "Charles Perrault",
+];
+
+const durations: number[] = [2, 3, 4, 5];
+
+function getRandomStyle(): string {
+  return styles[Math.floor(Math.random() * styles.length)];
+}
+
+function getRandomDuration(): number {
+  return durations[Math.floor(Math.random() * styles.length)];
+}
 
 /**
  * Interface to manage caching of stories.
