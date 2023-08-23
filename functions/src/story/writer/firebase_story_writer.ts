@@ -4,7 +4,7 @@ import {
 } from "firebase-admin/firestore";
 import { StoryMetadata } from "../story_metadata";
 import { StoryPart } from "../story_part";
-import { StoryWriter } from "./story_writer";
+import { StoryWriter } from "../story_writer";
 import { StoryStatus } from "../story_status";
 import { valueOrNull } from "./utils";
 import { FirestoreStories } from "../../firebase";
