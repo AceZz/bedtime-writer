@@ -3,9 +3,8 @@ import { CLASSIC_LOGIC } from "../logic";
 import { StoryRequestV1, StoryRequestV1Manager } from "../request";
 import { StoryChoice, StoryForm, StoryQuestion } from "../form";
 import { StoryMetadata } from "../story_metadata";
-import { FirebaseStoryWriter } from "../writer";
 import { StoryCacheManager } from "./story_cache_manager";
-import { FirestoreStoryCache } from "../../firebase";
+import { FirestoreStoryCache, FirebaseStoryWriter } from "../../firebase";
 import { parseEnvAsNumber, retryAsyncFunction } from "../../utils";
 
 export const CACHE_AUTHOR = "@CACHE_V1_MANAGER";
