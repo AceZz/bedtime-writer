@@ -156,3 +156,13 @@ export function listToMapById<K, V extends { id: K }>(list: V[]): Map<K, V> {
   }
   return map;
 }
+
+/**
+ * Convert `undefined` to `null`, and return `value` otherwise.
+ *
+ * This is useful when inserting data into Firestore, which does not handle
+ * `undefined`.
+ */
+export function valueOrNull<T>(value: T | undefined): T | null {
+  return value === undefined ? null : value;
+}

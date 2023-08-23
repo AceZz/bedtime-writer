@@ -2,13 +2,15 @@ import {
   CollectionReference,
   DocumentReference,
 } from "firebase-admin/firestore";
-import { StoryMetadata } from "../story_metadata";
-import { StoryPart } from "../story_part";
-import { StoryWriter } from "../story_writer";
-import { StoryStatus } from "../story_status";
-import { valueOrNull } from "./utils";
-import { FirestoreStories } from "../../firebase";
-import { StoryGenerator } from "../generator";
+import {
+  StoryMetadata,
+  StoryPart,
+  StoryWriter,
+  StoryStatus,
+  StoryGenerator,
+} from "../../story";
+import { valueOrNull } from "../../utils";
+import { FirestoreStories } from "./firestore_stories";
 import { logger } from "../../logger";
 
 /**

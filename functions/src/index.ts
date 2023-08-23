@@ -8,7 +8,6 @@ import { onSchedule } from "firebase-functions/v2/scheduler";
 import { getUid } from "./auth";
 import { logger } from "./logger";
 import {
-  FirebaseStoryWriter,
   NPartStoryGenerator,
   StoryMetadata,
   CLASSIC_LOGIC,
@@ -28,7 +27,7 @@ import {
   UserStats,
 } from "./user";
 import { getImageApi, getTextApi } from "./api";
-import { FirestoreContext } from "./firebase";
+import { FirestoreContext, FirebaseStoryWriter } from "./firebase";
 
 initializeApp();
 
