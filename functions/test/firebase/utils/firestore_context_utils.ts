@@ -3,7 +3,6 @@ import {
   FirestoreStoryFormsUtils,
   FirestoreStoryQuestionsUtils,
   FirestoreStoriesUtils,
-  FirestoreStoryCacheUtils,
   FirestoreUserFeedbackUtils,
   FirestoreUserStatsUtils,
 } from ".";
@@ -18,7 +17,6 @@ import {
 export class FirestoreContextUtils {
   firestore: FirestoreContext;
 
-  storyCache: FirestoreStoryCacheUtils;
   storyForms: FirestoreStoryFormsUtils;
   storyQuestions: FirestoreStoryQuestionsUtils;
   storyRealtime: FirestoreStoriesUtils;
@@ -28,10 +26,6 @@ export class FirestoreContextUtils {
   constructor(readonly id: string) {
     this.firestore = new FirestoreContext(`test_${id}`);
 
-    this.storyCache = new FirestoreStoryCacheUtils(
-      this.firestore.storyCache.collectionPath,
-      this.firestore
-    );
     this.storyForms = new FirestoreStoryFormsUtils(
       this.firestore.storyFormsLanding.collectionPath,
       this.firestore
