@@ -143,4 +143,17 @@ export class ClassicStoryLogic implements StoryLogic {
       " You must mention a fairytale digital painting style."
     );
   }
+
+  toJson(): { [key: string]: string | number | undefined } {
+    return {
+      duration: this.duration,
+      style: this.style,
+      characterName: this.characterName,
+      place: this.place,
+      object: this.object,
+      characterFlaw: this.characterFlaw,
+      characterPower: this.characterPower,
+      characterChallenge: this.characterChallenge,
+    };
+  }
 }

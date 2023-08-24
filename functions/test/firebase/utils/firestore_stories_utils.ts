@@ -1,26 +1,68 @@
 import { DocumentReference } from "firebase-admin/firestore";
-import { StoryMetadata, StoryStatus } from "../../../src/story";
+import { StoryLogic, StoryMetadata, StoryStatus } from "../../../src/story";
 import { FirestoreStories } from "../../../src/firebase";
 import { expect } from "@jest/globals";
+import { valueOrNull } from "../../../src/utils";
 
 /**
  * Helper class to interact with the story questions Firestore collection.
  */
 export class FirestoreStoriesUtils extends FirestoreStories {
+  async expectInitMetadata(id: string, metadata: StoryMetadata): Promise<void> {
+    const data = await this.getStoryData(id);
+
+    expect(data?.parts).toStrictEqual([]);
+    expect(data?.request).toStrictEqual(metadata.request);
+    expect(data?.status).toBe(StoryStatus.PENDING);
+    expect(data?.user).toBe(metadata.user);
+  }
+
+  async expectLogic(id: string, logic: StoryLogic): Promise<void> {
+    const data = await this.getStoryData(id);
+
+    const logicJson = logic.toJson();
+    const logicJsonWithNull: { [key: string]: string | number | null } = {};
+    for (const key in logicJson) {
+      logicJsonWithNull[key] = valueOrNull(logicJson[key]);
+    }
+
+    expect(data?.logic).toStrictEqual(logicJsonWithNull);
+  }
+
+  async expectParts(
+    id: string,
+    numParts: number,
+    numImages: number
+  ): Promise<void> {
+    expect(await this.getNumPartsList(id)).toBe(numParts);
+    expect(await this.getNumParts(id)).toBe(numParts);
+    expect(await this.getNumPrompts(id)).toBe(numParts);
+    expect(await this.getNumImages(id)).toBe(numImages);
+  }
+
+  async getNumPartsList(id: string): Promise<number> {
+    const data = await this.getStoryData(id);
+    return data?.parts.length;
+  }
+
+  async getNumParts(id: string): Promise<number> {
+    const data = (await this.partsRef(id).count().get()).data();
+    return data?.count;
+  }
+
+  async getNumPrompts(id: string): Promise<number> {
+    const data = (await this.promptsRef(id).count().get()).data();
+    return data?.count;
+  }
+
+  async getNumImages(id: string): Promise<number> {
+    const data = (await this.imagesRef(id).count().get()).data();
+    return data?.count;
+  }
+
   async expectComplete(id: string): Promise<void> {
     const data = await this.getStoryData(id);
     expect(data?.status).toBe(StoryStatus.COMPLETE);
-  }
-
-  async expectParts(id: string): Promise<void> {
-    const data = await this.getStoryData(id);
-    expect(data?.parts.length).toBeGreaterThanOrEqual(1);
-  }
-
-  async expectMetadata(id: string, metadata: StoryMetadata): Promise<void> {
-    const data = await this.getStoryData(id);
-    expect(data?.isFavorite).toBe(metadata.isFavorite);
-    expect(data?.title).toBe(metadata.title);
   }
 
   private async getStoryData(

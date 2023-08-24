@@ -1,45 +1,21 @@
 import {
   CollectionReference,
   DocumentReference,
+  Timestamp,
 } from "firebase-admin/firestore";
 import {
   StoryMetadata,
   StoryPart,
   StoryWriter,
   StoryStatus,
-  StoryGenerator,
+  StoryLogic,
 } from "../../story";
 import { valueOrNull } from "../../utils";
 import { FirestoreStories } from "./firestore_stories";
 import { logger } from "../../logger";
 
-/**
- * The Firestore document has the following schema:
- *
- * <story_collection>/
- *   <story_id>
- *     author (already set)
- *     isFavorite
- *     status
- *     timestamp (already set)
- *     title
- *     request {}
- *     parts = [part1_id, part2_id]
- *     images/
- *       <image_id>
- *         data
- *     parts/
- *       <part_id>
- *         text
- *         image = image_id
- *     prompts
- *       <part_id>
- *         textPrompt
- *         imagePrompt
- *         imagePromptPrompt
- */
-export class FirebaseStoryWriter implements StoryWriter {
-  private parts: string[];
+export class FirebaseStoryWriter extends StoryWriter {
+  private parts: string[] = [];
   /**
    * Cache the document IDs of already inserted images. This way, an image can
    * be written once, but referenced multiple times.
@@ -48,44 +24,52 @@ export class FirebaseStoryWriter implements StoryWriter {
 
   constructor(
     private readonly stories: FirestoreStories,
-    readonly metadata: StoryMetadata,
-    readonly storyId: string
+    protected readonly id: string | undefined = undefined
   ) {
-    this.parts = [];
+    super(id);
   }
 
-  async writeFromGenerator(generator: StoryGenerator): Promise<string> {
-    const storyId = await this.writeMetadata();
-
-    try {
-      // Write story to database part after part
-      for await (const part of generator.storyParts()) {
-        await this.writePart(part);
-      }
-      await this.writeComplete();
-      logger.info(
-        `FirebaseStoryWriter: story ${this.storyId} was generated and added to Firestore`
-      );
-    } catch (error) {
-      await this.writeError();
-      logger.error(
-        `FirebaseStoryWriter: story ${this.storyId} created by user ${this.metadata.author} encountered an error: ${error}`
-      );
-    }
-    return storyId;
-  }
-
-  async writeMetadata(): Promise<string> {
-    const payload = {
-      isFavorite: this.metadata.isFavorite,
-      title: this.metadata.title,
+  protected async writeInitMetadata(metadata: StoryMetadata): Promise<string> {
+    const data = {
       parts: [],
+      request: metadata.request,
+      status: StoryStatus.PENDING,
+      timestamp: Timestamp.now(),
+      user: metadata.user,
     };
-    await this.storyRef.update(payload);
-    return this.storyId;
+    const document = await this.stories.storiesRef().add(data);
+    return document.id;
   }
 
-  async writePart(part: StoryPart): Promise<string> {
+  protected async writeTitle(title: string): Promise<void> {
+    await this.storyRef.update({ title: title });
+  }
+
+  protected async writeLogic(logic: StoryLogic): Promise<void> {
+    // Firestore does not handle `undefined`, convert them to `null`.
+    const logicJson = logic.toJson();
+    const logicJsonWithNull: { [key: string]: string | number | null } = {};
+    for (const key in logicJson) {
+      logicJsonWithNull[key] = valueOrNull(logicJson[key]);
+    }
+
+    await this.storyRef.update({ logic: logicJsonWithNull });
+  }
+
+  protected async deleteParts(): Promise<void> {
+    const images = await this.imagesRef.get();
+    await Promise.all(images.docs.map((image) => image.ref.delete()));
+
+    const parts = await this.partsRef.get();
+    await Promise.all(parts.docs.map((part) => part.ref.delete()));
+    this.parts = [];
+
+    const prompts = await this.promptsRef.get();
+    await Promise.all(prompts.docs.map((prompt) => prompt.ref.delete()));
+    this.imageIds.clear();
+  }
+
+  protected async writePart(part: StoryPart): Promise<string> {
     const imageId = await this.writePartImage(part.image);
     const partId = await this.writePartData(part, imageId);
     this.parts.push(partId);
@@ -98,20 +82,12 @@ export class FirebaseStoryWriter implements StoryWriter {
     return partId;
   }
 
-  async writeComplete(): Promise<void> {
-    await this.storyRef.update({ status: StoryStatus.COMPLETE });
-  }
-
-  async writeError(): Promise<void> {
-    await this.storyRef.update({ status: StoryStatus.ERROR });
-  }
-
   private async writePartImage(image?: Buffer): Promise<string | undefined> {
     if (image === undefined) {
       return undefined;
     }
 
-    const payload = {
+    const data = {
       data: image,
     };
     const imageId = this.imageIds.get(image);
@@ -122,7 +98,7 @@ export class FirebaseStoryWriter implements StoryWriter {
     }
 
     // New image: insert it first.
-    const document = await this.imagesRef.add(payload);
+    const document = await this.imagesRef.add(data);
     this.imageIds.set(image, document.id);
     return document.id;
   }
@@ -131,11 +107,11 @@ export class FirebaseStoryWriter implements StoryWriter {
     part: StoryPart,
     imageId: string | undefined
   ): Promise<string> {
-    const payload = {
+    const data = {
       text: part.text,
       image: valueOrNull(imageId),
     };
-    const document = await this.partsRef.add(payload);
+    const document = await this.partsRef.add(data);
 
     return document.id;
   }
@@ -151,29 +127,55 @@ export class FirebaseStoryWriter implements StoryWriter {
     part: StoryPart,
     partId: string
   ): Promise<string> {
-    const payload = {
+    const data = {
       textPrompt: part.textPrompt,
       imagePrompt: valueOrNull(part.imagePrompt),
       imagePromptPrompt: valueOrNull(part.imagePromptPrompt),
     };
-    await this.promptsRef.doc(partId).set(payload);
+    await this.promptsRef.doc(partId).set(data);
 
     return partId;
   }
 
+  protected async writeStatusComplete(): Promise<void> {
+    await this.storyRef.update({ status: StoryStatus.COMPLETE });
+    logger.info(
+      `FirebaseStoryWriter: story ${this.storyIdOrThrow} was generated ` +
+        "and added to Firestore."
+    );
+  }
+
+  protected async writeStatusError(error: unknown): Promise<void> {
+    await this.storyRef.update({ status: StoryStatus.ERROR });
+    logger.error(
+      `FirebaseStoryWriter: story ${this.storyIdOrThrow} ` +
+        ` encountered an error: ${error}.`
+    );
+  }
+
   private get storyRef(): DocumentReference {
-    return this.stories.storyRef(this.storyId);
+    return this.stories.storyRef(this.storyIdOrThrow);
   }
 
   private get imagesRef(): CollectionReference {
-    return this.stories.imagesRef(this.storyId);
+    return this.stories.imagesRef(this.storyIdOrThrow);
   }
 
   private get partsRef(): CollectionReference {
-    return this.stories.partsRef(this.storyId);
+    return this.stories.partsRef(this.storyIdOrThrow);
   }
 
   private get promptsRef(): CollectionReference {
-    return this.stories.promptsRef(this.storyId);
+    return this.stories.promptsRef(this.storyIdOrThrow);
+  }
+
+  private get storyIdOrThrow(): string {
+    if (this.id === undefined) {
+      throw new Error(
+        "FirebaseStoryWriter: `id` is not set, have you called " +
+          "`this.writeInit()`?"
+      );
+    }
+    return this.id;
   }
 }

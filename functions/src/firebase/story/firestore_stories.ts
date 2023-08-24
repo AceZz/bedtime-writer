@@ -8,13 +8,28 @@ import { FirestoreCollection } from "../firestore_collection";
  * Helper class to manipulate a stories collection. It follows this schema:
  *
  * ```plain
- * <story_id>:
- *   ...
+ * <storyId>:
+ *   isFavorite: bool (optional)
+ *   logic: JSON
+ *   parts: <partId>[]
  *   request: JSON
+ *   status: string
+ *   timestamp: timestamp
+ *   title: string
+ *   user: <userId>
  *
  *   images/
+ *     <imageId>:
+ *       data: bytes
  *   parts/
+ *     <partId>:
+ *       text: string
+ *       image: <imageId>
  *   prompts/
+ *     <partId>:
+ *       textPrompt: string
+ *       imagePrompt: string
+ *       imagePromptPrompt: string
  */
 export abstract class FirestoreStories extends FirestoreCollection {
   storyRef(id: string): DocumentReference {

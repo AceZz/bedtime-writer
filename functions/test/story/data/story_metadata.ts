@@ -1,7 +1,10 @@
 import { StoryMetadata } from "../../../src/story";
 
 /**
- * A dummy metadata.
+ * A dummy metadata. Works with CLASSIC_LOGIC_0.
  */
-export const METADATA_0 = new StoryMetadata("author0", "title0");
-export const STORY_ID_0 = "story0";
+export const METADATA_0 = new StoryMetadata("author0", {
+  characterName: "frosty",
+  characterFlaw: "failure",
+  characterChallenge: "animal",
+});

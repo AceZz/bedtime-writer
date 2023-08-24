@@ -10,4 +10,6 @@ export interface StoryLogic {
   prompt(): string;
 
   imagePromptPrompt(): string;
+
+  toJson(): { [key: string]: string | number | undefined };
 }
