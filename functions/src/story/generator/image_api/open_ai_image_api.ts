@@ -1,5 +1,5 @@
 import { CreateImageRequest, OpenAIApi } from "openai";
-import { ImageApi, ImageApiConfig } from "./image_api";
+import { ImageApi, ImageApiConfig, IMAGE_SIZE_DEFAULT } from "./image_api";
 import { compressToPng } from "../../../utils";
 
 // These parameters were found with a benchmark on OpenAI data.
@@ -35,7 +35,7 @@ export class OpenAiImageApi implements ImageApi {
   ): CreateImageRequest {
     return {
       prompt: prompt,
-      size: "512x512",
+      size: IMAGE_SIZE_DEFAULT,
       ...config,
       response_format: "b64_json",
     };
