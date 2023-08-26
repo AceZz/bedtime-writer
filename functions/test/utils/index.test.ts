@@ -6,7 +6,7 @@ import {
   retryAsyncFunction,
   listToMapById,
 } from "../../src/utils";
-  import { FAKE_IMAGE_BYTES_0 } from "../../src/story";
+import { FAKE_IMAGE_BYTES_0 } from "../../src/story";
 
 test("compressToPng", async () => {
   await compressToPng(FAKE_IMAGE_BYTES_0, {});
