@@ -14,6 +14,7 @@ import {
   CLASSIC_LOGIC,
   StoryRequestV1Manager,
   StoryRequestV1,
+  FirebaseStoryReviewer,
 } from "./story";
 import {
   BucketRateLimiter,
@@ -159,6 +160,53 @@ export const collectUserFeedback = onCall(async (request) => {
   );
 
   await feedbackManager.write(feedback);
+});
+
+/**
+ * Regenerate the specified image in the cache collection.
+ *
+ * This is meant to be used with human reviewers input.
+ */
+export const cacheRegenImage = onCall(async (request) => {
+  const data = request.data;
+
+  const storyId = data.storyId;
+  if (storyId == undefined) {
+    throw new Error("cacheRegenImage: no storyId was provided.");
+  }
+  const imageId = data.imageId;
+  if (imageId == undefined) {
+    throw new Error("cacheRegenImage: no imageId was provided.");
+  }
+
+  const storyCache = new FirestoreContext().storyCache;
+  const storyReviewer = new FirebaseStoryReviewer(storyCache);
+  const imageApi = getImageApi();
+
+  await storyReviewer.regenImage(storyId, imageId, imageApi);
+});
+
+/**
+ * Approve the specified image in the cache collection.
+ *
+ * This is meant to be used with human reviewers input.
+ */
+export const cacheApproveImage = onCall(async (request) => {
+  const data = request.data;
+
+  const storyId = data.storyId;
+  if (storyId == undefined) {
+    throw new Error("cacheRegenImage: no storyId was provided.");
+  }
+  const imageId = data.imageId;
+  if (imageId == undefined) {
+    throw new Error("cacheRegenImage: no imageId was provided.");
+  }
+
+  const storyCache = new FirestoreContext().storyCache;
+  const storyReviewer = new FirebaseStoryReviewer(storyCache);
+
+  await storyReviewer.approveImage(storyId, imageId);
 });
 
 function getRateLimiter(limit: number): RateLimiter {

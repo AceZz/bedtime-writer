@@ -25,12 +25,20 @@ export abstract class FirestoreStories extends FirestoreCollection {
     return this.firestore.collection(this.collectionPath);
   }
 
+  imageRef(storyId: string, id: string): DocumentReference {
+    return this.imagesRef(storyId).doc(id);
+  }
+
   imagesRef(id: string): CollectionReference {
     return this.storyRef(id).collection("images");
   }
 
   partsRef(id: string): CollectionReference {
     return this.storyRef(id).collection("parts");
+  }
+
+  promptsDocRef(storyId: string, id: string): DocumentReference {
+    return this.promptsRef(storyId).doc(id);
   }
 
   promptsRef(id: string): CollectionReference {
@@ -73,6 +81,23 @@ export abstract class FirestoreStories extends FirestoreCollection {
     await copySubcollection(this.imagesRef(id), destination.imagesRef(id));
     await copySubcollection(this.partsRef(id), destination.partsRef(id));
     await copySubcollection(this.promptsRef(id), destination.promptsRef(id));
+  }
+
+  /**
+   * Get the prompt used to generate the image.
+   */
+  async getImagePrompt(storyId: string, imageId: string): Promise<string> {
+    const partsRef = this.partsRef(storyId);
+    const partId = (await partsRef.where("image", "==", imageId).get()).docs[0]
+      .id;
+    const prompts = (await this.promptsDocRef(storyId, partId).get()).data();
+    const imagePrompt = prompts?.imagePrompt;
+
+    if (imagePrompt == undefined) {
+      throw new Error("getImagePrompt: image prompt is undefined");
+    }
+
+    return imagePrompt;
   }
 }
 
