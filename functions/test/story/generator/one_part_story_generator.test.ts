@@ -6,7 +6,7 @@ import {
   OnePartStoryGenerator,
   OpenAiTextApi,
   FakeTextApi,
-  FAKE_IMAGE_BYTES,
+  FAKE_IMAGE_BYTES_0,
   FakeImageApi,
   OpenAiImageApi,
 } from "../../../src/story";
@@ -53,7 +53,7 @@ describe("with fake APIs", () => {
         "Write a fairy tale in the style of some style."
       )
     );
-    expect(storyPart.image).toBe(FAKE_IMAGE_BYTES);
+    expect(storyPart.image).toBe(FAKE_IMAGE_BYTES_0);
     expect(storyPart.imagePrompt).toBe(expectedTokens);
     expect(
       storyPart.imagePromptPrompt?.startsWith(

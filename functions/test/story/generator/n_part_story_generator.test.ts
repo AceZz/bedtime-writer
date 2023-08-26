@@ -3,7 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 
 import { getOpenAiApi } from "../../../src/open_ai";
 import {
-  FAKE_IMAGE_BYTES,
+  FAKE_IMAGE_BYTES_0,
   FakeImageApi,
   OpenAiImageApi,
   NPartStoryGenerator,
@@ -56,7 +56,7 @@ describe("with fake APIs", () => {
       );
 
       if (index === 0) {
-        expect(part.image).toBe(FAKE_IMAGE_BYTES);
+        expect(part.image).toBe(FAKE_IMAGE_BYTES_0);
         expect(part.imagePrompt?.trim()).toBe(
           Array.from(textApi.getTokens()).join("").trim()
         );
