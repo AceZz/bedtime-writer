@@ -12,6 +12,8 @@ export interface StoryCacheManager {
 
   /**
    * Cache the stories corresponding to the given requests.
+   *
+   * Returns the story ids.
    */
-  cacheStories(requests: StoryRequestV1[]): Promise<void>;
+  cacheStories(requests: StoryRequestV1[]): Promise<string[]>;
 }

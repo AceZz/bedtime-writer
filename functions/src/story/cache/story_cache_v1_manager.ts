@@ -69,14 +69,19 @@ export class StoryCacheV1Manager implements StoryCacheManager {
     return request;
   }
 
-  async cacheStories(requests: StoryRequestV1[]): Promise<void> {
+  async cacheStories(requests: StoryRequestV1[]): Promise<string[]> {
+    const storyIds: string[] = [];
+
     const promises = requests.map(async (request) => {
-      await this.cacheStory(request);
+      const id = await this.cacheStory(request);
+      storyIds.push(id);
     });
+
     await Promise.all(promises);
+    return storyIds;
   }
 
-  private async cacheStory(request: StoryRequestV1): Promise<void> {
+  private async cacheStory(request: StoryRequestV1): Promise<string> {
     const promiseFn = async () => {
       const storyId = await this.requestManager.create(
         CLASSIC_LOGIC,
@@ -95,13 +100,14 @@ export class StoryCacheV1Manager implements StoryCacheManager {
       const metadata = new StoryMetadata(request.author, generator.title());
       const writer = new FirebaseStoryWriter(this.stories, metadata, storyId);
 
-      await writer.writeFromGenerator(generator);
+      return await writer.writeFromGenerator(generator);
     };
 
     const maxTries = parseEnvAsNumber("CACHE_RETRY_MAX_TRIES", 3);
     const timeout = parseEnvAsNumber("CACHE_RETRY_TIMEOUT", 120000);
     const delay = parseEnvAsNumber("CACHE_RETRY_DELAY", 1000);
     const params = { maxTries: maxTries, timeout: timeout, delay: delay };
-    await retryAsyncFunction(promiseFn, params);
+    const { result: storyId } = await retryAsyncFunction(promiseFn, params);
+    return storyId;
   }
 }
