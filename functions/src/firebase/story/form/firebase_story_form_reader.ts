@@ -26,6 +26,18 @@ export class FirebaseStoryFormReader implements StoryFormReader {
     );
   }
 
+  async readNotGenerated(): Promise<StoryForm[]> {
+    const questions = await this.readQuestions();
+
+    const snapshots = await this.formsCollection
+      .formsRef()
+      .where("isGenerated", "==", false)
+      .get();
+    return Promise.all(
+      snapshots.docs.map((snapshot) => this.readForm(snapshot, questions))
+    );
+  }
+
   async readWithIds(): Promise<{ id: string; storyForm: StoryForm }[]> {
     const questions = await this.readQuestions();
 

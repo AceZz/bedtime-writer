@@ -47,6 +47,7 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
       index++;
     }
     data.numQuestions = index;
+    data.isGenerated = false;
 
     await this.formsCollection.formsRef().add(data);
   }
