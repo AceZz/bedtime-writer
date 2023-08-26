@@ -68,4 +68,21 @@ describe("FirebaseStoryFormReader", () => {
     const forms = await reader.readNotGenerated();
     expect(forms).toEqual([DUMMY_FORM_0]);
   });
+
+  test("readNotGeneratedWithIds", async () => {
+    const writer = new FirebaseStoryQuestionWriter(storyQuestions);
+    await writer.write(DUMMY_QUESTIONS);
+
+    const form0 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
+    const form1 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);
+    await form1.update({ isGenerated: true });
+
+    const reader = new FirebaseStoryFormReader(
+      storyForms,
+      new FirebaseStoryQuestionReader(storyQuestions)
+    );
+
+    const forms = await reader.readNotGeneratedWithIds();
+    expect(forms).toEqual(new Map([[form0.id, DUMMY_FORM_0]]));
+  });
 });

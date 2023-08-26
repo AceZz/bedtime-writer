@@ -27,48 +27,25 @@ export class FirebaseStoryFormReader implements StoryFormReader {
   }
 
   async readNotGenerated(): Promise<StoryForm[]> {
+    return Array.from((await this.readNotGeneratedWithIds()).values());
+  }
+
+  async readNotGeneratedWithIds(): Promise<Map<string, StoryForm>> {
     const questions = await this.readQuestions();
 
     const snapshots = await this.formsCollection
       .formsRef()
       .where("isGenerated", "==", false)
       .get();
-    return Promise.all(
-      snapshots.docs.map((snapshot) => this.readForm(snapshot, questions))
-    );
-  }
 
-  async readWithIds(): Promise<{ id: string; storyForm: StoryForm }[]> {
-    const questions = await this.readQuestions();
-
-    const snapshots = await this.formsCollection.formsRef().get();
-    return Promise.all(
-      snapshots.docs.map((snapshot) => {
-        return {
-          id: snapshot.id,
-          storyForm: this.readForm(snapshot, questions),
-        };
-      })
-    );
-  }
-
-  async readMostRecentWithIds(
-    n: number
-  ): Promise<{ id: string; storyForm: StoryForm }[]> {
-    const questions = await this.readQuestions();
-
-    const snapshots = await this.formsCollection
-      .formsRef()
-      .orderBy("datetime", "desc")
-      .limit(n)
-      .get();
-    return Promise.all(
-      snapshots.docs.map((snapshot) => {
-        return {
-          id: snapshot.id,
-          storyForm: this.readForm(snapshot, questions),
-        };
-      })
+    return new Map(
+      await Promise.all(
+        snapshots.docs.map(
+          (doc) =>
+            // Get a list of `[storyFormId, storyForm]`, and pass it to `Map`.
+            [doc.id, this.readForm(doc, questions)] as [string, StoryForm]
+        )
+      )
     );
   }
 
