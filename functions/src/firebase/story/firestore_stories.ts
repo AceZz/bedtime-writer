@@ -99,6 +99,14 @@ export abstract class FirestoreStories extends FirestoreCollection {
 
     return imagePrompt;
   }
+
+  /**
+   * Get the image ids for the story.
+   */
+  async getImageIds(storyId: string): Promise<string[]> {
+    const snapshot = await this.imagesRef(storyId).get();
+    return snapshot.docs.map((doc) => doc.id);
+  }
 }
 
 /**
