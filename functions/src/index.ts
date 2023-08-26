@@ -2,7 +2,7 @@ import { initializeApp } from "firebase-admin/app";
 import { region } from "firebase-functions";
 import { setGlobalOptions } from "firebase-functions/v2";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
-import { onCall, HttpsError } from "firebase-functions/v2/https";
+import { onCall, onRequest, HttpsError } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 
 import { getUid } from "./auth";
@@ -171,14 +171,14 @@ export const collectUserFeedback = onCall(async (request) => {
  * This is meant to be used with human reviewers input.
  * The BW API key must be provided in the request.
  */
-export const cacheRegenImage = onCall(async (request) => {
-  const data = request.data;
+export const cacheRegenImage = onRequest(async (req, res) => {
+  const body = req.body;
 
-  const key = data.key;
+  const key = body.key;
   checkBwApiKey(key);
-  const storyId = data.storyId;
+  const storyId = body.storyId;
   checkStoryId(storyId);
-  const imageId = data.imageId;
+  const imageId = body.imageId;
   checkImageId(imageId);
 
   const storyCache = new FirestoreContext().storyCache;
@@ -186,6 +186,10 @@ export const cacheRegenImage = onCall(async (request) => {
   const imageApi = getImageApi();
 
   await storyReviewer.regenImage(storyId, imageId, imageApi);
+  logger.info(
+    `cacheApproveImage: image ${imageId} of story ${storyId} was regenerated`
+  );
+  res.status(200).send("image-regenerated");
 });
 
 /**
@@ -194,20 +198,21 @@ export const cacheRegenImage = onCall(async (request) => {
  * This is meant to be used with human reviewers input.
  * The BW API key must be provided in the request.
  */
-export const cacheApproveImage = onCall(async (request) => {
-  const data = request.data;
+export const cacheApproveImage = onRequest(async (req, res) => {
+  const body = req.body;
 
-  const key = data.key;
+  const key = body.key;
   checkBwApiKey(key);
-  const storyId = data.storyId;
+  const storyId = body.storyId;
   checkStoryId(storyId);
-  const imageId = data.imageId;
+  const imageId = body.imageId;
   checkImageId(imageId);
 
   const storyCache = new FirestoreContext().storyCache;
   const storyReviewer = new FirebaseStoryReviewer(storyCache);
 
   await storyReviewer.approveImage(storyId, imageId);
+  res.status(200).send("image-approved");
 });
 
 function getRateLimiter(limit: number): RateLimiter {
