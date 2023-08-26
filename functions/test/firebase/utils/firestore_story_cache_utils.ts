@@ -28,6 +28,46 @@ export class FirestoreStoryCacheUtils extends FirestoreStoryCache {
     expect(query.data().count).toBe(expected);
   }
 
+  /**
+   * Compares the image in the database with the one provided
+   *
+   * Firebase must be initialized before calling this function.
+   */
+  async expectImageToBe(
+    storyId: string,
+    imageId: string,
+    expected: Buffer
+  ): Promise<void> {
+    const actual: Buffer = (await this.imageRef(storyId, imageId).get()).data()
+      ?.data;
+    // This is how Buffer should be compared.
+    expect(actual.equals(expected)).toBe(true);
+  }
+
+  /**
+   * Checks wether the image is approved
+   */
+  async expectImageToBeApproved(
+    storyId: string,
+    imageId: string
+  ): Promise<void> {
+    const actual = (await this.imageRef(storyId, imageId).get()).data()
+      ?.approved;
+    expect(actual).toBe("true");
+  }
+
+  /**
+   * Checks wether the image is not approved
+   */
+  async expectImageToNotBeApproved(
+    storyId: string,
+    imageId: string
+  ): Promise<void> {
+    const actual = (await this.imageRef(storyId, imageId).get()).data()
+      ?.approved;
+    expect(actual).not.toBe("true");
+  }
+
   private expectSameRequestsLength(
     actual: StoryRequestV1[],
     expected: StoryRequestV1[]

@@ -43,7 +43,6 @@ export class FirebaseStoryReviewer implements StoryReviewer {
     });
 
     await this.replaceImage(storyId, imageId, newImage);
-    //TODO: write test
   }
 
   async approveImage(storyId: string, imageId: string): Promise<void> {
@@ -59,7 +58,6 @@ export class FirebaseStoryReviewer implements StoryReviewer {
       approved: "true",
     };
     await imageRef.update(payload);
-    //TODO: write test
   }
 
   private async replaceImage(storyId: string, imageId: string, image: Buffer) {
