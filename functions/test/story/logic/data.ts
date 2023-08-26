@@ -19,5 +19,5 @@ export const FULL_CLASSIC_STORY_LOGIC = new ClassicStoryLogic(
   "some object",
   "has a flaw",
   "has a power",
-  "being challenged"
+  "is challenged with being challenged"
 );

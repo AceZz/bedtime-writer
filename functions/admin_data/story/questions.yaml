@@ -15,15 +15,15 @@ characterNameV1:
   choices:
     blaze:
       text: "Blaze, the kind dragon"
-      prompt: "The protagonist is Blaze, the kind dragon."
+      prompt: "Blaze, the kind dragon"
       imagePath: "admin_data/story/characterName/blaze.png"
     frosty:
       text: "Frosty, the penguin"
-      prompt: "The protagonist is Frosty, the penguin."
+      prompt: "Frosty, the penguin"
       imagePath: "admin_data/story/characterName/frosty.png"
     sparkles:
       text: "Sparkles, the magical horse"
-      prompt: "The protagonist is Sparkles, the magical horse."
+      prompt: "Sparkles, the magical horse"
       imagePath: "admin_data/story/characterName/sparkles.png"
 
 ########################
@@ -37,23 +37,23 @@ characterChallengeV1:
   choices:
     animal:
       text: "Fighting a big animal"
-      prompt: "The protagonist must battle a big animal."
+      prompt: "must battle a big animal"
       imagePath: "admin_data/story/characterChallenge/animal.png"
     friend:
       text: "Rescuing a friend"
-      prompt: "The protagonist must rescue a friend."
+      prompt: "must rescue a friend"
       imagePath: "admin_data/story/characterChallenge/friend.png"
     lost:
       text: "Being lost"
-      prompt: "The protagonist is lost."
+      prompt: "is lost"
       imagePath: "admin_data/story/characterChallenge/lost.png"
     riddle:
       text: "Solving a riddle"
-      prompt: "The protagonist must solve a riddle."
+      prompt: "must solve a riddle"
       imagePath: "admin_data/story/characterChallenge/riddle.png"
     witch:
       text: "Captured by a witch"
-      prompt: "The protagonist is captured by a witch."
+      prompt: "is captured by a witch"
       imagePath: "admin_data/story/characterChallenge/witch.png"
 
 characterFlawV1:
@@ -63,23 +63,23 @@ characterFlawV1:
   choices:
     failure:
       text: "Being afraid of failure"
-      prompt: "The protagonist is afraid of failure."
+      prompt: "is afraid of failure"
       imagePath: "admin_data/story/characterFlaw/failure.png"
     giveUp:
       text: "Giving up easily"
-      prompt: "The protagonist gives up easily."
+      prompt: "gives up easily"
       imagePath: "admin_data/story/characterFlaw/give_up.png"
     lazy:
       text: "Being a bit lazy"
-      prompt: "The protagonist is a bit lazy."
+      prompt: "is a bit lazy"
       imagePath: "admin_data/story/characterFlaw/lazy.png"
     noAdvice:
       text: "Not listening to advice"
-      prompt: "The protagonist does not listen to advice."
+      prompt: "does not listen to advice"
       imagePath: "admin_data/story/characterFlaw/no_advice.png"
     selfConfidence:
       text: "Lacking self-confidence"
-      prompt: "The protagonist lacks self-confidence."
+      prompt: "lacks self-confidence"
       imagePath: "admin_data/story/characterFlaw/self_confidence.png"
 
 characterPowerV1:
@@ -89,27 +89,27 @@ characterPowerV1:
   choices:
     animals:
       text: "Can communicate with animals"
-      prompt: "The protagonist can communicate with animals."
+      prompt: "can communicate with animals"
       imagePath: "admin_data/story/characterPower/animals.png"
     fly:
       text: "Is able to fly"
-      prompt: "The protagonist can fly."
+      prompt: "can fly"
       imagePath: "admin_data/story/characterPower/fly.png"
     heal:
       text: "Can heal the others"
-      prompt: "The protagonist can heal others."
+      prompt: "can heal others"
       imagePath: "admin_data/story/characterPower/heal.png"
     invisible:
       text: "Can become invisible"
-      prompt: "The protagonist can become invisible."
+      prompt: "can become invisible"
       imagePath: "admin_data/story/characterPower/invisible.png"
     minds:
       text: "Can read minds"
-      prompt: "The protagonist can read minds."
+      prompt: "can read minds"
       imagePath: "admin_data/story/characterPower/minds.png"
     weather:
       text: "Can control the weather"
-      prompt: "The protagonist can control the weather."
+      prompt: "can control the weather"
       imagePath: "admin_data/story/characterPower/weather.png"
 
 objectV1:
@@ -119,23 +119,23 @@ objectV1:
   choices:
     amulet:
       text: "A powerful amulet"
-      prompt: "The protagonist finds a powerful amulet."
+      prompt: "a powerful amulet"
       imagePath: "admin_data/story/object/amulet.png"
     diamond:
       text: "A big diamond"
-      prompt: "The protagonist finds a big diamond."
+      prompt: "a big diamond"
       imagePath: "admin_data/story/object/diamond.png"
     flower:
       text: "A rare flower"
-      prompt: "The protagonist finds a rare flower."
+      prompt: "a rare flower"
       imagePath: "admin_data/story/object/flower.png"
     ring:
       text: "A magical ring"
-      prompt: "The protagonist finds a magical ring."
+      prompt: "a magical ring"
       imagePath: "admin_data/story/object/ring.png"
     shield:
       text: "An enchanted shield"
-      prompt: "The protagonist finds an enchanted shield."
+      prompt: "an enchanted shield"
       imagePath: "admin_data/story/object/shield.png"
 
 placeV1:
@@ -145,25 +145,25 @@ placeV1:
   choices:
     beach:
       text: "On a sunny beach"
-      prompt: "The story takes place on a sunny beach."
+      prompt: "on a sunny beach"
       imagePath: "admin_data/story/place/beach.png"
     desert:
       text: "In a dry desert"
-      prompt: "The story takes place in a dry desert."
+      prompt: "in a dry desert"
       imagePath: "admin_data/story/place/desert.png"
     magic:
       text: "In a magical forest"
-      prompt: "The story takes place in a magical forest."
+      prompt: "in a magical forest"
       imagePath: "admin_data/story/place/magic.png"
     space:
       text: "In a space station"
-      prompt: "The story takes place in a space station."
+      prompt: "in a space station"
       imagePath: "admin_data/story/place/space.png"
     underwater:
       text: "In an underwater kingdom"
-      prompt: "The story takes place in an underwater kingdom."
+      prompt: "in an underwater kingdom"
       imagePath: "admin_data/story/place/underwater.png"
     village:
       text: "In a quiet village"
-      prompt: "The story takes place in a quiet village."
+      prompt: "in a quiet village"
       imagePath: "admin_data/story/place/village.png"

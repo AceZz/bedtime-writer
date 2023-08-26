@@ -61,8 +61,8 @@ test("prompt of partial", () => {
   expect(PARTIAL_CLASSIC_STORY_LOGIC.prompt()).toBe(
     "Write a fairy tale in the style of some style. " +
       "The protagonist is Someone. " +
-      "It has a flaw. " +
-      "The story happens at some place. " +
+      "The protagonist has a flaw. " +
+      "The story takes place at some place. " +
       "The length is about 300 words."
   );
 });
@@ -71,10 +71,10 @@ test("prompt of full", () => {
   expect(FULL_CLASSIC_STORY_LOGIC.prompt()).toBe(
     "Write a fairy tale in the style of some style. " +
       "The protagonist is Someone. " +
-      "It has a flaw. " +
-      "It has a power. " +
-      "It is challenged with being challenged. " +
-      "The story happens at some place. " +
+      "The protagonist has a flaw. " +
+      "The protagonist has a power. " +
+      "The protagonist is challenged with being challenged. " +
+      "The story takes place at some place. " +
       "The protagonist finds some object in the journey. " +
       "The length is about 300 words."
   );

@@ -100,24 +100,22 @@ export class ClassicStoryLogic implements StoryLogic {
 
   private getCharacterFlawPrompt(): string {
     const flaw = this.characterFlaw;
-    return flaw === undefined ? "" : ` It ${flaw}.`;
+    return flaw === undefined ? "" : ` The protagonist ${flaw}.`;
   }
 
   private getCharacterPowerPrompt(): string {
     const power = this.characterPower;
-    return power === undefined ? "" : ` It ${power}.`;
+    return power === undefined ? "" : ` The protagonist ${power}.`;
   }
 
   private getCharacterChallengePrompt(): string {
     const challenge = this.characterChallenge;
-    return challenge === undefined
-      ? ""
-      : ` It is challenged with ${challenge}.`;
+    return challenge === undefined ? "" : ` The protagonist ${challenge}.`;
   }
 
   private getPlacePrompt(): string {
     const place = this.place;
-    return place === undefined ? "" : ` The story happens ${place}.`;
+    return place === undefined ? "" : ` The story takes place ${place}.`;
   }
 
   private getObjectPrompt(): string {
