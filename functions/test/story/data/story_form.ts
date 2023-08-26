@@ -22,6 +22,7 @@ export const SERIALIZED_DUMMY_FORM_0 = {
   question0Choices: ["choice1", "choice2"],
   question1: "question2V1",
   question1Choices: ["choice1", "choice2"],
+  isGenerated: false,
 };
 
 /**
@@ -39,6 +40,7 @@ export const SERIALIZED_DUMMY_FORM_1 = {
   question0Choices: ["choice1", "choice3"],
   question1: "question3V1",
   question1Choices: ["choice1", "choice2"],
+  isGenerated: false,
 };
 
 /**
