@@ -40,17 +40,17 @@ describe("Firestore story cache manager", () => {
     const imageApi = new FakeImageApi(SEED_1);
     await storyReviewer.regenImage(storyId, imageId, imageApi);
 
-    storyCache.expectImageToBe(storyId, imageId, FAKE_IMAGE_BYTES_1);
+    await storyCache.expectImageToBe(storyId, imageId, FAKE_IMAGE_BYTES_1);
   }, 20000);
 
   test("Should approve image when called after caching step", async () => {
     const requests = await REQUESTS_CHARACTER();
     const storyId = (await storyCacheManager.cacheStories(requests))[0];
     const imageId = (await storyCache.getImageIds(storyId))[0];
-    storyCache.expectImageToNotBeApproved(storyId, imageId);
+    await storyCache.expectImageToNotBeApproved(storyId, imageId);
 
     await storyReviewer.approveImage(storyId, imageId);
 
-    storyCache.expectImageToBeApproved(storyId, imageId);
+    await storyCache.expectImageToBeApproved(storyId, imageId);
   }, 20000);
 });
