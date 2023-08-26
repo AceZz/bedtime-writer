@@ -25,7 +25,7 @@ describe("StoryFormManager", () => {
     expect(forms.length).toBe(1);
   });
 
-  test.only("generateForms numForms = 10", () => {
+  test("generateForms numForms = 10", () => {
     const forms = Array.from(manager.generateForms(10));
     expect(forms.length).toBe(10);
   });
