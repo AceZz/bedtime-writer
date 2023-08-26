@@ -57,6 +57,19 @@ export class FirestoreStoryCacheUtils extends FirestoreStoryCache {
   }
 
   /**
+   * Checks wether the image is approved
+   */
+  async expectImageRegenStatusToBe(
+    storyId: string,
+    imageId: string,
+    expected: string
+  ): Promise<void> {
+    const actual = (await this.imageRef(storyId, imageId).get()).data()
+      ?.regenStatus;
+    expect(actual).toBe(expected);
+  }
+
+  /**
    * Checks wether the image is not approved
    */
   async expectImageToNotBeApproved(

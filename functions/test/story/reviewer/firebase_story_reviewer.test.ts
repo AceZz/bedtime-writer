@@ -7,6 +7,7 @@ import {
   FakeTextApi,
   FAKE_IMAGE_BYTES_1,
   FirebaseStoryReviewer,
+  REGEN_STATUS_COMPLETE,
   StoryCacheV1Manager,
 } from "../../../src/story";
 import { FORM_CHARACTER_ID, REQUESTS_CHARACTER } from "../data";
@@ -41,6 +42,11 @@ describe("Firestore story cache manager", () => {
     await storyReviewer.regenImage(storyId, imageId, imageApi);
 
     await storyCache.expectImageToBe(storyId, imageId, FAKE_IMAGE_BYTES_1);
+    await storyCache.expectImageRegenStatusToBe(
+      storyId,
+      imageId,
+      REGEN_STATUS_COMPLETE
+    );
   }, 20000);
 
   test("Should approve image when called after caching step", async () => {

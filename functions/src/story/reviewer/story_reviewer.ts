@@ -1,5 +1,11 @@
 import { ImageApi } from "../generator";
 
+export const REGEN_STATUS_PENDING = "pending";
+
+export const REGEN_STATUS_COMPLETE = "complete";
+
+export const REGEN_STATUS_ERROR = "error";
+
 /**
  * Interface to review stories and make modifications.
  */

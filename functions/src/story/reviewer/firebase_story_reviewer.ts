@@ -1,6 +1,11 @@
 import { StoryReviewer } from ".";
 import { FirestoreStories } from "../../firebase";
 import { ImageApi, IMAGE_SIZE_DEFAULT } from "../generator";
+import {
+  REGEN_STATUS_COMPLETE,
+  REGEN_STATUS_ERROR,
+  REGEN_STATUS_PENDING,
+} from "./story_reviewer";
 
 /**
  * The Firestore document has the following schema:
@@ -35,14 +40,21 @@ export class FirebaseStoryReviewer implements StoryReviewer {
     imageId: string,
     imageApi: ImageApi
   ): Promise<void> {
-    const prompt = await this.stories.getImagePrompt(storyId, imageId);
+    try {
+      await this.setRegenImageStatus(storyId, imageId, REGEN_STATUS_PENDING);
+      const prompt = await this.stories.getImagePrompt(storyId, imageId);
 
-    const newImage = await imageApi.getImage(prompt, {
-      n: 1,
-      size: IMAGE_SIZE_DEFAULT,
-    });
+      const newImage = await imageApi.getImage(prompt, {
+        n: 1,
+        size: IMAGE_SIZE_DEFAULT,
+      });
 
-    await this.replaceImage(storyId, imageId, newImage);
+      await this.replaceImage(storyId, imageId, newImage);
+      await this.setRegenImageStatus(storyId, imageId, REGEN_STATUS_COMPLETE);
+    } catch (error) {
+      await this.setRegenImageStatus(storyId, imageId, REGEN_STATUS_ERROR);
+      throw error;
+    }
   }
 
   async approveImage(storyId: string, imageId: string): Promise<void> {
@@ -73,5 +85,17 @@ export class FirebaseStoryReviewer implements StoryReviewer {
       data: image,
     };
     await imageRef.set(payload);
+  }
+
+  private async setRegenImageStatus(
+    storyId: string,
+    imageId: string,
+    status: string
+  ): Promise<void> {
+    const imageRef = this.stories.imageRef(storyId, imageId);
+    const payload = {
+      regenStatus: status,
+    };
+    await imageRef.update(payload);
   }
 }
