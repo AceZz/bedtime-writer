@@ -39,6 +39,9 @@ const firestore = new FirestoreContext();
 // Set the default region.
 setGlobalOptions({ region: "europe-west6" });
 
+// Set Bedtime Writer API key.
+const BW_API_KEY = "b5c5aabf-0c60-465b-8d79-855bd4e3abcc";
+
 /**
  * Request a story. See `StoryRequestV1` for the expected fields (except
  * `author`).
@@ -166,10 +169,13 @@ export const collectUserFeedback = onCall(async (request) => {
  * Regenerate the specified image in the cache collection.
  *
  * This is meant to be used with human reviewers input.
+ * The BW API key must be provided in the request.
  */
 export const cacheRegenImage = onCall(async (request) => {
   const data = request.data;
 
+  const key = data.key;
+  checkBwApiKey(key);
   const storyId = data.storyId;
   checkStoryId(storyId);
   const imageId = data.imageId;
@@ -186,10 +192,13 @@ export const cacheRegenImage = onCall(async (request) => {
  * Approve the specified image in the cache collection.
  *
  * This is meant to be used with human reviewers input.
+ * The BW API key must be provided in the request.
  */
 export const cacheApproveImage = onCall(async (request) => {
   const data = request.data;
 
+  const key = data.key;
+  checkBwApiKey(key);
   const storyId = data.storyId;
   checkStoryId(storyId);
   const imageId = data.imageId;
@@ -207,6 +216,12 @@ function getRateLimiter(limit: number): RateLimiter {
     new Map([["story", limit]]),
     new Map([["story", 24 * 3600]])
   );
+}
+
+function checkBwApiKey(key: string) {
+  if (key != BW_API_KEY) {
+    throw new HttpsError("invalid-argument", "API key is not valid.");
+  }
 }
 
 function checkStoryId(storyId: string) {
