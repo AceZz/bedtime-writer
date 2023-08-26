@@ -53,7 +53,7 @@ export class FirestoreStoryCacheUtils extends FirestoreStoryCache {
   ): Promise<void> {
     const actual = (await this.imageRef(storyId, imageId).get()).data()
       ?.approved;
-    expect(actual).toBe("true");
+    expect(actual).toBe(true);
   }
 
   /**

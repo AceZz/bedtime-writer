@@ -67,7 +67,7 @@ export class FirebaseStoryReviewer implements StoryReviewer {
     }
 
     const payload = {
-      approved: "true",
+      approved: true,
     };
     await imageRef.update(payload);
   }
