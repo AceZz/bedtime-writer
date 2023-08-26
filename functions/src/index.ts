@@ -2,7 +2,7 @@ import { initializeApp } from "firebase-admin/app";
 import { region } from "firebase-functions";
 import { setGlobalOptions } from "firebase-functions/v2";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
-import { onCall } from "firebase-functions/v2/https";
+import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 
 import { getUid } from "./auth";
@@ -171,13 +171,9 @@ export const cacheRegenImage = onCall(async (request) => {
   const data = request.data;
 
   const storyId = data.storyId;
-  if (storyId == undefined) {
-    throw new Error("cacheRegenImage: no storyId was provided.");
-  }
+  checkStoryId(storyId);
   const imageId = data.imageId;
-  if (imageId == undefined) {
-    throw new Error("cacheRegenImage: no imageId was provided.");
-  }
+  checkImageId(imageId);
 
   const storyCache = new FirestoreContext().storyCache;
   const storyReviewer = new FirebaseStoryReviewer(storyCache);
@@ -195,13 +191,9 @@ export const cacheApproveImage = onCall(async (request) => {
   const data = request.data;
 
   const storyId = data.storyId;
-  if (storyId == undefined) {
-    throw new Error("cacheRegenImage: no storyId was provided.");
-  }
+  checkStoryId(storyId);
   const imageId = data.imageId;
-  if (imageId == undefined) {
-    throw new Error("cacheRegenImage: no imageId was provided.");
-  }
+  checkImageId(imageId);
 
   const storyCache = new FirestoreContext().storyCache;
   const storyReviewer = new FirebaseStoryReviewer(storyCache);
@@ -215,4 +207,16 @@ function getRateLimiter(limit: number): RateLimiter {
     new Map([["story", limit]]),
     new Map([["story", 24 * 3600]])
   );
+}
+
+function checkStoryId(storyId: string) {
+  if (storyId == undefined) {
+    throw new HttpsError("invalid-argument", "no storyId was provided.");
+  }
+}
+
+function checkImageId(imageId: string) {
+  if (imageId == undefined) {
+    throw new HttpsError("invalid-argument", "no imageId was provided.");
+  }
 }
