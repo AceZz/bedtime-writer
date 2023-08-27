@@ -25,13 +25,13 @@ test("copyWith", () => {
 test.each([PARTIAL_CLASSIC_STORY_LOGIC, FULL_CLASSIC_STORY_LOGIC])(
   "isValid",
   (logic) => {
-    expect(logic.isValid());
+    expect(logic.isValid()).toBe(true);
   }
 );
 
 test("isValid with out of bounds duration", () => {
   const logic = new ClassicStoryLogic(11, "some style", "Someone");
-  expect(!logic.isValid());
+  expect(logic.isValid()).not.toBe(true);
 });
 
 test.each([
@@ -46,7 +46,7 @@ test.each([
   const logic = PARTIAL_CLASSIC_STORY_LOGIC.copyWith({
     [stringKey]: "x".repeat(51),
   });
-  expect(!logic.isValid());
+  expect(logic.isValid()).not.toBe(true);
 });
 
 test("title of partial", () => {
