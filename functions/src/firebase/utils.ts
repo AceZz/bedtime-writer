@@ -3,6 +3,7 @@ import { readFileSync } from "fs";
 import { config } from "dotenv";
 
 import { applicationDefault, initializeApp } from "firebase-admin/app";
+import { prompt } from "../utils";
 
 /**
  * Initialize the Firebase application, configuring the emulators if needed.
@@ -20,6 +21,25 @@ export function initFirebase(forceEmulators = false) {
  */
 export function initEnv() {
   config({ path: ".env.local" });
+}
+
+/**
+ * Load the local secrets.
+ *
+ * Useful when you need to access the local secrets (such as the OpenAI key)
+ * outside the emulators function (such as in local admin scripts).
+ */
+export async function initLocalSecrets() {
+  const answer = (
+    await prompt("The `.secret.local` file will be loaded. Confirm? (y/N) ")
+  )?.toLowerCase();
+
+  if (["y", "yes"].includes(answer)) {
+    config({ path: ".secret.local" });
+  } else {
+    console.log("Abort.");
+    process.exit(0);
+  }
 }
 
 /**
