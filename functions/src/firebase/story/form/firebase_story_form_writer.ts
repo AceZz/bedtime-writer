@@ -17,7 +17,7 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
     private readonly questionReader: StoryQuestionReader
   ) {}
 
-  async write(form: StoryForm): Promise<void> {
+  async write(form: StoryForm): Promise<string> {
     const availableQuestions = await this.getQuestions();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -49,10 +49,15 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
     data.numQuestions = index;
     data.isGenerated = false;
 
-    await this.formsCollection.formsRef().add(data);
+    const doc = await this.formsCollection.formsRef().add(data);
+    return doc.id;
   }
 
   private async getQuestions(): Promise<Map<string, StoryQuestion>> {
     return listToMapById(await this.questionReader.readAll());
+  }
+
+  async writeIsGenerated(id: string): Promise<void> {
+    await this.formsCollection.formRef(id).update({ isGenerated: true });
   }
 }

@@ -5,5 +5,7 @@ import { StoryForm } from "./story_form";
  *
  */
 export interface StoryFormWriter {
-  write(form: StoryForm): Promise<void>;
+  write(form: StoryForm): Promise<string>;
+
+  writeIsGenerated(id: string): Promise<void>;
 }

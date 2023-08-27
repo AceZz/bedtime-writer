@@ -75,4 +75,11 @@ describe("FirebaseStoryFormWriter", () => {
     );
     await storyForms.expectCountToBe(0);
   });
+
+  test("writeIsGenerated", async () => {
+    const id = await formWriter.write(DUMMY_FORM_0);
+    await formWriter.writeIsGenerated(id);
+
+    await storyForms.expectIsGenerated(id);
+  });
 });
