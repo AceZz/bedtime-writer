@@ -126,6 +126,13 @@ done in `functions/test/setup.ts`, which is run automatically before every test 
 
 ### Github actions
 
+#### Environment variables
+
+The `functions/.env.ci` file is copy-pasted by the Backend CI job to `functions/.env.local`, so it
+is used by this job.
+
+#### `GOOGLE_SERVICE_ACCOUNT`
+
 To generate the `GOOGLE_SERVICE_ACCOUNT` secret (used in `backend_ci.yml`), generate a service
 account file for the CI (see [admin](./admin.md)), name it `service-account-ci.json` and run the
 following command: `base64 -w 0 "service-account-ci.json"` on Linux,

@@ -56,11 +56,13 @@ jobs:
         run: |
           firebase use bedtime-writer-dev
 
+      - name: Create .env.local
+        run: |
+          mv .env.ci .env.local
+
       - name: Run tests with Firebase emulator
         run: |
           firebase emulators:exec --only firestore "npm test"
-        env:
-          USE_FIREBASE_EMULATORS: true
 
       - name: Build
         run: |
