@@ -2,7 +2,7 @@ import { Readable } from "node:stream";
 
 import { CreateChatCompletionRequest, OpenAIApi } from "openai";
 
-import { TextApiConfig, TextPrompt, TextApi } from "./text_api";
+import { TextApiConfig, TextPrompt, TextApi } from "../../../story/";
 import { logger } from "../../../logger";
 
 /**

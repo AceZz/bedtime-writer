@@ -2,14 +2,14 @@ import { mkdir, writeFile } from "node:fs/promises";
 
 import { beforeAll, describe, expect, test } from "@jest/globals";
 
-import {
-  OnePartStoryGenerator,
-  OpenAiTextApi,
-  FakeTextApi,
-} from "../../../src/story";
+import { OnePartStoryGenerator } from "../../../src/story";
 import { FULL_CLASSIC_STORY_LOGIC } from "../logic/data";
-import { OpenAiImageApi, getOpenAiApi } from "../../../src/open_ai";
-import { FAKE_IMAGE_BYTES, FakeImageApi } from "../../../src/fake";
+import {
+  OpenAiImageApi,
+  OpenAiTextApi,
+  getOpenAiApi,
+} from "../../../src/open_ai";
+import { FAKE_IMAGE_BYTES, FakeImageApi, FakeTextApi } from "../../../src/fake";
 
 describe("with fake APIs", () => {
   function initGenerator() {
