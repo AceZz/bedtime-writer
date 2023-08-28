@@ -1,13 +1,7 @@
+import { FakeImageApi } from "./fake";
 import { logger } from "./logger";
-import { getOpenAiApi } from "./open_ai";
-import {
-  FakeImageApi,
-  FakeTextApi,
-  ImageApi,
-  OpenAiImageApi,
-  OpenAiTextApi,
-  TextApi,
-} from "./story";
+import { OpenAiImageApi, getOpenAiApi } from "./open_ai";
+import { FakeTextApi, ImageApi, OpenAiTextApi, TextApi } from "./story";
 
 export function getTextApi(): TextApi {
   if (process.env.TEXT_API?.toLowerCase() === "fake") {

@@ -6,12 +6,10 @@ import {
   OnePartStoryGenerator,
   OpenAiTextApi,
   FakeTextApi,
-  FAKE_IMAGE_BYTES,
-  FakeImageApi,
-  OpenAiImageApi,
 } from "../../../src/story";
 import { FULL_CLASSIC_STORY_LOGIC } from "../logic/data";
-import { getOpenAiApi } from "../../../src/open_ai";
+import { OpenAiImageApi, getOpenAiApi } from "../../../src/open_ai";
+import { FAKE_IMAGE_BYTES, FakeImageApi } from "../../../src/fake";
 
 describe("with fake APIs", () => {
   function initGenerator() {
