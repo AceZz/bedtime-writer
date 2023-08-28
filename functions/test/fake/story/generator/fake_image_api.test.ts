@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import { FAKE_IMAGE_BYTES, FakeImageApi } from "../../../../src/story";
+import { FAKE_IMAGE_BYTES, FakeImageApi } from "../../../../src/fake";
 
 test("getImage", async () => {
   const api = new FakeImageApi();
