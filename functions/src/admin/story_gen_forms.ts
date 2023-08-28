@@ -48,7 +48,7 @@ async function main() {
       `${numForms} forms written to ${firestore.storyFormsLanding.collectionPath}.`
     );
   } else {
-    console.log("Abort");
+    console.log("Abort.");
   }
 }
 
@@ -76,7 +76,7 @@ async function generateForms(
     const numGeneratedForms = numExtraForms - forms.length;
     console.log(
       `Generating ${numGeneratedForms} forms... ` +
-        `(${try_ + 1} / ${MAX_GENERATION_TRIES})`
+        `(try ${try_ + 1} / ${MAX_GENERATION_TRIES})`
     );
 
     for (const formCandidate of formManager.generateForms(numGeneratedForms)) {
@@ -109,7 +109,7 @@ async function readQuestions(
   if (questions.length === 0) {
     throw Error(
       `No questions were found in ${firestore.storyQuestions.collectionPath}` +
-        "Please run `npm run set_story_questions`."
+        "Please run `npm run story_set_questions`."
     );
   }
 
