@@ -3,8 +3,13 @@ import { initEnv, initFirebase } from "../../../src/firebase";
 
 import { FirestoreContextUtils } from "../../firebase/utils";
 import { StoryCacheManager, StoryCacheV1Manager } from "../../../src/story";
-import { FORM_CHARACTER, FORM_CHARACTER_ID, REQUESTS_CHARACTER } from "../data";
-import { FakeImageApi, FakeTextApi } from "../../../src/fake";
+import {
+  FAKE_IMAGE_API,
+  FAKE_TEXT_API,
+  FORM_CHARACTER,
+  FORM_CHARACTER_ID,
+  REQUESTS_CHARACTER,
+} from "../data";
 
 describe("Firestore story cache manager", () => {
   const storyCache = new FirestoreContextUtils("story_cache_manager")
@@ -16,8 +21,8 @@ describe("Firestore story cache manager", () => {
     initFirebase(true);
     storyCacheManager = new StoryCacheV1Manager(
       FORM_CHARACTER_ID,
-      new FakeTextApi(),
-      new FakeImageApi(),
+      FAKE_TEXT_API,
+      FAKE_IMAGE_API,
       storyCache
     );
   });

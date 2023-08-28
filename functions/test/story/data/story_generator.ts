@@ -1,14 +1,12 @@
-import { FakeImageApi, FakeTextApi } from "../../../src/fake";
 import { NPartStoryGenerator } from "../../../src/story";
+import { FAKE_IMAGE_API, FAKE_TEXT_API } from "./fake";
 import { CLASSIC_LOGIC_0 } from "./story_logic";
 
 /**
  * A dummy generator.
  */
-const TEXT_API = new FakeTextApi();
-const IMAGE_API = new FakeImageApi();
 export const GENERATOR_0 = new NPartStoryGenerator(
   CLASSIC_LOGIC_0,
-  TEXT_API,
-  IMAGE_API
+  FAKE_TEXT_API,
+  FAKE_IMAGE_API
 );

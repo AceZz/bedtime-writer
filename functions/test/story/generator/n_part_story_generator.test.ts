@@ -8,21 +8,20 @@ import {
 } from "../../../src/open_ai";
 import { NPartStoryGenerator } from "../../../src/story";
 import { FULL_CLASSIC_STORY_LOGIC } from "../logic/data";
-import { FAKE_IMAGE_BYTES, FakeImageApi, FakeTextApi } from "../../../src/fake";
+import { FAKE_IMAGE_BYTES } from "../../../src/fake";
+import { FAKE_IMAGE_API, FAKE_TEXT_API } from "../data";
 
 describe("with fake APIs", () => {
   function initGenerator() {
-    const textApi = new FakeTextApi(5, 100, 500, 100);
-    const imageApi = new FakeImageApi();
     const generator = new NPartStoryGenerator(
       FULL_CLASSIC_STORY_LOGIC,
-      textApi,
-      imageApi
+      FAKE_TEXT_API,
+      FAKE_IMAGE_API
     );
 
     return {
-      textApi,
-      imageApi,
+      textApi: FAKE_TEXT_API,
+      imageApi: FAKE_IMAGE_API,
       generator,
     };
   }
