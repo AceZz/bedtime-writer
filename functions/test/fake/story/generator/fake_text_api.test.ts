@@ -2,7 +2,7 @@ import { expect, test } from "@jest/globals";
 import { FakeTextApi } from "../../../../src/fake";
 
 test("getTokens", () => {
-  const api = new FakeTextApi(2, 10, 500, 100);
+  const api = new FakeTextApi(2, 10, 0, 0);
   const tokens = Array.from(api.getTokens());
 
   expect(tokens.join("").trim()).toBe(
@@ -11,7 +11,7 @@ test("getTokens", () => {
 });
 
 test("getText", async () => {
-  const api = new FakeTextApi(10, 150, 500, 100);
+  const api = new FakeTextApi(10, 150, 0, 0);
   const text = await api.getText();
   const tokens = Array.from(api.getTokens());
 
@@ -19,7 +19,7 @@ test("getText", async () => {
 });
 
 test("getStream", async () => {
-  const api = new FakeTextApi(10, 150, 500, 100);
+  const api = new FakeTextApi(10, 150, 0, 0);
   const stream = await api.getStream();
   const expectedTokens = Array.from(api.getTokens());
 
