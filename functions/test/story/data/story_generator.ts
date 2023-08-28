@@ -1,5 +1,5 @@
-import { FakeImageApi } from "../../../src/fake";
-import { FakeTextApi, NPartStoryGenerator } from "../../../src/story";
+import { FakeImageApi, FakeTextApi } from "../../../src/fake";
+import { NPartStoryGenerator } from "../../../src/story";
 import { CLASSIC_LOGIC_0 } from "./story_logic";
 
 /**

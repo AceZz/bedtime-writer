@@ -2,13 +2,9 @@ import { describe, test, beforeAll, beforeEach } from "@jest/globals";
 import { initEnv, initFirebase } from "../../../src/firebase";
 
 import { FirestoreContextUtils } from "../../firebase/utils";
-import {
-  FakeTextApi,
-  StoryCacheManager,
-  StoryCacheV1Manager,
-} from "../../../src/story";
+import { StoryCacheManager, StoryCacheV1Manager } from "../../../src/story";
 import { FORM_CHARACTER, FORM_CHARACTER_ID, REQUESTS_CHARACTER } from "../data";
-import { FakeImageApi } from "../../../src/fake";
+import { FakeImageApi, FakeTextApi } from "../../../src/fake";
 
 describe("Firestore story cache manager", () => {
   const storyCache = new FirestoreContextUtils("story_cache_manager")

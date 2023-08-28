@@ -1,9 +1,9 @@
 import { readFileSync } from "fs";
 
 import { Readable } from "stream";
-import { TextApi } from "./text_api";
+import { TextApi } from "../../../story";
 
-const FAKE_TOKENS = readFileSync("src/story/generator/text_api/fake_text.txt");
+const FAKE_TOKENS = readFileSync("src/fake/story/generator/fake_text.txt");
 
 /**
  * Parse `value` to an int and clamp it between a minimum and maximum.
