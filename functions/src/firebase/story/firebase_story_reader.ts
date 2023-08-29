@@ -9,6 +9,10 @@ import { FirestoreStories } from "./firestore_stories";
 export class FirebaseStoryReader implements StoryReader {
   constructor(private readonly stories: FirestoreStories) {}
 
+  async countAll(): Promise<number> {
+    return (await this.stories.storiesRef().count().get()).data()?.count;
+  }
+
   async readFormStories(
     formId: string
   ): Promise<{ id: string; status: StoryStatus; metadata: StoryMetadata }[]> {

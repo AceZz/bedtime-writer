@@ -6,7 +6,7 @@ import {
   FirebaseStoryReader,
 } from "../../../src/firebase";
 import { FirestoreContextUtils } from "../utils";
-import { CLASSIC_LOGIC_0, GENERATOR_0 } from "../../story/data";
+import { CLASSIC_LOGIC_0, GENERATOR_0, METADATA_0 } from "../../story/data";
 import { StoryMetadata, StoryStatus } from "../../../src/story";
 
 const storyRealtime = new FirestoreContextUtils("story_reader").storyRealtime;
@@ -19,6 +19,19 @@ describe("FirebaseStoryReader", () => {
 
   beforeEach(async () => {
     await storyRealtime.delete();
+  });
+
+  test("countAll", async () => {
+    const writer_0 = new FirebaseStoryWriter(storyRealtime);
+    await writer_0.writeInit(METADATA_0);
+    await writer_0.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
+
+    const writer_1 = new FirebaseStoryWriter(storyRealtime);
+    await writer_1.writeInit(METADATA_0);
+    await writer_1.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
+
+    const reader = new FirebaseStoryReader(storyRealtime);
+    expect(await reader.countAll()).toBe(2);
   });
 
   test("readFormStories", async () => {
