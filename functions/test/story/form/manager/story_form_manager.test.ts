@@ -1,5 +1,4 @@
 import { test, expect, describe, beforeAll } from "@jest/globals";
-import { StoryQuestion } from "../../../../src/story";
 import { QUESTIONS } from "./questions";
 import { StoryFormManager } from "../../../../src/story/form/manager/story_form_manager";
 
@@ -7,13 +6,10 @@ import { StoryFormManager } from "../../../../src/story/form/manager/story_form_
  * Straightforward implementation of `StoryFormManager` for tests.
  */
 describe("StoryFormManager", () => {
-  let allQuestions: StoryQuestion[];
   let manager: StoryFormManager;
 
-  // Check we are running in emulator mode before initializing Firebase.
   beforeAll(async () => {
-    allQuestions = await QUESTIONS();
-    manager = new StoryFormManager(allQuestions, 2, 2);
+    manager = new StoryFormManager(QUESTIONS, 2, 2);
   });
 
   test("generateForms numForms = 0", () => {
