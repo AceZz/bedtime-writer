@@ -8,6 +8,7 @@ import {
 import { FirestoreContextUtils } from "../utils";
 import { CLASSIC_LOGIC_0, GENERATOR_0, METADATA_0 } from "../../story/data";
 import { StoryMetadata, StoryStatus } from "../../../src/story";
+import { DUMMY_IMAGE_PROMPT, DUMMY_STORY_PART } from "../../story/data/stories";
 
 const storyRealtime = new FirestoreContextUtils("story_reader").storyRealtime;
 
@@ -87,4 +88,17 @@ describe("FirebaseStoryReader", () => {
       ])
     );
   }, 60000);
+
+  test("getImagePrompt after writing story", async () => {
+    const writer_0 = new FirebaseStoryWriter(storyRealtime);
+    const storyId = await writer_0.writeInit(METADATA_0);
+    await writer_0.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
+
+    const expected = DUMMY_IMAGE_PROMPT;
+    const storyPart = await DUMMY_STORY_PART(expected);
+    const partId = await writer_0.writePart(storyPart);
+    const imageId = await storyRealtime.getPartImageId(storyId, partId);
+
+    await storyRealtime.expectImagePromptToBe(storyId, imageId, expected);
+  });
 });

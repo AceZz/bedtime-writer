@@ -22,4 +22,9 @@ export interface StoryReader {
       metadata: StoryMetadata;
     }[]
   >;
+
+  /**
+   * Get the prompt used to generate the image.
+   */
+  getImagePrompt(storyId: string, imageId: string): Promise<string>;
 }
