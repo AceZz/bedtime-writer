@@ -1,3 +1,6 @@
+// This default image size ensures consistency accross the back-end.
+export const IMAGE_SIZE_DEFAULT = "512x512";
+
 /**
  * Generic interface to generate an image.
  */
