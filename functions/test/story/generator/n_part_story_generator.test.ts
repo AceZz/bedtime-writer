@@ -8,7 +8,7 @@ import {
 } from "../../../src/open_ai";
 import { NPartStoryGenerator } from "../../../src/story";
 import { FULL_CLASSIC_STORY_LOGIC } from "../logic/data";
-import { FAKE_IMAGE_BYTES } from "../../../src/fake";
+import { FAKE_IMAGE_BYTES_0 } from "../../../src/fake";
 import { FAKE_IMAGE_API, FAKE_TEXT_API } from "../data";
 
 describe("with fake APIs", () => {
@@ -53,7 +53,7 @@ describe("with fake APIs", () => {
       );
 
       if (index === 0) {
-        expect(part.image).toBe(FAKE_IMAGE_BYTES);
+        expect(part.image).toBe(FAKE_IMAGE_BYTES_0);
         expect(part.imagePrompt?.trim()).toBe(
           Array.from(textApi.getTokens()).join("").trim()
         );

@@ -9,7 +9,7 @@ import {
   OpenAiTextApi,
   getOpenAiApi,
 } from "../../../src/open_ai";
-import { FAKE_IMAGE_BYTES } from "../../../src/fake";
+import { FAKE_IMAGE_BYTES_0 } from "../../../src/fake";
 import { FAKE_IMAGE_API, FAKE_TEXT_API } from "../data";
 
 describe("with fake APIs", () => {
@@ -50,7 +50,7 @@ describe("with fake APIs", () => {
         "Write a fairy tale in the style of some style."
       )
     );
-    expect(storyPart.image).toBe(FAKE_IMAGE_BYTES);
+    expect(storyPart.image).toBe(FAKE_IMAGE_BYTES_0);
     expect(storyPart.imagePrompt).toBe(expectedTokens);
     expect(
       storyPart.imagePromptPrompt?.startsWith(
