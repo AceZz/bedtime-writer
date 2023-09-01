@@ -90,13 +90,13 @@ describe("FirebaseStoryReader", () => {
   }, 60000);
 
   test("getImagePrompt after writing story", async () => {
-    const writer_0 = new FirebaseStoryWriter(storyRealtime);
-    const storyId = await writer_0.writeInit(METADATA_0);
-    await writer_0.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
+    const writer = new FirebaseStoryWriter(storyRealtime);
+    const storyId = await writer.writeInit(METADATA_0);
+    await writer.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
 
     const expected = DUMMY_IMAGE_PROMPT;
     const storyPart = await DUMMY_STORY_PART(expected);
-    const partId = await writer_0.writePart(storyPart);
+    const partId = await writer.writePart(storyPart);
     const imageId = await storyRealtime.getPartImageId(storyId, partId);
 
     await storyRealtime.expectImagePromptToBe(storyId, imageId, expected);
