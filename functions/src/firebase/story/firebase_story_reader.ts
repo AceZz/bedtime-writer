@@ -44,7 +44,7 @@ export class FirebaseStoryReader implements StoryReader {
     ).data();
     const imagePrompt = prompts?.imagePrompt;
 
-    if (imagePrompt == undefined) {
+    if (imagePrompt === undefined) {
       throw new Error("getImagePrompt: image prompt is undefined");
     }
 

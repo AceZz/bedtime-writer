@@ -26,11 +26,6 @@ export abstract class StoryWriter {
   }
 
   /**
-   * Write a part of the story and return its id.
-   */
-  abstract writePart(part: StoryPart): Promise<string>;
-
-  /**
    * Write metadata to a new location and return its id.
    */
   protected abstract writeInitMetadata(
@@ -81,6 +76,11 @@ export abstract class StoryWriter {
    * Delete any existing parts / prompts / images.
    */
   protected abstract deleteParts(): Promise<void>;
+
+  /**
+   * Write a part of the story and return its id.
+   */
+  protected abstract writePart(part: StoryPart): Promise<string>;
 
   /**
    * Mark the story as complete.
