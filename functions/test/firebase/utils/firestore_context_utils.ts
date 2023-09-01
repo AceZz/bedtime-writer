@@ -17,6 +17,7 @@ import {
 export class FirestoreContextUtils {
   firestore: FirestoreContext;
 
+  storyCacheLanding: FirestoreStoriesUtils;
   storyForms: FirestoreStoryFormsUtils;
   storyQuestions: FirestoreStoryQuestionsUtils;
   storyRealtime: FirestoreStoriesUtils;
@@ -26,6 +27,10 @@ export class FirestoreContextUtils {
   constructor(readonly id: string) {
     this.firestore = new FirestoreContext(`test_${id}`);
 
+    this.storyCacheLanding = new FirestoreStoriesUtils(
+      this.firestore.storyCacheLanding.collectionPath,
+      this.firestore
+    );
     this.storyForms = new FirestoreStoryFormsUtils(
       this.firestore.storyFormsLanding.collectionPath,
       this.firestore

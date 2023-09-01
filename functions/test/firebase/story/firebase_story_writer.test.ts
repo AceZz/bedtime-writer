@@ -3,6 +3,7 @@ import {
   initEnv,
   initFirebase,
   FirebaseStoryWriter,
+  FirebaseStoryReader,
 } from "../../../src/firebase";
 import { FirestoreContextUtils } from "../utils";
 import {
@@ -11,8 +12,12 @@ import {
   GENERATOR_0,
   METADATA_0,
 } from "../../story/data";
+import { FakeImageApi, FAKE_IMAGE_BYTES_1 } from "../../../src/fake";
+import { StoryRegenImageStatus } from "../../../src/story";
 
 const storyRealtime = new FirestoreContextUtils("story_writer").storyRealtime;
+const storyCacheLanding = new FirestoreContextUtils("story_writer")
+  .storyCacheLanding;
 
 describe("FirebaseStoryWriter", () => {
   const numImages = 1;
@@ -66,4 +71,47 @@ describe("FirebaseStoryWriter", () => {
     await writer.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
     await storyRealtime.expectParts(id, FAKE_TEXT_API.numParts, numImages);
   }, 30000);
+
+  describe("Methods for story review", () => {
+    const SEED_1 = 1;
+
+    beforeEach(async () => {
+      await storyCacheLanding.delete();
+    });
+
+    test("should regenerate one image", async () => {
+      const writer = new FirebaseStoryWriter(storyCacheLanding);
+      const storyId = await writer.writeInit(METADATA_0);
+      await writer.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
+      const reader = new FirebaseStoryReader(storyCacheLanding);
+      const imageId = (await reader.getImageIds(storyId))[0];
+
+      const imageApi = new FakeImageApi(SEED_1);
+      await writer.regenImage(storyId, imageId, imageApi);
+
+      await storyCacheLanding.expectImageToBe(
+        storyId,
+        imageId,
+        FAKE_IMAGE_BYTES_1
+      );
+      await storyCacheLanding.expectImageRegenStatusToBe(
+        storyId,
+        imageId,
+        StoryRegenImageStatus.COMPLETE
+      );
+    }, 20000);
+
+    test("should approve image when called after caching step", async () => {
+      const writer = new FirebaseStoryWriter(storyCacheLanding);
+      const storyId = await writer.writeInit(METADATA_0);
+      await writer.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
+      const reader = new FirebaseStoryReader(storyCacheLanding);
+      const imageId = (await reader.getImageIds(storyId))[0];
+      await storyCacheLanding.expectImageToNotBeApproved(storyId, imageId);
+
+      await writer.approveImage(storyId, imageId);
+
+      await storyCacheLanding.expectImageToBeApproved(storyId, imageId);
+    }, 20000);
+  });
 });

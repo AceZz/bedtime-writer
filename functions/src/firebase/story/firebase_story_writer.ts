@@ -9,10 +9,14 @@ import {
   StoryWriter,
   StoryStatus,
   StoryLogic,
+  ImageApi,
+  StoryRegenImageStatus,
+  IMAGE_SIZE_DEFAULT,
 } from "../../story";
 import { valueOrNull } from "../../utils";
 import { FirestoreStories } from "./firestore_stories";
 import { logger } from "../../logger";
+import { FirebaseStoryReader } from "./firebase_story_reader";
 
 export class FirebaseStoryWriter extends StoryWriter {
   private parts: string[] = [];
@@ -21,12 +25,14 @@ export class FirebaseStoryWriter extends StoryWriter {
    * be written once, but referenced multiple times.
    */
   private imageIds: Map<Buffer, string> = new Map();
+  private readonly reader: FirebaseStoryReader;
 
   constructor(
     private readonly stories: FirestoreStories,
     protected readonly id: string | undefined = undefined
   ) {
     super(id);
+    this.reader = new FirebaseStoryReader(stories);
   }
 
   async writePart(part: StoryPart): Promise<string> {
@@ -40,6 +46,55 @@ export class FirebaseStoryWriter extends StoryWriter {
     ]);
 
     return partId;
+  }
+
+  async regenImage(
+    storyId: string,
+    imageId: string,
+    imageApi: ImageApi
+  ): Promise<void> {
+    try {
+      await this.setRegenImageStatus(
+        storyId,
+        imageId,
+        StoryRegenImageStatus.PENDING
+      );
+      const prompt = await this.reader.getImagePrompt(storyId, imageId);
+
+      const newImage = await imageApi.getImage(prompt, {
+        n: 1,
+        size: IMAGE_SIZE_DEFAULT,
+      });
+
+      await this.replaceImage(storyId, imageId, newImage);
+      await this.setRegenImageStatus(
+        storyId,
+        imageId,
+        StoryRegenImageStatus.COMPLETE
+      );
+    } catch (error) {
+      await this.setRegenImageStatus(
+        storyId,
+        imageId,
+        StoryRegenImageStatus.ERROR
+      );
+      throw error;
+    }
+  }
+
+  async approveImage(storyId: string, imageId: string): Promise<void> {
+    const imageRef = this.stories.imageRef(storyId, imageId);
+
+    const imageData = (await imageRef.get()).data()?.data;
+
+    if (imageData == undefined) {
+      throw new Error("approveImage: no image found");
+    }
+
+    const payload = {
+      approved: true,
+    };
+    await imageRef.update(payload);
   }
 
   protected async writeInitMetadata(metadata: StoryMetadata): Promise<string> {
@@ -151,6 +206,33 @@ export class FirebaseStoryWriter extends StoryWriter {
       `FirebaseStoryWriter: story ${this.storyIdOrThrow} ` +
         ` encountered an error: ${error}.`
     );
+  }
+
+  private async replaceImage(storyId: string, imageId: string, image: Buffer) {
+    const imageRef = this.stories.imageRef(storyId, imageId);
+
+    const imageData = (await imageRef.get()).data()?.data;
+
+    if (imageData == undefined) {
+      throw new Error("replaceImage: no current image data found");
+    }
+
+    const payload = {
+      data: image,
+    };
+    await imageRef.set(payload);
+  }
+
+  private async setRegenImageStatus(
+    storyId: string,
+    imageId: string,
+    status: string
+  ): Promise<void> {
+    const imageRef = this.stories.imageRef(storyId, imageId);
+    const payload = {
+      regenStatus: status,
+    };
+    await imageRef.update(payload);
   }
 
   private get storyRef(): DocumentReference {
