@@ -29,19 +29,6 @@ export class FirebaseStoryWriter extends StoryWriter {
     super(id);
   }
 
-  async writePart(part: StoryPart): Promise<string> {
-    const imageId = await this.writePartImage(part.image);
-    const partId = await this.writePartData(part, imageId);
-    this.parts.push(partId);
-
-    await Promise.all([
-      this.updateStory(),
-      this.writePartPrompts(part, partId),
-    ]);
-
-    return partId;
-  }
-
   protected async writeInitMetadata(metadata: StoryMetadata): Promise<string> {
     const data = {
       parts: [],
@@ -80,6 +67,19 @@ export class FirebaseStoryWriter extends StoryWriter {
     const prompts = await this.promptsRef.get();
     await Promise.all(prompts.docs.map((prompt) => prompt.ref.delete()));
     this.imageIds.clear();
+  }
+
+  protected async writePart(part: StoryPart): Promise<string> {
+    const imageId = await this.writePartImage(part.image);
+    const partId = await this.writePartData(part, imageId);
+    this.parts.push(partId);
+
+    await Promise.all([
+      this.updateStory(),
+      this.writePartPrompts(part, partId),
+    ]);
+
+    return partId;
   }
 
   private async writePartImage(image?: Buffer): Promise<string | undefined> {
