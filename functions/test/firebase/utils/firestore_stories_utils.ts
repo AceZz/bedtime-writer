@@ -65,6 +65,25 @@ export class FirestoreStoriesUtils extends FirestoreStories {
     expect(data?.status).toBe(StoryStatus.COMPLETE);
   }
 
+  async getPartImageId(storyId: string, partId: string): Promise<string> {
+    const data = (await this.partRef(storyId, partId).get()).data();
+    return data?.image;
+  }
+
+  async expectImagePromptToBe(
+    storyId: string,
+    imageId: string,
+    expected: string
+  ) {
+    const partsRef = this.partsRef(storyId);
+    const partId = (await partsRef.where("image", "==", imageId).get()).docs[0]
+      .id;
+    const prompts = (await this.promptsDocRef(storyId, partId).get()).data();
+    const actual = prompts?.imagePrompt;
+
+    expect(actual).toBe(expected);
+  }
+
   private async getStoryData(
     id: string
   ): Promise<FirebaseFirestore.DocumentData | undefined> {

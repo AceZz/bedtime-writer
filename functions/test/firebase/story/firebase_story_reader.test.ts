@@ -7,9 +7,20 @@ import {
 } from "../../../src/firebase";
 import { FirestoreContextUtils } from "../utils";
 import { CLASSIC_LOGIC_0, GENERATOR_0, METADATA_0 } from "../../story/data";
-import { StoryMetadata, StoryStatus } from "../../../src/story";
+import { StoryMetadata, StoryPart, StoryStatus } from "../../../src/story";
+import { DUMMY_IMAGE_PROMPT, DUMMY_STORY_PART } from "../../story/data/stories";
 
 const storyRealtime = new FirestoreContextUtils("story_reader").storyRealtime;
+
+/**
+ * Dummy implementation to access the protected methods of the base class.
+ */
+class TestFirebaseStoryWriter extends FirebaseStoryWriter {
+  // Overrides the parent method to make it public.
+  async writePart(part: StoryPart): Promise<string> {
+    return await super.writePart(part);
+  }
+}
 
 describe("FirebaseStoryReader", () => {
   beforeAll(() => {
@@ -87,4 +98,17 @@ describe("FirebaseStoryReader", () => {
       ])
     );
   }, 60000);
+
+  test("getImagePrompt after writing story", async () => {
+    const writer = new TestFirebaseStoryWriter(storyRealtime);
+    const storyId = await writer.writeInit(METADATA_0);
+    await writer.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
+
+    const expected = DUMMY_IMAGE_PROMPT;
+    const storyPart = await DUMMY_STORY_PART(expected);
+    const partId = await writer.writePart(storyPart);
+    const imageId = await storyRealtime.getPartImageId(storyId, partId);
+
+    await storyRealtime.expectImagePromptToBe(storyId, imageId, expected);
+  });
 });

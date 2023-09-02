@@ -40,12 +40,24 @@ export abstract class FirestoreStories extends FirestoreCollection {
     return this.firestore.collection(this.collectionPath);
   }
 
+  imageRef(storyId: string, id: string): DocumentReference {
+    return this.imagesRef(storyId).doc(id);
+  }
+
   imagesRef(id: string): CollectionReference {
     return this.storyRef(id).collection("images");
   }
 
+  partRef(storyId: string, id: string): DocumentReference {
+    return this.partsRef(storyId).doc(id);
+  }
+
   partsRef(id: string): CollectionReference {
     return this.storyRef(id).collection("parts");
+  }
+
+  promptsDocRef(storyId: string, id: string): DocumentReference {
+    return this.promptsRef(storyId).doc(id);
   }
 
   promptsRef(id: string): CollectionReference {
