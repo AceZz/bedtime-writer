@@ -25,14 +25,15 @@ export class FirebaseStoryWriter extends StoryWriter {
    * be written once, but referenced multiple times.
    */
   private imageIds: Map<Buffer, string> = new Map();
-  private readonly reader: FirebaseStoryReader;
+  protected readonly reader: FirebaseStoryReader;
 
   constructor(
     private readonly stories: FirestoreStories,
-    protected readonly id: string | undefined = undefined
+    protected readonly id: string | undefined = undefined,
+    reader: FirebaseStoryReader | undefined = undefined
   ) {
     super(id);
-    this.reader = new FirebaseStoryReader(stories);
+    this.reader = reader ?? new FirebaseStoryReader(stories);
   }
 
   async regenImage(
