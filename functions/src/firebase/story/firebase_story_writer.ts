@@ -75,7 +75,7 @@ export class FirebaseStoryWriter extends StoryWriter {
 
     const imageData = (await imageRef.get()).data()?.data;
 
-    if (imageData == undefined) {
+    if (imageData === undefined || imageData === null) {
       throw new Error(
         `replaceImage: no current image data found for story ${storyId} and image ${imageId}`
       );
@@ -99,7 +99,7 @@ export class FirebaseStoryWriter extends StoryWriter {
 
     const imageData = (await imageRef.get()).data()?.data;
 
-    if (imageData == undefined) {
+    if (imageData === undefined || imageData === null) {
       throw new Error(
         `approveImage: no image found for story ${storyId} and image ${imageId}`
       );
