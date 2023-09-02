@@ -34,7 +34,7 @@ export function parseStoryStatus(value: string): StoryStatus {
 
 export enum StoryRegenImageStatus {
   /**
-   * The image regenerat90j was requested, but regeneration
+   * The image regeneration was requested, but regeneration
    * is not yet complete.
    */
   PENDING = "pending",
