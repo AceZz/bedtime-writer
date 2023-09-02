@@ -3,6 +3,9 @@ html
     title= title
   body
     h1= title
-    ul
-      each question in questions
-        li= question
+    each images, storyId in allImages
+      h2= `Story ID: ${storyId}`
+      each imageObj in images
+        div
+          p= `Image ID: ${imageObj.id}`
+          img(src=`data:image/png;base64,${imageObj.data}`)

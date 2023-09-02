@@ -1,30 +1,44 @@
 import express from "express";
 import {
-  FirebaseStoryQuestionReader,
   FirestoreContext,
+  FirebaseStoryReader,
   initEnv,
   initFirebase,
 } from "../../firebase";
+
+initEnv();
+initFirebase();
 
 const app = express();
 app.set("view engine", "pug");
 app.set("views", "./src/admin/interface/views");
 const port = 3000;
 
-initEnv();
-initFirebase();
-
 app.get("/", async (req, res) => {
   const firestore = new FirestoreContext();
+  const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
 
-  const questionsReader = new FirebaseStoryQuestionReader(
-    firestore.storyQuestions
-  );
-  const questions = await questionsReader.readAll();
+  const formIds = await storyReader.getFormIds();
+  const firstFormId = formIds[0]; // Assume at least one exists
+
+  const storyIds = await storyReader.getFormStoryIds(firstFormId);
+
+  const allImages: { [key: string]: { id: string; data: string }[] } = {};
+
+  for (const storyId of storyIds) {
+    const imageIds = await storyReader.getImageIds(storyId);
+    const images = await Promise.all(
+      imageIds.map(async (id) => {
+        const data = await storyReader.getImage(storyId, id);
+        return { id, data: data.toString("base64") };
+      })
+    );
+    allImages[storyId] = images;
+  }
 
   res.render("index", {
-    title: "Questions",
-    questions: questions.map((question) => question.text),
+    title: `Images from Form ID: ${firstFormId}`,
+    allImages,
   });
 });
 

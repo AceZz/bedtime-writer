@@ -32,9 +32,21 @@ export class FirebaseStoryReader implements StoryReader {
     });
   }
 
-  /**
-   * Get the prompt used to generate the image.
-   */
+  async getFormIds(): Promise<string[]> {
+    const snapshots = await this.stories.storiesRef().get();
+
+    return snapshots.docs.map((doc) => doc.data().request.formId);
+  }
+
+  async getFormStoryIds(formId: string): Promise<string[]> {
+    const snapshots = await this.stories
+      .storiesRef()
+      .where("request.formId", "==", formId)
+      .get();
+
+    return snapshots.docs.map((doc) => doc.id);
+  }
+
   async getImagePrompt(storyId: string, imageId: string): Promise<string> {
     const partsRef = this.stories.partsRef(storyId);
     const partId = (await partsRef.where("image", "==", imageId).get()).docs[0]
@@ -51,11 +63,13 @@ export class FirebaseStoryReader implements StoryReader {
     return imagePrompt;
   }
 
-  /**
-   * Get the image ids for the story.
-   */
   async getImageIds(storyId: string): Promise<string[]> {
     const snapshot = await this.stories.imagesRef(storyId).get();
     return snapshot.docs.map((doc) => doc.id);
+  }
+
+  async getImage(storyId: string, imageId: string): Promise<Buffer> {
+    const snapshot = await this.stories.imageRef(storyId, imageId).get();
+    return snapshot.data()?.data;
   }
 }
