@@ -36,78 +36,6 @@ export class FirebaseStoryWriter extends StoryWriter {
     this.reader = reader ?? new FirebaseStoryReader(stories);
   }
 
-  async regenImage(
-    storyId: string,
-    imageId: string,
-    imageApi: ImageApi
-  ): Promise<void> {
-    try {
-      await this.setRegenImageStatus(
-        storyId,
-        imageId,
-        StoryRegenImageStatus.PENDING
-      );
-      const prompt = await this.reader.getImagePrompt(storyId, imageId);
-
-      const newImage = await imageApi.getImage(prompt, {
-        n: 1,
-        size: IMAGE_SIZE_DEFAULT,
-      });
-
-      await this.replaceImage(storyId, imageId, newImage);
-      await this.setRegenImageStatus(
-        storyId,
-        imageId,
-        StoryRegenImageStatus.COMPLETE
-      );
-    } catch (error) {
-      await this.setRegenImageStatus(
-        storyId,
-        imageId,
-        StoryRegenImageStatus.ERROR
-      );
-      logger.error(`regenImage: ${error}`);
-    }
-  }
-
-  private async replaceImage(storyId: string, imageId: string, image: Buffer) {
-    const imageRef = this.stories.imageRef(storyId, imageId);
-
-    const imageData = (await imageRef.get()).data()?.data;
-
-    if (imageData === undefined || imageData === null) {
-      throw new Error(
-        `replaceImage: no current image data found for story ${storyId} and image ${imageId}`
-      );
-    }
-
-    await imageRef.set({ data: image });
-  }
-
-  private async setRegenImageStatus(
-    storyId: string,
-    imageId: string,
-    status: string
-  ): Promise<void> {
-    const imageRef = this.stories.imageRef(storyId, imageId);
-
-    await imageRef.update({ regenStatus: status });
-  }
-
-  async approveImage(storyId: string, imageId: string): Promise<void> {
-    const imageRef = this.stories.imageRef(storyId, imageId);
-
-    const imageData = (await imageRef.get()).data()?.data;
-
-    if (imageData === undefined || imageData === null) {
-      throw new Error(
-        `approveImage: no image found for story ${storyId} and image ${imageId}`
-      );
-    }
-
-    await imageRef.update({ isApproved: true });
-  }
-
   protected async writeInitMetadata(metadata: StoryMetadata): Promise<string> {
     const data = {
       parts: [],
@@ -228,6 +156,78 @@ export class FirebaseStoryWriter extends StoryWriter {
       `FirebaseStoryWriter: story ${this.storyIdOrThrow} ` +
         ` encountered an error: ${error}.`
     );
+  }
+
+  async regenImage(
+    storyId: string,
+    imageId: string,
+    imageApi: ImageApi
+  ): Promise<void> {
+    try {
+      await this.setRegenImageStatus(
+        storyId,
+        imageId,
+        StoryRegenImageStatus.PENDING
+      );
+      const prompt = await this.reader.getImagePrompt(storyId, imageId);
+
+      const newImage = await imageApi.getImage(prompt, {
+        n: 1,
+        size: IMAGE_SIZE_DEFAULT,
+      });
+
+      await this.replaceImage(storyId, imageId, newImage);
+      await this.setRegenImageStatus(
+        storyId,
+        imageId,
+        StoryRegenImageStatus.COMPLETE
+      );
+    } catch (error) {
+      await this.setRegenImageStatus(
+        storyId,
+        imageId,
+        StoryRegenImageStatus.ERROR
+      );
+      logger.error(`regenImage: ${error}`);
+    }
+  }
+
+  private async replaceImage(storyId: string, imageId: string, image: Buffer) {
+    const imageRef = this.stories.imageRef(storyId, imageId);
+
+    const imageData = (await imageRef.get()).data()?.data;
+
+    if (imageData === undefined || imageData === null) {
+      throw new Error(
+        `replaceImage: no current image data found for story ${storyId} and image ${imageId}`
+      );
+    }
+
+    await imageRef.set({ data: image });
+  }
+
+  private async setRegenImageStatus(
+    storyId: string,
+    imageId: string,
+    status: string
+  ): Promise<void> {
+    const imageRef = this.stories.imageRef(storyId, imageId);
+
+    await imageRef.update({ regenStatus: status });
+  }
+
+  async approveImage(storyId: string, imageId: string): Promise<void> {
+    const imageRef = this.stories.imageRef(storyId, imageId);
+
+    const imageData = (await imageRef.get()).data()?.data;
+
+    if (imageData === undefined || imageData === null) {
+      throw new Error(
+        `approveImage: no image found for story ${storyId} and image ${imageId}`
+      );
+    }
+
+    await imageRef.update({ isApproved: true });
   }
 
   private get storyRef(): DocumentReference {
