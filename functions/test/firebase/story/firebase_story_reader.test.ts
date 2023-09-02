@@ -8,7 +8,11 @@ import {
 import { FirestoreContextUtils } from "../utils";
 import { CLASSIC_LOGIC_0, GENERATOR_0, METADATA_0 } from "../../story/data";
 import { StoryMetadata, StoryPart, StoryStatus } from "../../../src/story";
-import { DUMMY_IMAGE_PROMPT, DUMMY_STORY_PART } from "../../story/data/stories";
+import {
+  DUMMY_IMAGE_PROMPT,
+  DUMMY_STORY_PART_1,
+  DUMMY_STORY_PART_2,
+} from "../../story/data/stories";
 
 const storyRealtime = new FirestoreContextUtils("story_reader").storyRealtime;
 
@@ -105,10 +109,23 @@ describe("FirebaseStoryReader", () => {
     await writer.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
 
     const expected = DUMMY_IMAGE_PROMPT;
-    const storyPart = await DUMMY_STORY_PART(expected);
+    const storyPart = await DUMMY_STORY_PART_1(expected);
     const partId = await writer.writePart(storyPart);
     const imageId = await storyRealtime.getPartImageId(storyId, partId);
 
     await storyRealtime.expectImagePromptToBe(storyId, imageId, expected);
+  });
+
+  test("getImageIds should get all images", async () => {
+    const writer = new TestFirebaseStoryWriter(storyRealtime);
+    const storyId = await writer.writeInit(METADATA_0);
+    const storyPart1 = await DUMMY_STORY_PART_1();
+    await writer.writePart(storyPart1);
+    const storyPart2 = await DUMMY_STORY_PART_2();
+    await writer.writePart(storyPart2);
+
+    const reader = new FirebaseStoryReader(storyRealtime);
+    const imageIds = await reader.getImageIds(storyId);
+    expect(imageIds.length).toBe(2);
   });
 });
