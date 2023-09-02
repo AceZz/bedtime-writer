@@ -15,6 +15,12 @@ import {
 import { FakeImageApi, FAKE_IMAGE_BYTES_1 } from "../../../src/fake";
 import { StoryRegenImageStatus } from "../../../src/story";
 
+class FailImageApi extends FakeImageApi {
+  async getImage(): Promise<Buffer> {
+    throw new Error("FailImageApi: getImage will always throw an error.");
+  }
+}
+
 const storyRealtime = new FirestoreContextUtils("story_writer").storyRealtime;
 const storyCacheLanding = new FirestoreContextUtils("story_writer")
   .storyCacheLanding;
@@ -98,6 +104,23 @@ describe("FirebaseStoryWriter", () => {
         storyId,
         imageId,
         StoryRegenImageStatus.COMPLETE
+      );
+    }, 20000);
+
+    test("should set error status after failed image regeneration", async () => {
+      const writer = new FirebaseStoryWriter(storyCacheLanding);
+      const storyId = await writer.writeInit(METADATA_0);
+      await writer.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
+      const reader = new FirebaseStoryReader(storyCacheLanding);
+      const imageId = (await reader.getImageIds(storyId))[0];
+
+      const imageApi = new FailImageApi();
+      await writer.regenImage(storyId, imageId, imageApi);
+
+      await storyCacheLanding.expectImageRegenStatusToBe(
+        storyId,
+        imageId,
+        StoryRegenImageStatus.ERROR
       );
     }, 20000);
 
