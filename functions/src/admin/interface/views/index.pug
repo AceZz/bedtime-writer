@@ -1,11 +1,11 @@
+doctype html
 html
   head
-    title= title
+    title Select Form ID
   body
-    h1= title
-    each images, storyId in allImages
-      h2= `Story ID: ${storyId}`
-      each imageObj in images
-        div
-          p= `Image ID: ${imageObj.id}`
-          img(src=`data:image/png;base64,${imageObj.data}`)
+    h1 Select Form ID
+    form(method='get' action='/form')
+      select(name='formId')
+        each formId in formIds
+          option(value=formId)= formId
+      input(type='submit' value='Go')

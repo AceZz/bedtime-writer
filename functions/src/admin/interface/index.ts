@@ -19,9 +19,22 @@ app.get("/", async (req, res) => {
   const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
 
   const formIds = await storyReader.getFormIds();
-  const firstFormId = formIds[0]; // Assume at least one exists
+  res.render("index", { formIds }); // Use the existing Pug file
+});
 
-  const storyIds = await storyReader.getFormStoryIds(firstFormId);
+app.get("/form", async (req, res) => {
+  const selectedFormId = req.query.formId as string;
+  if (!selectedFormId) {
+    // Handle missing formId, maybe redirect to index
+    res.redirect("/");
+    return;
+  }
+
+  const firestore = new FirestoreContext();
+  const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
+
+  const storyIds = await storyReader.getFormStoryIds(selectedFormId);
+  const numberOfStories = storyIds.length; // Get the count of stories
 
   const allImages: { [key: string]: { id: string; data: string }[] } = {};
 
@@ -36,9 +49,10 @@ app.get("/", async (req, res) => {
     allImages[storyId] = images;
   }
 
-  res.render("index", {
-    title: `Images from Form ID: ${firstFormId}`,
+  res.render("form", {
+    title: `Images from Form ID: ${selectedFormId}`,
     allImages,
+    numberOfStories, // Include this in rendering
   });
 });
 

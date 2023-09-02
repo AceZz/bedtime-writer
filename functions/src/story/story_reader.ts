@@ -24,6 +24,18 @@ export interface StoryReader {
   >;
 
   /**
+   * Get the distinct formIds of the stories in the collection.
+   */
+  getFormIds(): Promise<string[]>;
+
+  /**
+   * Get the ids of the stories which where generated for `formId`.
+   *
+   * `formId` is matched against the content of `<story>.request.formId`.
+   */
+  getFormStoryIds(formId: string): Promise<string[]>;
+
+  /**
    * Get the prompt used to generate the image.
    */
   getImagePrompt(storyId: string, imageId: string): Promise<string>;
@@ -32,4 +44,9 @@ export interface StoryReader {
    * Get the image ids for the story.
    */
   getImageIds(storyId: string): Promise<string[]>;
+
+  /**
+   * Get the image buffer.
+   */
+  getImage(storyId: string, imageId: string): Promise<Buffer>;
 }

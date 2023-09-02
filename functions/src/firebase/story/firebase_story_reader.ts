@@ -34,8 +34,13 @@ export class FirebaseStoryReader implements StoryReader {
 
   async getFormIds(): Promise<string[]> {
     const snapshots = await this.stories.storiesRef().get();
+    const formIdsSet = new Set<string>();
 
-    return snapshots.docs.map((doc) => doc.data().request.formId);
+    snapshots.docs.forEach((doc) => {
+      formIdsSet.add(doc.data().request.formId);
+    });
+
+    return Array.from(formIdsSet);
   }
 
   async getFormStoryIds(formId: string): Promise<string[]> {

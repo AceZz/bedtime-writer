@@ -1,0 +1,12 @@
+html
+  head
+    title= title
+  body
+    h1= title
+    p Number of stories found: #{numberOfStories}
+    each images, storyId in allImages
+      h2= `Story ID: ${storyId}`
+      each imageObj in images
+        div
+          p= `Image ID: ${imageObj.id}`
+          img(src=`data:image/png;base64,${imageObj.data}`)
