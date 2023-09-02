@@ -10,9 +10,7 @@ export const FAKE_IMAGE_BYTES_1 = readFileSync(
 );
 
 export class FakeImageApi implements ImageApi {
-  constructor(private readonly seed?: 0 | 1) {
-    this.seed = seed ?? 0;
-  }
+  constructor(private readonly seed: 0 | 1 = 0) {}
 
   async getImage(): Promise<Buffer> {
     switch (this.seed) {
@@ -20,8 +18,6 @@ export class FakeImageApi implements ImageApi {
         return FAKE_IMAGE_BYTES_0;
       case 1:
         return FAKE_IMAGE_BYTES_1;
-      default:
-        throw new Error("FakeImageApi: a wrong random seed was specified.");
     }
   }
 }
