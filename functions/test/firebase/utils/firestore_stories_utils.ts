@@ -70,20 +70,6 @@ export class FirestoreStoriesUtils extends FirestoreStories {
     return data?.image;
   }
 
-  async expectImagePromptToBe(
-    storyId: string,
-    imageId: string,
-    expected: string
-  ) {
-    const partsRef = this.partsRef(storyId);
-    const partId = (await partsRef.where("image", "==", imageId).get()).docs[0]
-      .id;
-    const prompts = (await this.promptsDocRef(storyId, partId).get()).data();
-    const actual = prompts?.imagePrompt;
-
-    expect(actual).toBe(expected);
-  }
-
   /**
    * Compares the image in the database with the one provided
    *
