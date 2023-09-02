@@ -18,8 +18,7 @@ const storyRealtime = new FirestoreContextUtils("story_reader").storyRealtime;
 class TestFirebaseStoryWriter extends FirebaseStoryWriter {
   // Overrides the parent method to make it public.
   async writePart(part: StoryPart): Promise<string> {
-    const partId = await super.writePart(part);
-    return partId;
+    return await super.writePart(part);
   }
 }
 
