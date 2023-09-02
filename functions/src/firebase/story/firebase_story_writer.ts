@@ -66,8 +66,32 @@ export class FirebaseStoryWriter extends StoryWriter {
         imageId,
         StoryRegenImageStatus.ERROR
       );
-      throw error;
+      logger.error(`regenImage: ${error}`);
     }
+  }
+
+  private async replaceImage(storyId: string, imageId: string, image: Buffer) {
+    const imageRef = this.stories.imageRef(storyId, imageId);
+
+    const imageData = (await imageRef.get()).data()?.data;
+
+    if (imageData == undefined) {
+      throw new Error(
+        `replaceImage: no current image data found for story ${storyId} and image ${imageId}`
+      );
+    }
+
+    await imageRef.set({ data: image });
+  }
+
+  private async setRegenImageStatus(
+    storyId: string,
+    imageId: string,
+    status: string
+  ): Promise<void> {
+    const imageRef = this.stories.imageRef(storyId, imageId);
+
+    await imageRef.update({ regenStatus: status });
   }
 
   async approveImage(storyId: string, imageId: string): Promise<void> {
@@ -76,13 +100,12 @@ export class FirebaseStoryWriter extends StoryWriter {
     const imageData = (await imageRef.get()).data()?.data;
 
     if (imageData == undefined) {
-      throw new Error("approveImage: no image found");
+      throw new Error(
+        `approveImage: no image found for story ${storyId} and image ${imageId}`
+      );
     }
 
-    const payload = {
-      isApproved: true,
-    };
-    await imageRef.update(payload);
+    await imageRef.update({ isApproved: true });
   }
 
   protected async writeInitMetadata(metadata: StoryMetadata): Promise<string> {
@@ -143,9 +166,7 @@ export class FirebaseStoryWriter extends StoryWriter {
       return undefined;
     }
 
-    const data = {
-      data: image,
-    };
+    const data = { data: image };
     const imageId = this.imageIds.get(image);
 
     // Already existing image: return it.
@@ -207,33 +228,6 @@ export class FirebaseStoryWriter extends StoryWriter {
       `FirebaseStoryWriter: story ${this.storyIdOrThrow} ` +
         ` encountered an error: ${error}.`
     );
-  }
-
-  private async replaceImage(storyId: string, imageId: string, image: Buffer) {
-    const imageRef = this.stories.imageRef(storyId, imageId);
-
-    const imageData = (await imageRef.get()).data()?.data;
-
-    if (imageData == undefined) {
-      throw new Error("replaceImage: no current image data found");
-    }
-
-    const payload = {
-      data: image,
-    };
-    await imageRef.set(payload);
-  }
-
-  private async setRegenImageStatus(
-    storyId: string,
-    imageId: string,
-    status: string
-  ): Promise<void> {
-    const imageRef = this.stories.imageRef(storyId, imageId);
-    const payload = {
-      regenStatus: status,
-    };
-    await imageRef.update(payload);
   }
 
   private get storyRef(): DocumentReference {
