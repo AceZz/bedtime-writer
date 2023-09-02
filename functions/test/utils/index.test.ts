@@ -6,10 +6,10 @@ import {
   retryAsyncFunction,
   listToMapById,
 } from "../../src/utils";
-import { FAKE_IMAGE_BYTES } from "../../src/fake";
+import { FAKE_IMAGE_BYTES_0 } from "../../src/fake";
 
 test("compressToPng", async () => {
-  await compressToPng(FAKE_IMAGE_BYTES, {});
+  await compressToPng(FAKE_IMAGE_BYTES_0, {});
 });
 
 test("sleep for the specified duration", async () => {

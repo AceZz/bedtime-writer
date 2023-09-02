@@ -2,7 +2,7 @@ import { Readable } from "node:stream";
 
 import { StoryLogic } from "../logic";
 import { StoryPart } from "../story_part";
-import { ImageApi } from "./image_api";
+import { ImageApi, IMAGE_SIZE_DEFAULT } from "./image_api";
 import { StoryGenerator } from "./story_generator";
 import {
   AssistantTextPrompt,
@@ -126,7 +126,7 @@ export class NPartStoryGenerator implements StoryGenerator {
   private async getImage(imagePrompt: string): Promise<Buffer> {
     return this.imageApi.getImage(imagePrompt, {
       n: 1,
-      size: "512x512",
+      size: IMAGE_SIZE_DEFAULT,
     });
   }
 }

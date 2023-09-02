@@ -1,4 +1,4 @@
-import { StoryGenerator } from "./generator";
+import { ImageApi, StoryGenerator } from "./generator";
 import { StoryLogic } from "./logic";
 import { StoryMetadata } from "./story_metadata";
 import { StoryPart } from "./story_part";
@@ -96,4 +96,20 @@ export abstract class StoryWriter {
    * Note: calling `writePart` after `writeStatusError` is undefined behaviour.
    */
   protected abstract writeStatusError(error: unknown): Promise<void>;
+
+  /**
+   * Regenerate an image of a story.
+   *
+   * This employs the same prompt used for the previous image.
+   */
+  abstract regenImage(
+    storyId: string,
+    imageId: string,
+    imageApi: ImageApi
+  ): Promise<void>;
+
+  /**
+   * Approve an image to be served.
+   */
+  abstract approveImage(storyId: string, imageId: string): Promise<void>;
 }

@@ -9,7 +9,7 @@ import {
 import { logger } from "../../logger";
 import { StoryLogic } from "../logic/";
 import { StoryPart } from "../story_part";
-import { ImageApi } from "./image_api";
+import { ImageApi, IMAGE_SIZE_DEFAULT } from "./image_api";
 import { StoryGenerator } from "./story_generator";
 
 const NUM_TOKENS_SUMMARY = 100;
@@ -126,7 +126,10 @@ export class OnePartStoryGenerator implements StoryGenerator {
   }
 
   private async getImage(imagePrompt: string): Promise<Buffer> {
-    return this.imageApi.getImage(imagePrompt, { n: 1, size: "512x512" });
+    return this.imageApi.getImage(imagePrompt, {
+      n: 1,
+      size: IMAGE_SIZE_DEFAULT,
+    });
   }
 
   private async getStory(stream: Stream): Promise<string> {

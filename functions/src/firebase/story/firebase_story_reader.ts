@@ -50,4 +50,12 @@ export class FirebaseStoryReader implements StoryReader {
 
     return imagePrompt;
   }
+
+  /**
+   * Get the image ids for the story.
+   */
+  async getImageIds(storyId: string): Promise<string[]> {
+    const snapshot = await this.stories.imagesRef(storyId).get();
+    return snapshot.docs.map((doc) => doc.id);
+  }
 }

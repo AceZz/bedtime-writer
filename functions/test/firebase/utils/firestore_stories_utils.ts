@@ -70,17 +70,56 @@ export class FirestoreStoriesUtils extends FirestoreStories {
     return data?.image;
   }
 
-  async expectImagePromptToBe(
+  /**
+   * Compares the image in the database with the one provided
+   *
+   * Firebase must be initialized before calling this function.
+   */
+  async expectImageToBe(
+    storyId: string,
+    imageId: string,
+    expected: Buffer
+  ): Promise<void> {
+    const actual: Buffer = (await this.imageRef(storyId, imageId).get()).data()
+      ?.data;
+    // This is how Buffer should be compared.
+    expect(actual.equals(expected)).toBe(true);
+  }
+
+  /**
+   * Checks wether the image is approved
+   */
+  async expectImageToBeApproved(
+    storyId: string,
+    imageId: string
+  ): Promise<void> {
+    const actual = (await this.imageRef(storyId, imageId).get()).data()
+      ?.isApproved;
+    expect(actual).toBe(true);
+  }
+
+  /**
+   * Checks wether the image is not approved
+   */
+  async expectImageToNotBeApproved(
+    storyId: string,
+    imageId: string
+  ): Promise<void> {
+    const actual = (await this.imageRef(storyId, imageId).get()).data()
+      ?.isApproved;
+    expect(actual).not.toBe(true);
+  }
+
+  /**
+   * Checks image regen status
+   */
+  async expectImageRegenStatusToBe(
     storyId: string,
     imageId: string,
     expected: string
-  ) {
-    const partsRef = this.partsRef(storyId);
-    const partId = (await partsRef.where("image", "==", imageId).get()).docs[0]
-      .id;
-    const prompts = (await this.promptsDocRef(storyId, partId).get()).data();
-    const actual = prompts?.imagePrompt;
-
+  ): Promise<void> {
+    const actual = (await this.imageRef(storyId, imageId).get()).data()
+      ?.regenStatus;
     expect(actual).toBe(expected);
   }
 

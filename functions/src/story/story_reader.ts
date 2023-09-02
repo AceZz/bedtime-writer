@@ -27,4 +27,9 @@ export interface StoryReader {
    * Get the prompt used to generate the image.
    */
   getImagePrompt(storyId: string, imageId: string): Promise<string>;
+
+  /**
+   * Get the image ids for the story.
+   */
+  getImageIds(storyId: string): Promise<string[]>;
 }

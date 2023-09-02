@@ -31,3 +31,19 @@ export function parseStoryStatus(value: string): StoryStatus {
       throw new Error(`parseStoryStatus: unrecognized value ${value}`);
   }
 }
+
+export enum StoryRegenImageStatus {
+  /**
+   * The image regeneration was requested, but regeneration
+   * is not yet complete.
+   */
+  PENDING = "pending",
+  /**
+   * Image was regenerated.
+   */
+  COMPLETE = "complete",
+  /**
+   * The image regeneration failed.
+   */
+  ERROR = "error",
+}
