@@ -108,7 +108,7 @@ export class FirestoreStoriesUtils extends FirestoreStories {
     imageId: string
   ): Promise<void> {
     const actual = (await this.imageRef(storyId, imageId).get()).data()
-      ?.approved;
+      ?.isApproved;
     expect(actual).toBe(true);
   }
 
@@ -120,7 +120,7 @@ export class FirestoreStoriesUtils extends FirestoreStories {
     imageId: string
   ): Promise<void> {
     const actual = (await this.imageRef(storyId, imageId).get()).data()
-      ?.approved;
+      ?.isApproved;
     expect(actual).not.toBe(true);
   }
 

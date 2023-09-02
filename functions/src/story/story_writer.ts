@@ -111,7 +111,7 @@ export abstract class StoryWriter {
   /**
    * Approve an image to be served.
    *
-   * This writes a new field `approved: true` in the
+   * This writes a new field `isApproved: true` in the
    * image document.
    */
   abstract approveImage(storyId: string, imageId: string): Promise<void>;

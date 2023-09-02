@@ -79,7 +79,7 @@ export class FirebaseStoryWriter extends StoryWriter {
     }
 
     const payload = {
-      approved: true,
+      isApproved: true,
     };
     await imageRef.update(payload);
   }
