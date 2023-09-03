@@ -67,10 +67,6 @@ export class ClassicStoryLogic implements StoryLogic {
     );
   }
 
-  title(): string {
-    return `The story of ${this.characterName}`;
-  }
-
   prompt(): string {
     return (
       this.getIntroPrompt() +

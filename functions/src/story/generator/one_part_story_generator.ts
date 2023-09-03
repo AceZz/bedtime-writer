@@ -37,7 +37,7 @@ export class OnePartStoryGenerator implements StoryGenerator {
       );
     }
 
-    return this.textApi.getText(
+    const title = this.textApi.getText(
       [
         new SystemTextPrompt("Act as a professional storyteller."),
         new UserTextPrompt(this.textPrompt),
@@ -51,6 +51,9 @@ export class OnePartStoryGenerator implements StoryGenerator {
         presence_penalty: 0,
       }
     );
+    logger.debug("OnePartStoryGenerator: title generated");
+
+    return title;
   }
 
   async *storyParts(): AsyncGenerator<StoryPart> {
