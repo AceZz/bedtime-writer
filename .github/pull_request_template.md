@@ -8,3 +8,4 @@
 - Requires deployment of Cloud Functions?
 - Requires deployment of Firestore rules?
 - Backend architecture diagram updated?
+- Doc updated?

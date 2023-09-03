@@ -49,12 +49,12 @@ test.each([
   expect(logic.isValid()).not.toBe(true);
 });
 
-test("title of partial", () => {
-  expect(PARTIAL_CLASSIC_STORY_LOGIC.title()).toBe("The story of Someone");
+test("titlePrompt of partial", () => {
+  expect(PARTIAL_CLASSIC_STORY_LOGIC.titlePrompt()).not.toBe("");
 });
 
-test("title of full", () => {
-  expect(FULL_CLASSIC_STORY_LOGIC.title()).toBe("The story of Someone");
+test("titlePrompt of full", () => {
+  expect(FULL_CLASSIC_STORY_LOGIC.titlePrompt()).not.toBe("");
 });
 
 test("prompt of partial", () => {
