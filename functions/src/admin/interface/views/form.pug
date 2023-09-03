@@ -1,13 +1,13 @@
 html
   head
-    title= title
+    title= `Form ID: ${selectedFormId}`
   body
-    h1= title
-    h2= `Number of stories found: ${numStories}`
-    each images, storyId in allImages
-      h2= `Story ID: ${storyId}`
-      each imageObj in images
-        div
-          p= `Image ID: ${imageObj.id}`
-          p= `Status: ${imageObj.status}`
-          img(src=`data:image/png;base64,${imageObj.data}`)
+    h1= `Form ID: ${selectedFormId}`
+    h2= `Number stories: ${numStories}`
+    if currentImage
+      h2= `Image: ${currentUiIndex} / ${maxUiIndex} `
+      p= `Image ID: ${currentImageId}`
+      p= `Status: ${currentImage.status}`
+      img(src=`data:image/png;base64,${currentImage.data}`)
+    if nextImageId
+      a(href=`/form?formId=${selectedFormId}&imageId=${nextImageId}`) Next
