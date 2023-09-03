@@ -34,51 +34,24 @@ app.get("/form", async (req, res) => {
   const firestore = new FirestoreContext();
   const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
 
-  const storyIds = (await storyReader.getFormStoryIds(selectedFormId)).sort();
-  const numStories = storyIds.length;
-
-  const allImages: {
-    [imageId: string]: {
-      storyId: string;
-      data: string;
-      status: string | undefined;
-    };
-  } = {};
-
-  let allImageIds: string[] = [];
-
-  for (const storyId of storyIds) {
-    const imageIds = await storyReader.getImageIds(storyId);
-    allImageIds = allImageIds.concat(imageIds);
-    await Promise.all(
-      imageIds.map(async (imageId) => {
-        const data = await storyReader.getImage(storyId, imageId);
-        const status = await storyReader.getImageStatus(storyId, imageId);
-        allImages[imageId] = {
-          storyId: storyId,
-          data: data.toString("base64"),
-          status: status,
-        };
-      })
-    );
-  }
-  allImageIds.sort();
+  const imageMap = await storyReader.readFormStoryImagesAsMap(selectedFormId);
+  const imageIds = Array.from(imageMap.keys());
+  const numStories = (await storyReader.getFormStoryIds(selectedFormId)).length;
 
   // Get current imageId from request
   if (req.query.imageId === undefined || req.query.imageId === null) {
-    req.query.imageId = allImageIds[0];
+    req.query.imageId = imageMap.keys().next().value;
   }
   const currentImageId = req.query.imageId as string;
 
-  const currentImage = allImages[currentImageId];
-  const currentIndex = allImageIds.indexOf(currentImageId);
-  const nextIndex = (currentIndex + 1) % allImageIds.length;
-  const nextImageId = allImageIds[nextIndex];
+  const currentImage = imageMap.get(currentImageId);
+  const currentIndex = imageIds.indexOf(currentImageId);
+  const nextIndex = (currentIndex + 1) % imageIds.length;
+  const nextImageId = imageIds[nextIndex];
 
   const currentUiIndex = currentIndex + 1;
-  const maxUiIndex = allImageIds.length;
+  const maxUiIndex = imageIds.length;
   res.render("form", {
-    title: `Images from Form ID: ${selectedFormId}`,
     currentImageId,
     currentImage,
     currentUiIndex,

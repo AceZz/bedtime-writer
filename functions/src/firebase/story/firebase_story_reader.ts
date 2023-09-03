@@ -32,6 +32,31 @@ export class FirebaseStoryReader implements StoryReader {
     });
   }
 
+  async readFormStoryImagesAsMap(
+    formId: string
+  ): Promise<
+    Map<string, { storyId: string; status: string; b64Image: string }>
+  > {
+    const storyIds = (await this.getFormStoryIds(formId)).sort(); // Sorts story ids.
+
+    const imageIdToImageData = new Map();
+
+    for (const storyId of storyIds) {
+      const imageIds = (await this.getImageIds(storyId)).sort(); // Sorts image ids within story.
+      for (const imageId of imageIds) {
+        const data = await this.getImage(storyId, imageId);
+        const status = await this.getImageStatus(storyId, imageId);
+        imageIdToImageData.set(imageId, {
+          storyId: storyId,
+          status: status,
+          imageB64: data.toString("base64"),
+        });
+      }
+    }
+
+    return imageIdToImageData;
+  }
+
   async getFormIds(): Promise<string[]> {
     const snapshots = await this.stories.storiesRef().get();
     const formIdsSet = new Set<string>();
