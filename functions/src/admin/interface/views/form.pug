@@ -6,7 +6,14 @@ html
     style.
       body {
         font-family: 'Roboto', sans-serif;
-        margin: 20px;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .container {
+        text-align: left;
       }
       h1, h2, p {
         margin-bottom: 20px;
@@ -24,13 +31,14 @@ html
         border-radius: 4px;
       }
   body
-    h1= `Form ID: ${selectedFormId}`
-    h2= `Number stories: ${numStories}`
-    if currentImage
-      h2= `Image: ${currentUiIndex} / ${maxUiIndex}`
-      p= `Story ID: ${currentImage.storyId}`
-      p= `Image ID: ${currentImageId}`
-      p= `Status: ${currentImage.status}`
-      img(src=`data:image/png;base64,${currentImage.imageB64}`)
-    if nextImageId
-      a(href=`/form?formId=${selectedFormId}&imageId=${nextImageId}`) Next
+    .container
+      h1= `Form ID: ${selectedFormId}`
+      h2= `Number stories: ${numStories}`
+      if currentImage
+        h2= `Image: ${currentUiIndex} / ${maxUiIndex}`
+        p= `Story ID: ${currentImage.storyId}`
+        p= `Image ID: ${currentImageId}`
+        p= `Status: ${currentImage.status}`
+        img(src=`data:image/png;base64,${currentImage.imageB64}`)
+      if nextImageId
+        a(href=`/form?formId=${selectedFormId}&imageId=${nextImageId}`) Next
