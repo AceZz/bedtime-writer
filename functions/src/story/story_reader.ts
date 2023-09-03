@@ -46,7 +46,14 @@ export interface StoryReader {
   getImageIds(storyId: string): Promise<string[]>;
 
   /**
-   * Get the image buffer.
+   * Get the image doc.
    */
-  getImage(storyId: string, imageId: string): Promise<object>;
+  getImage(
+    storyId: string,
+    imageId: string
+  ): Promise<{
+    data: Buffer;
+    status: string | undefined;
+    isApproved: boolean | undefined;
+  }>;
 }
