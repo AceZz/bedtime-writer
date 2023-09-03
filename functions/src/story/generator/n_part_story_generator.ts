@@ -38,7 +38,9 @@ function isPart(tokens: string[]) {
 }
 
 export class NPartStoryGenerator implements StoryGenerator {
+  protected storyText = "";
   private textPrompt: string;
+  private titlePrompt: string;
   private imagePromptPrompt: string;
 
   constructor(
@@ -48,10 +50,33 @@ export class NPartStoryGenerator implements StoryGenerator {
   ) {
     this.textPrompt = this.logic.prompt();
     this.imagePromptPrompt = this.logic.imagePromptPrompt();
+    this.titlePrompt = this.logic.titlePrompt();
   }
 
-  title(): string {
-    return this.logic.title();
+  async title(): Promise<string> {
+    if (this.storyText === "") {
+      throw new Error(
+        "NPartStoryGenerator: cannot generate a title as no story text was found."
+      );
+    }
+
+    const title = this.textApi.getText(
+      [
+        new SystemTextPrompt("Act as a professional storyteller."),
+        new UserTextPrompt(this.textPrompt),
+        new AssistantTextPrompt(this.storyText),
+        new UserTextPrompt(this.titlePrompt),
+      ],
+      {
+        max_tokens: 100,
+        temperature: 0.4,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+      }
+    );
+    logger.debug("NPartStoryGenerator: title generated");
+
+    return title;
   }
 
   async *storyParts(): AsyncGenerator<StoryPart> {
@@ -59,6 +84,7 @@ export class NPartStoryGenerator implements StoryGenerator {
 
     let i = 0;
     for await (const part of splitIntoParts(textStream)) {
+      this.addStoryText(part);
       logger.debug(`NPartStoryGenerator: part ${i} generated`);
 
       let imagePrompt: string | undefined = undefined;
@@ -128,5 +154,9 @@ export class NPartStoryGenerator implements StoryGenerator {
       n: 1,
       size: IMAGE_SIZE_DEFAULT,
     });
+  }
+
+  private addStoryText(part: string) {
+    this.storyText += "\n" + part;
   }
 }

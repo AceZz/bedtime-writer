@@ -10,10 +10,19 @@ import { NPartStoryGenerator } from "../../../src/story";
 import { FULL_CLASSIC_STORY_LOGIC } from "../logic/data";
 import { FAKE_IMAGE_BYTES_0 } from "../../../src/fake";
 import { FAKE_IMAGE_API, FAKE_TEXT_API } from "../data";
+import { DUMMY_STORY_TEXT } from "./data";
+
+class TestNPartStoryGenerator extends NPartStoryGenerator {
+  storyText = "";
+
+  setStoryText(text: string) {
+    this.storyText = text;
+  }
+}
 
 describe("with fake APIs", () => {
   function initGenerator() {
-    const generator = new NPartStoryGenerator(
+    const generator = new TestNPartStoryGenerator(
       FULL_CLASSIC_STORY_LOGIC,
       FAKE_TEXT_API,
       FAKE_IMAGE_API
@@ -26,9 +35,13 @@ describe("with fake APIs", () => {
     };
   }
 
-  test("title", () => {
+  test("title", async () => {
     const { generator } = initGenerator();
-    expect(generator.title()).toBe("The story of Someone");
+    generator.setStoryText(DUMMY_STORY_TEXT);
+
+    const actual = await generator.title();
+
+    expect(actual).not.toBe("");
   });
 
   test("nextStoryPart", async () => {

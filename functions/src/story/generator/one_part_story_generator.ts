@@ -15,25 +15,52 @@ import { StoryGenerator } from "./story_generator";
 const NUM_TOKENS_SUMMARY = 100;
 
 export class OnePartStoryGenerator implements StoryGenerator {
+  protected storyText = "";
+  private textPrompt: string;
+  private titlePrompt: string;
+  private imagePromptPrompt: string;
+
   constructor(
     readonly logic: StoryLogic,
     readonly textApi: TextApi,
     readonly imageApi: ImageApi
-  ) {}
+  ) {
+    this.textPrompt = this.logic.prompt();
+    this.imagePromptPrompt = this.logic.imagePromptPrompt();
+    this.titlePrompt = this.logic.titlePrompt();
+  }
 
-  title(): string {
-    return this.logic.title();
+  async title(): Promise<string> {
+    if (this.storyText === "") {
+      throw new Error(
+        "OnePartStoryGenerator: cannot generate a title as no story text was found."
+      );
+    }
+
+    return this.textApi.getText(
+      [
+        new SystemTextPrompt("Act as a professional storyteller."),
+        new UserTextPrompt(this.textPrompt),
+        new AssistantTextPrompt(this.storyText),
+        new UserTextPrompt(this.titlePrompt),
+      ],
+      {
+        max_tokens: 100,
+        temperature: 0.4,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+      }
+    );
   }
 
   async *storyParts(): AsyncGenerator<StoryPart> {
     const textPrompt = this.logic.prompt();
-    const imagePromptPrompt = this.logic.imagePromptPrompt();
 
     const stream = await this.getTextStream(textPrompt);
     logger.debug("OnePartStoryGenerator: story stream created");
 
     const [{ imagePrompt, image }, text] = await Promise.all([
-      this.getImagePromptThenImage(textPrompt, stream, imagePromptPrompt),
+      this.getImagePromptThenImage(textPrompt, stream, this.imagePromptPrompt),
       this.getStory(stream),
     ]);
 
@@ -42,7 +69,7 @@ export class OnePartStoryGenerator implements StoryGenerator {
       textPrompt,
       image,
       imagePrompt,
-      imagePromptPrompt
+      this.imagePromptPrompt
     );
   }
 

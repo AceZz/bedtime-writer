@@ -48,14 +48,13 @@ export abstract class StoryWriter {
       );
 
     try {
-      await this.writeTitle(generator.title());
       await this.writeLogic(logic);
-
       await this.deleteParts();
 
       for await (const part of generator.storyParts()) {
         await this.writePart(part);
       }
+      await this.writeTitle(await generator.title());
       await this.writeStatusComplete();
     } catch (error) {
       await this.writeStatusError(error);
