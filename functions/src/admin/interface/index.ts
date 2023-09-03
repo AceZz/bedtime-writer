@@ -69,9 +69,6 @@ app.get("/form", async (req, res) => {
 app.post("/approve-image", async (req, res) => {
   const { storyId, imageId } = req.body;
   const storyWriter = new FirebaseStoryWriter(firestore.storyCacheLanding);
-
-  console.log("POST SUCCESS");
-
   try {
     await storyWriter.approveImage(storyId, imageId);
     res.json({ status: "success", message: "Image approved" });

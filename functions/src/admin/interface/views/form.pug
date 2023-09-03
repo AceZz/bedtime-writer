@@ -42,13 +42,14 @@ html
       }
   body
     .container
-      h1= `Form ID: ${selectedFormId}`
+      h1= `formId: ${selectedFormId}`
       h2= `Number stories: ${numStories}`
       if currentImage
         h2= `Image: ${currentUiIndex} / ${maxUiIndex}`
-        p= `Story ID: ${currentImage.storyId}`
-        p= `Image ID: ${currentImageId}`
-        p= `Status: ${currentImage.status}`
+        p= `storyId: ${currentImage.storyId}`
+        p= `imageID: ${currentImageId}`
+        p= `status: ${currentImage.status}`
+        p= `isApproved: ${currentImage.isApproved}`
         img(src=`data:image/png;base64,${currentImage.imageB64}`)
       if nextImageId
         a(href=`/form?formId=${selectedFormId}&imageId=${nextImageId}`) Next

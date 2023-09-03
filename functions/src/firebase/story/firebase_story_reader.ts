@@ -44,11 +44,14 @@ export class FirebaseStoryReader implements StoryReader {
     for (const storyId of storyIds) {
       const imageIds = (await this.getImageIds(storyId)).sort(); // Sorts image ids within story.
       for (const imageId of imageIds) {
-        const data = await this.getImage(storyId, imageId);
-        const status = await this.getImageStatus(storyId, imageId);
+        const { data, status, isApproved } = await this.getImage(
+          storyId,
+          imageId
+        );
         imageIdToImageData.set(imageId, {
           storyId: storyId,
           status: status,
+          isApproved: isApproved,
           imageB64: data.toString("base64"),
         });
       }
@@ -98,13 +101,21 @@ export class FirebaseStoryReader implements StoryReader {
     return snapshot.docs.map((doc) => doc.id);
   }
 
-  async getImage(storyId: string, imageId: string): Promise<Buffer> {
-    const snapshot = await this.stories.imageRef(storyId, imageId).get();
-    return snapshot.data()?.data;
-  }
+  async getImage(
+    storyId: string,
+    imageId: string
+  ): Promise<{
+    data: Buffer;
+    status: string | undefined;
+    isApproved: boolean | undefined;
+  }> {
+    const docData = (
+      await this.stories.imageRef(storyId, imageId).get()
+    ).data();
+    const data = docData?.data as Buffer;
+    const status = docData?.status as string | undefined;
+    const isApproved = docData?.isApproved as boolean | undefined;
 
-  async getImageStatus(storyId: string, imageId: string): Promise<string> {
-    const snapshot = await this.stories.imageRef(storyId, imageId).get();
-    return snapshot.data()?.status;
+    return { data, status, isApproved };
   }
 }

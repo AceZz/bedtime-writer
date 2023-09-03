@@ -48,5 +48,5 @@ export interface StoryReader {
   /**
    * Get the image buffer.
    */
-  getImage(storyId: string, imageId: string): Promise<Buffer>;
+  getImage(storyId: string, imageId: string): Promise<object>;
 }
