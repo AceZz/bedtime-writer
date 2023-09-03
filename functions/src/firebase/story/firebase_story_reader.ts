@@ -77,4 +77,9 @@ export class FirebaseStoryReader implements StoryReader {
     const snapshot = await this.stories.imageRef(storyId, imageId).get();
     return snapshot.data()?.data;
   }
+
+  async getImageStatus(storyId: string, imageId: string): Promise<string> {
+    const snapshot = await this.stories.imageRef(storyId, imageId).get();
+    return snapshot.data()?.status;
+  }
 }

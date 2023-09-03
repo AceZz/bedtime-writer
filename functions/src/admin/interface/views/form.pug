@@ -3,10 +3,11 @@ html
     title= title
   body
     h1= title
-    p Number of stories found: #{numberOfStories}
+    h2= `Number of stories found: ${numStories}`
     each images, storyId in allImages
       h2= `Story ID: ${storyId}`
       each imageObj in images
         div
           p= `Image ID: ${imageObj.id}`
+          p= `Status: ${imageObj.status}`
           img(src=`data:image/png;base64,${imageObj.data}`)
