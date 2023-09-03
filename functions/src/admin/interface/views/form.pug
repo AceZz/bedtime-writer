@@ -6,6 +6,7 @@ html
     h2= `Number stories: ${numStories}`
     if currentImage
       h2= `Image: ${currentUiIndex} / ${maxUiIndex} `
+      p= `Story ID: ${currentImage.storyId}`
       p= `Image ID: ${currentImageId}`
       p= `Status: ${currentImage.status}`
       img(src=`data:image/png;base64,${currentImage.imageB64}`)
