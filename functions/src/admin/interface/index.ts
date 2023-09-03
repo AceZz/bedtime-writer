@@ -1,18 +1,24 @@
-import express from "express";
+import express, { json } from "express";
+
 import {
   FirestoreContext,
   FirebaseStoryReader,
   initEnv,
   initFirebase,
+  FirebaseStoryWriter,
 } from "../../firebase";
 
 initEnv();
 initFirebase();
 
 const app = express();
+app.use(json());
+
 app.set("view engine", "pug");
 app.set("views", "./src/admin/interface/views");
 const port = 3000;
+
+const firestore = new FirestoreContext();
 
 app.get("/", async (req, res) => {
   const firestore = new FirestoreContext();
@@ -30,8 +36,6 @@ app.get("/form", async (req, res) => {
     res.redirect("/");
     return;
   }
-
-  const firestore = new FirestoreContext();
   const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
 
   const imageMap = await storyReader.readFormStoryImagesAsMap(selectedFormId);
@@ -60,6 +64,20 @@ app.get("/form", async (req, res) => {
     selectedFormId,
     numStories,
   });
+});
+
+app.post("/approve-image", async (req, res) => {
+  const { storyId, imageId } = req.body;
+  const storyWriter = new FirebaseStoryWriter(firestore.storyCacheLanding);
+
+  console.log("POST SUCCESS");
+
+  try {
+    await storyWriter.approveImage(storyId, imageId);
+    res.json({ status: "success", message: "Image approved" });
+  } catch (err) {
+    res.json({ status: "error", message: `${err}` });
+  }
 });
 
 app.listen(port, () => {

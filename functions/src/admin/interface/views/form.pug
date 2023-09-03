@@ -22,13 +22,23 @@ html
         max-width: 100%;
         height: auto;
       }
-      a {
+      a, button {
         display: inline-block;
         padding: 10px 20px;
-        background-color: #007bff;
+        font-size: 16px;
         color: white;
         text-decoration: none;
         border-radius: 4px;
+        width: 100px;
+        text-align: center;  // center the text
+      }
+      a {
+        background-color: #a9a9a9;  // darker gray
+      }
+      button {
+        background-color: #28a745;
+        border: none;
+        cursor: pointer;
       }
   body
     .container
@@ -42,3 +52,20 @@ html
         img(src=`data:image/png;base64,${currentImage.imageB64}`)
       if nextImageId
         a(href=`/form?formId=${selectedFormId}&imageId=${nextImageId}`) Next
+        button(id="approveButton") Approve
+        script.
+          const currentImage = !{JSON.stringify(currentImage)};
+          const currentImageId = !{JSON.stringify(currentImageId)};
+          document.getElementById('approveButton').addEventListener('click', async () => {
+            const storyId = currentImage.storyId;
+            const imageId = currentImageId;
+            const response = await fetch('/approve-image', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ storyId, imageId })
+            });
+            const result = await response.json();
+            console.log('Server response:', result);
+          });
