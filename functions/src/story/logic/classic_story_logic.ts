@@ -67,10 +67,6 @@ export class ClassicStoryLogic implements StoryLogic {
     );
   }
 
-  title(): string {
-    return `The story of ${this.characterName}`;
-  }
-
   prompt(): string {
     return (
       this.getIntroPrompt() +
@@ -128,6 +124,14 @@ export class ClassicStoryLogic implements StoryLogic {
   private getNumWordsPrompt(): string {
     // One minute is about 100 words.
     return ` The length is about ${100 * this.duration} words.`;
+  }
+
+  titlePrompt(): string {
+    return (
+      "Generate now an engaging and captivating title for this story." +
+      " The title should be short." +
+      " Write directly the title, with no punctuations or symbols."
+    );
   }
 
   imagePromptPrompt(): string {
