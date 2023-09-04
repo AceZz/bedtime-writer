@@ -44,22 +44,21 @@ html
     .container
       h1= `formId: ${selectedFormId}`
       h2= `Number stories: ${numStories}`
-      if currentImage
-        h2= `Image: ${currentUiIndex} / ${maxUiIndex}`
-        p= `storyId: ${currentImage.storyId}`
-        p= `imageID: ${currentImageId}`
-        p= `status: ${currentImage.status}`
-        p= `isApproved: ${currentImage.isApproved}`
-        img(src=`data:image/png;base64,${currentImage.imageB64}`)
+      if image
+        h2= `Image: ${uiIndex} / ${maxUiIndex}`
+        p= `storyId: ${storyId}`
+        p= `imageID: ${imageId}`
+        p= `status: ${image.status}`
+        p= `isApproved: ${image.isApproved}`
+        img(src=`data:image/png;base64,${image.imageB64}`)
       if nextImageId
-        a(href=`/form?formId=${selectedFormId}&imageId=${nextImageId}`) Next
+        a(href=`/form?formId=${selectedFormId}&storyId=${nextStoryId}&imageId=${nextImageId}`) Next
         button(id="approveButton") Approve
         script.
-          const currentImage = !{JSON.stringify(currentImage)};
-          const currentImageId = !{JSON.stringify(currentImageId)};
+          const imageId = !{JSON.stringify(imageId)};
           document.getElementById('approveButton').addEventListener('click', async () => {
-            const storyId = currentImage.storyId;
-            const imageId = currentImageId;
+            const storyId = storyId;
+            const imageId = imageId;
             const response = await fetch('/approve-image', {
               method: 'POST',
               headers: {

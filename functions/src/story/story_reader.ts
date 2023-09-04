@@ -48,11 +48,11 @@ export interface StoryReader {
   /**
    * Get the image doc.
    */
-  getImage(
+  getImageB64(
     storyId: string,
     imageId: string
   ): Promise<{
-    data: Buffer;
+    imageB64: string;
     status: string | undefined;
     isApproved: boolean | undefined;
   }>;

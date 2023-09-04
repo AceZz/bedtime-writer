@@ -32,32 +32,18 @@ export class FirebaseStoryReader implements StoryReader {
     });
   }
 
-  async readFormStoryImagesAsMap(
+  async getFormStoryImageIds(
     formId: string
-  ): Promise<
-    Map<string, { storyId: string; status: string; b64Image: string }>
-  > {
-    const storyIds = (await this.getFormStoryIds(formId)).sort(); // Sorts story ids.
+  ): Promise<{ storyId: string; imageId: string }[]> {
+    const storyIds = await this.getFormStoryIds(formId);
+    const imageIds = await Promise.all(
+      storyIds.flatMap(async (storyId) => {
+        const storyImageIds = await this.getImageIds(storyId);
+        return storyImageIds.map((imageId) => ({ storyId, imageId }));
+      })
+    );
 
-    const imageIdToImageData = new Map();
-
-    for (const storyId of storyIds) {
-      const imageIds = (await this.getImageIds(storyId)).sort(); // Sorts image ids within story.
-      for (const imageId of imageIds) {
-        const { data, status, isApproved } = await this.getImage(
-          storyId,
-          imageId
-        );
-        imageIdToImageData.set(imageId, {
-          storyId: storyId,
-          status: status,
-          isApproved: isApproved,
-          imageB64: data.toString("base64"),
-        });
-      }
-    }
-
-    return imageIdToImageData;
+    return imageIds.flat().sort();
   }
 
   async getFormIds(): Promise<string[]> {
@@ -75,6 +61,7 @@ export class FirebaseStoryReader implements StoryReader {
     const snapshots = await this.stories
       .storiesRef()
       .where("request.formId", "==", formId)
+      .select("id")
       .get();
 
     return snapshots.docs.map((doc) => doc.id);
@@ -97,25 +84,25 @@ export class FirebaseStoryReader implements StoryReader {
   }
 
   async getImageIds(storyId: string): Promise<string[]> {
-    const snapshot = await this.stories.imagesRef(storyId).get();
+    const snapshot = await this.stories.imagesRef(storyId).select("id").get();
     return snapshot.docs.map((doc) => doc.id);
   }
 
-  async getImage(
+  async getImageB64(
     storyId: string,
     imageId: string
   ): Promise<{
-    data: Buffer;
+    imageB64: string;
     status: string | undefined;
     isApproved: boolean | undefined;
   }> {
     const docData = (
       await this.stories.imageRef(storyId, imageId).get()
     ).data();
-    const data = docData?.data as Buffer;
+    const imageB64 = (docData?.data as Buffer).toString("base64");
     const status = docData?.status as string | undefined;
     const isApproved = docData?.isApproved as boolean | undefined;
 
-    return { data, status, isApproved };
+    return { imageB64, status, isApproved };
   }
 }

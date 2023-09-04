@@ -30,6 +30,7 @@ app.get("/", async (req, res) => {
 
 app.get("/form", async (req, res) => {
   // Get form from request
+
   const selectedFormId = req.query.formId as string;
 
   if (!selectedFormId) {
@@ -38,28 +39,35 @@ app.get("/form", async (req, res) => {
   }
   const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
 
-  const imageMap = await storyReader.readFormStoryImagesAsMap(selectedFormId);
-  const imageIds = Array.from(imageMap.keys());
+  // const imageMap = await storyReader.readFormStoryImagesAsMap(selectedFormId);
+  const storyImageIds = await storyReader.getFormStoryImageIds(selectedFormId);
   const numStories = (await storyReader.getFormStoryIds(selectedFormId)).length;
 
   // Get current imageId from request
   if (req.query.imageId === undefined || req.query.imageId === null) {
-    req.query.imageId = imageMap.keys().next().value;
+    req.query.storyId = storyImageIds[0].storyId;
+    req.query.imageId = storyImageIds[0].imageId;
   }
-  const currentImageId = req.query.imageId as string;
 
-  const currentImage = imageMap.get(currentImageId);
-  const currentIndex = imageIds.indexOf(currentImageId);
-  const nextIndex = (currentIndex + 1) % imageIds.length;
-  const nextImageId = imageIds[nextIndex];
+  const storyId = req.query.storyId as string;
+  const imageId = req.query.imageId as string;
 
-  const currentUiIndex = currentIndex + 1;
-  const maxUiIndex = imageIds.length;
+  const image = await storyReader.getImageB64(storyId, imageId);
+  const index = storyImageIds.findIndex((im) => im.imageId == imageId);
+  console.log(index);
+  const nextIndex = (index + 1) % storyImageIds.length;
+  const nextStoryId = storyImageIds[nextIndex].storyId;
+  const nextImageId = storyImageIds[nextIndex].imageId;
+
+  const uiIndex = index + 1;
+  const maxUiIndex = storyImageIds.length;
   res.render("form", {
-    currentImageId,
-    currentImage,
-    currentUiIndex,
+    storyId,
+    imageId,
+    image,
+    uiIndex,
     maxUiIndex,
+    nextStoryId,
     nextImageId,
     selectedFormId,
     numStories,
