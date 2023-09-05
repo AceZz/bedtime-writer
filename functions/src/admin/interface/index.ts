@@ -1,4 +1,5 @@
 import express, { json } from "express";
+import { getImageApi } from "../../api";
 
 import {
   FirestoreContext,
@@ -7,8 +8,10 @@ import {
   initFirebase,
   FirebaseStoryWriter,
 } from "../../firebase";
+import { initLocalSecrets } from "../../firebase/utils";
 
 initEnv();
+initLocalSecrets();
 initFirebase();
 
 const app = express();
@@ -63,6 +66,10 @@ app.get("/form", async (req, res) => {
 
   const uiIndex = index + 1;
   const maxUiIndex = storyImageIds.length;
+
+  //TODO: display story request to.
+  //TODO: add in UI `approve form`, which only approves if all images are approved
+
   res.render("form", {
     storyId,
     imageId,
@@ -83,6 +90,19 @@ app.post("/approve-image", async (req, res) => {
   const storyWriter = new FirebaseStoryWriter(firestore.storyCacheLanding);
   try {
     await storyWriter.approveImage(storyId, imageId);
+    res.json({ status: "success", message: "Image approved" });
+  } catch (err) {
+    res.json({ status: "error", message: `${err}` });
+  }
+});
+
+app.post("/regen-image", async (req, res) => {
+  const { storyId, imageId } = req.body;
+  console.log(`${req.body.imageId}`);
+  const storyWriter = new FirebaseStoryWriter(firestore.storyCacheLanding);
+  try {
+    const imageApi = getImageApi();
+    await storyWriter.regenImage(storyId, imageId, imageApi);
     res.json({ status: "success", message: "Image approved" });
   } catch (err) {
     res.json({ status: "error", message: `${err}` });

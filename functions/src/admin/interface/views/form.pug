@@ -39,7 +39,7 @@ html
       }
       button {
         padding: 10px 20px;
-        background-color: #28a745;
+        background-color: #a9a9a9;
         border: none;
         cursor: pointer;
       }
@@ -51,14 +51,37 @@ html
         display: flex;
         justify-content: center;
         color: black;
+        font-size: 18px;
       }
-      .status-container span,
+      .status-container span {
+        margin: 0 10px;
+        margin-top: 10px;
+        width: 100px;
+        display: inline-block;
+      }
+      .status-container span.separator {
+        width: 40px;
+        text-align: center;
+      }
       .status-container strong {
+        width: 60px;
         margin: 0 10px;
         margin-top: 10px;
       }
       strong {
         font-weight: bold;
+      }
+      #approveButton {
+        background-color: #28a745;
+      }
+      #regenButton {
+        background-color: #ff7f00;
+      }
+      #refreshButton {
+        padding: 5px 20px;
+        width: 460px;
+        margin: 0px;
+        margin-top: 5px;
       }
   body
     .container
@@ -70,30 +93,47 @@ html
         p= `imageId: ${imageId}`
         img(src=`data:image/png;base64,${image.imageB64}`)
         .status-container
-          span Status: 
-          strong= `${image.status}`
-          span | 
+          span regenStatus: 
+          strong= `${image.regenStatus}`
+          span.separator | 
           span isApproved: 
           strong= `${image.isApproved}`
       if nextImageId
+        .button-container
+          button(id="refreshButton") Refresh
+            script.
+              document.getElementById('refreshButton').addEventListener('click', async () => {
+                location.reload();
+              });
         .button-container
           a(href=`/form?formId=${selectedFormId}&storyId=${previousStoryId}&imageId=${previousImageId}`) Previous
           a(href=`/form?formId=${selectedFormId}&storyId=${nextStoryId}&imageId=${nextImageId}`) Next
           button(id="approveButton") Approve
             script.
-                const storyId = !{JSON.stringify(storyId)};
-                const imageId = !{JSON.stringify(imageId)};
-                document.getElementById('approveButton').addEventListener('click', async () => {
-                  const response = await fetch('/approve-image', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ storyId, imageId })
-                  });
-                  const result = await response.json();
-                  console.log('Server response:', result);
-                  location.reload();
+              const storyId = !{JSON.stringify(storyId)};
+              const imageId = !{JSON.stringify(imageId)};
+              document.getElementById('approveButton').addEventListener('click', async () => {
+                const response = await fetch('/approve-image', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ storyId, imageId })
                 });
-
+                const result = await response.json();
+                console.log('Server response:', result);
+                location.reload();
+              });
+          button(id="regenButton") Regen
+            script.
+              document.getElementById('regenButton').addEventListener('click', async () => {       
+                fetch('/regen-image', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ storyId, imageId })
+                });
+                location.reload();
+              });
             
