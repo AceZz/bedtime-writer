@@ -53,6 +53,10 @@ app.get("/form", async (req, res) => {
 
   const image = await storyReader.getImage(storyId, imageId);
   const index = storyImageIds.findIndex((im) => im.imageId == imageId);
+  const previousIndex =
+    (index - 1 + storyImageIds.length) % storyImageIds.length;
+  const previousStoryId = storyImageIds[previousIndex].storyId;
+  const previousImageId = storyImageIds[previousIndex].imageId;
   const nextIndex = (index + 1) % storyImageIds.length;
   const nextStoryId = storyImageIds[nextIndex].storyId;
   const nextImageId = storyImageIds[nextIndex].imageId;
@@ -65,6 +69,8 @@ app.get("/form", async (req, res) => {
     image,
     uiIndex,
     maxUiIndex,
+    previousStoryId,
+    previousImageId,
     nextStoryId,
     nextImageId,
     selectedFormId,

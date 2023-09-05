@@ -24,7 +24,6 @@ html
       }
       a, button {
         display: inline-block;
-        padding: 10px 20px;
         font-size: 16px;
         color: white;
         text-decoration: none;
@@ -35,9 +34,11 @@ html
         margin-top: 10px;
       }
       a {
+        padding: 10px 5px;
         background-color: #a9a9a9;
       }
       button {
+        padding: 10px 20px;
         background-color: #28a745;
         border: none;
         cursor: pointer;
@@ -76,20 +77,23 @@ html
           strong= `${image.isApproved}`
       if nextImageId
         .button-container
+          a(href=`/form?formId=${selectedFormId}&storyId=${previousStoryId}&imageId=${previousImageId}`) Previous
           a(href=`/form?formId=${selectedFormId}&storyId=${nextStoryId}&imageId=${nextImageId}`) Next
           button(id="approveButton") Approve
             script.
-              const storyId = !{JSON.stringify(storyId)};
-              const imageId = !{JSON.stringify(imageId)};
-              document.getElementById('approveButton').addEventListener('click', async () => {
-                const response = await fetch('/approve-image', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({ storyId, imageId })
+                const storyId = !{JSON.stringify(storyId)};
+                const imageId = !{JSON.stringify(imageId)};
+                document.getElementById('approveButton').addEventListener('click', async () => {
+                  const response = await fetch('/approve-image', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ storyId, imageId })
+                  });
+                  const result = await response.json();
+                  console.log('Server response:', result);
+                  location.reload();
                 });
-                const result = await response.json();
-                console.log('Server response:', result);
-                location.reload();
-              });
+
+            
