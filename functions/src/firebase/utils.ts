@@ -29,13 +29,20 @@ export function initEnv() {
  * Useful when you need to access the local secrets (such as the OpenAI key)
  * outside the emulators function (such as in local admin scripts).
  */
-export async function initLocalSecrets() {
+export function initLocalSecrets() {
+  config({ path: ".secret.local" });
+}
+
+/**
+ * Ask wether to load the local secrets.
+ */
+export async function promptInitLocalSecrets() {
   const answer = (
     await prompt("The `.secret.local` file will be loaded. Confirm? (y/N) ")
   )?.toLowerCase();
 
   if (["y", "yes"].includes(answer)) {
-    config({ path: ".secret.local" });
+    initLocalSecrets();
   } else {
     console.log("Abort.");
     process.exit(0);
