@@ -1,5 +1,5 @@
 import { StoryMetadata } from "./story_metadata";
-import { StoryStatus } from "./story_status";
+import { StoryRegenImageStatus, StoryStatus } from "./story_status";
 
 /**
  * Read stories.
@@ -53,7 +53,7 @@ export interface StoryReader {
     imageId: string
   ): Promise<{
     imageB64: string;
-    status: string | undefined;
+    regenStatus: StoryRegenImageStatus | undefined;
     isApproved: boolean | undefined;
   }>;
 }

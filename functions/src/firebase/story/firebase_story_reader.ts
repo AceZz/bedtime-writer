@@ -94,16 +94,18 @@ export class FirebaseStoryReader implements StoryReader {
     imageId: string
   ): Promise<{
     imageB64: string;
-    status: string | undefined;
+    regenStatus: StoryRegenImageStatus | undefined;
     isApproved: boolean | undefined;
   }> {
     const docData = (
       await this.stories.imageRef(storyId, imageId).get()
     ).data();
     const imageB64 = (docData?.data as Buffer).toString("base64");
-    const status = docData?.status as StoryRegenImageStatus | undefined;
+    const regenStatus = docData?.regenStatus as
+      | StoryRegenImageStatus
+      | undefined;
     const isApproved = docData?.isApproved as boolean | undefined;
 
-    return { imageB64, status, isApproved };
+    return { imageB64, regenStatus, isApproved };
   }
 }
