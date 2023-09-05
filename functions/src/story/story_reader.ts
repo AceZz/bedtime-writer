@@ -48,7 +48,7 @@ export interface StoryReader {
   /**
    * Get the image doc.
    */
-  getImageB64(
+  getImage(
     storyId: string,
     imageId: string
   ): Promise<{

@@ -39,7 +39,6 @@ app.get("/form", async (req, res) => {
   }
   const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
 
-  // const imageMap = await storyReader.readFormStoryImagesAsMap(selectedFormId);
   const storyImageIds = await storyReader.getFormStoryImageIds(selectedFormId);
   const numStories = (await storyReader.getFormStoryIds(selectedFormId)).length;
 
@@ -52,9 +51,8 @@ app.get("/form", async (req, res) => {
   const storyId = req.query.storyId as string;
   const imageId = req.query.imageId as string;
 
-  const image = await storyReader.getImageB64(storyId, imageId);
+  const image = await storyReader.getImage(storyId, imageId);
   const index = storyImageIds.findIndex((im) => im.imageId == imageId);
-  console.log(index);
   const nextIndex = (index + 1) % storyImageIds.length;
   const nextStoryId = storyImageIds[nextIndex].storyId;
   const nextImageId = storyImageIds[nextIndex].imageId;

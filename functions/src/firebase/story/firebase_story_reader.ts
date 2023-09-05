@@ -3,6 +3,7 @@ import {
   StoryReader,
   StoryStatus,
   parseStoryStatus,
+  StoryRegenImageStatus,
 } from "../../story";
 import { FirestoreStories } from "./firestore_stories";
 
@@ -88,7 +89,7 @@ export class FirebaseStoryReader implements StoryReader {
     return snapshot.docs.map((doc) => doc.id);
   }
 
-  async getImageB64(
+  async getImage(
     storyId: string,
     imageId: string
   ): Promise<{
@@ -100,7 +101,7 @@ export class FirebaseStoryReader implements StoryReader {
       await this.stories.imageRef(storyId, imageId).get()
     ).data();
     const imageB64 = (docData?.data as Buffer).toString("base64");
-    const status = docData?.status as string | undefined;
+    const status = docData?.status as StoryRegenImageStatus | undefined;
     const isApproved = docData?.isApproved as boolean | undefined;
 
     return { imageB64, status, isApproved };
