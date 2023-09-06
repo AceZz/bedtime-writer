@@ -148,6 +148,9 @@ class StoryFormGenerator {
       missingStories.map((story) => this.generateMissingStory(story))
     );
 
+    // Delete stories with failed generation.
+    await this.deleteFailedStories();
+
     // Check the result.
     const missingStoriesAfterGen = await this.getMissingStories();
     const numGeneratedStories =
@@ -178,6 +181,28 @@ class StoryFormGenerator {
           "Run `npm run story_gen_cache` again."
       );
     }
+  }
+
+  private async deleteFailedStories(): Promise<void> {
+    const stories = await this.storyReader.readFormStories(this.formId);
+    const deleteResults: number[] = await Promise.all(
+      stories.map(async (story) => {
+        if (story.status !== StoryStatus.COMPLETE) {
+          // This is a failed story which we delete.
+          const writer = new FirebaseStoryWriter(
+            this.firestore.storyCacheLanding,
+            story.id
+          );
+          await writer.delete(story.id);
+          return 1;
+        }
+        return 0;
+      })
+    );
+    const numFailedStories = deleteResults.reduce((acc, val) => acc + val, 0);
+    logger.debug(
+      `deleteFailedStories: deleted ${numFailedStories} failed stories.`
+    );
   }
 
   private async getMissingStories(): Promise<MissingStory[]> {
