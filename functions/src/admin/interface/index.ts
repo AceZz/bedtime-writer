@@ -67,12 +67,14 @@ app.get("/form", async (req, res) => {
   const uiIndex = index + 1;
   const maxUiIndex = storyImageIds.length;
 
-  //TODO: display story request to.
+  const logic = (await storyReader.getClassicStoryLogic(storyId)).toString();
+
   //TODO: add in UI `approve form`, which only approves if all images are approved
 
   res.render("form", {
     storyId,
     imageId,
+    logic,
     image,
     uiIndex,
     maxUiIndex,
@@ -98,7 +100,6 @@ app.post("/approve-image", async (req, res) => {
 
 app.post("/regen-image", async (req, res) => {
   const { storyId, imageId } = req.body;
-  console.log(`${req.body.imageId}`);
   const storyWriter = new FirebaseStoryWriter(firestore.storyCacheLanding);
   try {
     const imageApi = getImageApi();

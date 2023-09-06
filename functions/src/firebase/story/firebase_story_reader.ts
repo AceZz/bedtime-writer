@@ -4,6 +4,7 @@ import {
   StoryStatus,
   parseStoryStatus,
   StoryRegenImageStatus,
+  ClassicStoryLogic,
 } from "../../story";
 import { FirestoreStories } from "./firestore_stories";
 
@@ -47,6 +48,30 @@ export class FirebaseStoryReader implements StoryReader {
     );
 
     return imageIds.flat().sort();
+  }
+
+  async getClassicStoryLogic(storyId: string): Promise<ClassicStoryLogic> {
+    const data = (await this.stories.storyRef(storyId).get()).data();
+    if (data === undefined || data === null) {
+      throw new Error(
+        `getStoryLogic: no logic found in doc of story ${storyId}`
+      );
+    }
+    if (data.logic.logicType !== "classic") {
+      throw new Error(
+        `getStoryLogic: logic found is not classic logic for ${storyId}`
+      );
+    }
+    return new ClassicStoryLogic(
+      data.logic.duration,
+      data.logic.style,
+      data.logic.characterName,
+      data.logic.place,
+      data.logic.object,
+      data.logic.characterFlaw,
+      data.logic.characterPower,
+      data.logic.characterChallenge
+    );
   }
 
   async getFormIds(): Promise<string[]> {

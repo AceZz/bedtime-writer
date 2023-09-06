@@ -12,4 +12,6 @@ export interface StoryLogic {
   imagePromptPrompt(): string;
 
   toJson(): { [key: string]: string | number | undefined };
+
+  toString(): string;
 }
