@@ -3,8 +3,48 @@ import {
   StoryForm,
   StoryQuestionReader,
   StoryReader,
+  StoryQuestion,
 } from "../../../story/";
 import { FirestoreStoryForms } from "./firestore_story_forms";
+
+/**
+ * Transform a `StoryForm` into the object to insert into Firestore.
+ */
+export function storyFormToFirestore(
+  form: StoryForm,
+  availableQuestions: Map<string, StoryQuestion>
+): any {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data: any = {};
+
+  // Check and write the datetime.
+  data.datetime = form.datetime;
+
+  // Check and write the questions.
+  let index = 0;
+  for (const formQuestion of form.questions.values()) {
+    // Try to copy the existing question with the choices from the form. The
+    // choices are verified by `copyWithChoices`.
+    const validatedQuestion = availableQuestions
+      .get(formQuestion.id)
+      ?.copyWithChoices(formQuestion.choices.keys());
+
+    if (validatedQuestion === undefined) {
+      throw new Error(
+        `storyFormToFirestore: question "${formQuestion.id}" does not exist.`
+      );
+    }
+
+    data[`question${index}`] = formQuestion.id;
+    data[`question${index}Choices`] = formQuestion.choiceIds;
+    index++;
+  }
+  data.numQuestions = index;
+  data.isCached = false;
+  data.isApproved = false;
+
+  return data;
+}
 
 /**
  * This class writes a Form object to Firebase.
@@ -20,36 +60,7 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
   async write(form: StoryForm): Promise<string> {
     const availableQuestions = await this.questionReader.get();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data: any = {};
-
-    // Check and write the datetime.
-    data.datetime = form.datetime;
-
-    // Check and write the questions.
-    let index = 0;
-    for (const formQuestion of form.questions.values()) {
-      // Try to copy the existing question with the choices from the form. The
-      // choices are verified by `copyWithChoices`.
-      const validatedQuestion = availableQuestions
-        .get(formQuestion.id)
-        ?.copyWithChoices(formQuestion.choices.keys());
-
-      if (validatedQuestion === undefined) {
-        throw Error(
-          `FirebaseStoryFormWriter.write: question "${formQuestion.id}" ` +
-            "does not exist."
-        );
-      }
-
-      data[`question${index}`] = formQuestion.id;
-      data[`question${index}Choices`] = formQuestion.choiceIds;
-      index++;
-    }
-    data.numQuestions = index;
-    data.isCached = false;
-    data.isApproved = false;
-
+    const data = storyFormToFirestore(form, availableQuestions);
     const doc = await this.formsCollection.formsRef().add(data);
     return doc.id;
   }
