@@ -1,3 +1,4 @@
+export { FirebaseStoryFormCopier } from "./firebase_story_form_copier";
 export { FirebaseStoryFormReader } from "./firebase_story_form_reader";
 export { FirebaseStoryFormWriter } from "./firebase_story_form_writer";
 export { FirebaseStoryQuestionCopier } from "./firebase_story_question_copier";
