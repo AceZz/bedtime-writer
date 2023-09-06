@@ -33,6 +33,7 @@ import {
   getFirebaseProject,
   initLocalSecrets,
 } from "../firebase/utils";
+import { logger } from "../logger";
 
 export const CACHE_USER = "@STORY_GEN_CACHE";
 
@@ -225,9 +226,7 @@ class StoryFormGenerator {
     };
   }
 
-  private async generateMissingStory(
-    story: MissingStory
-  ): Promise<{ result: void; tries: number }> {
+  private async generateMissingStory(story: MissingStory): Promise<void> {
     const promiseFn = async () => {
       const writer = new FirebaseStoryWriter(
         this.firestore.storyCacheLanding,
@@ -249,7 +248,13 @@ class StoryFormGenerator {
     const timeout = parseEnvAsNumber("CACHE_RETRY_TIMEOUT", 120000);
     const delay = parseEnvAsNumber("CACHE_RETRY_DELAY", 1000);
     const params = { maxTries: maxTries, timeout: timeout, delay: delay };
-    return retryAsyncFunction(promiseFn, params);
+    try {
+      await retryAsyncFunction(promiseFn, params);
+    } catch (error) {
+      logger.error(
+        `generateMissingStory: maximum number of tries reached for story ${story.id}. Final error: ${error}`
+      );
+    }
   }
 }
 
