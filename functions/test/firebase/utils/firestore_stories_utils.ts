@@ -40,6 +40,11 @@ export class FirestoreStoriesUtils extends FirestoreStories {
     expect(await this.getNumImages(id)).toBe(numImages);
   }
 
+  async expectStoryToNotExist(storyId: string): Promise<void> {
+    const snapshot = await this.storyRef(storyId).get();
+    expect(snapshot.exists).toBeFalsy();
+  }
+
   async getNumPartsList(id: string): Promise<number> {
     const data = await this.getStoryData(id);
     return data?.parts.length;
