@@ -43,7 +43,7 @@ app.get("/form", async (req, res) => {
   const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
 
   const storyImageIds = await storyReader.getFormStoryImageIds(selectedFormId);
-  const numStories = (await storyReader.getFormStoryIds(selectedFormId)).length;
+  const numStories = (await storyReader.readFormStories(selectedFormId)).length;
 
   // Get current imageId from request
   if (req.query.imageId === undefined || req.query.imageId === null) {

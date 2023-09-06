@@ -36,7 +36,9 @@ export class FirebaseStoryReader implements StoryReader {
   async getFormStoryImageIds(
     formId: string
   ): Promise<{ storyId: string; imageId: string }[]> {
-    const storyIds = await this.getFormStoryIds(formId);
+    const storyIds = await (
+      await this.readFormStories(formId)
+    ).map((story) => story.id);
     const imageIds = await Promise.all(
       storyIds.flatMap(async (storyId) => {
         const storyImageIds = await this.getImageIds(storyId);
@@ -56,16 +58,6 @@ export class FirebaseStoryReader implements StoryReader {
     });
 
     return Array.from(formIdsSet);
-  }
-
-  async getFormStoryIds(formId: string): Promise<string[]> {
-    const snapshots = await this.stories
-      .storiesRef()
-      .where("request.formId", "==", formId)
-      .select("id")
-      .get();
-
-    return snapshots.docs.map((doc) => doc.id);
   }
 
   async getImagePrompt(storyId: string, imageId: string): Promise<string> {
