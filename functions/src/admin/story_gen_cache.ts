@@ -191,28 +191,22 @@ class StoryFormGenerator {
       const request = this.answersToRequest(answers);
       const metadata = new StoryMetadata(CACHE_USER, request);
       const logic = this.form.toClassicLogic(answers);
-      let hasAStory = false;
+      let hasACompleteStory = false;
 
       for (const story of stories) {
         if (_.isEqual(story.metadata.request, request)) {
-          if (story.status !== StoryStatus.COMPLETE) {
-            // There is a story for `answer`, but it is not `COMPLETE`, so
-            // should be rewritten.
-            missingStories.push({
-              metadata,
-              logic,
-              id: story.id,
-            });
+          if (story.status === StoryStatus.COMPLETE) {
+            // There is a story for `answer`and it is `COMPLETE`, so
+            // it should not be rewritten.
+            hasACompleteStory = true;
+            break;
           }
-
-          hasAStory = true;
-          break;
         }
       }
 
       // `answer` has no appropriate story, either because there was no story
-      // at all, or because the generated story was not `COMPLETE`.
-      if (!hasAStory) {
+      // at all, or because none of the generated stories was `COMPLETE`.
+      if (!hasACompleteStory) {
         missingStories.push({
           metadata,
           logic,
