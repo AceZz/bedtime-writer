@@ -94,10 +94,10 @@ html
         img(src=`data:image/png;base64,${image.imageB64}`)
         .status-container
           span regenStatus: 
-          strong= `${image.regenStatus}`
+          strong(style=`color: ${image.regenStatus == 'pending' ? 'orange' : 'black'};`)= `${image.regenStatus}`
           span.separator | 
           span isApproved: 
-          strong= `${image.isApproved}`
+          strong(style=`color: ${image.isApproved ? 'green' : 'black'};`)= `${image.isApproved}`
       if nextImageId
         .button-container
           button(id="refreshButton") Refresh
