@@ -1,0 +1,142 @@
+doctype html
+html
+  head
+    title= `Form ID: ${selectedFormId}`
+    link(href='https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap' rel='stylesheet')
+    style.
+      body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .container {
+        text-align: left;
+        width: 512px;
+      }
+      h1, h2, p {
+        margin-bottom: 20px;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+      a, button {
+        display: inline-block;
+        font-size: 16px;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        width: 100px;
+        text-align: center;
+        margin: 5px;
+        margin-top: 10px;
+      }
+      a {
+        padding: 10px 5px;
+        background-color: #a9a9a9;
+      }
+      button {
+        padding: 10px 20px;
+        background-color: #a9a9a9;
+        border: none;
+        cursor: pointer;
+      }
+      .button-container {
+        display: flex;
+        justify-content: center;
+      }
+      .status-container {
+        display: flex;
+        justify-content: center;
+        color: black;
+        font-size: 18px;
+      }
+      .status-container span {
+        margin: 0 10px;
+        margin-top: 10px;
+        width: 100px;
+        display: inline-block;
+      }
+      .status-container span.separator {
+        width: 40px;
+        text-align: center;
+      }
+      .status-container strong {
+        width: 60px;
+        margin: 0 10px;
+        margin-top: 10px;
+      }
+      strong {
+        font-weight: bold;
+      }
+      #approveButton {
+        background-color: #28a745;
+      }
+      #regenButton {
+        background-color: #ff7f00;
+      }
+      #refreshButton {
+        padding: 5px 20px;
+        width: 460px;
+        margin: 0px;
+        margin-top: 5px;
+      }
+  body
+    script.
+      const storyId = !{JSON.stringify(storyId)};
+      const imageId = !{JSON.stringify(imageId)};
+    .container
+      h1= `formId: ${selectedFormId}`
+      h2= `Number stories: ${numStories}`
+      if image
+        h2= `Image: ${uiIndex} / ${maxUiIndex}`
+        p= `storyId: ${storyId}`
+        p= `imageId: ${imageId}`
+        p= `logic: ${logic}`
+        img(src=`data:image/png;base64,${image.imageB64}`)
+        .status-container
+          span regenStatus: 
+          strong(style=`color: ${image.regenStatus == 'pending' ? 'orange' : 'black'};`)= `${image.regenStatus}`
+          span.separator | 
+          span isApproved: 
+          strong(style=`color: ${image.isApproved ? 'green' : 'black'};`)= `${image.isApproved}`
+      if nextImageId
+        .button-container
+          button(id="refreshButton") Refresh
+            script.
+              document.getElementById('refreshButton').addEventListener('click', async () => {
+                location.reload();
+              });
+        .button-container
+          a(href=`/form?formId=${selectedFormId}&storyId=${previousStoryId}&imageId=${previousImageId}`) Previous
+          a(href=`/form?formId=${selectedFormId}&storyId=${nextStoryId}&imageId=${nextImageId}`) Next
+          button(id="approveButton") Approve
+            script.
+              document.getElementById('approveButton').addEventListener('click', async () => {
+                const response = await fetch('/approve-image', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ storyId, imageId })
+                });
+                const result = await response.json();
+                console.log('Server response:', result);
+                location.reload();
+              });
+          button(id="regenButton") Regen
+            script.
+              document.getElementById('regenButton').addEventListener('click', async () => {       
+                fetch('/regen-image', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ storyId, imageId })
+                });
+                setTimeout(() => location.reload(), 100);
+              });
+            

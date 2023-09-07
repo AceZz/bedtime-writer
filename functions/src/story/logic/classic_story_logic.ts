@@ -7,6 +7,8 @@ export const MAX_STRING_LENGTH = 50;
  * A story logic with prompts adapted to a classic story (no interactivity).
  */
 export class ClassicStoryLogic implements StoryLogic {
+  private readonly logicType = "classic";
+
   constructor(
     private readonly duration: number,
     private readonly style: string,
@@ -148,6 +150,7 @@ export class ClassicStoryLogic implements StoryLogic {
 
   toJson(): { [key: string]: string | number | undefined } {
     return {
+      logicType: this.logicType,
       duration: this.duration,
       style: this.style,
       characterName: this.characterName,
@@ -157,5 +160,30 @@ export class ClassicStoryLogic implements StoryLogic {
       characterPower: this.characterPower,
       characterChallenge: this.characterChallenge,
     };
+  }
+
+  toString(): string {
+    const parts = [];
+    parts.push(`characterName: ${this.characterName}`);
+    if (this.place) {
+      parts.push(`place: ${this.place}`);
+    }
+    if (this.object) {
+      parts.push(`object: ${this.object}`);
+    }
+    if (this.characterFlaw) {
+      parts.push(`characterFlaw: ${this.characterFlaw}`);
+    }
+    if (this.characterPower) {
+      parts.push(`characterPower: ${this.characterPower}`);
+    }
+    if (this.characterChallenge) {
+      parts.push(`characterChallenge: ${this.characterChallenge}`);
+    }
+    parts.push(`logicType: ${this.logicType}`);
+    parts.push(`duration: ${this.duration}`);
+    parts.push(`style: ${this.style}`);
+
+    return parts.join(" | ");
   }
 }

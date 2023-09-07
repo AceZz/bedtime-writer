@@ -31,7 +31,7 @@ import _ from "lodash";
 import {
   firebaseEmulatorsAreUsed,
   getFirebaseProject,
-  initLocalSecrets,
+  promptInitLocalSecrets,
 } from "../firebase/utils";
 
 export const CACHE_USER = "@STORY_GEN_CACHE";
@@ -266,7 +266,7 @@ async function main() {
     process.env.TEXT_API?.toLowerCase() !== "fake" ||
     process.env.IMAGE_API?.toLowerCase() !== "fake"
   ) {
-    await initLocalSecrets();
+    await promptInitLocalSecrets();
   }
 
   initFirebase();
