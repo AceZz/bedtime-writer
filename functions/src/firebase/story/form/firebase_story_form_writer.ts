@@ -4,6 +4,7 @@ import {
   StoryForm,
   StoryQuestion,
   StoryQuestionReader,
+  StoryReader,
 } from "../../../story/";
 import { FirestoreStoryForms } from "./firestore_story_forms";
 
@@ -14,7 +15,10 @@ import { FirestoreStoryForms } from "./firestore_story_forms";
 export class FirebaseStoryFormWriter implements StoryFormWriter {
   constructor(
     private readonly formsCollection: FirestoreStoryForms,
-    private readonly questionReader: StoryQuestionReader | undefined = undefined
+    private readonly questionReader:
+      | StoryQuestionReader
+      | undefined = undefined,
+    private readonly storyReader: StoryReader | undefined = undefined
   ) {}
 
   async write(form: StoryForm): Promise<string> {
@@ -66,7 +70,26 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
     await this.formsCollection.formRef(id).update({ isGenerated: true });
   }
 
-  async writeIsApproved(id: string): Promise<void> {
+  async approveForm(id: string): Promise<void> {
+    if (this.storyReader === undefined) {
+      throw new Error(
+        "approveForm: no story reader found. Please provide a StoryReader when instantiating FirebaseStoryFormWriter."
+      );
+    }
+
+    const isAllFormImagesApproved =
+      await this.storyReader.checkAllFormImagesApproved(id);
+
+    if (!isAllFormImagesApproved) {
+      throw new Error(
+        `approveForm: form ${id} cannot be approved as some images in the stories collection are still not approved.`
+      );
+    }
+
+    await this.writeIsApproved(id);
+  }
+
+  private async writeIsApproved(id: string): Promise<void> {
     await this.formsCollection.formRef(id).update({ isApproved: true });
   }
 }

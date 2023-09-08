@@ -18,10 +18,10 @@ export interface StoryFormWriter {
   writeIsGenerated(id: string): Promise<void>;
 
   /**
-   * Write the form is approved.
+   * Approve the form.
    *
-   * The conditions for form approval must
-   * be checked prior to calling this method.
+   * Throws an error if the conditions for approval are not met.
+   * This is prerequisite for serving the form.
    */
-  writeIsApproved(id: string): Promise<void>;
+  approveForm(id: string): Promise<void>;
 }

@@ -35,11 +35,11 @@ export class FirebaseStoryReader implements StoryReader {
   }
 
   async checkAllFormImagesApproved(formId: string): Promise<boolean> {
-    const storyImageIds = await this.getFormStoryImageIds(formId);
+    const storyIds = (await this.readFormStories(formId)).map((doc) => doc.id);
 
     const approvals = await Promise.all(
-      storyImageIds.map(async (image) => {
-        return await this.checkImageApproved(image.storyId, image.imageId);
+      storyIds.map(async (storyId) => {
+        return await this.checkStoryImagesApproved(storyId);
       })
     );
 
@@ -139,11 +139,14 @@ export class FirebaseStoryReader implements StoryReader {
     return { imageB64, regenStatus, isApproved };
   }
 
-  private async checkImageApproved(
-    storyId: string,
-    imageId: string
-  ): Promise<boolean> {
-    const image = await this.getImage(storyId, imageId);
-    return image.isApproved ? true : false;
+  private async checkStoryImagesApproved(storyId: string): Promise<boolean> {
+    const docs = (
+      await this.stories.imagesRef(storyId).select("isApproved").get()
+    ).docs;
+    const approvals = docs.map((doc) => {
+      return doc.data().isApproved ? true : false;
+    });
+    const isAllApproved = !new Set(approvals).has(false);
+    return isAllApproved;
   }
 }
