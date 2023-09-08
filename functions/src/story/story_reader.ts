@@ -25,6 +25,11 @@ export interface StoryReader {
   >;
 
   /**
+   * Check wether all images for the form's stories are approved.
+   */
+  checkAllFormImagesApproved(formId: string): Promise<boolean>;
+
+  /**
    * Get the distinct formIds of the stories in the collection.
    */
   getFormIds(): Promise<string[]>;

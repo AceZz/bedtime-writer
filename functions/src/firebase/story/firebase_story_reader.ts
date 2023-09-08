@@ -34,6 +34,19 @@ export class FirebaseStoryReader implements StoryReader {
     });
   }
 
+  async checkAllFormImagesApproved(formId: string): Promise<boolean> {
+    const storyImageIds = await this.getFormStoryImageIds(formId);
+
+    const approvals = await Promise.all(
+      storyImageIds.map(async (image) => {
+        return await this.checkImageApproved(image.storyId, image.imageId);
+      })
+    );
+
+    const isAllApproved = !new Set(approvals).has(false);
+    return isAllApproved;
+  }
+
   async getFormStoryImageIds(
     formId: string
   ): Promise<{ storyId: string; imageId: string }[]> {
@@ -124,5 +137,13 @@ export class FirebaseStoryReader implements StoryReader {
     const isApproved = docData?.isApproved as boolean | undefined;
 
     return { imageB64, regenStatus, isApproved };
+  }
+
+  private async checkImageApproved(
+    storyId: string,
+    imageId: string
+  ): Promise<boolean> {
+    const image = await this.getImage(storyId, imageId);
+    return image.isApproved ? true : false;
   }
 }
