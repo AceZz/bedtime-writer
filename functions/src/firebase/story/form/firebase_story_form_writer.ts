@@ -14,7 +14,7 @@ import { FirestoreStoryForms } from "./firestore_story_forms";
 export class FirebaseStoryFormWriter implements StoryFormWriter {
   constructor(
     private readonly formsCollection: FirestoreStoryForms,
-    private readonly questionReader: StoryQuestionReader
+    private readonly questionReader: StoryQuestionReader | undefined = undefined
   ) {}
 
   async write(form: StoryForm): Promise<string> {
@@ -54,6 +54,11 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
   }
 
   private async getQuestions(): Promise<Map<string, StoryQuestion>> {
+    if (this.questionReader === undefined) {
+      throw new Error(
+        "getQuestions: no question reader found. Please provide a StoryQuestionReader when instantiating FirebaseStoryFormWriter."
+      );
+    }
     return listToMapById(await this.questionReader.readAll());
   }
 
