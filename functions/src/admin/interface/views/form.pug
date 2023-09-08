@@ -48,6 +48,9 @@ html
         display: flex;
         justify-content: center;
       }
+      .message-container {
+        text-align: center;
+      }
       .status-container {
         display: flex;
         justify-content: center;
@@ -110,7 +113,20 @@ html
                 });
                 const result = await response.json();
                 console.log('Server response:', result);
+                //- Check if the form is approved successfully
+                if (result.status === 'success') {
+                  const messageContainer = document.querySelector('.message-container');
+                  messageContainer.innerHTML = `
+                    <p>Success! The form has been approved.</p>
+                    <button id="redirectToHome">Go to Home</button>
+                  `;
+
+                  document.getElementById('redirectToHome').addEventListener('click', () => {
+                    window.location.href = '/';
+                  });
+                }
               });
+      .message-container
       h2= `Number stories: ${numStories}`
       if image
         h2= `Image: ${uiIndex} / ${maxUiIndex}`

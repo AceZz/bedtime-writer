@@ -72,7 +72,6 @@ app.get("/form", async (req, res) => {
 
   const logic = (await storyReader.getClassicStoryLogic(storyId)).toString();
 
-  //TODO: add response in web interface after approving form
   const isFormApprovable = await storyReader.checkAllFormImagesApproved(formId);
 
   res.render("form", {
