@@ -82,4 +82,11 @@ describe("FirebaseStoryFormWriter", () => {
 
     await storyForms.expectIsGenerated(id);
   });
+
+  test("writeIsApproved", async () => {
+    const id = await formWriter.write(DUMMY_FORM_0);
+    await formWriter.writeIsApproved(id);
+
+    await storyForms.expectIsApproved(id);
+  });
 });

@@ -46,4 +46,9 @@ export class FirestoreStoryFormsUtils extends FirestoreStoryForms {
     const data = (await this.formRef(id).get()).data();
     expect(data?.isGenerated).toBe(true);
   }
+
+  async expectIsApproved(id: string): Promise<void> {
+    const data = (await this.formRef(id).get()).data();
+    expect(data?.isApproved).toBe(true);
+  }
 }

@@ -60,4 +60,8 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
   async writeIsGenerated(id: string): Promise<void> {
     await this.formsCollection.formRef(id).update({ isGenerated: true });
   }
+
+  async writeIsApproved(id: string): Promise<void> {
+    await this.formsCollection.formRef(id).update({ isApproved: true });
+  }
 }
