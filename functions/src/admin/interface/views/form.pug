@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title= `Form ID: ${selectedFormId}`
+    title= `Form ID: ${formId}`
     link(href='https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap' rel='stylesheet')
     style.
       body {
@@ -75,6 +75,11 @@ html
       #approveButton {
         background-color: #28a745;
       }
+      #approveFormButton {
+        width: 300px;
+        margin: 0px;
+        background-color: #28a745;
+      }
       #regenButton {
         background-color: #ff7f00;
       }
@@ -86,10 +91,26 @@ html
       }
   body
     script.
+      const formId = !{JSON.stringify(formId)};
       const storyId = !{JSON.stringify(storyId)};
       const imageId = !{JSON.stringify(imageId)};
     .container
-      h1= `formId: ${selectedFormId}`
+      h1= `formId: ${formId}`
+      if isFormApprovable
+        .button-container
+          button(id="approveFormButton") Approve Form
+            script.
+              document.getElementById('approveFormButton').addEventListener('click', async () => {
+                const response = await fetch('/approve-form', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ formId })
+                });
+                const result = await response.json();
+                console.log('Server response:', result);
+              });
       h2= `Number stories: ${numStories}`
       if image
         h2= `Image: ${uiIndex} / ${maxUiIndex}`
@@ -111,8 +132,8 @@ html
                 location.reload();
               });
         .button-container
-          a(href=`/form?formId=${selectedFormId}&storyId=${previousStoryId}&imageId=${previousImageId}`) Previous
-          a(href=`/form?formId=${selectedFormId}&storyId=${nextStoryId}&imageId=${nextImageId}`) Next
+          a(href=`/form?formId=${formId}&storyId=${previousStoryId}&imageId=${previousImageId}`) Previous
+          a(href=`/form?formId=${formId}&storyId=${nextStoryId}&imageId=${nextImageId}`) Next
           button(id="approveButton") Approve
             script.
               document.getElementById('approveButton').addEventListener('click', async () => {

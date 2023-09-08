@@ -7,6 +7,7 @@ import {
   initEnv,
   initFirebase,
   FirebaseStoryWriter,
+  FirebaseStoryFormWriter,
 } from "../../firebase";
 import { initLocalSecrets } from "../../firebase/utils";
 
@@ -22,28 +23,30 @@ app.set("views", "./src/admin/interface/views");
 const port = 3000;
 
 const firestore = new FirestoreContext();
+const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
+const formWriter = new FirebaseStoryFormWriter(
+  firestore.storyFormsLanding,
+  undefined,
+  storyReader
+);
 
 app.get("/", async (req, res) => {
-  const firestore = new FirestoreContext();
-  const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
-
   const formIds = await storyReader.getFormIds();
   res.render("index", { formIds });
 });
 
 app.get("/form", async (req, res) => {
   // Get form from request
+  const formId = req.query.formId as string;
 
-  const selectedFormId = req.query.formId as string;
-
-  if (!selectedFormId) {
+  if (!formId) {
     res.redirect("/");
     return;
   }
   const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
 
-  const storyImageIds = await storyReader.getFormStoryImageIds(selectedFormId);
-  const numStories = (await storyReader.readFormStories(selectedFormId)).length;
+  const storyImageIds = await storyReader.getFormStoryImageIds(formId);
+  const numStories = (await storyReader.readFormStories(formId)).length;
 
   // Get current imageId from request
   if (req.query.imageId === undefined || req.query.imageId === null) {
@@ -69,9 +72,11 @@ app.get("/form", async (req, res) => {
 
   const logic = (await storyReader.getClassicStoryLogic(storyId)).toString();
 
-  //TODO: add in UI `approve form`, which only approves if all images are approved
+  //TODO: add response in web interface after approving form
+  const isFormApprovable = await storyReader.checkAllFormImagesApproved(formId);
 
   res.render("form", {
+    formId,
     storyId,
     imageId,
     logic,
@@ -82,8 +87,8 @@ app.get("/form", async (req, res) => {
     previousImageId,
     nextStoryId,
     nextImageId,
-    selectedFormId,
     numStories,
+    isFormApprovable,
   });
 });
 
@@ -105,6 +110,17 @@ app.post("/regen-image", async (req, res) => {
     const imageApi = getImageApi();
     await storyWriter.regenImage(storyId, imageId, imageApi);
     res.json({ status: "success", message: "Image approved" });
+  } catch (err) {
+    res.json({ status: "error", message: `${err}` });
+  }
+});
+
+app.post("/approve-form", async (req, res) => {
+  const { formId } = req.body;
+
+  try {
+    await formWriter.approveForm(formId);
+    res.json({ status: "success", message: "Form approved" });
   } catch (err) {
     res.json({ status: "error", message: `${err}` });
   }
