@@ -1,5 +1,6 @@
+import { ClassicStoryLogic } from "./logic";
 import { StoryMetadata } from "./story_metadata";
-import { StoryStatus } from "./story_status";
+import { StoryRegenImageStatus, StoryStatus } from "./story_status";
 
 /**
  * Read stories.
@@ -24,6 +25,18 @@ export interface StoryReader {
   >;
 
   /**
+   * Get the distinct formIds of the stories in the collection.
+   */
+  getFormIds(): Promise<string[]>;
+
+  /**
+   * Get the ClassicStoryLogic of the story.
+   *
+   * Throws an error if the logic is not classic.
+   */
+  getClassicStoryLogic(storyId: string): Promise<ClassicStoryLogic>;
+
+  /**
    * Get the prompt used to generate the image.
    */
   getImagePrompt(storyId: string, imageId: string): Promise<string>;
@@ -32,4 +45,16 @@ export interface StoryReader {
    * Get the image ids for the story.
    */
   getImageIds(storyId: string): Promise<string[]>;
+
+  /**
+   * Get the image doc.
+   */
+  getImage(
+    storyId: string,
+    imageId: string
+  ): Promise<{
+    imageB64: string;
+    regenStatus: StoryRegenImageStatus | undefined;
+    isApproved: boolean | undefined;
+  }>;
 }

@@ -31,7 +31,7 @@ import _ from "lodash";
 import {
   firebaseEmulatorsAreUsed,
   getFirebaseProject,
-  initLocalSecrets,
+  promptInitLocalSecrets,
 } from "../firebase/utils";
 import { logger } from "../logger";
 
@@ -290,7 +290,7 @@ async function main() {
     process.env.TEXT_API?.toLowerCase() !== "fake" ||
     process.env.IMAGE_API?.toLowerCase() !== "fake"
   ) {
-    await initLocalSecrets();
+    await promptInitLocalSecrets();
   }
 
   initFirebase();

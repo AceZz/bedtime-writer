@@ -3,6 +3,8 @@ import {
   StoryReader,
   StoryStatus,
   parseStoryStatus,
+  StoryRegenImageStatus,
+  ClassicStoryLogic,
 } from "../../story";
 import { FirestoreStories } from "./firestore_stories";
 
@@ -32,9 +34,57 @@ export class FirebaseStoryReader implements StoryReader {
     });
   }
 
-  /**
-   * Get the prompt used to generate the image.
-   */
+  async getFormStoryImageIds(
+    formId: string
+  ): Promise<{ storyId: string; imageId: string }[]> {
+    const storyIds = await (
+      await this.readFormStories(formId)
+    ).map((story) => story.id);
+    const imageIds = await Promise.all(
+      storyIds.flatMap(async (storyId) => {
+        const storyImageIds = await this.getImageIds(storyId);
+        return storyImageIds.map((imageId) => ({ storyId, imageId }));
+      })
+    );
+
+    return imageIds.flat().sort();
+  }
+
+  async getClassicStoryLogic(storyId: string): Promise<ClassicStoryLogic> {
+    const data = (await this.stories.storyRef(storyId).get()).data();
+    if (data === undefined || data === null) {
+      throw new Error(
+        `getStoryLogic: no logic found in doc of story ${storyId}`
+      );
+    }
+    if (data.logic.logicType !== "classic") {
+      throw new Error(
+        `getStoryLogic: logic found is not classic logic for ${storyId}`
+      );
+    }
+    return new ClassicStoryLogic(
+      data.logic.duration,
+      data.logic.style,
+      data.logic.characterName,
+      data.logic.place,
+      data.logic.object,
+      data.logic.characterFlaw,
+      data.logic.characterPower,
+      data.logic.characterChallenge
+    );
+  }
+
+  async getFormIds(): Promise<string[]> {
+    const snapshots = await this.stories.storiesRef().get();
+    const formIdsSet = new Set<string>();
+
+    snapshots.docs.forEach((doc) => {
+      formIdsSet.add(doc.data().request.formId);
+    });
+
+    return Array.from(formIdsSet);
+  }
+
   async getImagePrompt(storyId: string, imageId: string): Promise<string> {
     const partsRef = this.stories.partsRef(storyId);
     const partId = (await partsRef.where("image", "==", imageId).get()).docs[0]
@@ -51,11 +101,28 @@ export class FirebaseStoryReader implements StoryReader {
     return imagePrompt;
   }
 
-  /**
-   * Get the image ids for the story.
-   */
   async getImageIds(storyId: string): Promise<string[]> {
-    const snapshot = await this.stories.imagesRef(storyId).get();
+    const snapshot = await this.stories.imagesRef(storyId).select("id").get();
     return snapshot.docs.map((doc) => doc.id);
+  }
+
+  async getImage(
+    storyId: string,
+    imageId: string
+  ): Promise<{
+    imageB64: string;
+    regenStatus: StoryRegenImageStatus | undefined;
+    isApproved: boolean | undefined;
+  }> {
+    const docData = (
+      await this.stories.imageRef(storyId, imageId).get()
+    ).data();
+    const imageB64 = (docData?.data as Buffer).toString("base64");
+    const regenStatus = docData?.regenStatus as
+      | StoryRegenImageStatus
+      | undefined;
+    const isApproved = docData?.isApproved as boolean | undefined;
+
+    return { imageB64, regenStatus, isApproved };
   }
 }
