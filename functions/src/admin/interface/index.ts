@@ -33,7 +33,10 @@ const formWriter = new FirebaseStoryFormWriter(
 );
 
 app.get("/", async (req, res) => {
-  const formIds = await formReader.readCachedNotApprovedIds();
+  const formIds = await formReader.getIds({
+    isCached: true,
+    isApproved: false,
+  });
   res.render("index", { formIds });
 });
 

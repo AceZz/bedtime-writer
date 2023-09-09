@@ -82,7 +82,7 @@ class StoryFormGenerator {
       firestore.storyFormsLanding,
       new FirebaseStoryQuestionReader(firestore.storyQuestions)
     );
-    const forms = await reader.readNotCachedWithIds();
+    const forms = await reader.get({ isCached: false });
 
     if (forms.size === 0) {
       console.log(
