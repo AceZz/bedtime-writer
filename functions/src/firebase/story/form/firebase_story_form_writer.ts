@@ -61,7 +61,7 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
   private async getQuestions(): Promise<Map<string, StoryQuestion>> {
     if (this.questionReader === undefined) {
       throw new Error(
-        "getQuestions: no question reader found. Please provide a StoryQuestionReader when instantiating FirebaseStoryFormWriter."
+        "getQuestions: no question reader specified. Please provide a StoryQuestionReader when instantiating FirebaseStoryFormWriter."
       );
     }
     return listToMapById(await this.questionReader.readAll());
@@ -74,7 +74,7 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
   async approveForm(id: string): Promise<void> {
     if (this.storyReader === undefined) {
       throw new Error(
-        "approveForm: no story reader found. Please provide a StoryReader when instantiating FirebaseStoryFormWriter."
+        "approveForm: no story reader specified. Please provide a StoryReader when instantiating FirebaseStoryFormWriter."
       );
     }
 
