@@ -14,7 +14,7 @@ import { listToMapById } from "../../../utils";
 export class FirebaseStoryFormReader implements StoryFormReader {
   constructor(
     private readonly formsCollection: FirestoreStoryForms,
-    private readonly questionReader: StoryQuestionReader
+    private readonly questionReader: StoryQuestionReader | undefined = undefined
   ) {}
 
   async readAll(): Promise<StoryForm[]> {
@@ -50,6 +50,12 @@ export class FirebaseStoryFormReader implements StoryFormReader {
   }
 
   async readQuestions(): Promise<Map<string, StoryQuestion>> {
+    if (this.questionReader === undefined) {
+      throw new Error(
+        "readQuestions: no question reader specified. Please provide a StoryQuestionReader when instantiating FirebaseStoryFormReader."
+      );
+    }
+
     return listToMapById(await this.questionReader.readAll());
   }
 
