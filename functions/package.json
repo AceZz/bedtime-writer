@@ -19,7 +19,8 @@
     "story_set_questions": "node lib/src/admin/story_set_questions",
     "story_compress_images": "node lib/src/admin/story_compress_images.js",
     "story_gen_cache": "node lib/src/admin/story_gen_cache.js",
-    "story_gen_forms": "node lib/src/admin/story_gen_forms.js"
+    "story_gen_forms": "node lib/src/admin/story_gen_forms.js",
+    "story_serve_form": "node lib/src/admin/story_serve_form.js"
   },
   "main": "lib/src/index.js",
   "dependencies": {
