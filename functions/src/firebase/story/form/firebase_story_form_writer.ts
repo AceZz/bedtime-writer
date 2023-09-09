@@ -52,6 +52,7 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
     }
     data.numQuestions = index;
     data.isCached = false;
+    data.isApproved = false;
 
     const doc = await this.formsCollection.formsRef().add(data);
     return doc.id;
