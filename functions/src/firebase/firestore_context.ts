@@ -10,8 +10,11 @@ import { FirestoreUserFeedback, FirestoreUserStats } from "./user";
 
 // The default collection paths.
 const STORY_CACHE_LANDING = "story__cache_landing";
+const STORY_CACHE_SERVING = "story__cache_serving";
 const STORY_FORMS_LANDING = "story__forms_landing";
+const STORY_FORMS_SERVING = "story__forms_serving";
 const STORY_QUESTIONS = "story__questions";
+const STORY_QUESTIONS_SERVING = "story__questions_serving";
 const STORY_REALTIME = "story__realtime";
 const USER_FEEDBACK = "user__feedback";
 const USER_STATS = "user__stats";
@@ -36,8 +39,11 @@ const USER_STATS = "user__stats";
  */
 export class FirestoreContext {
   readonly storyCacheLanding: FirestoreStoryCache;
+  readonly storyCacheServing: FirestoreStoryCache;
   readonly storyFormsLanding: FirestoreStoryForms;
+  readonly storyFormsServing: FirestoreStoryForms;
   readonly storyQuestions: FirestoreStoryQuestions;
+  readonly storyQuestionsServing: FirestoreStoryQuestions;
   readonly storyRealtime: FirestoreStoryRealtime;
   readonly userFeedback: FirestoreUserFeedback;
   readonly userStats: FirestoreUserStats;
@@ -49,12 +55,24 @@ export class FirestoreContext {
       p + STORY_CACHE_LANDING,
       this
     );
+    this.storyCacheServing = new FirestoreStoryCache(
+      p + STORY_CACHE_SERVING,
+      this
+    );
     this.storyFormsLanding = new FirestoreStoryForms(
       p + STORY_FORMS_LANDING,
       this
     );
+    this.storyFormsServing = new FirestoreStoryForms(
+      p + STORY_FORMS_SERVING,
+      this
+    );
     this.storyQuestions = new FirestoreStoryQuestions(
       p + STORY_QUESTIONS,
+      this
+    );
+    this.storyQuestionsServing = new FirestoreStoryQuestions(
+      p + STORY_QUESTIONS_SERVING,
       this
     );
     this.storyRealtime = new FirestoreStoryRealtime(p + STORY_REALTIME, this);
