@@ -51,7 +51,7 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
       index++;
     }
     data.numQuestions = index;
-    data.isGenerated = false;
+    data.isCached = false;
 
     const doc = await this.formsCollection.formsRef().add(data);
     return doc.id;
@@ -66,8 +66,8 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
     return listToMapById(await this.questionReader.readAll());
   }
 
-  async writeIsGenerated(id: string): Promise<void> {
-    await this.formsCollection.formRef(id).update({ isGenerated: true });
+  async writeIsCached(id: string): Promise<void> {
+    await this.formsCollection.formRef(id).update({ isCached: true });
   }
 
   async approveForm(id: string): Promise<void> {

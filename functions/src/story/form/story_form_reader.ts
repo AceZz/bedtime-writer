@@ -6,5 +6,5 @@ import { StoryForm } from "./story_form";
 export interface StoryFormReader {
   readAll(): Promise<StoryForm[]>;
 
-  readNotGenerated(): Promise<StoryForm[]>;
+  readNotCached(): Promise<StoryForm[]>;
 }

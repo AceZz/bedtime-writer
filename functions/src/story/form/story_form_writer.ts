@@ -10,12 +10,12 @@ export interface StoryFormWriter {
   write(form: StoryForm): Promise<string>;
 
   /**
-   * Write the form is generated.
+   * Write the form is cached.
    *
    * The actual success of the related generation must
    * be checked prior to calling this method.
    */
-  writeIsGenerated(id: string): Promise<void>;
+  writeIsCached(id: string): Promise<void>;
 
   /**
    * Approve the form.
