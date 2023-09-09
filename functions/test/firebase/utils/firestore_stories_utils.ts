@@ -11,7 +11,7 @@ export class FirestoreStoriesUtils extends FirestoreStories {
   async expectInitMetadata(id: string, metadata: StoryMetadata): Promise<void> {
     const data = await this.getStoryData(id);
 
-    expect(data?.parts).toStrictEqual([]);
+    expect(data?.partIds).toStrictEqual([]);
     expect(data?.request).toStrictEqual(metadata.request);
     expect(data?.status).toBe(StoryStatus.PENDING);
     expect(data?.user).toBe(metadata.user);
@@ -34,20 +34,15 @@ export class FirestoreStoriesUtils extends FirestoreStories {
     numParts: number,
     numImages: number
   ): Promise<void> {
-    expect(await this.getNumPartsList(id)).toBe(numParts);
+    expect(await this.getNumPartIds(id)).toBe(numParts);
     expect(await this.getNumParts(id)).toBe(numParts);
     expect(await this.getNumPrompts(id)).toBe(numParts);
     expect(await this.getNumImages(id)).toBe(numImages);
   }
 
-  async expectStoryToNotExist(storyId: string): Promise<void> {
-    const snapshot = await this.storyRef(storyId).get();
-    expect(snapshot.exists).toBeFalsy();
-  }
-
-  async getNumPartsList(id: string): Promise<number> {
+  async getNumPartIds(id: string): Promise<number> {
     const data = await this.getStoryData(id);
-    return data?.parts.length;
+    return data?.partIds.length;
   }
 
   async getNumParts(id: string): Promise<number> {
@@ -63,6 +58,11 @@ export class FirestoreStoriesUtils extends FirestoreStories {
   async getNumImages(id: string): Promise<number> {
     const data = (await this.imagesRef(id).count().get()).data();
     return data?.count;
+  }
+
+  async expectStoryToNotExist(storyId: string): Promise<void> {
+    const snapshot = await this.storyRef(storyId).get();
+    expect(snapshot.exists).toBeFalsy();
   }
 
   async expectComplete(id: string): Promise<void> {
