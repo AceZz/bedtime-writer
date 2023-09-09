@@ -74,7 +74,7 @@ tests and the admin tools.
   * The maximum number of tries (api calls) the cache manager makes for a given story, as one may
     fail due to a network or other issues.
 * `CACHE_RETRY_TIMEOUT`
-  * positive integer (default `120000`)
+  * positive integer (default `60000`)
   * The timeout in milliseconds after which the cache manager will consider a story generation to
     be timed out.
 * `CACHE_RETRY_DELAY`
