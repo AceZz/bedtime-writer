@@ -7,7 +7,7 @@ import 'package:tuple/tuple.dart';
 import '../story_part.dart';
 import 'firebase.dart';
 
-/// Streams a specific [StoryPart].
+/// Streams a specific [StoryPart] identified by `(storyId, partId)`.
 final firebaseStoryPartProvider = StreamProvider.autoDispose
     .family<StoryPart, Tuple2<String, String>>((ref, ids) {
   final storyRef = firebaseFirestore.collection(storyRealtime).doc(ids.item1);
