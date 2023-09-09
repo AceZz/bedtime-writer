@@ -8,6 +8,7 @@ import {
   initFirebase,
   FirebaseStoryWriter,
   FirebaseStoryFormWriter,
+  FirebaseStoryFormReader,
 } from "../../firebase";
 import { initLocalSecrets } from "../../firebase/utils";
 
@@ -24,15 +25,15 @@ const port = 3000;
 
 const firestore = new FirestoreContext();
 const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
+const formReader = new FirebaseStoryFormReader(firestore.storyFormsLanding);
 const formWriter = new FirebaseStoryFormWriter(
   firestore.storyFormsLanding,
   undefined,
   storyReader
 );
 
-//TODO: only get form which are not approved
 app.get("/", async (req, res) => {
-  const formIds = await storyReader.getFormIds();
+  const formIds = await formReader.readNotApprovedIds();
   res.render("index", { formIds });
 });
 
@@ -45,7 +46,6 @@ app.get("/form", async (req, res) => {
     return;
   }
   const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
-
   const storyImageIds = await storyReader.getFormStoryImageIds(formId);
   const numStories = (await storyReader.readFormStories(formId)).length;
 

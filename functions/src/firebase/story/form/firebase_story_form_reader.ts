@@ -49,6 +49,15 @@ export class FirebaseStoryFormReader implements StoryFormReader {
     );
   }
 
+  async readNotApprovedIds(): Promise<string[]> {
+    const snapshots = await this.formsCollection
+      .formsRef()
+      .where("isApproved", "==", false)
+      .get();
+
+    return snapshots.docs.map((doc) => doc.id);
+  }
+
   async readQuestions(): Promise<Map<string, StoryQuestion>> {
     if (this.questionReader === undefined) {
       throw new Error(

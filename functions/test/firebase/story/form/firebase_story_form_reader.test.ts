@@ -85,4 +85,15 @@ describe("FirebaseStoryFormReader", () => {
     const forms = await reader.readNotCachedWithIds();
     expect(forms).toEqual(new Map([[form0.id, DUMMY_FORM_0]]));
   });
+
+  test("readNotApprovedIds", async () => {
+    const form0 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
+    const form1 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);
+    await form1.update({ isApproved: true });
+
+    const reader = new FirebaseStoryFormReader(storyForms);
+
+    const forms = await reader.readNotApprovedIds();
+    expect(forms).toEqual([form0.id]);
+  });
 });
