@@ -78,6 +78,15 @@ describe("FirebaseStoryWriter", () => {
     await storyRealtime.expectParts(id, FAKE_TEXT_API.numParts, numImages);
   }, 30000);
 
+  test("delete a story", async () => {
+    const writer = new FirebaseStoryWriter(storyCacheLanding);
+    const storyId = await writer.writeInit(METADATA_0);
+    await writer.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
+    await writer.delete(storyId);
+
+    await storyCacheLanding.expectStoryToNotExist(storyId);
+  }, 20000);
+
   describe("Methods for story review", () => {
     const SEED_1 = 1;
 

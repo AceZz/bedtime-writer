@@ -33,6 +33,7 @@ import {
   getFirebaseProject,
   promptInitLocalSecrets,
 } from "../firebase/utils";
+import { logger } from "../logger";
 
 export const CACHE_USER = "@STORY_GEN_CACHE";
 
@@ -147,6 +148,9 @@ class StoryFormGenerator {
       missingStories.map((story) => this.generateMissingStory(story))
     );
 
+    // Delete stories with failed generation.
+    await this.deleteFailedStories();
+
     // Check the result.
     const missingStoriesAfterGen = await this.getMissingStories();
     const numCachedStories =
@@ -179,6 +183,28 @@ class StoryFormGenerator {
     }
   }
 
+  private async deleteFailedStories(): Promise<void> {
+    const stories = await this.storyReader.readFormStories(this.formId);
+    const deleteResults: number[] = await Promise.all(
+      stories.map(async (story) => {
+        if (story.status !== StoryStatus.COMPLETE) {
+          // This is a failed story which we delete.
+          const writer = new FirebaseStoryWriter(
+            this.firestore.storyCacheLanding,
+            story.id
+          );
+          await writer.delete(story.id);
+          return 1;
+        }
+        return 0;
+      })
+    );
+    const numFailedStories = deleteResults.reduce((acc, val) => acc + val, 0);
+    logger.debug(
+      `deleteFailedStories: deleted ${numFailedStories} failed stories.`
+    );
+  }
+
   private async getMissingStories(): Promise<MissingStory[]> {
     const stories = await this.storyReader.readFormStories(this.formId);
 
@@ -191,28 +217,22 @@ class StoryFormGenerator {
       const request = this.answersToRequest(answers);
       const metadata = new StoryMetadata(CACHE_USER, request);
       const logic = this.form.toClassicLogic(answers);
-      let hasAStory = false;
+      let hasACompleteStory = false;
 
       for (const story of stories) {
         if (_.isEqual(story.metadata.request, request)) {
-          if (story.status !== StoryStatus.COMPLETE) {
-            // There is a story for `answer`, but it is not `COMPLETE`, so
-            // should be rewritten.
-            missingStories.push({
-              metadata,
-              logic,
-              id: story.id,
-            });
+          if (story.status === StoryStatus.COMPLETE) {
+            // There is a story for `answer`and it is `COMPLETE`, so
+            // it should not be rewritten.
+            hasACompleteStory = true;
+            break;
           }
-
-          hasAStory = true;
-          break;
         }
       }
 
       // `answer` has no appropriate story, either because there was no story
-      // at all, or because the generated story was not `COMPLETE`.
-      if (!hasAStory) {
+      // at all, or because none of the generated stories was `COMPLETE`.
+      if (!hasACompleteStory) {
         missingStories.push({
           metadata,
           logic,
@@ -231,9 +251,7 @@ class StoryFormGenerator {
     };
   }
 
-  private async generateMissingStory(
-    story: MissingStory
-  ): Promise<{ result: void; tries: number }> {
+  private async generateMissingStory(story: MissingStory): Promise<void> {
     const promiseFn = async () => {
       const writer = new FirebaseStoryWriter(
         this.firestore.storyCacheLanding,
@@ -255,7 +273,13 @@ class StoryFormGenerator {
     const timeout = parseEnvAsNumber("CACHE_RETRY_TIMEOUT", 120000);
     const delay = parseEnvAsNumber("CACHE_RETRY_DELAY", 1000);
     const params = { maxTries: maxTries, timeout: timeout, delay: delay };
-    return retryAsyncFunction(promiseFn, params);
+    try {
+      await retryAsyncFunction(promiseFn, params);
+    } catch (error) {
+      logger.error(
+        `generateMissingStory: maximum number of tries reached for story ${story.id}. Final error: ${error}`
+      );
+    }
   }
 }
 
