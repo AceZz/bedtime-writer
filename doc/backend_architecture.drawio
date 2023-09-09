@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2023-09-07T19:25:23.139Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.8 Chrome/114.0.5735.289 Electron/25.5.0 Safari/537.36" etag="Lo0ibOFmzwiaTo73ex_D" version="21.6.8" type="device">
+<mxfile host="Electron" modified="2023-09-09T16:38:06.512Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.8 Chrome/114.0.5735.289 Electron/25.5.0 Safari/537.36" etag="A7wuc9L6uYyH0F_kBf17" version="21.6.8" type="device">
   <diagram name="Page-1" id="c4acf3e9-155e-7222-9cf6-157b1a14988f">
     <mxGraphModel dx="3840" dy="1029" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" background="none" math="0" shadow="0">
       <root>
@@ -465,7 +465,7 @@
           <mxGeometry y="230" width="160" height="130" as="geometry" />
         </mxCell>
         <mxCell id="24NqbiVkr3B1c7BFda1W-6" value="StoryWriter" style="swimlane;html=1;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;swimlaneFillColor=#ffffff;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Lucida Console;fontSize=10;align=center;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
-          <mxGeometry x="600" y="1000" width="160" height="280" as="geometry">
+          <mxGeometry x="600" y="1000" width="160" height="320" as="geometry">
             <mxRectangle x="160" y="1000" width="160" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
@@ -480,6 +480,9 @@
         </mxCell>
         <mxCell id="RtnTzBK9Xo95rOdHSeZe-4" value="approveImage(&lt;br&gt;storyId: string,&lt;br&gt;imageId: string): Promise&amp;lt;void&amp;gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Lucida Console;fontSize=10;labelBackgroundColor=none;" parent="24NqbiVkr3B1c7BFda1W-6" vertex="1">
           <mxGeometry y="188" width="160" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="kJXdZ1oz2r0RcleCkOG5-1" value="delete(storyId: string): Promise&amp;lt;void&amp;gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontFamily=Lucida Console;fontSize=10;labelBackgroundColor=none;" vertex="1" parent="24NqbiVkr3B1c7BFda1W-6">
+          <mxGeometry y="240" width="160" height="52" as="geometry" />
         </mxCell>
         <mxCell id="mc0GokmXUKWkyvZYSWRq-19" value="" style="group" parent="1" vertex="1" connectable="0">
           <mxGeometry x="480" y="1400" width="1640" height="880" as="geometry" />
