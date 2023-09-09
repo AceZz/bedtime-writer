@@ -28,48 +28,31 @@ describe("FirebaseStoryFormReader", () => {
 
   beforeEach(async () => await storyForms.delete());
 
-  test("readAll", async () => {
+  test("All forms", async () => {
     const writer = new FirebaseStoryQuestionWriter(storyQuestions);
     await writer.write(DUMMY_QUESTIONS_0);
 
-    await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
-
-    const reader = new FirebaseStoryFormReader(
-      storyForms,
-      new FirebaseStoryQuestionReader(storyQuestions)
-    );
-    const forms = await reader.readAll();
-
-    expect(forms).toEqual([DUMMY_FORM_0]);
-  });
-
-  test("readAll no questions throws", async () => {
-    await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
-    const reader = new FirebaseStoryFormReader(
-      storyForms,
-      new FirebaseStoryQuestionReader(storyQuestions)
-    );
-    expect(reader.readAll).rejects.toThrow();
-  });
-
-  test("readNotCached", async () => {
-    const writer = new FirebaseStoryQuestionWriter(storyQuestions);
-    await writer.write(DUMMY_QUESTIONS);
-
-    await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
-    const form1 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);
-    await form1.update({ isCached: true });
+    const doc = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
 
     const reader = new FirebaseStoryFormReader(
       storyForms,
       new FirebaseStoryQuestionReader(storyQuestions)
     );
 
-    const forms = await reader.readNotCached();
-    expect(forms).toEqual([DUMMY_FORM_0]);
+    expect(await reader.get()).toEqual(new Map([[doc.id, DUMMY_FORM_0]]));
+    expect(await reader.getIds()).toEqual([doc.id]);
   });
 
-  test("readNotCachedWithIds", async () => {
+  test("get() no questions throws", async () => {
+    await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
+    const reader = new FirebaseStoryFormReader(
+      storyForms,
+      new FirebaseStoryQuestionReader(storyQuestions)
+    );
+    expect(reader.get).rejects.toThrow();
+  });
+
+  test("Not cached", async () => {
     const writer = new FirebaseStoryQuestionWriter(storyQuestions);
     await writer.write(DUMMY_QUESTIONS);
 
@@ -82,19 +65,28 @@ describe("FirebaseStoryFormReader", () => {
       new FirebaseStoryQuestionReader(storyQuestions)
     );
 
-    const forms = await reader.readNotCachedWithIds();
-    expect(forms).toEqual(new Map([[form0.id, DUMMY_FORM_0]]));
+    const params = { isCached: false };
+    expect(await reader.get(params)).toEqual(
+      new Map([[form0.id, DUMMY_FORM_0]])
+    );
+    expect(await reader.getIds(params)).toEqual([form0.id]);
   });
 
-  test("readCachedNotApprovedIds", async () => {
+  test("Cached and not approved", async () => {
     const form0 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
     await form0.update({ isCached: true });
     const form1 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);
     await form1.update({ isCached: true, isApproved: true });
 
-    const reader = new FirebaseStoryFormReader(storyForms);
+    const reader = new FirebaseStoryFormReader(
+      storyForms,
+      new FirebaseStoryQuestionReader(storyQuestions)
+    );
 
-    const forms = await reader.readCachedNotApprovedIds();
-    expect(forms).toEqual([form0.id]);
+    const params = { isCached: true, isApproved: false };
+    expect(await reader.get(params)).toEqual(
+      new Map([[form0.id, DUMMY_FORM_0]])
+    );
+    expect(await reader.getIds(params)).toEqual([form0.id]);
   });
 });

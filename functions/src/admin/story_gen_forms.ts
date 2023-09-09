@@ -67,7 +67,9 @@ async function generateForms(
 
   // To avoid duplicates with and within the generated forms, we register the
   // IDs of the current forms.
-  const fullIds = new Set(currentForms.map((form) => form.fullId()));
+  const fullIds = new Set(
+    Array.from(currentForms.values()).map((form) => form.fullId())
+  );
   const forms: StoryForm[] = [];
 
   // The generation is based on randomness, so we might not reach the number of
@@ -121,14 +123,16 @@ async function readQuestions(
   return questions;
 }
 
-async function readForms(firestore: FirestoreContext): Promise<StoryForm[]> {
+async function readForms(
+  firestore: FirestoreContext
+): Promise<Map<string, StoryForm>> {
   const formsReader = new FirebaseStoryFormReader(
     firestore.storyFormsLanding,
     new FirebaseStoryQuestionReader(firestore.storyQuestions)
   );
-  const currentForms = await formsReader.readAll();
+  const currentForms = await formsReader.get();
   console.log(
-    `${currentForms.length} forms were found in ` +
+    `${currentForms.size} forms were found in ` +
       `${firestore.storyFormsLanding.collectionPath}.`
   );
   return currentForms;
