@@ -30,6 +30,8 @@ const formWriter = new FirebaseStoryFormWriter(
   storyReader
 );
 
+//TODO: only get form which are not approved
+//TODO: rename isGenerated
 app.get("/", async (req, res) => {
   const formIds = await storyReader.getFormIds();
   res.render("index", { formIds });
