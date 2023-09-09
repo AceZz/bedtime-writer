@@ -158,6 +158,10 @@ export class FirebaseStoryWriter extends StoryWriter {
     );
   }
 
+  async delete(storyId: string) {
+    await this.stories.storyRef(storyId).delete();
+  }
+
   async regenImage(
     storyId: string,
     imageId: string,

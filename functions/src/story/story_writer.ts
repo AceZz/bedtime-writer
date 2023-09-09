@@ -97,6 +97,11 @@ export abstract class StoryWriter {
   protected abstract writeStatusError(error: unknown): Promise<void>;
 
   /**
+   * Delete the story.
+   */
+  abstract delete(storyId: string): Promise<void>;
+
+  /**
    * Regenerate an image of a story.
    *
    * This employs the same prompt used for the previous image.
