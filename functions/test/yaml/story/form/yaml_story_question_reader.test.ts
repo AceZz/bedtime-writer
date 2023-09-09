@@ -7,7 +7,7 @@ test("read questions", async () => {
 
   const reader = new YAMLStoryQuestionReader("test/story/data/questions.yaml");
 
-  const result = await reader.readAll();
+  const result = await reader.get();
   const expected = [
     new StoryQuestion(
       "characterNameV1",
@@ -77,5 +77,5 @@ test("read questions", async () => {
     ),
   ];
 
-  expect(result).toStrictEqual(expected);
+  expect(Array.from(result.values())).toStrictEqual(expected);
 });

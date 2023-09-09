@@ -58,7 +58,7 @@ async function generateForms(
 ): Promise<StoryForm[]> {
   const questions = await readQuestions(firestore);
   const formManager = new StoryFormManager(
-    questions,
+    Array.from(questions.values()),
     NUM_QUESTIONS_PER_FORM,
     NUM_CHOICES_PER_QUESTION
   );
@@ -102,13 +102,13 @@ async function generateForms(
 
 async function readQuestions(
   firestore: FirestoreContext
-): Promise<StoryQuestion[]> {
+): Promise<Map<string, StoryQuestion>> {
   const questionsReader = new FirebaseStoryQuestionReader(
     firestore.storyQuestions
   );
-  const questions = await questionsReader.readAll();
+  const questions = await questionsReader.get();
 
-  if (questions.length === 0) {
+  if (questions.size === 0) {
     throw Error(
       `No questions were found in ${firestore.storyQuestions.collectionPath}` +
         "Please run `npm run story_set_questions`."
@@ -116,7 +116,7 @@ async function readQuestions(
   }
 
   console.log(
-    `${questions.length} questions were found in ` +
+    `${questions.size} questions were found in ` +
       `${firestore.storyQuestions.collectionPath}.`
   );
 
