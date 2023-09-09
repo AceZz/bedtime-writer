@@ -1,8 +1,6 @@
-import { listToMapById } from "../../../utils";
 import {
   StoryFormWriter,
   StoryForm,
-  StoryQuestion,
   StoryQuestionReader,
   StoryReader,
 } from "../../../story/";
@@ -20,7 +18,9 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
   ) {}
 
   async write(form: StoryForm): Promise<string> {
-    const availableQuestions = await this.getQuestions();
+    if (this.questionReader === undefined)
+      throw new Error("write: no question reader specified.");
+    const availableQuestions = await this.questionReader.get();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data: any = {};
@@ -54,15 +54,6 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
 
     const doc = await this.formsCollection.formsRef().add(data);
     return doc.id;
-  }
-
-  private async getQuestions(): Promise<Map<string, StoryQuestion>> {
-    if (this.questionReader === undefined) {
-      throw new Error(
-        "getQuestions: no question reader specified. Please provide a StoryQuestionReader when instantiating FirebaseStoryFormWriter."
-      );
-    }
-    return listToMapById(await this.questionReader.readAll());
   }
 
   async writeIsCached(id: string): Promise<void> {

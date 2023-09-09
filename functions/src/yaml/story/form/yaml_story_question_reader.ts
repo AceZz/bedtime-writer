@@ -2,9 +2,13 @@ import { readFile } from "fs/promises";
 
 import { parse } from "yaml";
 
-import { StoryQuestion } from "../../../story/form/story_question";
-import { StoryChoice } from "../../../story/form/story_choice";
-import { StoryQuestionReader } from "../../../story/form/story_question_reader";
+import {
+  StoryQuestion,
+  StoryChoice,
+  StoryQuestionReader,
+  StoryQuestionReaderParams,
+} from "../../../story";
+import { listToMapById } from "../../../utils";
 
 /**
  * This class reads a YAML file.
@@ -31,7 +35,13 @@ import { StoryQuestionReader } from "../../../story/form/story_question_reader";
 export class YAMLStoryQuestionReader implements StoryQuestionReader {
   constructor(readonly path: string) {}
 
-  async readAll(): Promise<StoryQuestion[]> {
+  async get(
+    params?: StoryQuestionReaderParams
+  ): Promise<Map<string, StoryQuestion>> {
+    const ids = params?.ids;
+
+    if (ids !== undefined) throw new Error("Method not implemented with ids.");
+
     const file = await readFile(this.path, "utf8");
     const data = parse(file);
 
@@ -40,7 +50,7 @@ export class YAMLStoryQuestionReader implements StoryQuestionReader {
       parsed.push(await this.parseQuestion(questionKey, data[questionKey]));
     }
 
-    return parsed;
+    return listToMapById(parsed);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -11,7 +11,6 @@ import {
   QueryDocumentSnapshot,
 } from "firebase-admin/firestore";
 import { FirestoreStoryForms } from "./firestore_story_forms";
-import { listToMapById } from "../../../utils";
 
 /**
  * Read a list of Forms from Firebase.
@@ -48,9 +47,7 @@ export class FirebaseStoryFormReader implements StoryFormReader {
   private async docsToMap(
     docs: QueryDocumentSnapshot[]
   ): Promise<Map<string, StoryForm>> {
-    const questions = listToMapById<string, StoryQuestion>(
-      await this.questionReader.readAll()
-    );
+    const questions = await this.questionReader.get();
 
     return new Map(
       await Promise.all(

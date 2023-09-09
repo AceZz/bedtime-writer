@@ -26,7 +26,7 @@ async function main() {
   if (await confirm(firestore, yamlPath)) {
     initFirebase();
     const reader = new YAMLStoryQuestionReader(yamlPath);
-    const questions = await reader.readAll();
+    const questions = Array.from((await reader.get()).values());
 
     const writer = new FirebaseStoryQuestionWriter(firestore.storyQuestions);
     await writer.write(questions);
