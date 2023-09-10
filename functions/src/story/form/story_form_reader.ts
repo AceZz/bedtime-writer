@@ -7,4 +7,6 @@ export interface StoryFormReader {
   readAll(): Promise<StoryForm[]>;
 
   readNotCached(): Promise<StoryForm[]>;
+
+  readCachedNotApprovedIds(): Promise<string[]>;
 }
