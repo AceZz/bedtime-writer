@@ -62,7 +62,7 @@ async function dumpToCollectionInternal(
  */
 export async function dumpCollection(
   collection: FirestoreCollection,
-  ids: string[] | undefined = undefined
+  ids?: string[]
 ): Promise<Map<string, object>> {
   return dumpCollectionInternal(
     collection.collectionPath,
@@ -81,7 +81,7 @@ export async function dumpCollection(
 async function dumpCollectionInternal(
   path: string,
   firestore: Firestore,
-  ids: string[] | undefined = undefined
+  ids?: string[]
 ): Promise<Map<string, object>> {
   const result = new Map<string, object>();
 
