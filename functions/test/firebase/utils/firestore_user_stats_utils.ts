@@ -6,16 +6,6 @@ import { UserStats } from "../../../src/user";
  * Helper class to interact with the user stats Firestore collection.
  */
 export class FirestoreUserStatsUtils extends FirestoreUserStats {
-  /**
-   * Delete the collection.
-   *
-   * Firebase must be initialized before calling this function.
-   */
-  async delete(): Promise<void> {
-    const stats = await this.statsRef().get();
-    await Promise.all(stats.docs.map((stats_) => stats_.ref.delete()));
-  }
-
   async create(id: string, stats: UserStats): Promise<void> {
     await this.userRef(id).create({ ...stats });
   }

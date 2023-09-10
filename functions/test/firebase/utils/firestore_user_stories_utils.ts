@@ -7,29 +7,6 @@ import { FirestoreUserStories } from "../../../src/firebase";
  * Helper class to interact with the user stories Firestore collection.
  */
 export class FirestoreUserStoriesUtils extends FirestoreUserStories {
-  /**
-   * Delete the collection and subcollections.
-   *
-   * Firebase must be initialized before calling this function.
-   */
-  async delete(): Promise<void> {
-    const docs = (await this.usersRef().get()).docs;
-    console.log(docs.length);
-    await Promise.all(
-      docs.map(async (doc_) => {
-        console.log("deleted");
-        await this.deleteCacheSubcollection(doc_.id);
-        await doc_.ref.delete();
-      })
-    );
-  }
-
-  /* Delete the cache subcollection for this uid. */
-  private async deleteCacheSubcollection(uid: string): Promise<void> {
-    const docs = (await this.userStoriesRef(uid).get()).docs;
-    await Promise.all(docs.map(async (doc_) => doc_.ref.delete()));
-  }
-
   /* Init a stories doc for the user. */
   async initDoc(uid: string): Promise<void> {
     await this.userRef(uid).create({ createdAt: new Date(2020, 1, 1) });

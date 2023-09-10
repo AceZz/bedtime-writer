@@ -8,32 +8,6 @@ import { FirestoreStoryQuestions } from "../../../src/firebase";
  */
 export class FirestoreStoryQuestionsUtils extends FirestoreStoryQuestions {
   /**
-   * Delete the collection.
-   *
-   * Firebase must be initialized before calling this function.
-   */
-  async delete(): Promise<void> {
-    const questions = await this.questionsRef().get();
-    await Promise.all(
-      questions.docs.map((question) => this.deleteQuestion(question.ref))
-    );
-  }
-
-  private async deleteQuestion(question: DocumentReference): Promise<void> {
-    await this.deleteChoices(question);
-    await question.delete();
-  }
-
-  private async deleteChoices(question: DocumentReference): Promise<void> {
-    const choices = await question.collection("choices").get();
-    await Promise.all(
-      choices.docs.map((choice) => {
-        choice.ref.delete();
-      })
-    );
-  }
-
-  /**
    * Compare `StoryQuestion` objects against the content of the Firestore
    * database.
    *
