@@ -80,8 +80,8 @@ Fill it with some data. You can choose whichever data you want, a good start is
 `npm run story_set_questions` (run it in another terminal, you will be likely asked to set
 `GOOGLE_APPLICATION_CREDENTIALS` first).
 
-Export the Firebase data with `firebase emulators:export local_backend_export`. Firebase will write
-to `local_backend_export`. This folder should never be committed!
+Export the Firebase data with `firebase emulators:export lbd`. Firebase will write to `lbd`. This
+folder should never be committed!
 
 ### Use
 
