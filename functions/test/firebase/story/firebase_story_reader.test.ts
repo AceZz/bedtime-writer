@@ -133,11 +133,11 @@ describe("FirebaseStoryReader", () => {
     expect(actual_0).toBe(false);
 
     const imageIds = await reader.getFormStoryImageIds(formId);
-    writer_0.approveImage(imageIds[0].storyId, imageIds[0].imageId);
+    await writer_0.approveImage(imageIds[0].storyId, imageIds[0].imageId);
     const actual_1 = await reader.checkAllFormImagesApproved(formId);
     expect(actual_1).toBe(false);
 
-    writer_0.approveImage(imageIds[1].storyId, imageIds[1].imageId);
+    await writer_0.approveImage(imageIds[1].storyId, imageIds[1].imageId);
     const actual_2 = await reader.checkAllFormImagesApproved(formId);
     expect(actual_2).toBe(true);
   }, 60000);
