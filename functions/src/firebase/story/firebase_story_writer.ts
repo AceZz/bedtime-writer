@@ -64,15 +64,10 @@ export class FirebaseStoryWriter extends StoryWriter {
   }
 
   protected async deleteParts(): Promise<void> {
-    const images = await this.imagesRef.get();
-    await Promise.all(images.docs.map((image) => image.ref.delete()));
-
-    const parts = await this.partsRef.get();
-    await Promise.all(parts.docs.map((part) => part.ref.delete()));
+    await this.stories.firestore.recursiveDelete(this.imagesRef);
+    await this.stories.firestore.recursiveDelete(this.partsRef);
     this.partIds = [];
-
-    const prompts = await this.promptsRef.get();
-    await Promise.all(prompts.docs.map((prompt) => prompt.ref.delete()));
+    await this.stories.firestore.recursiveDelete(this.promptsRef);
     this.imageIds.clear();
   }
 

@@ -5,16 +5,6 @@ import { FirestoreUserFeedback } from "../../../src/firebase";
  * Helper class to interact with the user feedback Firestore collection.
  */
 export class FirestoreUserFeedbackUtils extends FirestoreUserFeedback {
-  /**
-   * Delete the collection.
-   *
-   * Firebase must be initialized before calling this function.
-   */
-  async delete(): Promise<void> {
-    const feedbacks = await this.feedbacksRef().get();
-    await Promise.all(feedbacks.docs.map((feedback) => feedback.ref.delete()));
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async expectToStrictEqual(expected: any[]): Promise<void> {
     const snapshots = await this.feedbacksRef().orderBy("createdAt").get();

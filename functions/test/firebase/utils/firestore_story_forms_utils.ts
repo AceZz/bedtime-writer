@@ -7,15 +7,6 @@ import { expect } from "@jest/globals";
  */
 export class FirestoreStoryFormsUtils extends FirestoreStoryForms {
   /**
-   * Delete the collection.
-   *
-   * Firebase must be initialized before calling this function.
-   */
-  async delete(): Promise<void> {
-    const forms = await this.formsRef().get();
-    await Promise.all(forms.docs.map((form) => form.ref.delete()));
-  }
-  /**
    * Checks the number of forms in the Firestore database.
    *
    * Firebase must be initialized before calling this function.

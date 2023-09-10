@@ -1,4 +1,3 @@
-import { DocumentReference } from "firebase-admin/firestore";
 import { StoryLogic, StoryMetadata, StoryStatus } from "../../../src/story";
 import { FirestoreStories } from "../../../src/firebase";
 import { expect } from "@jest/globals";
@@ -132,21 +131,5 @@ export class FirestoreStoriesUtils extends FirestoreStories {
     id: string
   ): Promise<FirebaseFirestore.DocumentData | undefined> {
     return (await this.storyRef(id).get()).data();
-  }
-
-  /**
-   * Delete the collection.
-   *
-   * Firebase must be initialized before calling this function.
-   */
-  async delete(): Promise<void> {
-    const questions = await this.storiesRef().get();
-    await Promise.all(
-      questions.docs.map((story) => this.deleteStory(story.ref))
-    );
-  }
-
-  private async deleteStory(storyRef: DocumentReference): Promise<void> {
-    await storyRef.delete();
   }
 }
