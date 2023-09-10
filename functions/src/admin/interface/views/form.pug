@@ -118,12 +118,8 @@ html
                   const messageContainer = document.querySelector('.message-container');
                   messageContainer.innerHTML = `
                     <p>Success! The form has been approved.</p>
-                    <button id="redirectToHome">Go to Home</button>
+                    <a id="redirectToHome" href="/">Go to Home</a>
                   `;
-
-                  document.getElementById('redirectToHome').addEventListener('click', () => {
-                    window.location.href = '/';
-                  });
                 }
               });
       .message-container
