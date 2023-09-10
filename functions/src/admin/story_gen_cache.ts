@@ -82,7 +82,7 @@ class StoryFormGenerator {
       firestore.storyFormsLanding,
       new FirebaseStoryQuestionReader(firestore.storyQuestions)
     );
-    const forms = await reader.readNotGeneratedWithIds();
+    const forms = await reader.readNotCachedWithIds();
 
     if (forms.size === 0) {
       console.log(
@@ -153,17 +153,17 @@ class StoryFormGenerator {
 
     // Check the result.
     const missingStoriesAfterGen = await this.getMissingStories();
-    const numGeneratedStories =
+    const numCachedStories =
       missingStories.length - missingStoriesAfterGen.length;
 
     if (missingStoriesAfterGen.length == 0) {
       // No story is missing.
-      await this.formWriter.writeIsGenerated(this.formId);
+      await this.formWriter.writeIsCached(this.formId);
       const count = await this.storyReader.countAll();
 
       console.log(
-        `Success: ${numGeneratedStories} stories / ${missingStories.length} ` +
-          "were generated.\n" +
+        `Success: ${numCachedStories} stories / ${missingStories.length} ` +
+          "were cached.\n" +
           `Form ${this.formId} has ${this.allAnswers.length} ` +
           "cached stories.\n" +
           `Collection ${this.firestore.storyCacheLanding.collectionPath} ` +
@@ -172,8 +172,8 @@ class StoryFormGenerator {
     } else {
       // Some stories are missing.
       console.log(
-        `Fail: ${numGeneratedStories} stories / ${missingStories.length} ` +
-          "were generated.\n" +
+        `Fail: ${numCachedStories} stories / ${missingStories.length} ` +
+          "were cached.\n" +
           `Form ${this.formId} has ` +
           `${this.allAnswers.length - missingStoriesAfterGen.length} ` +
           `cached stories, ${missingStoriesAfterGen.length} stories ` +

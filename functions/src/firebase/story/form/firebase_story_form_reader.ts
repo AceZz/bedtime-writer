@@ -14,7 +14,7 @@ import { listToMapById } from "../../../utils";
 export class FirebaseStoryFormReader implements StoryFormReader {
   constructor(
     private readonly formsCollection: FirestoreStoryForms,
-    private readonly questionReader: StoryQuestionReader
+    private readonly questionReader: StoryQuestionReader | undefined = undefined
   ) {}
 
   async readAll(): Promise<StoryForm[]> {
@@ -26,16 +26,16 @@ export class FirebaseStoryFormReader implements StoryFormReader {
     );
   }
 
-  async readNotGenerated(): Promise<StoryForm[]> {
-    return Array.from((await this.readNotGeneratedWithIds()).values());
+  async readNotCached(): Promise<StoryForm[]> {
+    return Array.from((await this.readNotCachedWithIds()).values());
   }
 
-  async readNotGeneratedWithIds(): Promise<Map<string, StoryForm>> {
+  async readNotCachedWithIds(): Promise<Map<string, StoryForm>> {
     const questions = await this.readQuestions();
 
     const snapshots = await this.formsCollection
       .formsRef()
-      .where("isGenerated", "==", false)
+      .where("isCached", "==", false)
       .get();
 
     return new Map(
@@ -49,7 +49,23 @@ export class FirebaseStoryFormReader implements StoryFormReader {
     );
   }
 
+  async readCachedNotApprovedIds(): Promise<string[]> {
+    const snapshots = await this.formsCollection
+      .formsRef()
+      .where("isCached", "==", true)
+      .where("isApproved", "==", false)
+      .get();
+
+    return snapshots.docs.map((doc) => doc.id);
+  }
+
   async readQuestions(): Promise<Map<string, StoryQuestion>> {
+    if (this.questionReader === undefined) {
+      throw new Error(
+        "readQuestions: no question reader specified. Please provide a StoryQuestionReader when instantiating FirebaseStoryFormReader."
+      );
+    }
+
     return listToMapById(await this.questionReader.readAll());
   }
 

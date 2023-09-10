@@ -52,37 +52,49 @@ describe("FirebaseStoryFormReader", () => {
     expect(reader.readAll).rejects.toThrow();
   });
 
-  test("readNotGenerated", async () => {
+  test("readNotCached", async () => {
     const writer = new FirebaseStoryQuestionWriter(storyQuestions);
     await writer.write(DUMMY_QUESTIONS);
 
     await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
     const form1 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);
-    await form1.update({ isGenerated: true });
+    await form1.update({ isCached: true });
 
     const reader = new FirebaseStoryFormReader(
       storyForms,
       new FirebaseStoryQuestionReader(storyQuestions)
     );
 
-    const forms = await reader.readNotGenerated();
+    const forms = await reader.readNotCached();
     expect(forms).toEqual([DUMMY_FORM_0]);
   });
 
-  test("readNotGeneratedWithIds", async () => {
+  test("readNotCachedWithIds", async () => {
     const writer = new FirebaseStoryQuestionWriter(storyQuestions);
     await writer.write(DUMMY_QUESTIONS);
 
     const form0 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
     const form1 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);
-    await form1.update({ isGenerated: true });
+    await form1.update({ isCached: true });
 
     const reader = new FirebaseStoryFormReader(
       storyForms,
       new FirebaseStoryQuestionReader(storyQuestions)
     );
 
-    const forms = await reader.readNotGeneratedWithIds();
+    const forms = await reader.readNotCachedWithIds();
     expect(forms).toEqual(new Map([[form0.id, DUMMY_FORM_0]]));
+  });
+
+  test("readCachedNotApprovedIds", async () => {
+    const form0 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
+    await form0.update({ isCached: true });
+    const form1 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);
+    await form1.update({ isCached: true, isApproved: true });
+
+    const reader = new FirebaseStoryFormReader(storyForms);
+
+    const forms = await reader.readCachedNotApprovedIds();
+    expect(forms).toEqual([form0.id]);
   });
 });

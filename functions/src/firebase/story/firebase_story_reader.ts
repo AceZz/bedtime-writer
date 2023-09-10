@@ -34,6 +34,25 @@ export class FirebaseStoryReader implements StoryReader {
     });
   }
 
+  async checkAllFormImagesApproved(formId: string): Promise<boolean> {
+    const storyIds = (await this.readFormStories(formId)).map((doc) => doc.id);
+    const approvals = await Promise.all(
+      storyIds.map(async (storyId) => {
+        return await this.checkStoryImagesApproved(storyId);
+      })
+    );
+    return approvals.every((approval) => approval);
+  }
+
+  private async checkStoryImagesApproved(storyId: string): Promise<boolean> {
+    const count = await this.stories
+      .imagesRef(storyId)
+      .where("isApproved", "==", false)
+      .count()
+      .get();
+    return count.data().count === 0;
+  }
+
   async getFormStoryImageIds(
     formId: string
   ): Promise<{ storyId: string; imageId: string }[]> {

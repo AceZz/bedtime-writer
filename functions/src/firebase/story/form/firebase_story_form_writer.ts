@@ -4,6 +4,7 @@ import {
   StoryForm,
   StoryQuestion,
   StoryQuestionReader,
+  StoryReader,
 } from "../../../story/";
 import { FirestoreStoryForms } from "./firestore_story_forms";
 
@@ -14,7 +15,8 @@ import { FirestoreStoryForms } from "./firestore_story_forms";
 export class FirebaseStoryFormWriter implements StoryFormWriter {
   constructor(
     private readonly formsCollection: FirestoreStoryForms,
-    private readonly questionReader: StoryQuestionReader
+    private readonly questionReader?: StoryQuestionReader,
+    private readonly storyReader?: StoryReader
   ) {}
 
   async write(form: StoryForm): Promise<string> {
@@ -47,17 +49,46 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
       index++;
     }
     data.numQuestions = index;
-    data.isGenerated = false;
+    data.isCached = false;
+    data.isApproved = false;
 
     const doc = await this.formsCollection.formsRef().add(data);
     return doc.id;
   }
 
   private async getQuestions(): Promise<Map<string, StoryQuestion>> {
+    if (this.questionReader === undefined) {
+      throw new Error(
+        "getQuestions: no question reader specified. Please provide a StoryQuestionReader when instantiating FirebaseStoryFormWriter."
+      );
+    }
     return listToMapById(await this.questionReader.readAll());
   }
 
-  async writeIsGenerated(id: string): Promise<void> {
-    await this.formsCollection.formRef(id).update({ isGenerated: true });
+  async writeIsCached(id: string): Promise<void> {
+    await this.formsCollection.formRef(id).update({ isCached: true });
+  }
+
+  async approveForm(id: string): Promise<void> {
+    if (this.storyReader === undefined) {
+      throw new Error(
+        "approveForm: no story reader specified. Please provide a StoryReader when instantiating FirebaseStoryFormWriter."
+      );
+    }
+
+    const isAllFormImagesApproved =
+      await this.storyReader.checkAllFormImagesApproved(id);
+
+    if (!isAllFormImagesApproved) {
+      throw new Error(
+        `approveForm: form ${id} cannot be approved as some images in the stories collection are still not approved.`
+      );
+    }
+
+    await this.writeIsApproved(id);
+  }
+
+  private async writeIsApproved(id: string): Promise<void> {
+    await this.formsCollection.formRef(id).update({ isApproved: true });
   }
 }

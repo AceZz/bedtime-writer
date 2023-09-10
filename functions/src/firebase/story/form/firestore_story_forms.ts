@@ -11,7 +11,8 @@ import { FirestoreCollection } from "../../firestore_collection";
  * ```plain
  * <form_id>:
  *   datetime: timestamp
- *   isGenerated: bool
+ *   isCached: bool
+ *   isApproved: bool
  *   numQuestions: int
  *   question0: <id>
  *   question0Choices: [<id>, <id>, ...]

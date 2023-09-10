@@ -30,7 +30,7 @@ export class FirebaseStoryWriter extends StoryWriter {
   constructor(
     private readonly stories: FirestoreStories,
     protected readonly id: string | undefined = undefined,
-    reader: FirebaseStoryReader | undefined = undefined
+    reader?: FirebaseStoryReader
   ) {
     super(id);
     this.reader = reader ?? new FirebaseStoryReader(stories);
@@ -94,7 +94,11 @@ export class FirebaseStoryWriter extends StoryWriter {
       return undefined;
     }
 
-    const data = { data: image };
+    const data = {
+      data: image,
+      isApproved: false,
+      regenStatus: StoryRegenImageStatus.IDLE,
+    };
     const imageId = this.imageIds.get(image);
 
     // Already existing image: return it.
