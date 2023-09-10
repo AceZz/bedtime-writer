@@ -86,10 +86,11 @@ describe("FirebaseStoryFormReader", () => {
     expect(forms).toEqual(new Map([[form0.id, DUMMY_FORM_0]]));
   });
 
-  test("readNotApprovedIds", async () => {
+  test("readCachedNotApprovedIds", async () => {
     const form0 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
+    await form0.update({ isCached: true });
     const form1 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);
-    await form1.update({ isApproved: true });
+    await form1.update({ isCached: true, isApproved: true });
 
     const reader = new FirebaseStoryFormReader(storyForms);
 
