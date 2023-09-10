@@ -30,7 +30,7 @@ export class FirebaseStoryWriter extends StoryWriter {
   constructor(
     private readonly stories: FirestoreStories,
     protected readonly id: string | undefined = undefined,
-    reader: FirebaseStoryReader | undefined = undefined
+    reader?: FirebaseStoryReader
   ) {
     super(id);
     this.reader = reader ?? new FirebaseStoryReader(stories);

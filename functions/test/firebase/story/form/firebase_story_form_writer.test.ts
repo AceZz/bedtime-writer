@@ -122,12 +122,10 @@ describe("FirebaseStoryFormWriter", () => {
 
     const storyReader = new FirebaseStoryReader(storyCacheLanding);
     const imageIds = await storyReader.getFormStoryImageIds(formId);
-    console.log(imageIds);
     await writer_0.approveImage(imageIds[0].storyId, imageIds[0].imageId);
     await expect(formWriter.approveForm(formId)).rejects.toThrowError(
       `approveForm: form ${formId} cannot be approved as some images in the stories collection are still not approved.`
     );
-    console.log("OOOOOOK");
 
     await writer_0.approveImage(imageIds[1].storyId, imageIds[1].imageId);
     await formWriter.approveForm(formId);

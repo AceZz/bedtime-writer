@@ -25,7 +25,7 @@ export interface StoryReader {
   >;
 
   /**
-   * Check wether all images for the form's stories are approved.
+   * Check whether all images for the form's stories are approved.
    */
   checkAllFormImagesApproved(formId: string): Promise<boolean>;
 

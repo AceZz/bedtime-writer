@@ -15,10 +15,8 @@ import { FirestoreStoryForms } from "./firestore_story_forms";
 export class FirebaseStoryFormWriter implements StoryFormWriter {
   constructor(
     private readonly formsCollection: FirestoreStoryForms,
-    private readonly questionReader:
-      | StoryQuestionReader
-      | undefined = undefined,
-    private readonly storyReader: StoryReader | undefined = undefined
+    private readonly questionReader?: StoryQuestionReader,
+    private readonly storyReader?: StoryReader
   ) {}
 
   async write(form: StoryForm): Promise<string> {
