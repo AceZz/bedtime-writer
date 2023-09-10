@@ -48,7 +48,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-# draw.io
-doc/.$*.bkp
-doc/.$*.dtmp
