@@ -32,6 +32,26 @@ service cloud.firestore {
       }
     }
 
+    match /story__cache_landing/{story} {
+      allow read: if isAuth();
+      allow write: if false;
+    }
+
+    match /story__forms_landing/{form} {
+      allow read: if isAuth();
+      allow write: if false;
+    }
+
+    match /story__questions/{question} {
+      allow read: if isAuth();
+      allow write: if false;
+
+      match /choices/{choice} {
+        allow read: if isAuth();
+        allow write: if false;
+      }
+    }
+
     match /user__stats/{r} {
           allow get: if isAuth() && r == request.auth.uid;
           allow list: if false;
