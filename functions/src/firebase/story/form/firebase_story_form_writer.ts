@@ -13,13 +13,11 @@ import { FirestoreStoryForms } from "./firestore_story_forms";
 export class FirebaseStoryFormWriter implements StoryFormWriter {
   constructor(
     private readonly formsCollection: FirestoreStoryForms,
-    private readonly questionReader?: StoryQuestionReader,
-    private readonly storyReader?: StoryReader
+    private readonly _questionReader?: StoryQuestionReader,
+    private readonly _storyReader?: StoryReader
   ) {}
 
   async write(form: StoryForm): Promise<string> {
-    if (this.questionReader === undefined)
-      throw new Error("write: no question reader specified.");
     const availableQuestions = await this.questionReader.get();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -61,18 +59,13 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
   }
 
   async approveForm(id: string): Promise<void> {
-    if (this.storyReader === undefined) {
-      throw new Error(
-        "approveForm: no story reader specified. Please provide a StoryReader when instantiating FirebaseStoryFormWriter."
-      );
-    }
-
     const isAllFormImagesApproved =
       await this.storyReader.checkAllFormImagesApproved(id);
 
     if (!isAllFormImagesApproved) {
       throw new Error(
-        `approveForm: form ${id} cannot be approved as some images in the stories collection are still not approved.`
+        `approveForm: form ${id} cannot be approved as some images in the ` +
+          "stories collection are still not approved."
       );
     }
 
@@ -81,5 +74,23 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
 
   private async writeIsApproved(id: string): Promise<void> {
     await this.formsCollection.formRef(id).update({ isApproved: true });
+  }
+
+  private get questionReader(): StoryQuestionReader {
+    if (this._questionReader === undefined)
+      throw new Error(
+        "FirebaseStoryFormWriter: specify a `StoryQuestionReader`" +
+          "in the constructor."
+      );
+    return this._questionReader;
+  }
+
+  private get storyReader(): StoryReader {
+    if (this._storyReader === undefined)
+      throw new Error(
+        "FirebaseStoryFormWriter: specify a `StoryReader`" +
+          "in the constructor."
+      );
+    return this._storyReader;
   }
 }
