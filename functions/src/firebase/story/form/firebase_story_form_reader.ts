@@ -49,9 +49,10 @@ export class FirebaseStoryFormReader implements StoryFormReader {
     );
   }
 
-  async readNotApprovedIds(): Promise<string[]> {
+  async readCachedNotApprovedIds(): Promise<string[]> {
     const snapshots = await this.formsCollection
       .formsRef()
+      .where("isCached", "==", true)
       .where("isApproved", "==", false)
       .get();
 

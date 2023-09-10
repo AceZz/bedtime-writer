@@ -93,7 +93,7 @@ describe("FirebaseStoryFormReader", () => {
 
     const reader = new FirebaseStoryFormReader(storyForms);
 
-    const forms = await reader.readNotApprovedIds();
+    const forms = await reader.readCachedNotApprovedIds();
     expect(forms).toEqual([form0.id]);
   });
 });

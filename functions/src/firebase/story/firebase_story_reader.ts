@@ -45,13 +45,12 @@ export class FirebaseStoryReader implements StoryReader {
   }
 
   private async checkStoryImagesApproved(storyId: string): Promise<boolean> {
-    const docs = (
-      await this.stories.imagesRef(storyId).select("isApproved").get()
-    ).docs;
-    const approvals = docs.map((doc) => {
-      return doc.data().isApproved ? true : false;
-    });
-    return approvals.every((approval) => approval);
+    const count = await this.stories
+      .imagesRef(storyId)
+      .where("isApproved", "==", false)
+      .count()
+      .get();
+    return count.data().count === 0;
   }
 
   async getFormStoryImageIds(
