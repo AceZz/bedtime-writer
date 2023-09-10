@@ -6,7 +6,7 @@
       "ignore": [
         ".git",
         "admin_data",
-        "local_backend_export",
+        "lbd",
         "node_modules",
         "test",
         "*.ts",
