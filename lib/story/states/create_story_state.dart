@@ -69,7 +69,7 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
   CreateStoryStateNotifier({required this.ref})
       : super(
           CreateStoryState(
-            storyForm: const StoryForm(questions: []),
+            storyForm: ref.read(storyFormProvider),
             duration: 5,
           ),
         );
@@ -78,7 +78,7 @@ class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
     final Preferences preferences = ref.read(preferencesProvider);
 
     state = CreateStoryState(
-      storyForm: storyForm,
+      storyForm: ref.read(storyFormProvider),
       duration: preferences.duration,
     );
   }

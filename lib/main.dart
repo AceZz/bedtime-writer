@@ -14,6 +14,14 @@ import 'logger.dart';
 import 'router.dart';
 import 'theme.dart';
 
+/// Temporary class.
+class _StoryForm implements StoryForm {
+  @override
+  final List<Question> questions;
+
+  _StoryForm({required this.questions});
+}
+
 void main() async {
   configureLogging();
 
@@ -44,12 +52,14 @@ void main() async {
 
   Paint.enableDithering = true; // Make smoother gradient
 
-  // Load the [SharedPreferences].
+  // Load the overridable providers.
   final sharedPreferences = await SharedPreferences.getInstance();
+  final storyForm = _StoryForm(questions: []);
   runApp(
     ProviderScope(
       overrides: [
-        sharedPreferencesBaseProvider.overrideWithValue(sharedPreferences)
+        sharedPreferencesBaseProvider.overrideWithValue(sharedPreferences),
+        storyFormProvider.overrideWithValue(storyForm),
       ],
       child: const MyApp(),
     ),

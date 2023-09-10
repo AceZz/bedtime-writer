@@ -53,6 +53,11 @@ final AutoDisposeStreamProviderFamily<StoryPart, Tuple2<String, String>>
 Future<String> Function(StoryAnswers answers) createClassicStory =
     firebaseCreateClassicStory;
 
+/// Returns the current [StoryForm]. Has to be overridden with
+/// [Provider.overrideWithValue].
+final Provider<StoryForm> storyFormProvider =
+    Provider((ref) => throw UnimplementedError());
+
 /// Streams the [StoryStatus] of a specific story.
 final AutoDisposeFutureProviderFamily<StoryStatus, String> storyStatusProvider =
     firebaseStoryStatusProvider;
