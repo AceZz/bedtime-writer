@@ -94,7 +94,11 @@ export class FirebaseStoryWriter extends StoryWriter {
       return undefined;
     }
 
-    const data = { data: image };
+    const data = {
+      data: image,
+      isApproved: false,
+      regenStatus: StoryRegenImageStatus.IDLE,
+    };
     const imageId = this.imageIds.get(image);
 
     // Already existing image: return it.
