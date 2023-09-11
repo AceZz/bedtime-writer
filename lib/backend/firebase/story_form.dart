@@ -53,9 +53,11 @@ class _FirebaseQuestion implements Question {
     final ref = firebaseFirestore.collection(storyQuestions).doc(id);
     final data = (await getCacheThenServer(ref)).data()!;
 
-    final choices = await Future.wait(choiceIds.map((choiceId) async {
-      return _FirebaseChoice.get(ref, choiceId);
-    }),);
+    final choices = await Future.wait(
+      choiceIds.map((choiceId) async {
+        return _FirebaseChoice.get(ref, choiceId);
+      }),
+    );
 
     return _FirebaseQuestion(id, data['text'], choices);
   }

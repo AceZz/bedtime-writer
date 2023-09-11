@@ -11,8 +11,11 @@ class _Question implements Question {
   @override
   final List<Choice> choices;
 
-  const _Question(
-      {required this.id, required this.text, required this.choices,});
+  const _Question({
+    required this.id,
+    required this.text,
+    required this.choices,
+  });
 }
 
 class _Choice implements Choice {
