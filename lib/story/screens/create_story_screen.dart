@@ -46,8 +46,17 @@ class CreateStoryScreen extends ConsumerWidget {
       return FutureBuilder(
         future: ref.read(createStoryStateProvider.notifier).loadStoryForm(),
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+          if (snapshot.hasError) {
+            return ErrorScreen(
+              text: 'A mystical error occurred. Please go home and try again.',
+              buttonText: 'Home',
+              destination: 'Home',
+              buttonColor: Theme.of(context).colorScheme.primary,
+            );
+          }
+
           return const _LoadingScreen(
-            firstText: 'Please wait while we are crafting magical questions...',
+            firstText: 'A moment please, magical questions will appear soon...',
           );
         },
       );
@@ -71,6 +80,15 @@ class CreateStoryScreen extends ConsumerWidget {
       return FutureBuilder(
         future: createClassicStory(state.storyAnswers),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          if (snapshot.hasError) {
+            return ErrorScreen(
+              text: 'A mystical error occurred. Please go home and try again.',
+              buttonText: 'Home',
+              destination: 'Home',
+              buttonColor: Theme.of(context).colorScheme.primary,
+            );
+          }
+
           final requestId = snapshot.data;
           return _StoryScreen(requestId: requestId);
         },
