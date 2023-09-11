@@ -23,6 +23,7 @@ class FirebaseStoryForm implements StoryForm {
   /// Download a [StoryForm], including its [Question]s and [Choice]s, and
   /// return it.
   static Future<FirebaseStoryForm> get(String id) async {
+    //TODO: change colleciton below to storyFormsServing
     final ref = firebaseFirestore.collection(storyFormsLanding).doc(id);
     final data = (await getCacheThenServer(ref)).data()!;
 
@@ -55,6 +56,7 @@ class _FirebaseQuestion implements Question {
     String id,
     List<String> choiceIds,
   ) async {
+    //TODO: update collection below to storyQuestionsServing
     final ref = firebaseFirestore.collection(storyQuestions).doc(id);
     final data = (await getCacheThenServer(ref)).data()!;
 
