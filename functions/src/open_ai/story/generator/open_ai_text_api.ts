@@ -62,6 +62,7 @@ export class OpenAiTextApi implements TextApi {
   constructor(api: OpenAIApi, model: string) {
     this.api = api;
     this.model = model;
+    logger.info(`using OpenAI text API with model ${this.model}`);
   }
 
   async getText(prompts: TextPrompt[], config: TextApiConfig): Promise<string> {
