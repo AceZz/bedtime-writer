@@ -12,6 +12,7 @@ final storyFormProvider =
 /// Firebase implementation of [StoryForm].
 class FirebaseStoryForm implements StoryForm {
   final String id;
+  @override
   final List<Question> questions;
 
   /// Download a [StoryForm], including its [Question]s and [Choice]s, and
@@ -32,13 +33,17 @@ class FirebaseStoryForm implements StoryForm {
 
   const FirebaseStoryForm(this.id, this.questions) : super();
 
+  @override
   String toString() => '_FirebaseStoryForm($id, $questions)';
 }
 
 /// Firebase implementation of [Question].
 class _FirebaseQuestion implements Question {
+  @override
   final String id;
+  @override
   final String text;
+  @override
   final List<Choice> choices;
 
   static Future<_FirebaseQuestion> get(
@@ -50,20 +55,24 @@ class _FirebaseQuestion implements Question {
 
     final choices = await Future.wait(choiceIds.map((choiceId) async {
       return _FirebaseChoice.get(ref, choiceId);
-    }));
+    }),);
 
     return _FirebaseQuestion(id, data['text'], choices);
   }
 
   const _FirebaseQuestion(this.id, this.text, this.choices) : super();
 
+  @override
   String toString() => '_FirebaseQuestion($id, $text, $choices)';
 }
 
 /// Firebase implementation of [Choice].
 class _FirebaseChoice implements Choice {
+  @override
   final String id;
+  @override
   final String text;
+  @override
   final Uint8List? image;
 
   static Future<_FirebaseChoice> get(
@@ -78,5 +87,6 @@ class _FirebaseChoice implements Choice {
 
   const _FirebaseChoice(this.id, this.text, this.image) : super();
 
+  @override
   String toString() => '_FirebaseChoice($id, $text)';
 }

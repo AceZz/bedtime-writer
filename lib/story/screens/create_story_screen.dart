@@ -166,11 +166,10 @@ class _StoryScreen extends ConsumerWidget {
 
 /// Displays a loading screen.
 class _LoadingScreen extends StatelessWidget {
-  final String firstText;
+  final String firstText = 'Your fairy tale will appear in a few seconds';
 
   const _LoadingScreen({
     Key? key,
-    this.firstText = 'Your fairy tale will appear in a few seconds',
   }) : super(key: key);
 
   @override

@@ -4,17 +4,23 @@ import 'package:bedtime_writer/backend/story_form.dart';
 import 'package:test/test.dart';
 
 class _Question implements Question {
+  @override
   final String id;
+  @override
   final String text;
+  @override
   final List<Choice> choices;
 
   const _Question(
-      {required this.id, required this.text, required this.choices});
+      {required this.id, required this.text, required this.choices,});
 }
 
 class _Choice implements Choice {
+  @override
   final String id;
+  @override
   final String text;
+  @override
   final Uint8List? image = null;
 
   const _Choice({required this.id, required this.text});
