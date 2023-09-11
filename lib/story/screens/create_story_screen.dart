@@ -41,6 +41,18 @@ class CreateStoryScreen extends ConsumerWidget {
     const errorScreenDestination = 'sign_in';
     final errorScreenButtonColor = Theme.of(context).colorScheme.primary;
 
+    // Loads the [StoryForm] if needed.
+    if (!state.hasStoryForm) {
+      return FutureBuilder(
+        future: ref.read(createStoryStateProvider.notifier).loadStoryForm(),
+        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+          return const _LoadingScreen(
+            firstText: 'Please wait while we are crafting magical questions...',
+          );
+        },
+      );
+    }
+
     // Checks on stories limit and displays a question
     if (state.hasRemainingQuestions) {
       nextScreen = _QuestionScreen(question: state.currentQuestion);
@@ -166,10 +178,11 @@ class _StoryScreen extends ConsumerWidget {
 
 /// Displays a loading screen.
 class _LoadingScreen extends StatelessWidget {
-  final String firstText = 'Your fairy tale will appear in a few seconds';
+  final String firstText;
 
   const _LoadingScreen({
     Key? key,
+    this.firstText = 'Your fairy tale will appear in a few seconds',
   }) : super(key: key);
 
   @override

@@ -1,13 +1,18 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../story_form.dart';
 import 'firebase.dart';
 
-final storyFormProvider =
-    Provider<FirebaseStoryForm>((ref) => throw UnimplementedError());
+Future<FirebaseStoryForm> firebaseGetRandomStoryForm() async {
+  final documents = await firebaseFirestore
+      .collection(storyFormsLanding) //TODO: change this to serving
+      .limit(1) //TODO: randomize
+      .get();
+  final id = documents.docs[0].id;
+  return FirebaseStoryForm.get(id);
+}
 
 /// Firebase implementation of [StoryForm].
 class FirebaseStoryForm implements StoryForm {
@@ -18,7 +23,7 @@ class FirebaseStoryForm implements StoryForm {
   /// Download a [StoryForm], including its [Question]s and [Choice]s, and
   /// return it.
   static Future<FirebaseStoryForm> get(String id) async {
-    final ref = firebaseFirestore.collection(storyForms).doc(id);
+    final ref = firebaseFirestore.collection(storyFormsLanding).doc(id);
     final data = (await getCacheThenServer(ref)).data()!;
 
     final questions = [];
