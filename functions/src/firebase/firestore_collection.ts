@@ -28,6 +28,6 @@ export abstract class FirestoreCollection {
 /**
  * A class that can provide a `Firestore` object.
  */
-interface FirestoreProvider {
+export interface FirestoreProvider {
   getFirestore(): Firestore;
 }
