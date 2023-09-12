@@ -1,6 +1,5 @@
 import { beforeAll, beforeEach, describe, expect, test } from "@jest/globals";
 import {
-  FirebaseStoryQuestionReader,
   FirebaseStoryQuestionWriter,
   dumpCollection,
   dumpToCollection,
@@ -73,8 +72,7 @@ describe("firestore_utils", () => {
       ])
     );
 
-    const reader = new FirebaseStoryQuestionReader(questions);
-    expect(await reader.get()).toEqual(listToMapById(DUMMY_QUESTIONS_0));
+    expect(await questions.get()).toEqual(listToMapById(DUMMY_QUESTIONS_0));
   });
 
   test("dumpToCollection does not merge", async () => {
@@ -98,8 +96,7 @@ describe("firestore_utils", () => {
       ])
     );
 
-    const reader = new FirebaseStoryQuestionReader(questions);
-    const actual = await reader.get();
+    const actual = await questions.get();
 
     expect(actual.size).toBe(2);
     // text was not specified, and thus becomes "".

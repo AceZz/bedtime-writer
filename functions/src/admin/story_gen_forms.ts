@@ -14,7 +14,6 @@ import {
   FirestoreContext,
   FirebaseStoryFormWriter,
   FirebaseStoryFormReader,
-  FirebaseStoryQuestionReader,
 } from "../firebase";
 import { StoryFormManager, StoryQuestion, StoryForm } from "../story";
 
@@ -37,7 +36,7 @@ async function main() {
   if (await confirm(firestore, numForms)) {
     const writer = new FirebaseStoryFormWriter(
       firestore.storyFormsLanding,
-      new FirebaseStoryQuestionReader(firestore.storyQuestions)
+      firestore.storyQuestions
     );
 
     for (const form of generatedForms) {
@@ -103,10 +102,7 @@ async function generateForms(
 async function readQuestions(
   firestore: FirestoreContext
 ): Promise<Map<string, StoryQuestion>> {
-  const questionsReader = new FirebaseStoryQuestionReader(
-    firestore.storyQuestions
-  );
-  const questions = await questionsReader.get();
+  const questions = await firestore.storyQuestions.get();
 
   if (questions.size === 0) {
     throw Error(
@@ -128,7 +124,7 @@ async function readForms(
 ): Promise<Map<string, StoryForm>> {
   const formsReader = new FirebaseStoryFormReader(
     firestore.storyFormsLanding,
-    new FirebaseStoryQuestionReader(firestore.storyQuestions)
+    firestore.storyQuestions
   );
   const currentForms = await formsReader.get();
   console.log(

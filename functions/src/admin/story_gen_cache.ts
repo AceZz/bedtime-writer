@@ -7,7 +7,6 @@ import { parseEnvAsNumber, prompt, retryAsyncFunction } from "../utils";
 import {
   FirebaseStoryFormReader,
   FirebaseStoryFormWriter,
-  FirebaseStoryQuestionReader,
   FirebaseStoryReader,
   FirebaseStoryWriter,
   FirestoreContext,
@@ -21,7 +20,6 @@ import {
   StoryFormWriter,
   StoryLogic,
   StoryMetadata,
-  StoryQuestionReader,
   StoryReader,
   StoryStatus,
   TextApi,
@@ -48,7 +46,6 @@ class StoryFormGenerator {
   private storyTextApi: TextApi;
   private textApi: TextApi;
   private imageApi: ImageApi;
-  private questionReader: StoryQuestionReader;
   private storyReader: StoryReader;
   private formWriter: StoryFormWriter;
 
@@ -62,13 +59,10 @@ class StoryFormGenerator {
     this.textApi = getTextApi("gpt-3.5-turbo");
     this.imageApi = getImageApi();
 
-    this.questionReader = new FirebaseStoryQuestionReader(
-      firestore.storyQuestions
-    );
     this.storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
     this.formWriter = new FirebaseStoryFormWriter(
       firestore.storyFormsLanding,
-      this.questionReader
+      firestore.storyQuestions
     );
   }
 
@@ -82,7 +76,7 @@ class StoryFormGenerator {
     // Download the `StoryForm`s.
     const reader = new FirebaseStoryFormReader(
       firestore.storyFormsLanding,
-      new FirebaseStoryQuestionReader(firestore.storyQuestions)
+      firestore.storyQuestions
     );
     const forms = await reader.get({ isCached: false });
 
