@@ -26,7 +26,7 @@ describe("FirebaseStoryFormCopier", () => {
   beforeAll(() => {
     initEnv();
     initFirebase(true);
-    formWriter = new FirebaseStoryFormWriter(originForms, originQuestions);
+    formWriter = new FirebaseStoryFormWriter(originForms);
   });
 
   beforeEach(async () => {

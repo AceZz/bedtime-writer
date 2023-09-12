@@ -40,7 +40,7 @@ export class FirestoreStoryForms
   constructor(
     collectionPath: string,
     firestoreProvider: FirestoreProvider,
-    private readonly questionReader: StoryQuestionReader
+    readonly questionReader: StoryQuestionReader
   ) {
     super(collectionPath, firestoreProvider);
   }

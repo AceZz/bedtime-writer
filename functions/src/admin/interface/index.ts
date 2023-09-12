@@ -26,7 +26,6 @@ const firestore = new FirestoreContext();
 const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
 const formWriter = new FirebaseStoryFormWriter(
   firestore.storyFormsLanding,
-  undefined,
   storyReader
 );
 
