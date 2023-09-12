@@ -2,7 +2,6 @@ import { beforeAll, beforeEach, describe, expect, test } from "@jest/globals";
 import {
   FirebaseStoryFormCopier,
   FirebaseStoryFormWriter,
-  FirebaseStoryQuestionReader,
   FirebaseStoryQuestionWriter,
   dumpCollection,
   initEnv,
@@ -23,16 +22,14 @@ const originForms = origin.storyForms;
 const dest = new FirestoreContextUtils("form_copier_dest").storyForms;
 
 describe("FirebaseStoryFormCopier", () => {
-  let questionReader: FirebaseStoryQuestionReader;
   let questionWriter: FirebaseStoryQuestionWriter;
   let formWriter: FirebaseStoryFormWriter;
 
   beforeAll(() => {
     initEnv();
     initFirebase(true);
-    questionReader = new FirebaseStoryQuestionReader(originQuestions);
     questionWriter = new FirebaseStoryQuestionWriter(originQuestions);
-    formWriter = new FirebaseStoryFormWriter(originForms, questionReader);
+    formWriter = new FirebaseStoryFormWriter(originForms, originQuestions);
   });
 
   beforeEach(async () => {

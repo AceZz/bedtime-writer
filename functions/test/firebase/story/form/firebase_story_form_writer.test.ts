@@ -4,7 +4,6 @@ import {
   initFirebase,
   FirebaseStoryFormWriter,
   FirebaseStoryQuestionWriter,
-  FirebaseStoryQuestionReader,
   FirebaseStoryWriter,
   FirebaseStoryReader,
 } from "../../../../src/firebase";
@@ -38,7 +37,7 @@ describe("FirebaseStoryFormWriter", () => {
     questionsWriter = new FirebaseStoryQuestionWriter(storyQuestions);
     formWriter = new FirebaseStoryFormWriter(
       storyForms,
-      new FirebaseStoryQuestionReader(storyQuestions),
+      storyQuestions,
       new FirebaseStoryReader(storyCacheLanding)
     );
   });

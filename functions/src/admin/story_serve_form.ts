@@ -11,7 +11,6 @@ import {
   FirebaseStoryFormCopier,
   FirebaseStoryFormReader,
   FirebaseStoryQuestionCopier,
-  FirebaseStoryQuestionReader,
   FirebaseStoryReader,
   FirestoreContext,
   FirestoreStories,
@@ -113,7 +112,7 @@ async function getApprovedForms(
 ): Promise<Map<string, StoryForm>> {
   const formReader = new FirebaseStoryFormReader(
     landing.forms,
-    new FirebaseStoryQuestionReader(landing.questions)
+    landing.questions
   );
   return formReader.get({ isApproved: true, isCached: true });
 }

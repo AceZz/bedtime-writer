@@ -2,14 +2,12 @@ import { Copier, CopierFilter, CopierParams, StoryForm } from "../../../story";
 import { dumpToCollection } from "../../firestore_utils";
 import { FirebaseStoryFormReader } from "./firebase_story_form_reader";
 import { storyFormToFirestore } from "./firebase_story_form_writer";
-import { FirebaseStoryQuestionReader } from "./firebase_story_question_reader";
 import { FirestoreStoryForms } from "./firestore_story_forms";
 import { FirestoreStoryQuestions } from "./firestore_story_questions";
 
 export class FirebaseStoryFormCopier<
   T extends { [key: string]: any }
 > extends Copier<any, T> {
-  private questionReader: FirebaseStoryQuestionReader;
   private formReader: FirebaseStoryFormReader;
 
   constructor(
@@ -19,10 +17,9 @@ export class FirebaseStoryFormCopier<
     private readonly dest: FirestoreStoryForms
   ) {
     super();
-    this.questionReader = new FirebaseStoryQuestionReader(this.originQuestions);
     this.formReader = new FirebaseStoryFormReader(
       this.originForms,
-      this.questionReader
+      this.originQuestions
     );
   }
 
@@ -37,7 +34,7 @@ export class FirebaseStoryFormCopier<
   private async storyFormsToFirestore(
     forms: Map<string, StoryForm>
   ): Promise<Map<string, any>> {
-    const availableQuestions = await this.questionReader.get();
+    const availableQuestions = await this.originQuestions.get();
 
     const entries = Array.from(forms.entries()).map(([key, form]) => [
       key,

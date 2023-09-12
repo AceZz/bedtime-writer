@@ -1,7 +1,6 @@
 import { beforeAll, beforeEach, describe, expect, test } from "@jest/globals";
 import {
   FirebaseStoryFormReader,
-  FirebaseStoryQuestionReader,
   FirebaseStoryQuestionWriter,
   initEnv,
   initFirebase,
@@ -34,10 +33,7 @@ describe("FirebaseStoryFormReader", () => {
 
     const doc = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
 
-    const reader = new FirebaseStoryFormReader(
-      storyForms,
-      new FirebaseStoryQuestionReader(storyQuestions)
-    );
+    const reader = new FirebaseStoryFormReader(storyForms, storyQuestions);
 
     expect(await reader.get()).toEqual(new Map([[doc.id, DUMMY_FORM_0]]));
     expect(await reader.getIds()).toEqual([doc.id]);
@@ -45,10 +41,7 @@ describe("FirebaseStoryFormReader", () => {
 
   test("get() no questions throws", async () => {
     await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
-    const reader = new FirebaseStoryFormReader(
-      storyForms,
-      new FirebaseStoryQuestionReader(storyQuestions)
-    );
+    const reader = new FirebaseStoryFormReader(storyForms, storyQuestions);
     expect(reader.get).rejects.toThrow();
   });
 
@@ -60,10 +53,7 @@ describe("FirebaseStoryFormReader", () => {
     const form1 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);
     await form1.update({ isCached: true });
 
-    const reader = new FirebaseStoryFormReader(
-      storyForms,
-      new FirebaseStoryQuestionReader(storyQuestions)
-    );
+    const reader = new FirebaseStoryFormReader(storyForms, storyQuestions);
 
     const params = { isCached: false };
     expect(await reader.get(params)).toEqual(
@@ -78,10 +68,7 @@ describe("FirebaseStoryFormReader", () => {
     const form1 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);
     await form1.update({ isCached: true, isApproved: true });
 
-    const reader = new FirebaseStoryFormReader(
-      storyForms,
-      new FirebaseStoryQuestionReader(storyQuestions)
-    );
+    const reader = new FirebaseStoryFormReader(storyForms, storyQuestions);
 
     const params = { isCached: true, isApproved: false };
     expect(await reader.get(params)).toEqual(
