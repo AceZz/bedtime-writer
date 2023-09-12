@@ -65,14 +65,6 @@ export class FirestoreContext {
       p + STORY_CACHE_SERVING,
       this
     );
-    this.storyFormsLanding = new FirestoreStoryForms(
-      p + STORY_FORMS_LANDING,
-      this
-    );
-    this.storyFormsServing = new FirestoreStoryForms(
-      p + STORY_FORMS_SERVING,
-      this
-    );
     this.storyQuestions = new FirestoreStoryQuestions(
       p + STORY_QUESTIONS,
       this
@@ -80,6 +72,16 @@ export class FirestoreContext {
     this.storyQuestionsServing = new FirestoreStoryQuestions(
       p + STORY_QUESTIONS_SERVING,
       this
+    );
+    this.storyFormsLanding = new FirestoreStoryForms(
+      p + STORY_FORMS_LANDING,
+      this,
+      this.storyQuestions
+    );
+    this.storyFormsServing = new FirestoreStoryForms(
+      p + STORY_FORMS_SERVING,
+      this,
+      this.storyQuestionsServing
     );
     this.storyRealtime = new FirestoreStoryRealtime(p + STORY_REALTIME, this);
     this.userFeedback = new FirestoreUserFeedback(p + USER_FEEDBACK, this);

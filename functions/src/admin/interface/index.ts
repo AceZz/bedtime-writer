@@ -8,7 +8,6 @@ import {
   initFirebase,
   FirebaseStoryWriter,
   FirebaseStoryFormWriter,
-  FirebaseStoryFormReader,
 } from "../../firebase";
 import { initLocalSecrets } from "../../firebase/utils";
 
@@ -25,7 +24,6 @@ const port = 3000;
 
 const firestore = new FirestoreContext();
 const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
-const formReader = new FirebaseStoryFormReader(firestore.storyFormsLanding);
 const formWriter = new FirebaseStoryFormWriter(
   firestore.storyFormsLanding,
   undefined,
@@ -33,7 +31,7 @@ const formWriter = new FirebaseStoryFormWriter(
 );
 
 app.get("/", async (req, res) => {
-  const formIds = await formReader.getIds({
+  const formIds = await firestore.storyFormsLanding.getIds({
     isCached: true,
     isApproved: false,
   });

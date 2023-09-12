@@ -1,9 +1,5 @@
 import { beforeAll, beforeEach, describe, expect, test } from "@jest/globals";
-import {
-  FirebaseStoryFormReader,
-  initEnv,
-  initFirebase,
-} from "../../../../src/firebase";
+import { initEnv, initFirebase } from "../../../../src/firebase";
 import { FirestoreContextUtils } from "../../utils";
 import {
   DUMMY_FORM_0,
@@ -13,12 +9,11 @@ import {
   SERIALIZED_DUMMY_FORM_1,
 } from "../../../story/data";
 
-const context = new FirestoreContextUtils("form_reader");
+const context = new FirestoreContextUtils("firestore_story_forms");
 const storyForms = context.storyForms;
 const storyQuestions = context.storyQuestions;
 
-describe("FirebaseStoryFormReader", () => {
-  // Check we are running in emulator mode before initializing Firebase.
+describe("FirestoreStoryForms", () => {
   beforeAll(() => {
     initEnv();
     initFirebase(true);
@@ -31,16 +26,13 @@ describe("FirebaseStoryFormReader", () => {
 
     const doc = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
 
-    const reader = new FirebaseStoryFormReader(storyForms, storyQuestions);
-
-    expect(await reader.get()).toEqual(new Map([[doc.id, DUMMY_FORM_0]]));
-    expect(await reader.getIds()).toEqual([doc.id]);
+    expect(await storyForms.get()).toEqual(new Map([[doc.id, DUMMY_FORM_0]]));
+    expect(await storyForms.getIds()).toEqual([doc.id]);
   });
 
   test("get() no questions throws", async () => {
     await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
-    const reader = new FirebaseStoryFormReader(storyForms, storyQuestions);
-    expect(reader.get).rejects.toThrow();
+    expect(storyForms.get).rejects.toThrow();
   });
 
   test("Not cached", async () => {
@@ -50,13 +42,11 @@ describe("FirebaseStoryFormReader", () => {
     const form1 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);
     await form1.update({ isCached: true });
 
-    const reader = new FirebaseStoryFormReader(storyForms, storyQuestions);
-
     const params = { isCached: false };
-    expect(await reader.get(params)).toEqual(
+    expect(await storyForms.get(params)).toEqual(
       new Map([[form0.id, DUMMY_FORM_0]])
     );
-    expect(await reader.getIds(params)).toEqual([form0.id]);
+    expect(await storyForms.getIds(params)).toEqual([form0.id]);
   });
 
   test("Cached and not approved", async () => {
@@ -65,12 +55,10 @@ describe("FirebaseStoryFormReader", () => {
     const form1 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);
     await form1.update({ isCached: true, isApproved: true });
 
-    const reader = new FirebaseStoryFormReader(storyForms, storyQuestions);
-
     const params = { isCached: true, isApproved: false };
-    expect(await reader.get(params)).toEqual(
+    expect(await storyForms.get(params)).toEqual(
       new Map([[form0.id, DUMMY_FORM_0]])
     );
-    expect(await reader.getIds(params)).toEqual([form0.id]);
+    expect(await storyForms.getIds(params)).toEqual([form0.id]);
   });
 });

@@ -5,7 +5,6 @@
 
 import { parseEnvAsNumber, prompt, retryAsyncFunction } from "../utils";
 import {
-  FirebaseStoryFormReader,
   FirebaseStoryFormWriter,
   FirebaseStoryReader,
   FirebaseStoryWriter,
@@ -74,11 +73,7 @@ class StoryFormGenerator {
     firestore: FirestoreContext
   ): Promise<StoryFormGenerator> {
     // Download the `StoryForm`s.
-    const reader = new FirebaseStoryFormReader(
-      firestore.storyFormsLanding,
-      firestore.storyQuestions
-    );
-    const forms = await reader.get({ isCached: false });
+    const forms = await firestore.storyFormsLanding.get({ isCached: false });
 
     if (forms.size === 0) {
       console.log(

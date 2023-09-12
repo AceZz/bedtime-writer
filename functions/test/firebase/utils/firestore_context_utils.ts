@@ -33,13 +33,14 @@ export class FirestoreContextUtils {
       this.firestore.storyCacheLanding.collectionPath,
       this.firestore
     );
-    this.storyForms = new FirestoreStoryFormsUtils(
-      this.firestore.storyFormsLanding.collectionPath,
-      this.firestore
-    );
     this.storyQuestions = new FirestoreStoryQuestionsUtils(
       this.firestore.storyQuestions.collectionPath,
       this.firestore
+    );
+    this.storyForms = new FirestoreStoryFormsUtils(
+      this.firestore.storyFormsLanding.collectionPath,
+      this.firestore,
+      this.storyQuestions
     );
     this.storyRealtime = new FirestoreStoriesUtils(
       this.firestore.storyRealtime.collectionPath,

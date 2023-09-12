@@ -9,7 +9,6 @@ import { FieldPath } from "firebase-admin/firestore";
 import {
   FirebaseStoryCopier,
   FirebaseStoryFormCopier,
-  FirebaseStoryFormReader,
   FirebaseStoryQuestionCopier,
   FirebaseStoryReader,
   FirestoreContext,
@@ -110,11 +109,7 @@ async function main() {
 async function getApprovedForms(
   landing: Collections
 ): Promise<Map<string, StoryForm>> {
-  const formReader = new FirebaseStoryFormReader(
-    landing.forms,
-    landing.questions
-  );
-  return formReader.get({ isApproved: true, isCached: true });
+  return landing.forms.get({ isApproved: true, isCached: true });
 }
 
 async function getServingFormIds(serving: Collections): Promise<Set<string>> {
