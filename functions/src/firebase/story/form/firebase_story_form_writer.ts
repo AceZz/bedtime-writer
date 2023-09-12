@@ -1,7 +1,6 @@
 import {
   StoryFormWriter,
   StoryForm,
-  StoryQuestionReader,
   StoryReader,
   StoryQuestion,
 } from "../../../story/";
@@ -53,12 +52,11 @@ export function storyFormToFirestore(
 export class FirebaseStoryFormWriter implements StoryFormWriter {
   constructor(
     private readonly formsCollection: FirestoreStoryForms,
-    private readonly _questionReader?: StoryQuestionReader,
     private readonly _storyReader?: StoryReader
   ) {}
 
   async write(form: StoryForm): Promise<string> {
-    const availableQuestions = await this.questionReader.get();
+    const availableQuestions = await this.formsCollection.questionReader.get();
 
     const data = storyFormToFirestore(form, availableQuestions);
     const doc = await this.formsCollection.formsRef().add(data);
@@ -85,15 +83,6 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
 
   private async writeIsApproved(id: string): Promise<void> {
     await this.formsCollection.formRef(id).update({ isApproved: true });
-  }
-
-  private get questionReader(): StoryQuestionReader {
-    if (this._questionReader === undefined)
-      throw new Error(
-        "FirebaseStoryFormWriter: specify a `StoryQuestionReader`" +
-          "in the constructor."
-      );
-    return this._questionReader;
   }
 
   private get storyReader(): StoryReader {

@@ -34,7 +34,6 @@ describe("FirebaseStoryFormWriter", () => {
     initFirebase(true);
     formWriter = new FirebaseStoryFormWriter(
       storyForms,
-      storyQuestions,
       new FirebaseStoryReader(storyCacheLanding)
     );
   });

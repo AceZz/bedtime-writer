@@ -33,10 +33,7 @@ async function main() {
   const generatedForms = await generateForms(numForms, firestore);
 
   if (await confirm(firestore, numForms)) {
-    const writer = new FirebaseStoryFormWriter(
-      firestore.storyFormsLanding,
-      firestore.storyQuestions
-    );
+    const writer = new FirebaseStoryFormWriter(firestore.storyFormsLanding);
 
     for (const form of generatedForms) {
       await writer.write(form);

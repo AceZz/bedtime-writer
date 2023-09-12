@@ -59,10 +59,7 @@ class StoryFormGenerator {
     this.imageApi = getImageApi();
 
     this.storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
-    this.formWriter = new FirebaseStoryFormWriter(
-      firestore.storyFormsLanding,
-      firestore.storyQuestions
-    );
+    this.formWriter = new FirebaseStoryFormWriter(firestore.storyFormsLanding);
   }
 
   /**
