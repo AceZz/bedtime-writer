@@ -196,9 +196,7 @@ function getQuestionCopier(
 function getFormCopier(
   landing: Collections,
   serving: Collections
-): FirebaseStoryFormCopier<{
-  [key: string]: any;
-}> {
+): FirebaseStoryFormCopier {
   return new FirebaseStoryFormCopier(
     (form) => {
       const props = [...Array(form.numQuestions).keys()].flatMap((i) => [

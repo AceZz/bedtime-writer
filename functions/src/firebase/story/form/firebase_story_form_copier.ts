@@ -1,14 +1,21 @@
 import { Copier, CopierFilter, CopierParams, StoryForm } from "../../../story";
-import { dumpToCollection } from "../../firestore_utils";
+import { FirestoreDocument, dumpToCollection } from "../../firestore_utils";
 import { storyFormToFirestore } from "./firebase_story_form_writer";
-import { FirestoreStoryForms } from "./firestore_story_forms";
+import {
+  FirestoreStoryForm,
+  FirestoreStoryForms,
+} from "./firestore_story_forms";
 import { FirestoreStoryQuestions } from "./firestore_story_questions";
 
-export class FirebaseStoryFormCopier<
-  T extends { [key: string]: any }
-> extends Copier<any, T> {
+export class FirebaseStoryFormCopier extends Copier<
+  FirestoreStoryForm,
+  FirestoreDocument
+> {
   constructor(
-    protected readonly itemFilter: CopierFilter<any, T>,
+    protected readonly itemFilter: CopierFilter<
+      FirestoreStoryForm,
+      FirestoreDocument
+    >,
     private readonly originQuestions: FirestoreStoryQuestions,
     private readonly originForms: FirestoreStoryForms,
     private readonly dest: FirestoreStoryForms
@@ -26,13 +33,16 @@ export class FirebaseStoryFormCopier<
 
   private async storyFormsToFirestore(
     forms: Map<string, StoryForm>
-  ): Promise<Map<string, any>> {
+  ): Promise<Map<string, FirestoreStoryForm>> {
     const availableQuestions = await this.originQuestions.get();
 
-    const entries = Array.from(forms.entries()).map(([key, form]) => [
-      key,
-      storyFormToFirestore(form, availableQuestions),
-    ]) as [string, any][];
+    const entries = Array.from(forms.entries()).map(
+      ([key, form]) =>
+        [key, storyFormToFirestore(form, availableQuestions)] as [
+          string,
+          FirestoreStoryForm
+        ]
+    );
     return new Map(entries);
   }
 }

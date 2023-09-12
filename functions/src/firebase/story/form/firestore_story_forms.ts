@@ -17,6 +17,15 @@ import {
   FirestoreProvider,
 } from "../../firestore_collection";
 
+export type FirestoreStoryForm = {
+  createdAt: Date;
+  isApproved: boolean;
+  isCached: boolean;
+  numQuestions: number;
+  [key: `question${number}`]: string;
+  [key: `question${number}Choices`]: string[];
+};
+
 /**
  * Helper class to manipulate the story forms collection (usually called
  * `story__forms`). It follows this schema:
