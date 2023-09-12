@@ -2,6 +2,11 @@ import { FieldPath, Firestore } from "firebase-admin/firestore";
 import { FirestoreCollection } from "./firestore_collection";
 
 /**
+ * An object with fields.
+ */
+export type FirestoreDocument = { [key: string]: any };
+
+/**
  * Dump `rawObjects` to `collection`.
  *
  * The exact keys of `rawObjects` are used as the IDs of the inserted Firestore
@@ -13,7 +18,7 @@ import { FirestoreCollection } from "./firestore_collection";
  */
 export async function dumpToCollection(
   collection: FirestoreCollection,
-  rawObjects: Map<string, { [key: string]: any }>
+  rawObjects: Map<string, FirestoreDocument>
 ): Promise<void> {
   return dumpToCollectionInternal(
     collection.collectionPath,
@@ -29,7 +34,7 @@ export async function dumpToCollection(
  */
 async function dumpToCollectionInternal(
   path: string,
-  rawObjects: Map<string, { [key: string]: any }>,
+  rawObjects: Map<string, FirestoreDocument>,
   firestore: Firestore
 ): Promise<void> {
   const collection = firestore.collection(path);
@@ -39,7 +44,7 @@ async function dumpToCollectionInternal(
     // Not required, but may fix a problem on some environments.
     await document.set({});
 
-    const data: { [key: string]: any } = {};
+    const data: FirestoreDocument = {};
     for (const key in raw) {
       // If the value is a `Map`, insert it in a subcollection.
       // Otherwise, store the value in `data`, it will be inserted in the end.

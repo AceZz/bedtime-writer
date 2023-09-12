@@ -4,7 +4,10 @@ import {
   StoryReader,
   StoryQuestion,
 } from "../../../story/";
-import { FirestoreStoryForms } from "./firestore_story_forms";
+import {
+  FirestoreStoryForm,
+  FirestoreStoryForms,
+} from "./firestore_story_forms";
 
 /**
  * Transform a `StoryForm` into the object to insert into Firestore.
@@ -12,12 +15,13 @@ import { FirestoreStoryForms } from "./firestore_story_forms";
 export function storyFormToFirestore(
   form: StoryForm,
   availableQuestions: Map<string, StoryQuestion>
-): any {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any = {};
-
-  // Check and write the creation time.
-  data.createdAt = form.createdAt;
+): FirestoreStoryForm {
+  const data: FirestoreStoryForm = {
+    createdAt: form.createdAt,
+    isApproved: false,
+    isCached: false,
+    numQuestions: 0,
+  };
 
   // Check and write the questions.
   let index = 0;
@@ -39,8 +43,6 @@ export function storyFormToFirestore(
     index++;
   }
   data.numQuestions = index;
-  data.isCached = false;
-  data.isApproved = false;
 
   return data;
 }
