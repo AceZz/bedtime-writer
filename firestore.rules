@@ -32,17 +32,12 @@ service cloud.firestore {
       }
     }
 
-    match /story__cache_landing/{story} {
+    match /story__forms_serving/{form} {
       allow read: if isAuth();
       allow write: if false;
     }
 
-    match /story__forms_landing/{form} {
-      allow read: if isAuth();
-      allow write: if false;
-    }
-
-    match /story__questions/{question} {
+    match /story__questions_serving/{question} {
       allow read: if isAuth();
       allow write: if false;
 
