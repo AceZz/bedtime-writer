@@ -25,11 +25,8 @@ Future<DocumentSnapshot<Map<String, dynamic>>> getCacheThenServer(
 }
 
 /// Sets the Firebase collection names
-const storyCacheLanding = 'story__cache_landing';
 const storyCacheServing = 'story__cache_serving';
-const storyFormsLanding = 'story__forms_landing';
 const storyFormsServing = 'story__forms_serving';
-const storyQuestions = 'story__questions';
 const storyQuestionsServing = 'story__questions_serving';
 const storyQuestionChoices = 'choices';
 const storyRealtime = 'story__realtime';

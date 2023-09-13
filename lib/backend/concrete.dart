@@ -57,7 +57,7 @@ Future<String> Function(StoryAnswers answers) createClassicStory =
 final AutoDisposeFutureProviderFamily<StoryStatus, String> storyStatusProvider =
     firebaseStoryStatusProvider;
 
-/// Returns the current [StoryForm].
+/// Returns a random [StoryForm] among those available.
 Future<StoryForm> Function() getRandomStoryForm = firebaseGetRandomStoryForm;
 
 /**

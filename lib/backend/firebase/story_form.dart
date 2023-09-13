@@ -7,7 +7,7 @@ import 'firebase.dart';
 
 Future<FirebaseStoryForm> firebaseGetRandomStoryForm() async {
   final documents = await firebaseFirestore
-      .collection(storyFormsLanding) //TODO: change this to serving
+      .collection(storyFormsServing)
       .limit(1) //TODO: randomize
       .get();
   final id = documents.docs[0].id;
@@ -23,8 +23,7 @@ class FirebaseStoryForm implements StoryForm {
   /// Download a [StoryForm], including its [Question]s and [Choice]s, and
   /// return it.
   static Future<FirebaseStoryForm> get(String id) async {
-    //TODO: change colleciton below to storyFormsServing
-    final ref = firebaseFirestore.collection(storyFormsLanding).doc(id);
+    final ref = firebaseFirestore.collection(storyFormsServing).doc(id);
     final data = (await getCacheThenServer(ref)).data()!;
 
     final questions = [];
@@ -57,7 +56,7 @@ class _FirebaseQuestion implements Question {
     List<String> choiceIds,
   ) async {
     //TODO: update collection below to storyQuestionsServing
-    final ref = firebaseFirestore.collection(storyQuestions).doc(id);
+    final ref = firebaseFirestore.collection(storyQuestionsServing).doc(id);
     final data = (await getCacheThenServer(ref)).data()!;
 
     final choices = await Future.wait(
