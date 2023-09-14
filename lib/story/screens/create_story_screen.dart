@@ -41,6 +41,27 @@ class CreateStoryScreen extends ConsumerWidget {
     const errorScreenDestination = 'sign_in';
     final errorScreenButtonColor = Theme.of(context).colorScheme.primary;
 
+    // Loads the [StoryForm] if needed.
+    if (!state.hasStoryForm) {
+      return FutureBuilder(
+        future: ref.read(createStoryStateProvider.notifier).loadStoryForm(),
+        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+          if (snapshot.hasError) {
+            return ErrorScreen(
+              text: 'A mystical error occurred. Please go home and try again.',
+              buttonText: 'Home',
+              destination: 'Home',
+              buttonColor: Theme.of(context).colorScheme.primary,
+            );
+          }
+
+          return const _LoadingScreen(
+            firstText: 'A moment please, magical questions will appear soon...',
+          );
+        },
+      );
+    }
+
     // Checks on stories limit and displays a question
     if (state.hasRemainingQuestions) {
       nextScreen = _QuestionScreen(question: state.currentQuestion);
@@ -59,6 +80,15 @@ class CreateStoryScreen extends ConsumerWidget {
       return FutureBuilder(
         future: createClassicStory(state.storyAnswers),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          if (snapshot.hasError) {
+            return ErrorScreen(
+              text: 'A mystical error occurred. Please go home and try again.',
+              buttonText: 'Home',
+              destination: 'Home',
+              buttonColor: Theme.of(context).colorScheme.primary,
+            );
+          }
+
           final requestId = snapshot.data;
           return _StoryScreen(requestId: requestId);
         },
@@ -166,7 +196,12 @@ class _StoryScreen extends ConsumerWidget {
 
 /// Displays a loading screen.
 class _LoadingScreen extends StatelessWidget {
-  const _LoadingScreen({Key? key}) : super(key: key);
+  final String firstText;
+
+  const _LoadingScreen({
+    Key? key,
+    this.firstText = 'Your fairy tale will appear in a few seconds',
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -175,14 +210,14 @@ class _LoadingScreen extends StatelessWidget {
       showAppBar: false,
       child: Padding(
         padding: EdgeInsets.only(top: 0.3 * screenHeight),
-        child: const Column(
+        child: Column(
           children: [
-            LottieLoading(),
+            const LottieLoading(),
             SizedBox(
               height: 200,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                child: _LoadingTexts(),
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: _LoadingTexts(firstText: firstText),
               ),
             )
           ],
@@ -200,17 +235,16 @@ class _LoadingTexts extends StatelessWidget {
   static const int maxNumLoadingTexts = 10;
 
   /// The first text that is shown. To avoid duplicates, it should not appear in
-  /// [assetFile],
-  static const String defaultText =
-      'Your fairy tale will appear in a few seconds';
+  /// [assetFile].
+  final String firstText;
 
-  const _LoadingTexts({Key? key}) : super(key: key);
+  const _LoadingTexts({Key? key, required this.firstText}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _texts(context),
-      initialData: const [defaultText],
+      initialData: [firstText],
       builder: (
         BuildContext context,
         AsyncSnapshot<Iterable<String>> snapshot,
@@ -230,7 +264,7 @@ class _LoadingTexts extends StatelessWidget {
     var texts = data.split('\n');
     texts = texts.where((string) => string.isNotEmpty).toList();
     texts.shuffle();
-    return [defaultText, ...texts.take(maxNumLoadingTexts)];
+    return [firstText, ...texts.take(maxNumLoadingTexts)];
   }
 
   Widget _animatedTexts(Iterable<String> texts, TextStyle? textStyle) {
@@ -344,10 +378,11 @@ class _ChoiceButton extends ConsumerWidget {
             child: Ink(
               child: Row(
                 children: [
-                  SizedBox(
-                    width: buttonWidth,
-                    child: ClipOval(child: choice.image),
-                  ),
+                  if (choice.image != null)
+                    SizedBox(
+                      width: buttonWidth,
+                      child: ClipOval(child: Image.memory(choice.image!)),
+                    ),
                   text,
                 ],
               ),

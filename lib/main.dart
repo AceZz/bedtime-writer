@@ -44,12 +44,12 @@ void main() async {
 
   Paint.enableDithering = true; // Make smoother gradient
 
-  // Load the [SharedPreferences].
+  // Load the overridable providers.
   final sharedPreferences = await SharedPreferences.getInstance();
   runApp(
     ProviderScope(
       overrides: [
-        sharedPreferencesBaseProvider.overrideWithValue(sharedPreferences)
+        sharedPreferencesBaseProvider.overrideWithValue(sharedPreferences),
       ],
       child: const MyApp(),
     ),

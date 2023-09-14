@@ -12,6 +12,7 @@ import 'firebase.dart';
 import 'story_part.dart';
 
 Future<String> firebaseCreateClassicStory(StoryAnswers answers) async {
+  //TODO: recreate this function in backend
   return firebaseFunctions
       .httpsCallable('createClassicStoryRequest')
       .call(answers.serialize())

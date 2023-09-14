@@ -1,21 +1,49 @@
+import 'dart:typed_data';
+
 import 'package:bedtime_writer/backend/story_form.dart';
 import 'package:test/test.dart';
 
-const question_1 = Question(
+class _Question implements Question {
+  @override
+  final String id;
+  @override
+  final String text;
+  @override
+  final List<Choice> choices;
+
+  const _Question({
+    required this.id,
+    required this.text,
+    required this.choices,
+  });
+}
+
+class _Choice implements Choice {
+  @override
+  final String id;
+  @override
+  final String text;
+  @override
+  final Uint8List? image = null;
+
+  const _Choice({required this.id, required this.text});
+}
+
+const question_1 = _Question(
   id: 'question_1',
   text: 'Question 1',
   choices: [
-    Choice(id: 'choice_1', text: 'Choice 1'),
-    Choice(id: 'choice_2', text: 'Choice 2'),
+    _Choice(id: 'choice_1', text: 'Choice 1'),
+    _Choice(id: 'choice_2', text: 'Choice 2'),
   ],
 );
 
-const question_2 = Question(
+const question_2 = _Question(
   id: 'question_2',
   text: 'Question 2',
   choices: [
-    Choice(id: 'choice_3', text: 'Choice 3'),
-    Choice(id: 'choice_4', text: 'Choice 4'),
+    _Choice(id: 'choice_3', text: 'Choice 3'),
+    _Choice(id: 'choice_4', text: 'Choice 4'),
   ],
 );
 
