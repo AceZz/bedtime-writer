@@ -58,7 +58,7 @@ async function generateForms(
 ): Promise<StoryForm[]> {
   const questions = await readQuestions(firestore);
   const formManager = new StoryFormManager(
-    questions,
+    Array.from(questions.values()),
     NUM_QUESTIONS_PER_FORM,
     NUM_CHOICES_PER_QUESTION
   );
@@ -67,7 +67,9 @@ async function generateForms(
 
   // To avoid duplicates with and within the generated forms, we register the
   // IDs of the current forms.
-  const fullIds = new Set(currentForms.map((form) => form.fullId()));
+  const fullIds = new Set(
+    Array.from(currentForms.values()).map((form) => form.fullId())
+  );
   const forms: StoryForm[] = [];
 
   // The generation is based on randomness, so we might not reach the number of
@@ -100,13 +102,13 @@ async function generateForms(
 
 async function readQuestions(
   firestore: FirestoreContext
-): Promise<StoryQuestion[]> {
+): Promise<Map<string, StoryQuestion>> {
   const questionsReader = new FirebaseStoryQuestionReader(
     firestore.storyQuestions
   );
-  const questions = await questionsReader.readAll();
+  const questions = await questionsReader.get();
 
-  if (questions.length === 0) {
+  if (questions.size === 0) {
     throw Error(
       `No questions were found in ${firestore.storyQuestions.collectionPath}` +
         "Please run `npm run story_set_questions`."
@@ -114,21 +116,23 @@ async function readQuestions(
   }
 
   console.log(
-    `${questions.length} questions were found in ` +
+    `${questions.size} questions were found in ` +
       `${firestore.storyQuestions.collectionPath}.`
   );
 
   return questions;
 }
 
-async function readForms(firestore: FirestoreContext): Promise<StoryForm[]> {
+async function readForms(
+  firestore: FirestoreContext
+): Promise<Map<string, StoryForm>> {
   const formsReader = new FirebaseStoryFormReader(
     firestore.storyFormsLanding,
     new FirebaseStoryQuestionReader(firestore.storyQuestions)
   );
-  const currentForms = await formsReader.readAll();
+  const currentForms = await formsReader.get();
   console.log(
-    `${currentForms.length} forms were found in ` +
+    `${currentForms.size} forms were found in ` +
       `${firestore.storyFormsLanding.collectionPath}.`
   );
   return currentForms;

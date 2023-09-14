@@ -11,7 +11,7 @@ import { FirestoreCollection } from "../firestore_collection";
  * <storyId>:
  *   isFavorite: bool (optional)
  *   logic: JSON
- *   parts: <partId>[]
+ *   partIds: <partId>[]
  *   request: JSON
  *   status: string
  *   timestamp: timestamp

@@ -1,12 +1,50 @@
-import { listToMapById } from "../../../utils";
 import {
   StoryFormWriter,
   StoryForm,
-  StoryQuestion,
   StoryQuestionReader,
   StoryReader,
+  StoryQuestion,
 } from "../../../story/";
 import { FirestoreStoryForms } from "./firestore_story_forms";
+
+/**
+ * Transform a `StoryForm` into the object to insert into Firestore.
+ */
+export function storyFormToFirestore(
+  form: StoryForm,
+  availableQuestions: Map<string, StoryQuestion>
+): any {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data: any = {};
+
+  // Check and write the datetime.
+  data.datetime = form.datetime;
+
+  // Check and write the questions.
+  let index = 0;
+  for (const formQuestion of form.questions.values()) {
+    // Try to copy the existing question with the choices from the form. The
+    // choices are verified by `copyWithChoices`.
+    const validatedQuestion = availableQuestions
+      .get(formQuestion.id)
+      ?.copyWithChoices(formQuestion.choices.keys());
+
+    if (validatedQuestion === undefined) {
+      throw new Error(
+        `storyFormToFirestore: question "${formQuestion.id}" does not exist.`
+      );
+    }
+
+    data[`question${index}`] = formQuestion.id;
+    data[`question${index}Choices`] = formQuestion.choiceIds;
+    index++;
+  }
+  data.numQuestions = index;
+  data.isCached = false;
+  data.isApproved = false;
+
+  return data;
+}
 
 /**
  * This class writes a Form object to Firebase.
@@ -15,54 +53,16 @@ import { FirestoreStoryForms } from "./firestore_story_forms";
 export class FirebaseStoryFormWriter implements StoryFormWriter {
   constructor(
     private readonly formsCollection: FirestoreStoryForms,
-    private readonly questionReader?: StoryQuestionReader,
-    private readonly storyReader?: StoryReader
+    private readonly _questionReader?: StoryQuestionReader,
+    private readonly _storyReader?: StoryReader
   ) {}
 
   async write(form: StoryForm): Promise<string> {
-    const availableQuestions = await this.getQuestions();
+    const availableQuestions = await this.questionReader.get();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data: any = {};
-
-    // Check and write the datetime.
-    data.datetime = form.datetime;
-
-    // Check and write the questions.
-    let index = 0;
-    for (const formQuestion of form.questions.values()) {
-      // Try to copy the existing question with the choices from the form. The
-      // choices are verified by `copyWithChoices`.
-      const validatedQuestion = availableQuestions
-        .get(formQuestion.id)
-        ?.copyWithChoices(formQuestion.choices.keys());
-
-      if (validatedQuestion === undefined) {
-        throw Error(
-          `FirebaseStoryFormWriter.write: question "${formQuestion.id}" ` +
-            "does not exist."
-        );
-      }
-
-      data[`question${index}`] = formQuestion.id;
-      data[`question${index}Choices`] = formQuestion.choiceIds;
-      index++;
-    }
-    data.numQuestions = index;
-    data.isCached = false;
-    data.isApproved = false;
-
+    const data = storyFormToFirestore(form, availableQuestions);
     const doc = await this.formsCollection.formsRef().add(data);
     return doc.id;
-  }
-
-  private async getQuestions(): Promise<Map<string, StoryQuestion>> {
-    if (this.questionReader === undefined) {
-      throw new Error(
-        "getQuestions: no question reader specified. Please provide a StoryQuestionReader when instantiating FirebaseStoryFormWriter."
-      );
-    }
-    return listToMapById(await this.questionReader.readAll());
   }
 
   async writeIsCached(id: string): Promise<void> {
@@ -70,18 +70,13 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
   }
 
   async approveForm(id: string): Promise<void> {
-    if (this.storyReader === undefined) {
-      throw new Error(
-        "approveForm: no story reader specified. Please provide a StoryReader when instantiating FirebaseStoryFormWriter."
-      );
-    }
-
     const isAllFormImagesApproved =
       await this.storyReader.checkAllFormImagesApproved(id);
 
     if (!isAllFormImagesApproved) {
       throw new Error(
-        `approveForm: form ${id} cannot be approved as some images in the stories collection are still not approved.`
+        `approveForm: form ${id} cannot be approved as some images in the ` +
+          "stories collection are still not approved."
       );
     }
 
@@ -90,5 +85,23 @@ export class FirebaseStoryFormWriter implements StoryFormWriter {
 
   private async writeIsApproved(id: string): Promise<void> {
     await this.formsCollection.formRef(id).update({ isApproved: true });
+  }
+
+  private get questionReader(): StoryQuestionReader {
+    if (this._questionReader === undefined)
+      throw new Error(
+        "FirebaseStoryFormWriter: specify a `StoryQuestionReader`" +
+          "in the constructor."
+      );
+    return this._questionReader;
+  }
+
+  private get storyReader(): StoryReader {
+    if (this._storyReader === undefined)
+      throw new Error(
+        "FirebaseStoryFormWriter: specify a `StoryReader`" +
+          "in the constructor."
+      );
+    return this._storyReader;
   }
 }

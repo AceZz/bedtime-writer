@@ -1,12 +1,16 @@
 import {
   StoryForm,
   StoryFormReader,
+  StoryFormReaderParams,
   StoryQuestion,
   StoryQuestionReader,
 } from "../../../story";
-import { QueryDocumentSnapshot } from "firebase-admin/firestore";
+import {
+  FieldPath,
+  Query,
+  QueryDocumentSnapshot,
+} from "firebase-admin/firestore";
 import { FirestoreStoryForms } from "./firestore_story_forms";
-import { listToMapById } from "../../../utils";
 
 /**
  * Read a list of Forms from Firebase.
@@ -14,59 +18,46 @@ import { listToMapById } from "../../../utils";
 export class FirebaseStoryFormReader implements StoryFormReader {
   constructor(
     private readonly formsCollection: FirestoreStoryForms,
-    private readonly questionReader: StoryQuestionReader | undefined = undefined
+    private readonly _questionReader?: StoryQuestionReader
   ) {}
 
-  async readAll(): Promise<StoryForm[]> {
-    const questions = await this.readQuestions();
-
-    const snapshots = await this.formsCollection.formsRef().get();
-    return Promise.all(
-      snapshots.docs.map((snapshot) => this.readForm(snapshot, questions))
-    );
+  async get(params?: StoryFormReaderParams): Promise<Map<string, StoryForm>> {
+    const query = this.buildQuery(params);
+    const snapshots = await query.get();
+    return this.docsToMap(snapshots.docs);
   }
 
-  async readNotCached(): Promise<StoryForm[]> {
-    return Array.from((await this.readNotCachedWithIds()).values());
+  private buildQuery(params?: StoryFormReaderParams): Query {
+    let query: Query = this.formsCollection.formsRef();
+
+    const ids = params?.ids;
+    if (ids !== undefined)
+      query = query.where(FieldPath.documentId(), "in", ids);
+
+    const isCached = params?.isCached;
+    if (isCached !== undefined) query = query.where("isCached", "==", isCached);
+
+    const isApproved = params?.isApproved;
+    if (isApproved !== undefined)
+      query = query.where("isApproved", "==", isApproved);
+
+    return query;
   }
 
-  async readNotCachedWithIds(): Promise<Map<string, StoryForm>> {
-    const questions = await this.readQuestions();
-
-    const snapshots = await this.formsCollection
-      .formsRef()
-      .where("isCached", "==", false)
-      .get();
+  private async docsToMap(
+    docs: QueryDocumentSnapshot[]
+  ): Promise<Map<string, StoryForm>> {
+    const questions = await this.questionReader.get();
 
     return new Map(
       await Promise.all(
-        snapshots.docs.map(
+        docs.map(
           (doc) =>
             // Get a list of `[storyFormId, storyForm]`, and pass it to `Map`.
             [doc.id, this.readForm(doc, questions)] as [string, StoryForm]
         )
       )
     );
-  }
-
-  async readCachedNotApprovedIds(): Promise<string[]> {
-    const snapshots = await this.formsCollection
-      .formsRef()
-      .where("isCached", "==", true)
-      .where("isApproved", "==", false)
-      .get();
-
-    return snapshots.docs.map((doc) => doc.id);
-  }
-
-  async readQuestions(): Promise<Map<string, StoryQuestion>> {
-    if (this.questionReader === undefined) {
-      throw new Error(
-        "readQuestions: no question reader specified. Please provide a StoryQuestionReader when instantiating FirebaseStoryFormReader."
-      );
-    }
-
-    return listToMapById(await this.questionReader.readAll());
   }
 
   private readForm(
@@ -89,5 +80,20 @@ export class FirebaseStoryFormReader implements StoryFormReader {
     }
 
     return new StoryForm(newQuestions, data.datetime.toDate());
+  }
+
+  async getIds(params?: StoryFormReaderParams): Promise<string[]> {
+    const query = this.buildQuery(params).select(FieldPath.documentId());
+    const snapshots = await query.get();
+    return snapshots.docs.map((doc) => doc.id);
+  }
+
+  private get questionReader(): StoryQuestionReader {
+    if (this._questionReader === undefined) {
+      throw new Error(
+        "FirebaseStoryFormReader: `this._questionReader` is undefined."
+      );
+    }
+    return this._questionReader;
   }
 }

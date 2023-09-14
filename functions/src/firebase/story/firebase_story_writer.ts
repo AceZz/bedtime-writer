@@ -19,7 +19,7 @@ import { logger } from "../../logger";
 import { FirebaseStoryReader } from "./firebase_story_reader";
 
 export class FirebaseStoryWriter extends StoryWriter {
-  private parts: string[] = [];
+  private partIds: string[] = [];
   /**
    * Cache the document IDs of already inserted images. This way, an image can
    * be written once, but referenced multiple times.
@@ -38,7 +38,7 @@ export class FirebaseStoryWriter extends StoryWriter {
 
   protected async writeInitMetadata(metadata: StoryMetadata): Promise<string> {
     const data = {
-      parts: [],
+      partIds: [],
       request: metadata.request,
       status: StoryStatus.PENDING,
       timestamp: Timestamp.now(),
@@ -69,7 +69,7 @@ export class FirebaseStoryWriter extends StoryWriter {
 
     const parts = await this.partsRef.get();
     await Promise.all(parts.docs.map((part) => part.ref.delete()));
-    this.parts = [];
+    this.partIds = [];
 
     const prompts = await this.promptsRef.get();
     await Promise.all(prompts.docs.map((prompt) => prompt.ref.delete()));
@@ -79,7 +79,7 @@ export class FirebaseStoryWriter extends StoryWriter {
   protected async writePart(part: StoryPart): Promise<string> {
     const imageId = await this.writePartImage(part.image);
     const partId = await this.writePartData(part, imageId);
-    this.parts.push(partId);
+    this.partIds.push(partId);
 
     await Promise.all([
       this.updateStory(),
@@ -127,7 +127,7 @@ export class FirebaseStoryWriter extends StoryWriter {
 
   private async updateStory() {
     await this.storyRef.update({
-      parts: this.parts,
+      partIds: this.partIds,
       status: StoryStatus.GENERATING,
     });
   }

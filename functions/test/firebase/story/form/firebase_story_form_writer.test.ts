@@ -72,7 +72,7 @@ describe("FirebaseStoryFormWriter", () => {
 
   test("Incompatible question ID", async () => {
     await expect(formWriter.write(DUMMY_FORM_2)).rejects.toThrow(
-      'FirebaseStoryFormWriter.write: question "doesnotexistV1" does not exist'
+      'storyFormToFirestore: question "doesnotexistV1" does not exist'
     );
     await storyForms.expectCountToBe(0);
   });

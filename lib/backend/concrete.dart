@@ -45,7 +45,7 @@ final AutoDisposeStreamProvider<List<Story>> favoriteUserStoriesProvider =
 final AutoDisposeStreamProviderFamily<Story, String> storyProvider =
     firebaseStoryProvider;
 
-/// Streams a specific [StoryPart].
+/// Streams a specific [StoryPart] identified by `(storyId, partId)`.
 final AutoDisposeStreamProviderFamily<StoryPart, Tuple2<String, String>>
     storyPartProvider = firebaseStoryPartProvider;
 

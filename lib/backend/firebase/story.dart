@@ -120,12 +120,12 @@ class _FirebaseStory implements Story {
   }
 
   @override
-  int get numParts => parts.length;
+  int get numParts => partIds.length;
 
   @override
-  String getPartId(int index) => parts[index];
+  String getPartId(int index) => partIds[index];
 
-  List<dynamic> get parts => _data['parts'];
+  List<dynamic> get partIds => _data['partIds'];
 
   CollectionReference<Map<String, dynamic>> get _imagesRef =>
       _storyRef.collection('images');
