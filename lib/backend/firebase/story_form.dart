@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -6,12 +7,17 @@ import '../story_form.dart';
 import 'firebase.dart';
 
 Future<FirebaseStoryForm> firebaseGetRandomStoryForm() async {
-  final documents = await firebaseFirestore
-      .collection(storyFormsServing)
-      .limit(1) //TODO: randomize
-      .get();
-  final id = documents.docs[0].id;
-  return FirebaseStoryForm.get(id);
+  // Get all form IDs
+  final documents = await firebaseFirestore.collection(storyFormsServing).get();
+  final ids = documents.docs.map((doc) => doc.id).toList();
+
+  // Select a random ID
+  final random = Random();
+  final randomIndex = random.nextInt(ids.length);
+  final randomId = ids[randomIndex];
+
+  // Get associated form
+  return FirebaseStoryForm.get(randomId);
 }
 
 /// Firebase implementation of [StoryForm].
@@ -55,7 +61,6 @@ class _FirebaseQuestion implements Question {
     String id,
     List<String> choiceIds,
   ) async {
-    //TODO: update collection below to storyQuestionsServing
     final ref = firebaseFirestore.collection(storyQuestionsServing).doc(id);
     final data = (await getCacheThenServer(ref)).data()!;
 
