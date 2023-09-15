@@ -56,9 +56,7 @@ export const collectUserFeedback = onCall(async (request) => {
   const data = request.data;
 
   const text = data.text;
-  console.log(data.datetime);
   const datetime = new Date(data.datetime);
-  console.log(datetime);
   const uid = getUid(request.auth);
 
   const feedback = new UserFeedback(text, datetime, uid);
