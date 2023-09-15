@@ -47,8 +47,11 @@ class CreateStoryScreen extends ConsumerWidget {
         future: ref.read(createStoryStateProvider.notifier).loadStoryForm(),
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           if (snapshot.hasError) {
+            final text = debugStory()
+                ? 'Error: ${snapshot.error}'
+                : 'A mystical error occurred. Please go home and try again.';
             return ErrorScreen(
-              text: 'A mystical error occurred. Please go home and try again.',
+              text: text,
               buttonText: 'Home',
               destination: 'home',
               buttonColor: Theme.of(context).colorScheme.primary,
