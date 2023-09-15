@@ -2,6 +2,10 @@ import { ClassicStoryLogic } from "./logic";
 import { StoryMetadata } from "./story_metadata";
 import { StoryRegenImageStatus, StoryStatus } from "./story_status";
 
+export type StoryReaderFilter = {
+  request?: { [key: string]: string } | undefined;
+};
+
 /**
  * Read stories.
  */
@@ -28,6 +32,11 @@ export interface StoryReader {
    * Check whether all images for the form's stories are approved.
    */
   checkAllFormImagesApproved(formId: string): Promise<boolean>;
+
+  /**
+   * Get the mathing story ids based on the filter specified.
+   */
+  getIds(filter?: StoryReaderFilter): Promise<string[]>;
 
   /**
    * Get the distinct formIds of the stories in the collection.

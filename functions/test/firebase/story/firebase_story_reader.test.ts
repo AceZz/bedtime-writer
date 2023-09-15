@@ -142,6 +142,62 @@ describe("FirebaseStoryReader", () => {
     expect(actual_2).toBe(true);
   }, 60000);
 
+  test("getIds", async () => {
+    const metadata_0_0 = new StoryMetadata("author0", {
+      formId: "form0",
+      characterName: "frosty",
+      characterFlaw: "failure",
+      characterChallenge: "animal",
+    });
+
+    const metadata_0_1 = new StoryMetadata("author1", {
+      formId: "form0", // Same form.
+      characterName: "frosty",
+      characterFlaw: "lazy",
+      characterChallenge: "animal",
+    });
+
+    const metadata_1_0 = new StoryMetadata("author2", {
+      formId: "form1", // Another form.
+      characterName: "frosty",
+      characterFlaw: "failure",
+      characterChallenge: "animal",
+    });
+
+    const writer_0 = new FirebaseStoryWriter(storyRealtime);
+    const storyId0 = await writer_0.writeInit(metadata_0_0);
+    await writer_0.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
+
+    const writer_1 = new FirebaseStoryWriter(storyRealtime);
+    const storyId1 = await writer_1.writeInit(metadata_0_1);
+    await writer_1.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
+
+    const writer_2 = new FirebaseStoryWriter(storyRealtime);
+    await writer_2.writeInit(metadata_1_0);
+    await writer_2.writeFromGenerator(CLASSIC_LOGIC_0, GENERATOR_0);
+
+    const reader = new FirebaseStoryReader(storyRealtime);
+
+    const filter_0 = {
+      request: {
+        formId: "form0",
+        characterName: "frosty",
+        characterFlaw: "failure",
+        characterChallenge: "animal",
+      },
+    };
+    const actual_1 = await reader.getIds(filter_0);
+    expect(actual_1).toEqual([storyId0]);
+
+    const filter_1 = {
+      request: {
+        formId: "form0",
+      },
+    };
+    const actual_2 = await reader.getIds(filter_1);
+    expect(actual_2.sort()).toEqual([storyId0, storyId1].sort());
+  }, 60000);
+
   test("getFormIds", async () => {
     const metadata_0_0 = new StoryMetadata("author0", {
       formId: "form0",
