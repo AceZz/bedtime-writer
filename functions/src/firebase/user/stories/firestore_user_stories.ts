@@ -25,7 +25,15 @@ export class FirestoreUserStories extends FirestoreCollection {
     return this.firestore.collection(this.collectionPath);
   }
 
+  storiesDocRef(uid: string): DocumentReference {
+    return this.firestore.collection(this.collectionPath).doc(uid);
+  }
+
   cacheRef(id: string): CollectionReference {
     return this.userRef(id).collection("cache");
+  }
+
+  cacheDocRef(id: string, storyId: string): DocumentReference {
+    return this.userRef(id).collection("cache").doc(storyId);
   }
 }
