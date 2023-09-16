@@ -12,6 +12,7 @@ import { FirestoreCollection } from "../../firestore_collection";
  *<user_id>:
  *  cache/
  *    <storyId>
+ *      createdAt: timestamp
  *      isFavorite: bool
  * ```
  */
