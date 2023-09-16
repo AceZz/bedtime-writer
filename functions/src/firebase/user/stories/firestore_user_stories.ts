@@ -6,11 +6,13 @@ import { FirestoreCollection } from "../../firestore_collection";
 
 /**
  * Helper class to manipulate the user stories collection (usually called
- * `user__stories`. It follows this schema:
+ * `user__stories`). It follows this schema:
  *
  * ```plain
  *<user_id>:
- *  cacheStoryIds: string[]
+ *  cache/
+ *    <storyId>
+ *      isFavorite: bool
  * ```
  */
 export class FirestoreUserStories extends FirestoreCollection {
@@ -20,5 +22,9 @@ export class FirestoreUserStories extends FirestoreCollection {
 
   storiesRef(): CollectionReference {
     return this.firestore.collection(this.collectionPath);
+  }
+
+  cacheRef(id: string): CollectionReference {
+    return this.userRef(id).collection("cache");
   }
 }
