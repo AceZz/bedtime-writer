@@ -20,9 +20,9 @@ Future<String> firebaseCreateClassicStory(CreateStoryState state) async {
 
 /// Streams a specific [Story].
 final firebaseStoryProvider =
-    StreamProvider.autoDispose.family<Story, String>((ref, id) {
+    StreamProvider.autoDispose.family<Story, String>((ref, storyId) {
   final snapshots =
-      firebaseFirestore.collection(storyRealtime).doc(id).snapshots();
+      firebaseFirestore.collection(storyCacheServing).doc(storyId).snapshots();
   return snapshots.map((story) => _FirebaseStory.deserialize(story));
 });
 
@@ -69,9 +69,10 @@ AutoDisposeStreamProvider<List<Story>> _userStoriesProvider({
 }
 
 /// A query that only returns stories authored by [user].
+//TODO: adapt below
 Query<Map<String, dynamic>> userStoriesQueryBuilder(AuthUser user) =>
     firebaseFirestore
-        .collection(storyRealtime)
+        .collection(storyCacheServing)
         .orderBy('timestamp', descending: true)
         .where('author', isEqualTo: user.uid)
         .where('status', isEqualTo: 'complete');
@@ -94,7 +95,7 @@ class _FirebaseStory implements Story {
   String toString() => '_FirebaseStory($title, $author, $dateTime, $numParts)';
 
   DocumentReference<Map<String, dynamic>> get _storyRef =>
-      firebaseFirestore.collection(storyRealtime).doc(id);
+      firebaseFirestore.collection(storyCacheServing).doc(id);
 
   @override
   String get title => _data['title'];

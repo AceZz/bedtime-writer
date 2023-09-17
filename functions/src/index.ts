@@ -15,6 +15,11 @@ import {
   UserStats,
 } from "./user";
 import { FirebaseStoryReader, FirestoreContext } from "./firebase";
+import {
+  BucketRateLimiter,
+  FirestoreBucketRateLimiterStorage,
+  RateLimiter,
+} from "./rate_limiter";
 
 initializeApp();
 
@@ -27,11 +32,24 @@ setGlobalOptions({ region: "europe-west6" });
 /**
  * Create a classic story for a user.
  *
- * It matches the cache with the answers in the
- * request and adds the story id to the user's
- * list of stories.
+ * Returns the story id. It matches the cache with
+ * the answers in the request and adds the story
+ * id to the user's list of stories.
  */
 export const createClassicStory = onCall(async (request) => {
+  // Check limit rate
+  const uid = getUid(request.auth);
+  const userRateLimiter = getRateLimiter(
+    parseEnvNumber("RATE_LIMITER_MAX_REQUESTS_PER_DAY_USER", 50)
+  );
+  await userRateLimiter.addRequests(uid, ["story"]);
+
+  const globalRateLimiter = getRateLimiter(
+    parseEnvNumber("RATE_LIMITER_MAX_REQUESTS_PER_DAY_GLOBAL", 1000)
+  );
+  await globalRateLimiter.addRequests("global", ["story"]);
+
+  // Retrieve the story
   const answers = request.data;
   const reader = new FirebaseStoryReader(firestore.storyCacheServing);
   const filter = { request: answers };
@@ -47,8 +65,9 @@ export const createClassicStory = onCall(async (request) => {
   const userStoriesManager = new FirebaseUserStoriesManager(
     firestore.userStories
   );
-  const uid = getUid(request.auth);
   await userStoriesManager.addCacheStory(uid, storyId);
+
+  return storyId;
 });
 
 /**
@@ -95,3 +114,11 @@ export const collectUserFeedback = onCall(async (request) => {
 
   await feedbackManager.write(feedback);
 });
+
+function getRateLimiter(limit: number): RateLimiter {
+  return new BucketRateLimiter(
+    new FirestoreBucketRateLimiterStorage(),
+    new Map([["story", limit]]),
+    new Map([["story", 24 * 3600]])
+  );
+}

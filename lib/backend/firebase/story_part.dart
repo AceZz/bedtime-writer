@@ -10,7 +10,8 @@ import 'firebase.dart';
 /// Streams a specific [StoryPart] identified by `(storyId, partId)`.
 final firebaseStoryPartProvider = StreamProvider.autoDispose
     .family<StoryPart, Tuple2<String, String>>((ref, ids) {
-  final storyRef = firebaseFirestore.collection(storyRealtime).doc(ids.item1);
+  final storyRef =
+      firebaseFirestore.collection(storyCacheServing).doc(ids.item1);
   final imagesRef = storyRef.collection('images');
   final snapshots = storyRef.collection('parts').doc(ids.item2).snapshots();
   return snapshots
