@@ -247,7 +247,7 @@ function getStoryCopier(
       );
 
       return {
-        ..._.pick(story, ["request", "title", "partIds"]),
+        ..._.pick(story, ["request", "status", "title", "partIds"]),
         images: images,
         parts: parts,
       };
