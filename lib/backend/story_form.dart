@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 /// We assume that [questions] comes in the order that they should be asked.
 @immutable
 abstract class StoryForm {
+  String get id;
   List<Question> get questions;
 }
 

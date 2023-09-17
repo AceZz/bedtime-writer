@@ -22,6 +22,7 @@ Future<FirebaseStoryForm> firebaseGetRandomStoryForm() async {
 
 /// Firebase implementation of [StoryForm].
 class FirebaseStoryForm implements StoryForm {
+  @override
   final String id;
   @override
   final List<Question> questions;
