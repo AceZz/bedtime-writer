@@ -81,7 +81,7 @@ class CreateStoryScreen extends ConsumerWidget {
     // Creates and displays story after questions have been answered
     else {
       return FutureBuilder(
-        future: createClassicStory(state.storyAnswers),
+        future: createClassicStory(state),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           if (snapshot.hasError) {
             return ErrorScreen(

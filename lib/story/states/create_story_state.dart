@@ -51,6 +51,10 @@ class CreateStoryState {
       currentQuestionIndex + 1,
     );
   }
+
+  Map<String, dynamic> serialize() {
+    return {'formId': storyForm.id, ...storyAnswers.serialize()};
+  }
 }
 
 class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {

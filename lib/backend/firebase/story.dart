@@ -3,19 +3,18 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../story/index.dart';
 import '../concrete.dart';
 import '../story.dart';
-import '../story_form.dart';
 import '../story_status.dart';
 import '../user.dart';
 import 'firebase.dart';
 import 'story_part.dart';
 
-Future<String> firebaseCreateClassicStory(StoryAnswers answers) async {
-  //TODO: recreate this function in backend
+Future<String> firebaseCreateClassicStory(CreateStoryState state) async {
   return firebaseFunctions
-      .httpsCallable('createClassicStoryRequest')
-      .call(answers.serialize())
+      .httpsCallable('createClassicStory')
+      .call(state.serialize())
       .then((result) => result.data);
 }
 

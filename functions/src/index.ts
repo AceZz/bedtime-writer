@@ -10,10 +10,11 @@ import { parseEnvAsNumber as parseEnvNumber } from "./utils";
 import {
   FirebaseUserFeedbackManager,
   FirebaseUserStatsManager,
+  FirebaseUserStoriesManager,
   UserFeedback,
   UserStats,
 } from "./user";
-import { FirestoreContext } from "./firebase";
+import { FirebaseStoryReader, FirestoreContext } from "./firebase";
 
 initializeApp();
 
@@ -22,6 +23,33 @@ const firestore = new FirestoreContext();
 
 // Set the default region.
 setGlobalOptions({ region: "europe-west6" });
+
+/**
+ * Create a classic story for a user.
+ *
+ * It matches the cache with the answers in the
+ * request and adds the story id to the user's
+ * list of stories.
+ */
+export const createClassicStory = onCall(async (request) => {
+  const answers = request.data;
+  const reader = new FirebaseStoryReader(firestore.storyCacheServing);
+  const filter = { request: answers };
+  const storyIds = await reader.getIds(filter);
+
+  if (storyIds.length === 0) {
+    const error = `createClassicStory: no matching stories found for a request on formId ${filter.request.formId}.`;
+    logger.error(error);
+    throw new Error(error);
+  }
+
+  const storyId = storyIds[0]; // Most recent story.
+  const userStoriesManager = new FirebaseUserStoriesManager(
+    firestore.userStories
+  );
+  const uid = getUid(request.auth);
+  await userStoriesManager.addCacheStory(uid, storyId);
+});
 
 /**
  * Initialize user stats in the user__stats collection from Firestore upon new user creation.
