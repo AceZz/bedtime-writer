@@ -98,7 +98,7 @@ export class FirebaseStoryReader implements StoryReader {
   async getIds(filter?: StoryReaderFilter): Promise<string[]> {
     const query = this.buildQuery(filter);
     // Do an empty projection as only doc ids matter.
-    const snapshots = await query.orderBy("timestamp", "desc").select().get();
+    const snapshots = await query.select().get();
     return snapshots.docs.map((doc) => doc.id);
   }
 

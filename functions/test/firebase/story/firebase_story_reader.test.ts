@@ -235,7 +235,7 @@ describe("FirebaseStoryReader", () => {
     const reader = new FirebaseStoryReader(storyRealtime);
     const actual = (await reader.getFormIds()).sort();
 
-    expect(actual).toEqual(["form0", "form1"]);
+    expect(actual.sort()).toEqual(["form0", "form1"]);
   }, 60000);
 
   test("getClassicStoryLogic", async () => {
