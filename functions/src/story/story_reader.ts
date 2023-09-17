@@ -34,7 +34,10 @@ export interface StoryReader {
   checkAllFormImagesApproved(formId: string): Promise<boolean>;
 
   /**
-   * Get the mathing story ids based on the filter specified.
+   * Get the matching story ids based on the filter specified.
+   *
+   * Stories are returned with a descending order on their
+   * creation date.
    */
   getIds(filter?: StoryReaderFilter): Promise<string[]>;
 

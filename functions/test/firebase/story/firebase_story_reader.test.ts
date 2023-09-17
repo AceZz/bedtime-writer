@@ -195,7 +195,7 @@ describe("FirebaseStoryReader", () => {
       },
     };
     const actual_2 = await reader.getIds(filter_1);
-    expect(actual_2.sort()).toEqual([storyId0, storyId1].sort());
+    expect(actual_2).toEqual([storyId1, storyId0]);
   }, 60000);
 
   test("getFormIds", async () => {
