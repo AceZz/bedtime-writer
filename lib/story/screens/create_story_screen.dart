@@ -87,7 +87,7 @@ class CreateStoryScreen extends ConsumerWidget {
             return ErrorScreen(
               text: 'A mystical error occurred. Please go home and try again.',
               buttonText: 'Home',
-              destination: 'Home',
+              destination: 'home',
               buttonColor: Theme.of(context).colorScheme.primary,
             );
           }
