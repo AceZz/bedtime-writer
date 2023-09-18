@@ -64,11 +64,10 @@ class _FavoriteButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final storyId = ref.watch(_currentStoryId);
     //TODO: change below
-    final isFavorite = false;
-    // final isFavorite = ref.watch(
-    //   storyProvider(storyId)
-    //       .select((story) => story.valueOrNull?.isFavorite ?? false),
-    // );
+    final isFavorite = ref.watch(
+      userStoryProvider(storyId)
+          .select((story) => story.valueOrNull?.isFavorite ?? false),
+    );
 
     return FavoriteButton(
       isFavorite: isFavorite,

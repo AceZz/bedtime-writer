@@ -31,6 +31,7 @@ final firebaseUserStoriesProvider = _userStoriesProvider(
   queryBuilder: userStoriesQueryBuilder,
 );
 
+//TODO: change below
 /// Streams the favorite [Story]s authored by the current [User].
 final firebaseFavoriteUserStoriesProvider = _userStoriesProvider(
   queryBuilder: (AuthUser user) =>

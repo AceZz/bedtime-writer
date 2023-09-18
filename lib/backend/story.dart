@@ -18,6 +18,7 @@ abstract class Story {
 
   bool get isFavorite;
 
+  //TODO: delete below
   /// Toggle the [isFavorite] state the story.
   ///
   /// Returns the new [isFavorite] state.

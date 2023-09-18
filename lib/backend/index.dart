@@ -27,3 +27,4 @@ export 'user.dart'
         GoogleAuthMixin;
 export 'user_feedback.dart' show UserFeedback;
 export 'user_stats.dart' show UserStats;
+export 'user_story.dart' show UserStory;

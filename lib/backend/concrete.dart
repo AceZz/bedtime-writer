@@ -15,6 +15,7 @@ import 'story_status.dart';
 import 'user.dart';
 import 'user_feedback.dart';
 import 'user_stats.dart';
+import 'user_story.dart';
 
 /**
  * USER
@@ -34,10 +35,12 @@ Future<void> Function(UserFeedback feedback) collectUserFeedback =
  * STORY
  */
 
+//TODO: change name below
 /// Streams the [Story]s authored by the current [User].
 final AutoDisposeStreamProvider<List<Story>> userStoriesProvider =
     firebaseUserStoriesProvider;
 
+//TODO: change name below
 /// Streams the [Story]s authored by the current [User] and marked as favorite.
 final AutoDisposeStreamProvider<List<Story>> favoriteUserStoriesProvider =
     firebaseFavoriteUserStoriesProvider;
@@ -45,6 +48,10 @@ final AutoDisposeStreamProvider<List<Story>> favoriteUserStoriesProvider =
 /// Streams a specific [Story].
 final AutoDisposeStreamProviderFamily<Story, String> storyProvider =
     firebaseStoryProvider;
+
+/// Streams a specific [UserStory].
+final AutoDisposeStreamProviderFamily<UserStory, String> userStoryProvider =
+    firebaseUserStoryProvider;
 
 /// Streams a specific [StoryPart] identified by `(storyId, partId)`.
 final AutoDisposeStreamProviderFamily<StoryPart, Tuple2<String, String>>
