@@ -63,7 +63,6 @@ class _FavoriteButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final storyId = ref.watch(_currentStoryId);
-    //TODO: change below
     final isFavorite = ref.watch(
       userStoryProvider(storyId)
           .select((story) => story.valueOrNull?.isFavorite ?? false),
@@ -73,10 +72,10 @@ class _FavoriteButton extends ConsumerWidget {
       isFavorite: isFavorite,
       iconSize: 30.sp,
       onPressed: () async {
-        final story = ref.read(storyProvider(storyId)).value;
+        final userStory = ref.read(userStoryProvider(storyId)).value;
 
-        if (story != null) {
-          final isFavorite = await story.toggleIsFavorite();
+        if (userStory != null) {
+          final isFavorite = await userStory.toggleIsFavorite();
           ScaffoldMessenger.of(context).showSnackBar(
             _favoriteSnackBar(context, isFavorite),
           );

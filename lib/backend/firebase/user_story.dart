@@ -7,7 +7,8 @@ import 'firebase.dart';
 /// Streams a specific [UserStory].
 final firebaseUserStoryProvider =
     StreamProvider.autoDispose.family<UserStory, String>((ref, storyId) {
-  final uid = ref.read(userProvider).toString();
+  final user = ref.read(userProvider);
+  final uid = user is AuthUser ? user.uid : '';
   final snapshots = firebaseFirestore
       .collection(userStories)
       .doc(uid)
@@ -29,7 +30,6 @@ class _FirebaseUserStory implements UserStory {
     String uid,
     DocumentSnapshot<Map<String, dynamic>> userStory,
   ) {
-    print(uid);
     return _FirebaseUserStory(uid, userStory.id, userStory.data()!);
   }
 
