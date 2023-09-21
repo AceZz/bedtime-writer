@@ -67,6 +67,10 @@ export const createClassicStory = onCall(async (request) => {
   );
   await userStoriesManager.addCacheStory(uid, storyId);
 
+  // Update user stats
+  const userStatsManager = new FirebaseUserStatsManager(firestore.userStats);
+  await userStatsManager.updateStatsAfterStory(uid);
+
   return storyId;
 });
 
