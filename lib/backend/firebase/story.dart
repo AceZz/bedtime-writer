@@ -27,15 +27,18 @@ final firebaseStoryProvider =
 });
 
 /// Streams the [Story]s authored by the current [User].
-final firebaseStoriesProvider = _storiesProvider(
-  queryBuilder: storiesQueryBuilder,
-);
+final firebaseStoriesProvider =
+    AutoDisposeFutureProvider<List<Story>>((ref) async {
+  final user = ref.watch(userProvider) as AuthUser;
+  return await getStories(user, getUserStories);
+});
 
 /// Streams the favorite [Story]s authored by the current [User].
-final firebaseFavoriteStoriesProvider = _storiesProvider(
-  queryBuilder: (AuthUser user) =>
-      storiesQueryBuilder(user).where('isFavorite', isEqualTo: true),
-);
+final firebaseFavoriteStoriesProvider =
+    AutoDisposeFutureProvider<List<Story>>((ref) async {
+  final user = ref.watch(userProvider) as AuthUser;
+  return await getStories(user, getFavoriteUserStories);
+});
 
 /// Streams a specific [StoryStatus].
 final firebaseStoryStatusProvider =
@@ -44,38 +47,51 @@ final firebaseStoryStatusProvider =
       .watch(firebaseStoryProvider(id).selectAsync((story) => story.status));
 });
 
-/// Helper to create providers that return lists of [Story].
-///
-/// The parameter [queryBuilder] transforms a [AuthUser] into a [Query]. It can
-/// be [storiesQueryBuilder] for instance.
-AutoDisposeStreamProvider<List<Story>> _storiesProvider({
-  required Query<Map<String, dynamic>> Function(AuthUser) queryBuilder,
-}) {
-  return StreamProvider.autoDispose<List<Story>>((ref) {
-    final user = ref.watch(userProvider);
+Future<List<Story>> getStories(
+  AuthUser user,
+  Query<Map<String, dynamic>> Function(AuthUser) userStoriesQueryBuilder,
+) async {
+  // Step 1: Get the story IDs from the user__stories sub-collection, ordered by 'createdAt'
+  final List<String> orderedStoryIds = [];
+  final Map<String, Timestamp> storyIdstoCreatedAt = {};
+  final userSnapshot = await userStoriesQueryBuilder(user)
+      .orderBy('createdAt', descending: true)
+      .get();
+  for (var doc in userSnapshot.docs) {
+    orderedStoryIds.add(doc.id);
+    storyIdstoCreatedAt[doc.id] = doc.data()['createdAt'] as Timestamp;
+  }
 
-    if (user is AuthUser) {
-      final snapshots = queryBuilder(user).snapshots();
+  // Step 2: Fetch the documents from cache one by one in parallel
+  final futures = orderedStoryIds.map((id) {
+    return firebaseFirestore.collection(storyCacheServing).doc(id).get();
+  }).toList();
 
-      return snapshots.map(
-        (stories) => stories.docs
-            .map((story) => _FirebaseStory.deserialize(story))
-            .toList(),
-      );
-    }
+  final List<DocumentSnapshot<Map<String, dynamic>>> docs =
+      await Future.wait(futures);
 
-    return const Stream.empty();
-  });
+  // Step 3: Deserialize and update create date
+  final storyDocs = docs.map((doc) {
+    final story = _FirebaseStory.deserialize(doc);
+    story.updateDataTimestamp(storyIdstoCreatedAt[doc.id]!);
+    return story;
+  }).toList();
+
+  return storyDocs;
 }
 
 /// A query that only returns stories authored by [user].
-//TODO: adapt below
-Query<Map<String, dynamic>> storiesQueryBuilder(AuthUser user) =>
-    firebaseFirestore
-        .collection(storyCacheServing)
-        .orderBy('timestamp', descending: true)
-        .where('author', isEqualTo: user.uid)
-        .where('status', isEqualTo: 'complete');
+Query<Map<String, dynamic>> getUserStories(AuthUser user) {
+  return firebaseFirestore
+      .collection(userStories)
+      .doc(user.uid)
+      .collection(userStoriesSubCache);
+}
+
+/// A query that only returns favorite stories authored by [user].
+Query<Map<String, dynamic>> getFavoriteUserStories(AuthUser user) {
+  return getUserStories(user).where('isFavorite', isEqualTo: true);
+}
 
 /// Firebase implementation of [Story].
 class _FirebaseStory implements Story {
@@ -112,11 +128,8 @@ class _FirebaseStory implements Story {
   @override
   bool get isFavorite => _data['isFavorite'];
 
-  @override
-  Future<bool> toggleIsFavorite() async {
-    final newIsFavorite = !isFavorite;
-    await _storyRef.update({'isFavorite': newIsFavorite});
-    return newIsFavorite;
+  void updateDataTimestamp(Timestamp timestamp) {
+    _data['timestamp'] = timestamp;
   }
 
   @override

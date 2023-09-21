@@ -18,12 +18,6 @@ abstract class Story {
 
   bool get isFavorite;
 
-  //TODO: delete below
-  /// Toggle the [isFavorite] state the story.
-  ///
-  /// Returns the new [isFavorite] state.
-  Future<bool> toggleIsFavorite();
-
   int get numParts;
 
   /// Returns the ID of the part at [index].

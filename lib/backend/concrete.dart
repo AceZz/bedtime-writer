@@ -35,14 +35,12 @@ Future<void> Function(UserFeedback feedback) collectUserFeedback =
  * STORY
  */
 
-//TODO: change name below
 /// Streams the [Story]s authored by the current [User].
-final AutoDisposeStreamProvider<List<Story>> userStoriesProvider =
+final AutoDisposeFutureProvider<List<Story>> userStoriesProvider =
     firebaseStoriesProvider;
 
-//TODO: change name below
 /// Streams the [Story]s authored by the current [User] and marked as favorite.
-final AutoDisposeStreamProvider<List<Story>> favoriteUserStoriesProvider =
+final AutoDisposeFutureProvider<List<Story>> favoriteUserStoriesProvider =
     firebaseFavoriteStoriesProvider;
 
 /// Streams a specific [Story].

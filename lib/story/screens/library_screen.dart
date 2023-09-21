@@ -91,7 +91,7 @@ const _libraryTabBar = TabBar(
 );
 
 class _LibraryTab extends ConsumerWidget {
-  final AutoDisposeStreamProvider<List<Story>> provider;
+  final AutoDisposeFutureProvider<List<Story>> provider;
 
   const _LibraryTab({
     Key? key,
@@ -100,9 +100,9 @@ class _LibraryTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storiesStream = ref.watch(provider);
+    final storiesFuture = ref.watch(provider);
 
-    return storiesStream.when(
+    return storiesFuture.when(
       data: _data,
       error: _error,
       loading: _loading,

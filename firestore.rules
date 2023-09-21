@@ -82,6 +82,7 @@ service cloud.firestore {
       match /cache/{storyId} {
        allow get: if isAuth() && docId == request.auth.uid;
        allow update: if isAuth() && docId == request.auth.uid;
+       allow list: if isAuth() && docId == request.auth.uid;
        allow write: if false;
       }
     }
