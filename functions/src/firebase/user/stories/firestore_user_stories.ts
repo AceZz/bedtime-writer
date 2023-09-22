@@ -9,16 +9,16 @@ import { FirestoreCollection } from "../../firestore_collection";
  * `user__stories`). It follows this schema:
  *
  * ```plain
- *<user_id>:
- *  cache/
- *    <storyId>
- *      createdAt: timestamp
- *      isFavorite: bool
+ * <user_id>:
+ *   cache/
+ *     <storyId>:
+ *       createdAt: timestamp
+ *       isFavorite: bool
  * ```
  */
 export class FirestoreUserStories extends FirestoreCollection {
-  userRef(id: string): DocumentReference {
-    return this.storiesRef().doc(id);
+  userRef(uid: string): DocumentReference {
+    return this.storiesRef().doc(uid);
   }
 
   storiesRef(): CollectionReference {
@@ -29,11 +29,11 @@ export class FirestoreUserStories extends FirestoreCollection {
     return this.firestore.collection(this.collectionPath).doc(uid);
   }
 
-  cacheRef(id: string): CollectionReference {
-    return this.userRef(id).collection("cache");
+  cacheRef(uid: string): CollectionReference {
+    return this.userRef(uid).collection("cache");
   }
 
-  cacheDocRef(id: string, storyId: string): DocumentReference {
-    return this.userRef(id).collection("cache").doc(storyId);
+  cacheDocRef(uid: string, storyId: string): DocumentReference {
+    return this.cacheRef(uid).doc(storyId);
   }
 }

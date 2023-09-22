@@ -6,7 +6,7 @@ import { onSchedule } from "firebase-functions/v2/scheduler";
 
 import { getUid } from "./auth";
 import { logger } from "./logger";
-import { parseEnvAsNumber as parseEnvNumber } from "./utils";
+import { parseEnvAsNumber, pickRandom } from "./utils";
 import {
   FirebaseUserFeedbackManager,
   FirebaseUserStatsManager,
@@ -40,12 +40,12 @@ export const createClassicStory = onCall(async (request) => {
   // Check limit rate
   const uid = getUid(request.auth);
   const userRateLimiter = getRateLimiter(
-    parseEnvNumber("RATE_LIMITER_MAX_REQUESTS_PER_DAY_USER", 50)
+    parseEnvAsNumber("RATE_LIMITER_MAX_REQUESTS_PER_DAY_USER", 50)
   );
   await userRateLimiter.addRequests(uid, ["story"]);
 
   const globalRateLimiter = getRateLimiter(
-    parseEnvNumber("RATE_LIMITER_MAX_REQUESTS_PER_DAY_GLOBAL", 1000)
+    parseEnvAsNumber("RATE_LIMITER_MAX_REQUESTS_PER_DAY_GLOBAL", 1000)
   );
   await globalRateLimiter.addRequests("global", ["story"]);
 
@@ -61,7 +61,7 @@ export const createClassicStory = onCall(async (request) => {
     throw new Error(error);
   }
 
-  const storyId = storyIds[0]; // Most recent story.
+  const storyId = pickRandom(storyIds);
   const userStoriesManager = new FirebaseUserStoriesManager(
     firestore.userStories
   );
@@ -82,7 +82,7 @@ export const initializeUserStats = region("europe-west6")
   .onCreate(async (user) => {
     const userStatsManager = new FirebaseUserStatsManager(firestore.userStats);
 
-    const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
+    const userStoriesLimit = parseEnvAsNumber("STORY_DAILY_LIMIT", 2);
     const initialUserStats = new UserStats(0, userStoriesLimit);
 
     await userStatsManager.initUser(user.uid, initialUserStats);
@@ -93,7 +93,7 @@ export const initializeUserStats = region("europe-west6")
  */
 export const resetDailyLimits = onSchedule("every day 01:00", async () => {
   logger.info("resetDailyLimits: started");
-  const userStoriesLimit = parseEnvNumber("STORY_DAILY_LIMIT", 2);
+  const userStoriesLimit = parseEnvAsNumber("STORY_DAILY_LIMIT", 2);
 
   const userStatsManager = new FirebaseUserStatsManager(firestore.userStats);
 

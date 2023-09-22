@@ -27,7 +27,7 @@ export class FirebaseUserStoriesManager implements UserStoriesManager {
   }
 
   async readCacheStoryIds(uid: string): Promise<string[]> {
-    const docs = (await this.userStories.cacheRef(uid).get()).docs;
+    const docs = (await this.userStories.cacheRef(uid).select().get()).docs;
     return docs.map((doc) => doc.id);
   }
 
