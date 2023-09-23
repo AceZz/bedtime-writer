@@ -5,7 +5,7 @@ import { ClassicStoryLogic } from "../../../src/story";
  */
 const duration = 1;
 const style = "style1";
-const characterName = "frosty";
+const characterName = "Frosty, the penguin";
 const place = undefined;
 const object = undefined;
 const characterFlaw = "failure";

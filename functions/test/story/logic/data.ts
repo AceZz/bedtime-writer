@@ -3,7 +3,7 @@ import { ClassicStoryLogic } from "../../../src/story";
 export const PARTIAL_CLASSIC_STORY_LOGIC = new ClassicStoryLogic(
   3,
   "some style",
-  "Someone",
+  "Frosty, the penguin",
   "at some place",
   undefined,
   "has a flaw",
@@ -14,7 +14,7 @@ export const PARTIAL_CLASSIC_STORY_LOGIC = new ClassicStoryLogic(
 export const FULL_CLASSIC_STORY_LOGIC = new ClassicStoryLogic(
   3,
   "some style",
-  "Someone",
+  "Frosty, the penguin",
   "at some place",
   "some object",
   "has a flaw",
