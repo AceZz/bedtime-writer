@@ -1,4 +1,5 @@
 import { StoryLogic } from "./story_logic";
+import { APPEARANCE } from "./prompt_data";
 
 export const MAX_DURATION = 10;
 export const MAX_STRING_LENGTH = 50;
@@ -93,7 +94,14 @@ export class ClassicStoryLogic implements StoryLogic {
   }
 
   private getCharacterIntroPrompt(): string {
-    return ` The protagonist is ${this.characterName}.`;
+    const appearance = APPEARANCE[this.characterName];
+    if (appearance === undefined) {
+      throw new Error(
+        `getCharacterIntroPrompt: ${this.characterName} does not have an appearance defined.`
+      );
+    } else {
+      return ` The protagonist is ${this.characterName}. ${appearance}.`;
+    }
   }
 
   private getCharacterFlawPrompt(): string {
