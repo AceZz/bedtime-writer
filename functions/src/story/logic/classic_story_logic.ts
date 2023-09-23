@@ -146,13 +146,15 @@ export class ClassicStoryLogic implements StoryLogic {
 
   imagePromptPrompt(): string {
     const name = this.characterName;
-
     return (
-      "Generate now a very simple and concise prompt for dalle" +
-      ` to illustrate ${name} of the story and its environment.` +
-      ` When mentioning ${name}, provide a short but accurate appearance description.` +
-      ` ${name} should be either beautiful or cute.` +
-      " You must mention a fairytale digital painting style."
+      `Generate now a detailed prompt for dalle, to paint ${name} of the story and their environment.` +
+      `When mentioning ${name}, provide an accurate appearance description.` +
+      `${name} should be either beautiful or cute.` +
+      "You must mention regarding style: text-free illustration, fairytale, dreamy atmosphere, whimsical, magical." +
+      "You must one or two emotions among the following: wonder, calm, curiosity, joy, intrigue, inspiration, nostalgia, mystery, serenity." +
+      "Your prompt must be 100 words or less." +
+      "Your prompt must start with: Create a digital painting of ..." +
+      "Directly write the prompt. Do not make paragraphs."
     );
   }
 
