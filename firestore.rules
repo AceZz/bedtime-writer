@@ -27,16 +27,19 @@ service cloud.firestore {
     }
 
     match /story__cache_serving/{story} {
-      allow read: if isAuth();
+      allow get: if isAuth();
+      allow list: if false;
       allow write: if false;
 
       match /images/{image} {
-        allow read: if isAuth();
+        allow get: if isAuth();
+        allow list: if false;
         allow write: if false;
       }
 
       match /parts/{part} {
-        allow read: if isAuth();
+        allow get: if isAuth();
+        allow list: if false;
         allow write: if false;
       }
     }
