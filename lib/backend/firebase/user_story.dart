@@ -12,7 +12,7 @@ final firebaseUserStoryProvider =
   final snapshots = firebaseFirestore
       .collection(userStories)
       .doc(uid)
-      .collection(userStoriesSubCache)
+      .collection(userStoriesCache)
       .doc(storyId)
       .snapshots();
   return snapshots.map((story) => _FirebaseUserStory.deserialize(uid, story));
@@ -42,7 +42,7 @@ class _FirebaseUserStory implements UserStory {
   DocumentReference<Map<String, dynamic>> get _userStoryRef => firebaseFirestore
       .collection(userStories)
       .doc(uid)
-      .collection(userStoriesSubCache)
+      .collection(userStoriesCache)
       .doc(storyId);
 
   @override

@@ -32,4 +32,4 @@ const storyQuestionChoices = 'choices';
 const storyRealtime = 'story__realtime';
 const userStats = 'user__stats';
 const userStories = 'user__stories';
-const userStoriesSubCache = 'cache'; // Subcollection
+const userStoriesCache = 'cache'; // Subcollection

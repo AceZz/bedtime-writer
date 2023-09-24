@@ -85,7 +85,7 @@ Query<Map<String, dynamic>> getUserStories(AuthUser user) {
   return firebaseFirestore
       .collection(userStories)
       .doc(user.uid)
-      .collection(userStoriesSubCache);
+      .collection(userStoriesCache);
 }
 
 /// A query that only returns favorite stories authored by [user].
