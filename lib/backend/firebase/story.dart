@@ -53,13 +53,13 @@ Future<List<Story>> getStories(
 ) async {
   // Step 1: Get the story IDs from the user__stories sub-collection, ordered by 'createdAt'
   final List<String> orderedStoryIds = [];
-  final Map<String, Timestamp> storyIdstoCreatedAt = {};
+  final Map<String, Timestamp> storyIdsToCreatedAt = {};
   final userSnapshot = await userStoriesQueryBuilder(user)
       .orderBy('createdAt', descending: true)
       .get();
   for (var doc in userSnapshot.docs) {
     orderedStoryIds.add(doc.id);
-    storyIdstoCreatedAt[doc.id] = doc.data()['createdAt'] as Timestamp;
+    storyIdsToCreatedAt[doc.id] = doc.data()['createdAt'] as Timestamp;
   }
 
   // Step 2: Fetch the documents from cache one by one in parallel
@@ -73,7 +73,7 @@ Future<List<Story>> getStories(
   // Step 3: Deserialize and update create date
   final storyDocs = docs.map((doc) {
     final story = _FirebaseStory.deserialize(doc);
-    story.updateDataTimestamp(storyIdstoCreatedAt[doc.id]!);
+    story.updateDataTimestamp(storyIdsToCreatedAt[doc.id]!);
     return story;
   }).toList();
 
