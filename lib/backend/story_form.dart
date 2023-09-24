@@ -2,12 +2,15 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
+import '../utils.dart';
+
 /// A list of questions to generate a story.
 ///
 /// We assume that [questions] comes in the order that they should be asked.
 @immutable
 abstract class StoryForm {
   String get id;
+
   List<Question> get questions;
 }
 
@@ -41,7 +44,7 @@ abstract class Choice {
 /// question, or a new answer to an existing question.
 @immutable
 class StoryAnswers {
-  final Map<String, dynamic> answers;
+  final DynMap answers;
 
   const StoryAnswers({required this.answers});
 
@@ -54,7 +57,7 @@ class StoryAnswers {
     );
   }
 
-  Map<String, dynamic> serialize() {
+  DynMap serialize() {
     return answers;
   }
 }

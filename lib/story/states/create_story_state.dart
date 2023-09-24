@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../backend/concrete.dart';
 import '../../backend/index.dart';
+import '../../utils.dart';
 
 /// A state that contains a [StoryForm] and a [StoryAnswers].
 @immutable
@@ -20,7 +21,7 @@ class CreateStoryState {
   factory CreateStoryState({
     required StoryForm? storyForm,
   }) {
-    final Map<String, dynamic> answers = {};
+    final DynMap answers = {};
 
     return CreateStoryState._internal(
       storyForm,
@@ -52,7 +53,7 @@ class CreateStoryState {
     );
   }
 
-  Map<String, dynamic> serialize() {
+  DynMap serialize() {
     return {'formId': storyForm.id, ...storyAnswers.serialize()};
   }
 }

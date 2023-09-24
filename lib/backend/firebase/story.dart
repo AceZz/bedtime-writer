@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../story/index.dart';
+import '../../utils.dart';
 import '../concrete.dart';
 import '../story.dart';
 import '../story_status.dart';
@@ -36,8 +37,9 @@ final firebaseStoryProvider =
 });
 
 /// Streams the data of a story, found in [storyCacheServing].
-final _storyProvider = AutoDisposeStreamProviderFamily<
-    DocumentSnapshot<Map<String, dynamic>>, String>((ref, storyId) {
+final _storyProvider =
+    AutoDisposeStreamProviderFamily<DocumentSnapshot<DynMap>, String>(
+        (ref, storyId) {
   return firebaseFirestore
       .collection(storyCacheServing)
       .doc(storyId)
@@ -47,8 +49,7 @@ final _storyProvider = AutoDisposeStreamProviderFamily<
 /// Streams the metadata of the story [storyId] belonging to user [uid], found
 /// in [userStories]. [param] is [uid], [storyId].
 final _userStoryProvider = AutoDisposeStreamProviderFamily<
-    DocumentSnapshot<Map<String, dynamic>>,
-    Tuple2<String, String>>((ref, param) {
+    DocumentSnapshot<DynMap>, Tuple2<String, String>>((ref, param) {
   return firebaseFirestore
       .collection(userStories)
       .doc(param.item1)
@@ -81,7 +82,7 @@ final firebaseFavoriteStoriesProvider =
 });
 
 /// A query that only returns stories authored by [user].
-Query<Map<String, dynamic>> userStoriesQuery(AuthUser user) {
+Query<DynMap> userStoriesQuery(AuthUser user) {
   return firebaseFirestore
       .collection(userStories)
       .doc(user.uid)
@@ -91,7 +92,7 @@ Query<Map<String, dynamic>> userStoriesQuery(AuthUser user) {
 /// Provides stories from a [Query].
 Stream<List<_FirebaseStory>> _storiesStream(
   AutoDisposeStreamProviderRef ref,
-  Query<Map<String, dynamic>> query,
+  Query<DynMap> query,
 ) {
   final userStories = ref.watch(_userStoriesProvider(query)).value;
 
@@ -107,9 +108,9 @@ Stream<List<_FirebaseStory>> _storiesStream(
 }
 
 /// Streams user stories.
-final _userStoriesProvider = AutoDisposeStreamProviderFamily<
-    QuerySnapshot<Map<String, dynamic>>,
-    Query<Map<String, dynamic>>>((ref, query) {
+final _userStoriesProvider =
+    AutoDisposeStreamProviderFamily<QuerySnapshot<DynMap>, Query<DynMap>>(
+        (ref, query) {
   return query.orderBy('createdAt', descending: true).snapshots();
 });
 
@@ -120,14 +121,14 @@ class _FirebaseStory implements Story {
 
   final String uid;
 
-  final Map<String, dynamic> _storyData;
+  final DynMap _storyData;
 
-  final Map<String, dynamic> _userStoryData;
+  final DynMap _userStoryData;
 
   factory _FirebaseStory.deserialize(
     String uid,
-    DocumentSnapshot<Map<String, dynamic>> story,
-    DocumentSnapshot<Map<String, dynamic>> userStory,
+    DocumentSnapshot<DynMap> story,
+    DocumentSnapshot<DynMap> userStory,
   ) {
     return _FirebaseStory(story.id, uid, story.data()!, userStory.data()!);
   }
@@ -168,8 +169,7 @@ class _FirebaseStory implements Story {
 
   List<dynamic> get partIds => _storyData['partIds'];
 
-  CollectionReference<Map<String, dynamic>> get _imagesRef =>
-      _storyRef.collection('images');
+  CollectionReference<DynMap> get _imagesRef => _storyRef.collection('images');
 
   @override
   Future<Uint8List?> get thumbnail async {
@@ -187,12 +187,12 @@ class _FirebaseStory implements Story {
     return null;
   }
 
-  DocumentReference<Map<String, dynamic>> get _userStoryRef => firebaseFirestore
+  DocumentReference<DynMap> get _userStoryRef => firebaseFirestore
       .collection(userStories)
       .doc(uid)
       .collection(userStoriesCache)
       .doc(id);
 
-  DocumentReference<Map<String, dynamic>> get _storyRef =>
+  DocumentReference<DynMap> get _storyRef =>
       firebaseFirestore.collection(storyCacheServing).doc(id);
 }

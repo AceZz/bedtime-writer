@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'firebase.dart';
+import '../../utils.dart';
 import '../concrete.dart';
-import '../user_stats.dart';
 import '../user.dart';
+import '../user_stats.dart';
+import 'firebase.dart';
 
 /// Provides user stats based on Firebase.
 
@@ -35,5 +36,5 @@ final firebaseUserStatsProvider = StreamProvider<UserStats>((ref) {
 });
 
 /// A query that returns user stats for [user].
-DocumentReference<Map<String, dynamic>> _userStatsDocument(AuthUser user) =>
+DocumentReference<DynMap> _userStatsDocument(AuthUser user) =>
     firebaseFirestore.collection(userStats).doc(user.uid);

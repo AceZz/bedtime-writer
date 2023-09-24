@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
+import '../../utils.dart';
 import '../story_part.dart';
 import 'firebase.dart';
 
@@ -21,12 +22,12 @@ final firebaseStoryPartProvider = StreamProvider.autoDispose
 /// Firebase implementation of [StoryPart].
 class FirebaseStoryPart implements StoryPart {
   final String id;
-  final CollectionReference<Map<String, dynamic>> _imagesRef;
-  final Map<String, dynamic> _data;
+  final CollectionReference<DynMap> _imagesRef;
+  final DynMap _data;
 
   factory FirebaseStoryPart.deserialize(
-    CollectionReference<Map<String, dynamic>> imagesRef,
-    DocumentSnapshot<Map<String, dynamic>> part,
+    CollectionReference<DynMap> imagesRef,
+    DocumentSnapshot<DynMap> part,
   ) {
     return FirebaseStoryPart(part.id, imagesRef, part.data()!);
   }
@@ -45,7 +46,7 @@ class FirebaseStoryPart implements StoryPart {
     return image.data()!['data'].bytes;
   }
 
-  DocumentReference<Map<String, dynamic>> get _imageRef {
+  DocumentReference<DynMap> get _imageRef {
     final imageId = _data['image'];
     return _imagesRef.doc(imageId);
   }
