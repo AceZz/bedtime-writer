@@ -1,7 +1,7 @@
 import { Timestamp } from "firebase-admin/firestore";
 
 import { FirestoreUserStories } from "../../firebase";
-import { UserStoriesManager } from "./user_stories";
+import { UserStoriesManager } from "./user_stories_manager";
 
 /**
  * Update user stories
@@ -17,33 +17,32 @@ export class FirebaseUserStoriesManager implements UserStoriesManager {
     const hasCacheStory = await this.hasCacheStory(uid, storyId);
     if (hasCacheStory) {
       await this.userStories
-        .cacheDocRef(uid, storyId)
+        .userStoryRef(uid, storyId)
         .update({ createdAt: Timestamp.now() });
     } else {
       await this.userStories
-        .cacheDocRef(uid, storyId)
+        .userStoryRef(uid, storyId)
         .set({ createdAt: Timestamp.now(), isFavorite: false });
     }
   }
 
   async readCacheStoryIds(uid: string): Promise<string[]> {
-    const docs = (await this.userStories.cacheRef(uid).select().get()).docs;
+    const docs = (await this.userStories.userStoriesRef(uid).select().get())
+      .docs;
     return docs.map((doc) => doc.id);
   }
 
   private async hasCacheStory(uid: string, storyId: string): Promise<boolean> {
-    const snapshot = await this.userStories.cacheDocRef(uid, storyId).get();
+    const snapshot = await this.userStories.userStoryRef(uid, storyId).get();
     return snapshot.exists;
   }
 
   private async hasDoc(uid: string): Promise<boolean> {
-    const snapshot = await this.userStories.storiesDocRef(uid).get();
+    const snapshot = await this.userStories.userRef(uid).get();
     return snapshot.exists;
   }
 
   private async initDoc(uid: string): Promise<void> {
-    await this.userStories
-      .storiesDocRef(uid)
-      .create({ createdAt: Timestamp.now() });
+    await this.userStories.userRef(uid).create({ createdAt: Timestamp.now() });
   }
 }

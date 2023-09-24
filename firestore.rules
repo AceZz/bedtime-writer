@@ -58,17 +58,18 @@ service cloud.firestore {
 
     match /user__stats/{r} {
       allow get: if isAuth() && r == request.auth.uid;
+      allow list: if false;
       allow write: if false;
     }
 
-    match /user__stories/{docId} {
-      allow get: if isAuth() && docId == request.auth.uid;
+    match /user__stories/{uid} {
+      allow get: if isAuth() && uid == request.auth.uid;
       allow write: if false;
 
       match /cache/{storyId} {
-       allow read: if isAuth() && docId == request.auth.uid;
+       allow read: if isAuth() && uid == request.auth.uid;
        allow create: if false;
-       allow update: if isAuth() && docId == request.auth.uid;
+       allow update: if (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isFavorite']));
        allow delete: if false;
       }
     }

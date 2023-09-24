@@ -13,7 +13,7 @@ export class FirestoreUserStoriesUtils extends FirestoreUserStories {
    * Firebase must be initialized before calling this function.
    */
   async delete(): Promise<void> {
-    const docs = (await this.storiesRef().get()).docs;
+    const docs = (await this.usersRef().get()).docs;
     console.log(docs.length);
     await Promise.all(
       docs.map(async (doc_) => {
@@ -26,13 +26,13 @@ export class FirestoreUserStoriesUtils extends FirestoreUserStories {
 
   /* Delete the cache subcollection for this uid. */
   private async deleteCacheSubcollection(uid: string): Promise<void> {
-    const docs = (await this.cacheRef(uid).get()).docs;
+    const docs = (await this.userStoriesRef(uid).get()).docs;
     await Promise.all(docs.map(async (doc_) => doc_.ref.delete()));
   }
 
   /* Init a stories doc for the user. */
   async initDoc(uid: string): Promise<void> {
-    await this.storiesDocRef(uid).create({ createdAt: new Date(2020, 1, 1) });
+    await this.userRef(uid).create({ createdAt: new Date(2020, 1, 1) });
   }
 
   /** Create a doc in the cache subcollection of user.
@@ -45,14 +45,14 @@ export class FirestoreUserStoriesUtils extends FirestoreUserStories {
     storyId: string,
     data: object
   ): Promise<void> {
-    await this.cacheDocRef(uid, storyId).create(data);
+    await this.userStoryRef(uid, storyId).create(data);
   }
 
   /**
    * Checks the doc ids of the cache subcollection of user stories.
    */
   async expectCacheIdsToBe(uid: string, expected: string[]): Promise<void> {
-    const docs = (await this.cacheRef(uid).get()).docs;
+    const docs = (await this.userStoriesRef(uid).get()).docs;
     const actual = docs.map((doc) => doc.id);
 
     expect(actual.sort()).toEqual(expected.sort());
@@ -65,7 +65,7 @@ export class FirestoreUserStoriesUtils extends FirestoreUserStories {
     uid: string,
     storyId: string
   ): Promise<void> {
-    const data = (await this.cacheDocRef(uid, storyId).get()).data();
+    const data = (await this.userStoryRef(uid, storyId).get()).data();
     const actual = data?.createdAt;
     const expected = Timestamp.now();
 
