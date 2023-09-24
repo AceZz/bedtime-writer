@@ -56,7 +56,7 @@ export const createClassicStory = onCall(async (request) => {
   const storyIds = await reader.getIds(filter);
 
   if (storyIds.length === 0) {
-    const error = `createClassicStory: no matching stories found for a request on formId ${filter.request.formId}.`;
+    const error = `createClassicStory: no story found for request ${answers}`;
     logger.error(error);
     throw new Error(error);
   }

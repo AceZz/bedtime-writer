@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../story/index.dart';
 import '../concrete.dart';
@@ -18,26 +19,42 @@ Future<String> firebaseCreateClassicStory(CreateStoryState state) async {
       .then((result) => result.data);
 }
 
-/// Streams a specific [Story].
+/// Provides the [_FirebaseStory] called [storyId] for the current user.
 final firebaseStoryProvider =
-    StreamProvider.autoDispose.family<Story, String>((ref, storyId) {
-  final snapshots =
-      firebaseFirestore.collection(storyCacheServing).doc(storyId).snapshots();
-  return snapshots.map((story) => _FirebaseStory.deserialize(story));
+    AutoDisposeStreamProviderFamily<_FirebaseStory, String>((ref, storyId) {
+  final user = ref.read(userProvider);
+  final uid = user is AuthUser ? user.uid : '';
+
+  final userStory = ref.watch(_userStoryProvider(Tuple2(uid, storyId))).value;
+  final story = ref.watch(_storyProvider(storyId)).value;
+
+  if (userStory == null || story == null) {
+    return const Stream.empty();
+  }
+
+  return Stream.value(_FirebaseStory.deserialize(uid, story, userStory));
 });
 
-/// Streams the [Story]s authored by the current [User].
-final firebaseStoriesProvider =
-    AutoDisposeFutureProvider<List<Story>>((ref) async {
-  final user = ref.watch(userProvider) as AuthUser;
-  return await getStories(user, getUserStories);
+/// Streams the data of a story, found in [storyCacheServing].
+final _storyProvider = AutoDisposeStreamProviderFamily<
+    DocumentSnapshot<Map<String, dynamic>>, String>((ref, storyId) {
+  return firebaseFirestore
+      .collection(storyCacheServing)
+      .doc(storyId)
+      .snapshots();
 });
 
-/// Streams the favorite [Story]s authored by the current [User].
-final firebaseFavoriteStoriesProvider =
-    AutoDisposeFutureProvider<List<Story>>((ref) async {
-  final user = ref.watch(userProvider) as AuthUser;
-  return await getStories(user, getFavoriteUserStories);
+/// Streams the metadata of the story [storyId] belonging to user [uid], found
+/// in [userStories]. [param] is [uid], [storyId].
+final _userStoryProvider = AutoDisposeStreamProviderFamily<
+    DocumentSnapshot<Map<String, dynamic>>,
+    Tuple2<String, String>>((ref, param) {
+  return firebaseFirestore
+      .collection(userStories)
+      .doc(param.item1)
+      .collection(userStoriesCache)
+      .doc(param.item2)
+      .snapshots();
 });
 
 /// Streams a specific [StoryStatus].
@@ -47,89 +64,100 @@ final firebaseStoryStatusProvider =
       .watch(firebaseStoryProvider(id).selectAsync((story) => story.status));
 });
 
-Future<List<Story>> getStories(
-  AuthUser user,
-  Query<Map<String, dynamic>> Function(AuthUser) userStoriesQueryBuilder,
-) async {
-  // Step 1: Get the story IDs from the user__stories sub-collection, ordered by 'createdAt'
-  final List<String> orderedStoryIds = [];
-  final Map<String, Timestamp> storyIdsToCreatedAt = {};
-  final userSnapshot = await userStoriesQueryBuilder(user)
-      .orderBy('createdAt', descending: true)
-      .get();
-  for (var doc in userSnapshot.docs) {
-    orderedStoryIds.add(doc.id);
-    storyIdsToCreatedAt[doc.id] = doc.data()['createdAt'] as Timestamp;
-  }
+/// Streams the [Story]s authored by the current [User].
+final firebaseStoriesProvider = AutoDisposeStreamProvider<List<Story>>((ref) {
+  final user = ref.watch(userProvider) as AuthUser;
+  return _storiesStream(ref, userStoriesQuery(user));
+});
 
-  // Step 2: Fetch the documents from cache one by one in parallel
-  final futures = orderedStoryIds.map((id) {
-    return firebaseFirestore.collection(storyCacheServing).doc(id).get();
-  }).toList();
-
-  final List<DocumentSnapshot<Map<String, dynamic>>> docs =
-      await Future.wait(futures);
-
-  // Step 3: Deserialize and update create date
-  final storyDocs = docs.map((doc) {
-    final story = _FirebaseStory.deserialize(doc);
-    story.updateDataTimestamp(storyIdsToCreatedAt[doc.id]!);
-    return story;
-  }).toList();
-
-  return storyDocs;
-}
+/// Streams the favorite [Story]s authored by the current [User].
+final firebaseFavoriteStoriesProvider =
+    AutoDisposeStreamProvider<List<Story>>((ref) {
+  final user = ref.watch(userProvider) as AuthUser;
+  return _storiesStream(
+    ref,
+    userStoriesQuery(user).where('isFavorite', isEqualTo: true),
+  );
+});
 
 /// A query that only returns stories authored by [user].
-Query<Map<String, dynamic>> getUserStories(AuthUser user) {
+Query<Map<String, dynamic>> userStoriesQuery(AuthUser user) {
   return firebaseFirestore
       .collection(userStories)
       .doc(user.uid)
       .collection(userStoriesCache);
 }
 
-/// A query that only returns favorite stories authored by [user].
-Query<Map<String, dynamic>> getFavoriteUserStories(AuthUser user) {
-  return getUserStories(user).where('isFavorite', isEqualTo: true);
+/// Provides stories from a [Query].
+Stream<List<_FirebaseStory>> _storiesStream(
+  AutoDisposeStreamProviderRef ref,
+  Query<Map<String, dynamic>> query,
+) {
+  final userStories = ref.watch(_userStoriesProvider(query)).value;
+
+  if (userStories == null) {
+    return const Stream.empty();
+  }
+
+  final stories = userStories.docs
+      .map((doc) => ref.watch(firebaseStoryProvider(doc.id)).value)
+      .whereType<_FirebaseStory>()
+      .toList();
+  return Stream.value(stories);
 }
+
+/// Streams user stories.
+final _userStoriesProvider = AutoDisposeStreamProviderFamily<
+    QuerySnapshot<Map<String, dynamic>>,
+    Query<Map<String, dynamic>>>((ref, query) {
+  return query.orderBy('createdAt', descending: true).snapshots();
+});
 
 /// Firebase implementation of [Story].
 class _FirebaseStory implements Story {
   @override
   final String id;
-  final Map<String, dynamic> _data;
+
+  final String uid;
+
+  final Map<String, dynamic> _storyData;
+
+  final Map<String, dynamic> _userStoryData;
 
   factory _FirebaseStory.deserialize(
+    String uid,
     DocumentSnapshot<Map<String, dynamic>> story,
+    DocumentSnapshot<Map<String, dynamic>> userStory,
   ) {
-    return _FirebaseStory(story.id, story.data()!);
+    return _FirebaseStory(story.id, uid, story.data()!, userStory.data()!);
   }
 
-  const _FirebaseStory(this.id, this._data) : super();
+  const _FirebaseStory(this.id, this.uid, this._storyData, this._userStoryData)
+      : super();
 
   @override
-  String toString() => '_FirebaseStory($title, $author, $dateTime, $numParts)';
-
-  DocumentReference<Map<String, dynamic>> get _storyRef =>
-      firebaseFirestore.collection(storyCacheServing).doc(id);
+  String toString() => '_FirebaseStory($title, $author, $createdAt, $numParts)';
 
   @override
-  String get title => _data['title'];
+  String get title => _storyData['title'];
 
   @override
-  String get author => _data['author'];
+  String get author => _storyData['author'];
 
   @override
-  DateTime get dateTime => (_data['timestamp'] as Timestamp).toDate();
+  DateTime get createdAt => (_userStoryData['createdAt'] as Timestamp).toDate();
 
   @override
-  StoryStatus get status => tryParseStoryRequestStatus(_data['status']);
+  StoryStatus get status => tryParseStoryRequestStatus(_storyData['status']);
 
   @override
-  bool get isFavorite => _data['isFavorite'];
+  bool get isFavorite => _userStoryData['isFavorite'];
 
-  void updateDataTimestamp(Timestamp timestamp) {
-    _data['timestamp'] = timestamp;
+  @override
+  Future<bool> toggleIsFavorite() async {
+    final newIsFavorite = !isFavorite;
+    await _userStoryRef.update({'isFavorite': newIsFavorite});
+    return newIsFavorite;
   }
 
   @override
@@ -138,7 +166,7 @@ class _FirebaseStory implements Story {
   @override
   String getPartId(int index) => partIds[index];
 
-  List<dynamic> get partIds => _data['partIds'];
+  List<dynamic> get partIds => _storyData['partIds'];
 
   CollectionReference<Map<String, dynamic>> get _imagesRef =>
       _storyRef.collection('images');
@@ -158,4 +186,13 @@ class _FirebaseStory implements Story {
     }
     return null;
   }
+
+  DocumentReference<Map<String, dynamic>> get _userStoryRef => firebaseFirestore
+      .collection(userStories)
+      .doc(uid)
+      .collection(userStoriesCache)
+      .doc(id);
+
+  DocumentReference<Map<String, dynamic>> get _storyRef =>
+      firebaseFirestore.collection(storyCacheServing).doc(id);
 }

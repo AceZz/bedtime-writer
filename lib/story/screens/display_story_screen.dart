@@ -64,7 +64,7 @@ class _FavoriteButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final storyId = ref.watch(_currentStoryId);
     final isFavorite = ref.watch(
-      userStoryProvider(storyId)
+      storyProvider(storyId)
           .select((story) => story.valueOrNull?.isFavorite ?? false),
     );
 
@@ -72,7 +72,7 @@ class _FavoriteButton extends ConsumerWidget {
       isFavorite: isFavorite,
       iconSize: 30.sp,
       onPressed: () async {
-        final userStory = ref.read(userStoryProvider(storyId)).value;
+        final userStory = ref.read(storyProvider(storyId)).value;
 
         if (userStory != null) {
           final isFavorite = await userStory.toggleIsFavorite();

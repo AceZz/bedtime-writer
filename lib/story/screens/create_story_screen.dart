@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../backend/concrete.dart';
 import '../../backend/index.dart';
 import '../../config.dart';
+import '../../logger.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
 import '../states/create_story_state.dart';
@@ -84,6 +85,7 @@ class CreateStoryScreen extends ConsumerWidget {
         future: createClassicStory(state),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           if (snapshot.hasError) {
+            logger.severe(snapshot.error);
             return ErrorScreen(
               text: 'A mystical error occurred. Please go home and try again.',
               buttonText: 'Home',
