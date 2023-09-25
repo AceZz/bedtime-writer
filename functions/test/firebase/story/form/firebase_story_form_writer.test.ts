@@ -3,7 +3,6 @@ import {
   initEnv,
   initFirebase,
   FirebaseStoryFormWriter,
-  FirebaseStoryQuestionWriter,
   FirebaseStoryWriter,
   FirebaseStoryReader,
 } from "../../../../src/firebase";
@@ -27,14 +26,12 @@ const storyForms = utils.storyForms;
 const storyQuestions = utils.storyQuestions;
 
 describe("FirebaseStoryFormWriter", () => {
-  let questionsWriter: FirebaseStoryQuestionWriter;
   let formWriter: FirebaseStoryFormWriter;
 
   // Check we are running in emulator mode before initializing Firebase.
   beforeAll(() => {
     initEnv();
     initFirebase(true);
-    questionsWriter = new FirebaseStoryQuestionWriter(storyQuestions);
     formWriter = new FirebaseStoryFormWriter(
       storyForms,
       storyQuestions,
@@ -48,7 +45,7 @@ describe("FirebaseStoryFormWriter", () => {
     await storyForms.delete();
     await storyCacheLanding.delete();
 
-    await questionsWriter.write(DUMMY_QUESTIONS);
+    await storyQuestions.write(DUMMY_QUESTIONS);
   });
 
   test("Simple write", async () => {

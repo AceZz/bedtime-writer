@@ -1,6 +1,5 @@
 import { beforeAll, beforeEach, describe, expect, test } from "@jest/globals";
 import {
-  FirebaseStoryQuestionWriter,
   dumpCollection,
   dumpToCollection,
   initEnv,
@@ -76,8 +75,7 @@ describe("firestore_utils", () => {
   });
 
   test("dumpToCollection does not merge", async () => {
-    const writer = new FirebaseStoryQuestionWriter(questions);
-    await writer.write(DUMMY_QUESTIONS_0);
+    await questions.write(DUMMY_QUESTIONS_0);
 
     await dumpToCollection(
       questions,
@@ -106,8 +104,7 @@ describe("firestore_utils", () => {
   });
 
   test("dumpCollection", async () => {
-    const writer = new FirebaseStoryQuestionWriter(questions);
-    await writer.write(DUMMY_QUESTIONS_0);
+    await questions.write(DUMMY_QUESTIONS_0);
 
     const dump = await dumpCollection(questions);
     expect(dump).toEqual(
@@ -171,8 +168,7 @@ describe("firestore_utils", () => {
   });
 
   test("dumpCollection specific ID", async () => {
-    const writer = new FirebaseStoryQuestionWriter(questions);
-    await writer.write(DUMMY_QUESTIONS_0);
+    await questions.write(DUMMY_QUESTIONS_0);
 
     const dump = await dumpCollection(questions, ["question1V1"]);
     expect(dump).toEqual(
@@ -209,8 +205,7 @@ describe("firestore_utils", () => {
   });
 
   test("dumpCollection wrong ID ignored", async () => {
-    const writer = new FirebaseStoryQuestionWriter(questions);
-    await writer.write(DUMMY_QUESTIONS_0);
+    await questions.write(DUMMY_QUESTIONS_0);
 
     const dump = await dumpCollection(questions, [
       "question1V1",
