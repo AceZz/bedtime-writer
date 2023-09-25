@@ -1,4 +1,4 @@
-import { FieldValue } from "firebase-admin/firestore";
+import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { HttpsError } from "firebase-functions/v2/https";
 
 import { UserStats, UserStatsManager } from "./user_stats";
@@ -31,7 +31,7 @@ export class FirebaseUserStatsManager implements UserStatsManager {
 
     // If no user data is found, add this user to the collection with maximal daily remaining stories.
     if (!userSnapshotData) {
-      await userRef.set({ ...userStats });
+      await userRef.set({ createdAt: Timestamp.now(), ...userStats });
     }
   }
 

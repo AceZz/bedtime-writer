@@ -37,7 +37,7 @@ describe("FirebaseUserStatsManager", () => {
 
   test("should init user stats", async () => {
     await statsManager.initUser(UID_0, STATS_0);
-    await userStats.expectToStrictEqual([STATS_0]);
+    await userStats.expectToEqual([STATS_0]);
   });
 
   test("should set all remaining stories", async () => {
@@ -50,7 +50,7 @@ describe("FirebaseUserStatsManager", () => {
   test("should update stats after story", async () => {
     await userStats.create(UID_0, STATS_0);
     await statsManager.updateStatsAfterStory(UID_0);
-    await userStats.expectToStrictEqual([STATS_UPDATED_0]);
+    await userStats.expectToEqual([STATS_UPDATED_0]);
   });
 
   test("should throw on updating stats after limit reached", async () => {
