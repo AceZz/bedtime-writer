@@ -1,3 +1,4 @@
+import { Query } from "firebase-admin/firestore";
 import {
   StoryMetadata,
   StoryReader,
@@ -6,6 +7,7 @@ import {
   StoryRegenImageStatus,
   ClassicStoryLogic,
 } from "../../story";
+import { StoryReaderFilter } from "../../story/story_reader";
 import { FirestoreStories } from "./firestore_stories";
 
 export class FirebaseStoryReader implements StoryReader {
@@ -91,6 +93,25 @@ export class FirebaseStoryReader implements StoryReader {
       data.logic.characterPower,
       data.logic.characterChallenge
     );
+  }
+
+  async getIds(filter?: StoryReaderFilter): Promise<string[]> {
+    const query = this.buildQuery(filter);
+    // Do an empty projection as only doc ids matter.
+    const snapshots = await query.select().get();
+    return snapshots.docs.map((doc) => doc.id);
+  }
+
+  private buildQuery(filter?: StoryReaderFilter): Query {
+    let query: Query = this.stories.storiesRef();
+
+    if (filter?.request) {
+      for (const [key, value] of Object.entries(filter.request)) {
+        query = query.where(`request.${key}`, "==", value);
+      }
+    }
+
+    return query;
   }
 
   async getFormIds(): Promise<string[]> {

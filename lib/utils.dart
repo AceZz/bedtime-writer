@@ -2,6 +2,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'logger.dart';
 
+/// A [Map] with [String] keys and dynamic values.
+typedef DynMap = Map<String, dynamic>;
+
 int parseEnvAsInt(String name, int defaultValue) {
   final rawValue = dotenv.env[name];
 

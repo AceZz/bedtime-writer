@@ -8,7 +8,7 @@ import '../../config.dart';
 import '../../widgets/app_scaffold.dart';
 import 'story_image.dart';
 
-/// Displays the [title], the [dateTime] and the image of a [Story] in a
+/// Displays the [title], the [createdAt] and the image of a [Story] in a
 /// [ListTile].
 ///
 /// On tap, redirects to `display_story`.
@@ -59,7 +59,7 @@ class _StoryTile extends StatelessWidget {
   }
 
   String get _formattedDateTime =>
-      '${story.dateTime.day}/${story.dateTime.month}/${story.dateTime.year}';
+      '${story.createdAt.day}/${story.createdAt.month}/${story.createdAt.year}';
 }
 
 class LibraryScreen extends StatelessWidget {
@@ -100,9 +100,9 @@ class _LibraryTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storiesStream = ref.watch(provider);
+    final storiesFuture = ref.watch(provider);
 
-    return storiesStream.when(
+    return storiesFuture.when(
       data: _data,
       error: _error,
       loading: _loading,

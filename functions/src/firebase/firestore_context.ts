@@ -6,7 +6,11 @@ import {
   FirestoreStoryForms,
   FirestoreStoryQuestions,
 } from "./story";
-import { FirestoreUserFeedback, FirestoreUserStats } from "./user";
+import {
+  FirestoreUserFeedback,
+  FirestoreUserStats,
+  FirestoreUserStories,
+} from "./user";
 
 // The default collection paths.
 const STORY_CACHE_LANDING = "story__cache_landing";
@@ -18,6 +22,7 @@ const STORY_QUESTIONS_SERVING = "story__questions_serving";
 const STORY_REALTIME = "story__realtime";
 const USER_FEEDBACK = "user__feedback";
 const USER_STATS = "user__stats";
+const USER_STORIES = "user__stories";
 
 /**
  * This class configures and stores all the Firestore helper classes that
@@ -47,6 +52,7 @@ export class FirestoreContext {
   readonly storyRealtime: FirestoreStoryRealtime;
   readonly userFeedback: FirestoreUserFeedback;
   readonly userStats: FirestoreUserStats;
+  readonly userStories: FirestoreUserStories;
 
   constructor(prefix?: string, private firestore?: Firestore) {
     const p = prefix === undefined ? "" : `${prefix}__`;
@@ -78,6 +84,7 @@ export class FirestoreContext {
     this.storyRealtime = new FirestoreStoryRealtime(p + STORY_REALTIME, this);
     this.userFeedback = new FirestoreUserFeedback(p + USER_FEEDBACK, this);
     this.userStats = new FirestoreUserStats(p + USER_STATS, this);
+    this.userStories = new FirestoreUserStories(p + USER_STORIES, this);
   }
 
   /**

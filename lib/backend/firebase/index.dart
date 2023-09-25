@@ -2,10 +2,10 @@ export 'emulators.dart' show configureFirebaseEmulators;
 export 'story.dart'
     show
         firebaseCreateClassicStory,
-        firebaseFavoriteUserStoriesProvider,
+        firebaseFavoriteStoriesProvider,
         firebaseStoryProvider,
         firebaseStoryStatusProvider,
-        firebaseUserStoriesProvider;
+        firebaseStoriesProvider;
 export 'story_form.dart' show firebaseGetRandomStoryForm;
 export 'story_part.dart' show firebaseStoryPartProvider;
 export 'user.dart' show getFirebaseUser, firebaseResetPassword;

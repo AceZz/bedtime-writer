@@ -2,6 +2,10 @@ import { ClassicStoryLogic } from "./logic";
 import { StoryMetadata } from "./story_metadata";
 import { StoryRegenImageStatus, StoryStatus } from "./story_status";
 
+export type StoryReaderFilter = {
+  request?: { [key: string]: string } | undefined;
+};
+
 /**
  * Read stories.
  */
@@ -28,6 +32,14 @@ export interface StoryReader {
    * Check whether all images for the form's stories are approved.
    */
   checkAllFormImagesApproved(formId: string): Promise<boolean>;
+
+  /**
+   * Get the matching story ids based on the filter specified.
+   *
+   * Stories are returned with a descending order on their
+   * creation date.
+   */
+  getIds(filter?: StoryReaderFilter): Promise<string[]>;
 
   /**
    * Get the distinct formIds of the stories in the collection.

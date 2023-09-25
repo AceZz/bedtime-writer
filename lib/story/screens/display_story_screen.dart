@@ -22,16 +22,16 @@ final _currentStoryId = Provider<String>((ref) => throw UnimplementedError());
 final _currentPartIndex = Provider<int>((ref) => throw UnimplementedError());
 
 class DisplayStoryScreen extends ConsumerWidget {
-  final String id;
+  final String storyId;
 
-  const DisplayStoryScreen({Key? key, required this.id}) : super(key: key);
+  const DisplayStoryScreen({Key? key, required this.storyId}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final status = ref.watch(storyStatusProvider(id)).value;
+    final status = ref.watch(storyStatusProvider(storyId)).value;
 
     return ProviderScope(
-      overrides: [_currentStoryId.overrideWithValue(id)],
+      overrides: [_currentStoryId.overrideWithValue(storyId)],
       child: AppScaffold(
         appBarTitle: 'Story',
         scrollableAppBar: true,
@@ -72,10 +72,10 @@ class _FavoriteButton extends ConsumerWidget {
       isFavorite: isFavorite,
       iconSize: 30.sp,
       onPressed: () async {
-        final story = ref.read(storyProvider(storyId)).value;
+        final userStory = ref.read(storyProvider(storyId)).value;
 
-        if (story != null) {
-          final isFavorite = await story.toggleIsFavorite();
+        if (userStory != null) {
+          final isFavorite = await userStory.toggleIsFavorite();
           ScaffoldMessenger.of(context).showSnackBar(
             _favoriteSnackBar(context, isFavorite),
           );

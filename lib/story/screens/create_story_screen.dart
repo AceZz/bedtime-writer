@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../backend/concrete.dart';
 import '../../backend/index.dart';
 import '../../config.dart';
+import '../../logger.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../widgets/lottie_loading.dart';
 import '../states/create_story_state.dart';
@@ -47,10 +48,13 @@ class CreateStoryScreen extends ConsumerWidget {
         future: ref.read(createStoryStateProvider.notifier).loadStoryForm(),
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           if (snapshot.hasError) {
+            final text = debugStory()
+                ? 'Error: ${snapshot.error}'
+                : 'A mystical error occurred. Please go home and try again.';
             return ErrorScreen(
-              text: 'A mystical error occurred. Please go home and try again.',
+              text: text,
               buttonText: 'Home',
-              destination: 'Home',
+              destination: 'home',
               buttonColor: Theme.of(context).colorScheme.primary,
             );
           }
@@ -78,19 +82,20 @@ class CreateStoryScreen extends ConsumerWidget {
     // Creates and displays story after questions have been answered
     else {
       return FutureBuilder(
-        future: createClassicStory(state.storyAnswers),
+        future: createClassicStory(state),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           if (snapshot.hasError) {
+            logger.severe(snapshot.error);
             return ErrorScreen(
               text: 'A mystical error occurred. Please go home and try again.',
               buttonText: 'Home',
-              destination: 'Home',
+              destination: 'home',
               buttonColor: Theme.of(context).colorScheme.primary,
             );
           }
 
-          final requestId = snapshot.data;
-          return _StoryScreen(requestId: requestId);
+          final storyId = snapshot.data;
+          return _StoryScreen(storyId: storyId);
         },
       );
     }
@@ -140,16 +145,16 @@ class _StoryScreen extends ConsumerWidget {
   // We use a temporary widget instead of inlining the content of the build
   // method into `CreateStoryScreen.build`. That's because of a weird behaviour
   // with ref.watch, which triggers the future of `FutureBuilder` many times.
-  final String? requestId;
+  final String? storyId;
 
-  const _StoryScreen({Key? key, required this.requestId}) : super(key: key);
+  const _StoryScreen({Key? key, required this.storyId}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final requestId_ = requestId;
+    final storyId_ = storyId;
     const loadingScreen = _LoadingScreen();
 
-    if (requestId_ == null) {
+    if (storyId_ == null) {
       return loadingScreen;
     }
 
@@ -157,13 +162,13 @@ class _StoryScreen extends ConsumerWidget {
         'A mystical force seems to have interrupted your story.\n\nLet\'s try creating your dreamy tale again:';
 
     return ref.watch(
-      storyStatusProvider(requestId_).select(
+      storyStatusProvider(storyId_).select(
         (status) => status.when(
           data: (StoryStatus status) {
             switch (status) {
               case StoryStatus.generating:
               case StoryStatus.complete:
-                return DisplayStoryScreen(id: requestId_);
+                return DisplayStoryScreen(storyId: storyId_);
               case StoryStatus.pending:
                 return loadingScreen;
               case StoryStatus.error:

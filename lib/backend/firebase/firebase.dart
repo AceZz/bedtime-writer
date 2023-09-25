@@ -5,6 +5,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../logger.dart';
+import '../../utils.dart';
 
 final firebaseAuth = FirebaseAuth.instance;
 final firebaseFirestore = FirebaseFirestore.instance;
@@ -12,8 +13,8 @@ final firebaseFunctions = FirebaseFunctions.instanceFor(region: 'europe-west6');
 
 /// Tries to get the data of [ref] from the cache. If it fails, returns it from
 /// the server (standard behavior).
-Future<DocumentSnapshot<Map<String, dynamic>>> getCacheThenServer(
-  DocumentReference<Map<String, dynamic>> ref,
+Future<DocumentSnapshot<DynMap>> getCacheThenServer(
+  DocumentReference<DynMap> ref,
 ) async {
   return ref.get(const GetOptions(source: Source.cache)).then((value) {
     logger.fine('getCacheThenServer: retrieve ${ref.path} with cache.');
@@ -31,3 +32,5 @@ const storyQuestionsServing = 'story__questions_serving';
 const storyQuestionChoices = 'choices';
 const storyRealtime = 'story__realtime';
 const userStats = 'user__stats';
+const userStories = 'user__stories';
+const userStoriesCache = 'cache';

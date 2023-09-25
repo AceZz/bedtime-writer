@@ -86,7 +86,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           return redirect ?? library;
         },
         builder: (context, state) =>
-            DisplayStoryScreen(id: state.pathParameters['id'] ?? ''),
+            DisplayStoryScreen(storyId: state.pathParameters['id'] ?? ''),
       ),
       GoRoute(
         name: 'preferences',

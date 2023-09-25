@@ -4,6 +4,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuple/tuple.dart';
 
+import '../story/index.dart';
 import 'firebase/index.dart';
 import 'preferences.dart';
 import 'shared_preferences/index.dart';
@@ -35,11 +36,11 @@ Future<void> Function(UserFeedback feedback) collectUserFeedback =
 
 /// Streams the [Story]s authored by the current [User].
 final AutoDisposeStreamProvider<List<Story>> userStoriesProvider =
-    firebaseUserStoriesProvider;
+    firebaseStoriesProvider;
 
 /// Streams the [Story]s authored by the current [User] and marked as favorite.
 final AutoDisposeStreamProvider<List<Story>> favoriteUserStoriesProvider =
-    firebaseFavoriteUserStoriesProvider;
+    firebaseFavoriteStoriesProvider;
 
 /// Streams a specific [Story].
 final AutoDisposeStreamProviderFamily<Story, String> storyProvider =
@@ -50,7 +51,7 @@ final AutoDisposeStreamProviderFamily<StoryPart, Tuple2<String, String>>
     storyPartProvider = firebaseStoryPartProvider;
 
 /// Creates a story request, and returns the id of the story.
-Future<String> Function(StoryAnswers answers) createClassicStory =
+Future<String> Function(CreateStoryState state) createClassicStory =
     firebaseCreateClassicStory;
 
 /// Streams the [StoryStatus] of a specific story.

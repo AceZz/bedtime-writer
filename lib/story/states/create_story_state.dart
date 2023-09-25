@@ -1,19 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../backend/concrete.dart';
 import '../../backend/index.dart';
-
-const List<String> _styles = [
-  'the Arabian Nights',
-  'Hans Christian Andersen',
-  'the Brothers Grimm',
-  'Charles Perrault',
-];
-
-String _getRandomStyle() => _styles[Random().nextInt(_styles.length)];
+import '../../utils.dart';
 
 /// A state that contains a [StoryForm] and a [StoryAnswers].
 @immutable
@@ -30,12 +20,8 @@ class CreateStoryState {
 
   factory CreateStoryState({
     required StoryForm? storyForm,
-    required int duration,
   }) {
-    final Map<String, dynamic> answers = {
-      'style': _getRandomStyle(),
-      'duration': duration,
-    };
+    final DynMap answers = {};
 
     return CreateStoryState._internal(
       storyForm,
@@ -66,26 +52,25 @@ class CreateStoryState {
       currentQuestionIndex + 1,
     );
   }
+
+  DynMap serialize() {
+    return {'formId': storyForm.id, ...storyAnswers.serialize()};
+  }
 }
 
 class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
   final Ref ref;
 
   CreateStoryStateNotifier({required this.ref})
-      : super(CreateStoryState(storyForm: null, duration: 5));
+      : super(CreateStoryState(storyForm: null));
 
   void reset() {
-    final Preferences preferences = ref.read(preferencesProvider);
-
-    state = CreateStoryState(storyForm: null, duration: preferences.duration);
+    state = CreateStoryState(storyForm: null);
   }
 
   Future<void> loadStoryForm() async {
-    final Preferences preferences = ref.read(preferencesProvider);
-
     state = CreateStoryState(
       storyForm: await getRandomStoryForm(),
-      duration: preferences.duration,
     );
   }
 

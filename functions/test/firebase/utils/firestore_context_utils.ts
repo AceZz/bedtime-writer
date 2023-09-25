@@ -5,6 +5,7 @@ import {
   FirestoreStoriesUtils,
   FirestoreUserFeedbackUtils,
   FirestoreUserStatsUtils,
+  FirestoreUserStoriesUtils,
 } from ".";
 
 /**
@@ -23,6 +24,7 @@ export class FirestoreContextUtils {
   storyRealtime: FirestoreStoriesUtils;
   userFeedback: FirestoreUserFeedbackUtils;
   userStats: FirestoreUserStatsUtils;
+  userStories: FirestoreUserStoriesUtils;
 
   constructor(readonly id: string) {
     this.firestore = new FirestoreContext(`test_${id}`);
@@ -49,6 +51,10 @@ export class FirestoreContextUtils {
     );
     this.userStats = new FirestoreUserStatsUtils(
       this.firestore.userStats.collectionPath,
+      this.firestore
+    );
+    this.userStories = new FirestoreUserStoriesUtils(
+      this.firestore.userStories.collectionPath,
       this.firestore
     );
   }
