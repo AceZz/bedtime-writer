@@ -10,7 +10,6 @@ import {
   initEnv,
   initFirebase,
   FirestoreContext,
-  FirebaseStoryQuestionWriter,
 } from "../firebase";
 import { YAMLStoryQuestionReader } from "../yaml";
 
@@ -28,8 +27,7 @@ async function main() {
     const reader = new YAMLStoryQuestionReader(yamlPath);
     const questions = Array.from((await reader.get()).values());
 
-    const writer = new FirebaseStoryQuestionWriter(firestore.storyQuestions);
-    await writer.write(questions);
+    await firestore.storyQuestions.write(questions);
     console.log(
       `${questions.length} question(s) saved to ` +
         `${firestore.storyQuestions.collectionPath}.`

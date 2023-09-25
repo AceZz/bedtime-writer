@@ -1,7 +1,6 @@
 import { beforeAll, beforeEach, describe, expect, test } from "@jest/globals";
 import {
   FirebaseStoryFormReader,
-  FirebaseStoryQuestionWriter,
   initEnv,
   initFirebase,
 } from "../../../../src/firebase";
@@ -28,8 +27,7 @@ describe("FirebaseStoryFormReader", () => {
   beforeEach(async () => await storyForms.delete());
 
   test("All forms", async () => {
-    const writer = new FirebaseStoryQuestionWriter(storyQuestions);
-    await writer.write(DUMMY_QUESTIONS_0);
+    await storyQuestions.write(DUMMY_QUESTIONS_0);
 
     const doc = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
 
@@ -46,8 +44,7 @@ describe("FirebaseStoryFormReader", () => {
   });
 
   test("Not cached", async () => {
-    const writer = new FirebaseStoryQuestionWriter(storyQuestions);
-    await writer.write(DUMMY_QUESTIONS);
+    await storyQuestions.write(DUMMY_QUESTIONS);
 
     const form0 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
     const form1 = await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);

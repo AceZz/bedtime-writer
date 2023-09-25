@@ -2,7 +2,6 @@ import { beforeAll, beforeEach, describe, expect, test } from "@jest/globals";
 import {
   FirebaseStoryFormCopier,
   FirebaseStoryFormWriter,
-  FirebaseStoryQuestionWriter,
   dumpCollection,
   initEnv,
   initFirebase,
@@ -22,13 +21,11 @@ const originForms = origin.storyForms;
 const dest = new FirestoreContextUtils("form_copier_dest").storyForms;
 
 describe("FirebaseStoryFormCopier", () => {
-  let questionWriter: FirebaseStoryQuestionWriter;
   let formWriter: FirebaseStoryFormWriter;
 
   beforeAll(() => {
     initEnv();
     initFirebase(true);
-    questionWriter = new FirebaseStoryQuestionWriter(originQuestions);
     formWriter = new FirebaseStoryFormWriter(originForms, originQuestions);
   });
 
@@ -39,7 +36,7 @@ describe("FirebaseStoryFormCopier", () => {
   });
 
   test("copy() all", async () => {
-    await questionWriter.write(DUMMY_QUESTIONS);
+    await originQuestions.write(DUMMY_QUESTIONS);
     await formWriter.write(DUMMY_FORM_0);
     await formWriter.write(DUMMY_FORM_1);
 
@@ -55,7 +52,7 @@ describe("FirebaseStoryFormCopier", () => {
   });
 
   test("copy() filtered", async () => {
-    await questionWriter.write(DUMMY_QUESTIONS);
+    await originQuestions.write(DUMMY_QUESTIONS);
     const id_0 = await formWriter.write(DUMMY_FORM_0);
     const id_1 = await formWriter.write(DUMMY_FORM_1);
 
@@ -91,7 +88,7 @@ describe("FirebaseStoryFormCopier", () => {
   });
 
   test("copy() ids", async () => {
-    await questionWriter.write(DUMMY_QUESTIONS);
+    await originQuestions.write(DUMMY_QUESTIONS);
     const id_0 = await formWriter.write(DUMMY_FORM_0);
     await formWriter.write(DUMMY_FORM_1);
 

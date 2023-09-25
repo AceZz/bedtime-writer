@@ -1,7 +1,6 @@
 import { beforeAll, beforeEach, describe, expect, test } from "@jest/globals";
 import {
   FirebaseStoryQuestionCopier,
-  FirebaseStoryQuestionWriter,
   dumpCollection,
   initEnv,
   initFirebase,
@@ -14,12 +13,9 @@ const origin = new FirestoreContextUtils("question_copier_origin")
 const dest = new FirestoreContextUtils("question_copier_dest").storyQuestions;
 
 describe("FirebaseStoryQuestionCopier", () => {
-  let writer: FirebaseStoryQuestionWriter;
-
   beforeAll(() => {
     initEnv();
     initFirebase(true);
-    writer = new FirebaseStoryQuestionWriter(origin);
   });
 
   beforeEach(async () => {
@@ -28,7 +24,7 @@ describe("FirebaseStoryQuestionCopier", () => {
   });
 
   test("copy() all", async () => {
-    await writer.write(DUMMY_QUESTIONS);
+    await origin.write(DUMMY_QUESTIONS);
 
     const copier = new FirebaseStoryQuestionCopier(
       (question) => question,
@@ -41,7 +37,7 @@ describe("FirebaseStoryQuestionCopier", () => {
   });
 
   test("copy() filtered", async () => {
-    await writer.write(DUMMY_QUESTIONS);
+    await origin.write(DUMMY_QUESTIONS);
 
     const copier = new FirebaseStoryQuestionCopier(
       (question) => {
@@ -80,7 +76,7 @@ describe("FirebaseStoryQuestionCopier", () => {
   });
 
   test("copy() some", async () => {
-    await writer.write(DUMMY_QUESTIONS);
+    await origin.write(DUMMY_QUESTIONS);
 
     const copier = new FirebaseStoryQuestionCopier(
       (question) => question,
