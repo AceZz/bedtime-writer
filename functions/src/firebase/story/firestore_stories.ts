@@ -14,7 +14,7 @@ import { FirestoreCollection } from "../firestore_collection";
  *   partIds: <partId>[]
  *   request: JSON
  *   status: string
- *   timestamp: timestamp
+ *   createdAt: timestamp
  *   title: string
  *   user: <userId>
  *

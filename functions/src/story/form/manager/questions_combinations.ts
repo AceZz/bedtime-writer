@@ -63,7 +63,7 @@ export function getQuestions(allQuestions: StoryQuestion[]): {
 /**
  * Return an Array of questions, one question per `promptParam`. For each
  * `promptParam`, the chosen question is the question which has the highest
- * datetime.
+ * createdAt.
  */
 export function filterQuestions(
   allQuestions: StoryQuestion[]

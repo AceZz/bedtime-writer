@@ -16,7 +16,7 @@ export const DUMMY_FORM_0 = new StoryForm(
 );
 
 export const SERIALIZED_DUMMY_FORM_0 = {
-  datetime: new Date("2020-01-01T12:00:00Z"),
+  createdAt: new Date("2020-01-01T12:00:00Z"),
   numQuestions: 2,
   question0: "question1V1",
   question0Choices: ["choice1", "choice2"],
@@ -35,7 +35,7 @@ export const DUMMY_FORM_1 = new StoryForm(
 );
 
 export const SERIALIZED_DUMMY_FORM_1 = {
-  datetime: new Date("2023-01-01T12:00:00Z"),
+  createdAt: new Date("2023-01-01T12:00:00Z"),
   numQuestions: 2,
   question0: "question1V1",
   question0Choices: ["choice1", "choice3"],

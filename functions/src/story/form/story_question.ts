@@ -12,7 +12,7 @@ export class StoryQuestion {
     readonly promptParam: string,
     readonly text: string,
     readonly priority: number,
-    readonly datetime: Date,
+    readonly createdAt: Date,
     choices: StoryChoice[]
   ) {
     this.choices = listToMapById(choices);
@@ -61,16 +61,16 @@ export class StoryQuestion {
       this.promptParam,
       this.text,
       this.priority,
-      this.datetime,
+      this.createdAt,
       newChoices
     );
   }
 
   /**
-   * Sort `questions` per `datetime` in place.
+   * Sort `questions` per `createdAt` in place.
    */
   static sortMostRecentFirst(questions: StoryQuestion[]): void {
-    questions.sort((a, b) => b.datetime.getTime() - a.datetime.getTime());
+    questions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
   /**

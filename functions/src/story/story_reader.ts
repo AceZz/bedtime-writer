@@ -37,7 +37,7 @@ export interface StoryReader {
    * Get the matching story ids based on the filter specified.
    *
    * Stories are returned with a descending order on their
-   * creation date.
+   * createdAt.
    */
   getIds(filter?: StoryReaderFilter): Promise<string[]>;
 

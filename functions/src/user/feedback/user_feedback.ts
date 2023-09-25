@@ -13,7 +13,7 @@ export interface UserFeedbackManager {
 export class UserFeedback {
   constructor(
     readonly text: string,
-    readonly datetime: Date,
+    readonly createdAt: Date,
     readonly uid: string | undefined
   ) {}
 

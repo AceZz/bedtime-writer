@@ -8,16 +8,16 @@ class UserFeedback {
   final String text;
 
   // Creation datetime
-  final DateTime datetime;
+  final DateTime createdAt;
   final String? uid;
 
-  const UserFeedback({required this.text, required this.datetime, this.uid});
+  const UserFeedback({required this.text, required this.createdAt, this.uid});
 
   DynMap serialize() {
     return {
       'text': text,
-      'datetime':
-          datetime.toIso8601String(), // Convert the DateTime object to a string
+      'createdAt':
+          createdAt.toIso8601String(), // Convert the DateTime object to a string
       'uid': uid,
     };
   }

@@ -41,7 +41,7 @@ export class FirebaseStoryWriter extends StoryWriter {
       partIds: [],
       request: metadata.request,
       status: StoryStatus.PENDING,
-      timestamp: Timestamp.now(),
+      createdAt: Timestamp.now(),
       user: metadata.user,
     };
     const document = await this.stories.storiesRef().add(data);

@@ -17,8 +17,8 @@ export function storyFormToFirestore(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data: any = {};
 
-  // Check and write the datetime.
-  data.datetime = form.datetime;
+  // Check and write the creation time.
+  data.createdAt = form.createdAt;
 
   // Check and write the questions.
   let index = 0;
