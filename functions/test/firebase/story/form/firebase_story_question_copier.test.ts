@@ -37,7 +37,7 @@ describe("FirebaseStoryQuestionCopier", () => {
     );
     await copier.copy();
 
-    dest.expectQuestionsToBe(DUMMY_QUESTIONS);
+    await dest.expectQuestionsToBe(DUMMY_QUESTIONS);
   });
 
   test("copy() filtered", async () => {
@@ -90,6 +90,6 @@ describe("FirebaseStoryQuestionCopier", () => {
 
     await copier.copy({ ids: [DUMMY_QUESTIONS[0].id, DUMMY_QUESTIONS[1].id] });
 
-    dest.expectQuestionsToBe([DUMMY_QUESTIONS[0], DUMMY_QUESTIONS[1]]);
+    await dest.expectQuestionsToBe([DUMMY_QUESTIONS[0], DUMMY_QUESTIONS[1]]);
   });
 });
