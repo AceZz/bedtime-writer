@@ -16,8 +16,8 @@ class UserFeedback {
   DynMap serialize() {
     return {
       'text': text,
-      'createdAt':
-          createdAt.toIso8601String(), // Convert the DateTime object to a string
+      'createdAt': createdAt
+          .toIso8601String(), // Convert the DateTime object to a string
       'uid': uid,
     };
   }
