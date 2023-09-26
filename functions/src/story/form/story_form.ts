@@ -19,15 +19,15 @@ const STYLES = [
 /**
  * Stores questions and choices that should be displayed to the user.
  *
- * `datetime` is the creation datetime.
+ * `createdAt` is the creation timestmap.
  */
 export class StoryForm {
-  readonly datetime: Date;
+  readonly createdAt: Date;
   readonly questions: Map<string, StoryQuestion>;
 
-  constructor(questions: StoryQuestion[], datetime?: Date) {
+  constructor(questions: StoryQuestion[], createdAt?: Date) {
     this.questions = listToMapById(questions);
-    this.datetime = datetime ?? new Date();
+    this.createdAt = createdAt ?? new Date();
   }
 
   toString(): string {

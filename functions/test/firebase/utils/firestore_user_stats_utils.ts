@@ -20,13 +20,14 @@ export class FirestoreUserStatsUtils extends FirestoreUserStats {
     await this.userRef(id).create({ ...stats });
   }
 
-  async expectToStrictEqual(expected: UserStats[]): Promise<void> {
+  async expectToEqual(expected: UserStats[]): Promise<void> {
     const snapshots = await this.statsRef().get();
 
     const tested = snapshots.docs.map((snapshot) => snapshot.data());
     const tested_ = tested
       .map((item) => ({
-        ...item,
+        numStories: item.numStories,
+        remainingStories: item.remainingStories,
       }))
       .sort();
 

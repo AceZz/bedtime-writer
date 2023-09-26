@@ -9,9 +9,9 @@ import { FirestoreCollection } from "../../firestore_collection";
  * `user__feedback`. It follows this schema:
  *
  * ```plain
- *<feedback_id>:
+ * <feedback_id>:
  *   text: string
- *   datetime: datetime
+ *   createdAt: timestamp
  *   uid: string
  * ```
  */

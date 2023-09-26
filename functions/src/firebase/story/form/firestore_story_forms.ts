@@ -10,7 +10,7 @@ import { FirestoreCollection } from "../../firestore_collection";
  *
  * ```plain
  * <form_id>:
- *   datetime: timestamp
+ *   createdAt: timestamp
  *   isCached: bool
  *   isApproved: bool
  *   numQuestions: int

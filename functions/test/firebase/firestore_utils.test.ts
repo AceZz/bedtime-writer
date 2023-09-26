@@ -30,7 +30,7 @@ describe("firestore_utils", () => {
       listToMapById([
         {
           id: "question1V1",
-          datetime: new Date(2023, 7, 15),
+          createdAt: new Date(2023, 7, 15),
           priority: 0,
           promptParam: "question1",
           text: "Question 1",
@@ -51,7 +51,7 @@ describe("firestore_utils", () => {
         },
         {
           id: "question2V1",
-          datetime: new Date(2023, 7, 10),
+          createdAt: new Date(2023, 7, 10),
           priority: 1,
           promptParam: "question2",
           text: "Question 2",
@@ -87,7 +87,7 @@ describe("firestore_utils", () => {
         {
           id: "question1V1",
           priority: 100,
-          datetime: new Date(2023, 7, 15),
+          createdAt: new Date(2023, 7, 15),
           choices: listToMapById([
             {
               id: "choice1",
@@ -118,7 +118,7 @@ describe("firestore_utils", () => {
         [
           "question1V1",
           {
-            datetime: Timestamp.fromDate(new Date(2023, 7, 15)),
+            createdAt: Timestamp.fromDate(new Date(2023, 7, 15)),
             priority: 0,
             promptParam: "question1",
             text: "Question 1",
@@ -145,7 +145,7 @@ describe("firestore_utils", () => {
         [
           "question2V1",
           {
-            datetime: Timestamp.fromDate(new Date(2023, 7, 10)),
+            createdAt: Timestamp.fromDate(new Date(2023, 7, 10)),
             priority: 1,
             promptParam: "question2",
             text: "Question 2",
@@ -183,7 +183,7 @@ describe("firestore_utils", () => {
         [
           "question1V1",
           {
-            datetime: Timestamp.fromDate(new Date(2023, 7, 15)),
+            createdAt: Timestamp.fromDate(new Date(2023, 7, 15)),
             priority: 0,
             promptParam: "question1",
             text: "Question 1",
@@ -224,7 +224,7 @@ describe("firestore_utils", () => {
         [
           "question1V1",
           {
-            datetime: Timestamp.fromDate(new Date(2023, 7, 15)),
+            createdAt: Timestamp.fromDate(new Date(2023, 7, 15)),
             priority: 0,
             promptParam: "question1",
             text: "Question 1",

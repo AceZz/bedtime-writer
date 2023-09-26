@@ -79,7 +79,7 @@ export class FirebaseStoryFormReader implements StoryFormReader {
       newQuestions.push(questionWithChoices);
     }
 
-    return new StoryForm(newQuestions, data.datetime.toDate());
+    return new StoryForm(newQuestions, data.createdAt.toDate());
   }
 
   async getIds(params?: StoryFormReaderParams): Promise<string[]> {

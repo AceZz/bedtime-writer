@@ -48,7 +48,7 @@ export class FirebaseStoryQuestionWriter implements StoryQuestionWriter {
       promptParam: question.promptParam,
       text: question.text,
       priority: question.priority,
-      datetime: question.datetime,
+      createdAt: question.createdAt,
     });
     await this.removeExtraChoices(question);
 

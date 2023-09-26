@@ -85,7 +85,7 @@ _feedbackOnPressed({
   required String feedbackText,
 }) {
   final feedback =
-      UserFeedback(text: feedbackText, datetime: DateTime.now().toUtc());
+      UserFeedback(text: feedbackText, createdAt: DateTime.now().toUtc());
   collectUserFeedback(feedback); // Async is voluntarily not awaited
   context.pop();
   _showFeedbackConfirmationAlertDialog(context: context);

@@ -107,10 +107,10 @@ export const collectUserFeedback = onCall(async (request) => {
   const data = request.data;
 
   const text = data.text;
-  const datetime = new Date(data.datetime);
+  const createdAt = new Date(data.createdAt);
   const uid = getUid(request.auth);
 
-  const feedback = new UserFeedback(text, datetime, uid);
+  const feedback = new UserFeedback(text, createdAt, uid);
 
   const feedbackManager = new FirebaseUserFeedbackManager(
     firestore.userFeedback

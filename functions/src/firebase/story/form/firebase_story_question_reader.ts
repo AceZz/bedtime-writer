@@ -42,7 +42,7 @@ export class FirebaseStoryQuestionReader implements StoryQuestionReader {
       snapshot.data().promptParam ?? "",
       snapshot.data().text ?? "",
       snapshot.data().priority ?? "",
-      snapshot.data().datetime.toDate() ?? new Date(1900, 1, 1),
+      snapshot.data().createdAt.toDate() ?? new Date(1900, 1, 1),
       await this.getChoices(snapshot.id)
     );
   }
