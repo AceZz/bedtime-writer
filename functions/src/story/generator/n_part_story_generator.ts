@@ -45,6 +45,7 @@ export class NPartStoryGenerator implements StoryGenerator {
 
   constructor(
     readonly logic: StoryLogic,
+    readonly storyTextApi: TextApi,
     readonly textApi: TextApi,
     readonly imageApi: ImageApi
   ) {

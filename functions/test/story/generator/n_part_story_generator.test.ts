@@ -25,6 +25,7 @@ describe("with fake APIs", () => {
     const generator = new TestNPartStoryGenerator(
       FULL_CLASSIC_STORY_LOGIC,
       FAKE_TEXT_API,
+      FAKE_TEXT_API,
       FAKE_IMAGE_API
     );
 
@@ -96,6 +97,7 @@ describe.skip("with OpenAI APIs", () => {
   function initGenerator() {
     return new NPartStoryGenerator(
       FULL_CLASSIC_STORY_LOGIC,
+      new OpenAiTextApi(API, "gpt-4"),
       new OpenAiTextApi(API, "gpt-3.5-turbo"),
       new OpenAiImageApi(API)
     );

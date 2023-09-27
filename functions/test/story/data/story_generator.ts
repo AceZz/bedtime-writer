@@ -8,5 +8,6 @@ import { CLASSIC_LOGIC_0 } from "./story_logic";
 export const GENERATOR_0 = new NPartStoryGenerator(
   CLASSIC_LOGIC_0,
   FAKE_TEXT_API,
+  FAKE_TEXT_API,
   FAKE_IMAGE_API
 );
