@@ -166,3 +166,17 @@ export function listToMapById<K, V extends { id: K }>(list: V[]): Map<K, V> {
 export function valueOrNull<T>(value: T | undefined): T | null {
   return value === undefined ? null : value;
 }
+
+/**
+ * Transform `items` by passing them through `transformer`.
+ */
+export function transformItems<T, U>(
+  items: Map<string, T>,
+  transformer: (item: T) => U
+): Map<string, U> {
+  const map = new Map();
+  for (const [key, item] of items.entries()) {
+    map.set(key, transformer(item));
+  }
+  return map;
+}

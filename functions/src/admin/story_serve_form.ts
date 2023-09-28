@@ -9,7 +9,6 @@ import { FieldPath } from "firebase-admin/firestore";
 import {
   FirebaseStoryCopier,
   FirebaseStoryFormCopier,
-  FirebaseStoryQuestionCopier,
   FirebaseStoryReader,
   FirestoreContext,
   FirestoreStories,
@@ -19,7 +18,7 @@ import {
   initFirebase,
 } from "../firebase";
 import { collectionInfo } from "./utils";
-import { StoryForm } from "../story";
+import { StoryForm, StoryQuestion } from "../story";
 import _ from "lodash";
 
 type Collections = {
@@ -66,7 +65,6 @@ async function main() {
 
   // Initialize the questions copier.
   const questionIds = form.questionIds;
-  const questionCopier = getQuestionCopier(landing, serving);
   console.log(
     `\t${questionIds.length} questions will be copied or replaced from ` +
       `${collectionInfo(landing.questions)} to ` +
@@ -93,7 +91,9 @@ async function main() {
 
   if (await confirm()) {
     console.log("Copying the questions...");
-    await questionCopier.copy({ ids: questionIds });
+    await landing.questions.copy(serving.questions, questionTransformer, {
+      ids: questionIds,
+    });
     console.log("Copying the form...");
     await formCopier.copy({ ids: [formId] });
     console.log("Copying the stories...");
@@ -165,28 +165,16 @@ async function promptFormId(
  * Keep the text of the question, as well as the image and the text of each
  * choice.
  */
-function getQuestionCopier(
-  landing: Collections,
-  serving: Collections
-): FirebaseStoryQuestionCopier<{
-  text: string;
-  choices: Map<string, { image: Buffer; text: string }>;
-}> {
-  return new FirebaseStoryQuestionCopier(
-    (question) => {
-      return {
-        text: question.text,
-        choices: new Map(
-          Array.from(question.choices.entries()).map(([id, choice]) => [
-            id,
-            _.pick(choice, ["image", "text"]),
-          ])
-        ),
-      };
-    },
-    landing.questions,
-    serving.questions
-  );
+function questionTransformer(question: StoryQuestion) {
+  return {
+    text: question.text,
+    choices: new Map(
+      Array.from(question.choices.entries()).map(([id, choice]) => [
+        id,
+        _.pick(choice, ["image", "text"]),
+      ])
+    ),
+  };
 }
 
 /**

@@ -8,8 +8,4 @@ export {
   StoryQuestionReader,
   StoryQuestionReaderParams,
 } from "./story_question_reader";
-export {
-  StoryQuestionCopier,
-  StoryQuestionFilter,
-} from "./story_question_copier";
 export { StoryQuestionWriter } from "./story_question_writer";
