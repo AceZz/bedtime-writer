@@ -12,7 +12,8 @@ import {
   StoryQuestionReader,
   StoryQuestionWriter,
 } from "../../../story";
-import { listToMapById } from "../../../utils";
+import { listToMapById, transformItems } from "../../../utils";
+import { FirestoreDocument, dumpToCollection } from "../../firestore_utils";
 
 /**
  * Helper class to manipulate the story questions collection (usually called
@@ -147,6 +148,24 @@ export class FirestoreStoryQuestions
       prompt: choice.prompt,
       image: choice.image,
     });
+  }
+
+  /**
+   * Copy some or all questions in the collection to `dest`.
+   *
+   * `StoryQuestion`s are transformed by `transformer` before being written to
+   * `dest`.
+   */
+  async copy(
+    dest: FirestoreStoryQuestions,
+    transformer: (question: StoryQuestion) => FirestoreDocument,
+    params?: {
+      ids?: string[] | undefined;
+    }
+  ): Promise<void> {
+    const questions = await this.get(params);
+    const documents = transformItems(questions, transformer);
+    await dumpToCollection(dest, documents);
   }
 
   choiceRef(questionId: string, choiceId: string): DocumentReference {

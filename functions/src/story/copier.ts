@@ -4,13 +4,6 @@ export type CopierParams = {
   ids?: string[];
 };
 
-/**
- * Copy some or all `I` from one location to another.
- *
- * The copier transforms the `I` which are being copied by using the
- * `itemFilter` function. This function can return any object `T`, which
- * parametrizes the class.
- */
 export abstract class Copier<I, T> {
   protected abstract get itemFilter(): CopierFilter<I, T>;
 
