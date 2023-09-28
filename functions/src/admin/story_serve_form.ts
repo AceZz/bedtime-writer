@@ -8,10 +8,10 @@ import { prompt } from "../utils";
 import { FieldPath } from "firebase-admin/firestore";
 import {
   FirebaseStoryCopier,
-  FirebaseStoryFormCopier,
   FirebaseStoryReader,
   FirestoreContext,
   FirestoreStories,
+  FirestoreStoryForm,
   FirestoreStoryForms,
   FirestoreStoryQuestions,
   initEnv,
@@ -63,16 +63,13 @@ async function main() {
 
   console.log(`\nForm ${formId} will be made available PUBLICLY.`);
 
-  // Initialize the questions copier.
+  // Log the questions and form copier.
   const questionIds = form.questionIds;
   console.log(
     `\t${questionIds.length} questions will be copied or replaced from ` +
       `${collectionInfo(landing.questions)} to ` +
       `${collectionInfo(serving.questions)}.`
   );
-
-  // Initialize the form copier.
-  const formCopier = getFormCopier(landing, serving);
   console.log(
     `\tForm ${formId} will be copied or replaced from ` +
       `${collectionInfo(landing.forms)} to ` +
@@ -95,7 +92,7 @@ async function main() {
       ids: questionIds,
     });
     console.log("Copying the form...");
-    await formCopier.copy({ ids: [formId] });
+    await landing.forms.copy(serving.forms, formTransformer, { ids: [formId] });
     console.log("Copying the stories...");
     await storyCopier.copy({ ids: storyIds });
 
@@ -181,23 +178,13 @@ function questionTransformer(question: StoryQuestion) {
  * Keep the number of questions of the form, as well as each `question...` and
  * `question...Choices`.
  */
-function getFormCopier(
-  landing: Collections,
-  serving: Collections
-): FirebaseStoryFormCopier {
-  return new FirebaseStoryFormCopier(
-    (form) => {
-      const props = [...Array(form.numQuestions).keys()].flatMap((i) => [
-        `question${i}`,
-        `question${i}Choices`,
-      ]);
+function formTransformer(form: FirestoreStoryForm) {
+  const props = [...Array(form.numQuestions).keys()].flatMap((i) => [
+    `question${i}`,
+    `question${i}Choices`,
+  ]);
 
-      return _.pick(form, ["numQuestions", ...props]);
-    },
-    landing.questions,
-    landing.forms,
-    serving.forms
-  );
+  return _.pick(form, ["numQuestions", ...props]);
 }
 
 /**
