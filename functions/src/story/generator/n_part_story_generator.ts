@@ -81,7 +81,7 @@ export class NPartStoryGenerator implements StoryGenerator {
   }
 
   async *storyParts(): AsyncGenerator<StoryPart> {
-    const textStream = await this.initTextStream();
+    const textStream = await this.initStoryTextStream();
 
     // Generate parts from stream
     let i = 0;
@@ -117,8 +117,8 @@ export class NPartStoryGenerator implements StoryGenerator {
     for (const storyPart of storyParts) yield storyPart;
   }
 
-  private async initTextStream(): Promise<Readable> {
-    return await this.textApi.getStream(
+  private async initStoryTextStream(): Promise<Readable> {
+    return await this.storyTextApi.getStream(
       [
         new SystemTextPrompt("Act as a professional writer for children."),
         new UserTextPrompt(this.textPrompt),
