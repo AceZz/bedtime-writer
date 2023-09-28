@@ -45,6 +45,7 @@ type MissingStory = {
 
 class StoryFormGenerator {
   private allAnswers: Map<string, string>[];
+  private storyTextApi: TextApi;
   private textApi: TextApi;
   private imageApi: ImageApi;
   private questionReader: StoryQuestionReader;
@@ -57,7 +58,8 @@ class StoryFormGenerator {
     private readonly firestore: FirestoreContext
   ) {
     this.allAnswers = form.getAllAnswers();
-    this.textApi = getTextApi();
+    this.storyTextApi = getTextApi("gpt-4");
+    this.textApi = getTextApi("gpt-3.5-turbo");
     this.imageApi = getImageApi();
 
     this.questionReader = new FirebaseStoryQuestionReader(
@@ -263,6 +265,7 @@ class StoryFormGenerator {
 
       const generator = new NPartStoryGenerator(
         story.logic,
+        this.storyTextApi,
         this.textApi,
         this.imageApi
       );
