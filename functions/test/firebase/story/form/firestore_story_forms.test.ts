@@ -1,5 +1,9 @@
 import { beforeAll, beforeEach, describe, expect, test } from "@jest/globals";
-import { initEnv, initFirebase } from "../../../../src/firebase";
+import {
+  dumpCollection,
+  initEnv,
+  initFirebase,
+} from "../../../../src/firebase";
 import { FirestoreContextUtils } from "../../utils";
 import {
   DUMMY_FORM_0,
@@ -12,6 +16,7 @@ import {
 const context = new FirestoreContextUtils("firestore_story_forms");
 const storyForms = context.storyForms;
 const storyQuestions = context.storyQuestions;
+const dest = new FirestoreContextUtils("firestore_story_forms_dest").storyForms;
 
 describe("FirestoreStoryForms", () => {
   beforeAll(() => {
@@ -19,7 +24,10 @@ describe("FirestoreStoryForms", () => {
     initFirebase(true);
   });
 
-  beforeEach(async () => await storyForms.delete());
+  beforeEach(async () => {
+    await storyForms.delete();
+    await dest.delete();
+  });
 
   test("All forms", async () => {
     await storyQuestions.write(DUMMY_QUESTIONS_0);
@@ -60,5 +68,55 @@ describe("FirestoreStoryForms", () => {
       new Map([[form0.id, DUMMY_FORM_0]])
     );
     expect(await storyForms.getIds(params)).toEqual([form0.id]);
+  });
+
+  test("copy() all", async () => {
+    await storyQuestions.write(DUMMY_QUESTIONS);
+    await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0);
+    await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);
+
+    await storyForms.copy(dest, (form) => form);
+
+    await dest.expectToBe([SERIALIZED_DUMMY_FORM_0, SERIALIZED_DUMMY_FORM_1]);
+  });
+
+  test("copy() filtered", async () => {
+    await storyQuestions.write(DUMMY_QUESTIONS);
+    const id_0 = (await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0)).id;
+    const id_1 = (await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1)).id;
+
+    await storyForms.copy(dest, (form) => {
+      return {
+        question: form.question0,
+      };
+    });
+
+    const actual = await dumpCollection(dest);
+    expect(actual).toEqual(
+      new Map([
+        [
+          id_0,
+          {
+            question: "question1V1",
+          },
+        ],
+        [
+          id_1,
+          {
+            question: "question1V1",
+          },
+        ],
+      ])
+    );
+  });
+
+  test("copy() ids", async () => {
+    await storyQuestions.write(DUMMY_QUESTIONS);
+    const id_0 = (await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_0)).id;
+    await storyForms.formsRef().add(SERIALIZED_DUMMY_FORM_1);
+
+    await storyForms.copy(dest, (form) => form, { ids: [id_0] });
+
+    await dest.expectToBe([SERIALIZED_DUMMY_FORM_0]);
   });
 });

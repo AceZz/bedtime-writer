@@ -16,6 +16,9 @@ import {
   FirestoreCollection,
   FirestoreProvider,
 } from "../../firestore_collection";
+import { FirestoreDocument, dumpToCollection } from "../../firestore_utils";
+import { storyFormToFirestore } from "./firebase_story_form_writer";
+import { transformItems } from "../../../utils";
 
 export type FirestoreStoryForm = {
   createdAt: Date;
@@ -119,6 +122,41 @@ export class FirestoreStoryForms
     const query = this.buildQuery(params).select(FieldPath.documentId());
     const snapshots = await query.get();
     return snapshots.docs.map((doc) => doc.id);
+  }
+
+  /**
+   * Copy some or all forms in the collection to `dest`.
+   *
+   * `FirestoreStoryForm`s are transformed by `transformer` before being written
+   * to `dest`.
+   */
+  async copy(
+    dest: FirestoreStoryForms,
+    transformer: (form: FirestoreStoryForm) => FirestoreDocument,
+    params?: {
+      ids?: string[] | undefined;
+    }
+  ): Promise<void> {
+    const forms = await this.get(params);
+    const firestoreForms = await this.storyFormsToFirestore(forms);
+
+    const raw = transformItems(firestoreForms, transformer);
+    await dumpToCollection(dest, raw);
+  }
+
+  private async storyFormsToFirestore(
+    forms: Map<string, StoryForm>
+  ): Promise<Map<string, FirestoreStoryForm>> {
+    const availableQuestions = await this.questionReader.get();
+
+    const entries = Array.from(forms.entries()).map(
+      ([key, form]) =>
+        [key, storyFormToFirestore(form, availableQuestions)] as [
+          string,
+          FirestoreStoryForm
+        ]
+    );
+    return new Map(entries);
   }
 
   formsRef(): CollectionReference {
