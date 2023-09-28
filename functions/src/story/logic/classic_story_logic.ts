@@ -9,6 +9,7 @@ export const MAX_STRING_LENGTH = 50;
  */
 export class ClassicStoryLogic implements StoryLogic {
   private readonly logicType = "classic";
+  private readonly appearance: string;
 
   constructor(
     private readonly duration: number,
@@ -19,7 +20,9 @@ export class ClassicStoryLogic implements StoryLogic {
     private readonly characterFlaw?: string,
     private readonly characterPower?: string,
     private readonly characterChallenge?: string
-  ) {}
+  ) {
+    this.appearance = APPEARANCE[this.characterName];
+  }
 
   /**
    * Return a copy of the current object with a selection of updated parameters.
@@ -94,13 +97,12 @@ export class ClassicStoryLogic implements StoryLogic {
   }
 
   private getCharacterIntroPrompt(): string {
-    const appearance = APPEARANCE[this.characterName];
-    if (appearance === undefined) {
+    if (this.appearance === undefined) {
       throw new Error(
         `getCharacterIntroPrompt: ${this.characterName} does not have an appearance defined.`
       );
     } else {
-      return ` The protagonist is ${this.characterName}. ${appearance}.`;
+      return ` The protagonist is ${this.characterName}. ${this.appearance}.`;
     }
   }
 
@@ -151,7 +153,7 @@ export class ClassicStoryLogic implements StoryLogic {
       `When mentioning ${name}, provide an accurate appearance description.` +
       `${name} should be either beautiful or cute.` +
       "You must mention regarding style: text-free illustration, fairytale, dreamy atmosphere, whimsical, magical." +
-      "You must one or two emotions among the following: wonder, calm, curiosity, joy, intrigue, inspiration, nostalgia, mystery, serenity." +
+      "You must mention one or two emotions among the following: wonder, calm, curiosity, joy, intrigue, inspiration, nostalgia, mystery, serenity." +
       "Your prompt must be 100 words or less." +
       "Your prompt must start with: Create a digital painting of ..." +
       "Directly write the prompt. Do not make paragraphs."
