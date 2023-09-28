@@ -82,29 +82,38 @@ export class NPartStoryGenerator implements StoryGenerator {
   async *storyParts(): AsyncGenerator<StoryPart> {
     const textStream = await this.initTextStream();
 
+    // Generate parts from stream
     let i = 0;
+    const storyParts: StoryPart[] = [];
     for await (const part of splitIntoParts(textStream)) {
       this.addStoryText(part);
       logger.debug(`NPartStoryGenerator: part ${i} generated`);
-
-      let imagePrompt: string | undefined = undefined;
-      let image: Buffer | undefined = undefined;
-      let imagePromptPrompt: string | undefined = undefined;
-      if (i == 0) {
-        [imagePrompt, image] = await this.getImageThenImagePrompt(part);
-        imagePromptPrompt = this.imagePromptPrompt;
-      }
-
-      yield new StoryPart(
+      const storyPart = new StoryPart(
         part,
         this.textPrompt,
-        image,
-        imagePrompt,
-        imagePromptPrompt
+        undefined,
+        undefined,
+        undefined
       );
-
+      storyParts.push(storyPart);
       i++;
     }
+
+    // Generate image from full storyText
+    const [imagePrompt, image] = await this.getImagePromptThenImage(
+      this.storyText
+    );
+    const imagePart = new StoryPart(
+      storyParts[0].text,
+      storyParts[0].textPrompt,
+      image,
+      imagePrompt,
+      this.imagePromptPrompt
+    );
+    storyParts[0] = imagePart;
+
+    // Yield parts
+    for (const storyPart of storyParts) yield storyPart;
   }
 
   private async initTextStream(): Promise<Readable> {
@@ -122,10 +131,10 @@ export class NPartStoryGenerator implements StoryGenerator {
     );
   }
 
-  private async getImageThenImagePrompt(
-    firstPart: string
+  private async getImagePromptThenImage(
+    storyText: string
   ): Promise<[string, Buffer]> {
-    const imagePrompt = await this.getImagePrompt(firstPart);
+    const imagePrompt = await this.getImagePrompt(storyText);
     logger.debug("NPartStoryGenerator: imagePrompt generated");
     const image = await this.getImage(imagePrompt);
     logger.debug("NPartStoryGenerator: image generated");

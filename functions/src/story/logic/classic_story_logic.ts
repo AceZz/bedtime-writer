@@ -1,4 +1,5 @@
 import { StoryLogic } from "./story_logic";
+import { APPEARANCE } from "./prompt_data";
 
 export const MAX_DURATION = 10;
 export const MAX_STRING_LENGTH = 50;
@@ -8,6 +9,7 @@ export const MAX_STRING_LENGTH = 50;
  */
 export class ClassicStoryLogic implements StoryLogic {
   private readonly logicType = "classic";
+  private readonly appearance: string;
 
   constructor(
     private readonly duration: number,
@@ -18,7 +20,9 @@ export class ClassicStoryLogic implements StoryLogic {
     private readonly characterFlaw?: string,
     private readonly characterPower?: string,
     private readonly characterChallenge?: string
-  ) {}
+  ) {
+    this.appearance = APPEARANCE[this.characterName];
+  }
 
   /**
    * Return a copy of the current object with a selection of updated parameters.
@@ -93,7 +97,13 @@ export class ClassicStoryLogic implements StoryLogic {
   }
 
   private getCharacterIntroPrompt(): string {
-    return ` The protagonist is ${this.characterName}.`;
+    if (this.appearance === undefined) {
+      throw new Error(
+        `getCharacterIntroPrompt: ${this.characterName} does not have an appearance defined.`
+      );
+    } else {
+      return ` The protagonist is ${this.characterName}. ${this.appearance}.`;
+    }
   }
 
   private getCharacterFlawPrompt(): string {
@@ -138,13 +148,15 @@ export class ClassicStoryLogic implements StoryLogic {
 
   imagePromptPrompt(): string {
     const name = this.characterName;
-
     return (
-      "Generate now a very simple and concise prompt for dalle" +
-      ` to illustrate ${name} of the story and its environment.` +
-      ` When mentioning ${name}, provide a short but accurate appearance description.` +
-      ` ${name} should be either beautiful or cute.` +
-      " You must mention a fairytale digital painting style."
+      `Generate now a detailed prompt for dalle, to paint ${name} of the story and their environment.` +
+      `When mentioning ${name}, provide an accurate appearance description.` +
+      `${name} should be either beautiful or cute.` +
+      "You must mention regarding style: text-free illustration, fairytale, dreamy atmosphere, whimsical, magical." +
+      "You must mention one or two emotions among the following: wonder, calm, curiosity, joy, intrigue, inspiration, nostalgia, mystery, serenity." +
+      "Your prompt must be 100 words or less." +
+      "Your prompt must start with: Create a digital painting of ..." +
+      "Directly write the prompt. Do not make paragraphs."
     );
   }
 

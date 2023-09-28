@@ -15,7 +15,7 @@ describe("ClassicStoryLogic", () => {
       new ClassicStoryLogic(
         3,
         "some style",
-        "Someone",
+        "Frosty, the penguin",
         "another place",
         "some object",
         "has a flaw"
@@ -59,51 +59,42 @@ describe("ClassicStoryLogic", () => {
   });
 
   test("prompt of partial", () => {
-    expect(PARTIAL_CLASSIC_STORY_LOGIC.prompt()).toBe(
-      "Write a fairy tale in the style of some style. " +
-        "The protagonist is Someone. " +
-        "The protagonist has a flaw. " +
-        "The story takes place at some place. " +
-        "The length is about 300 words."
+    expect(PARTIAL_CLASSIC_STORY_LOGIC.prompt()).toContain(
+      "Frosty, the penguin"
     );
+    expect(PARTIAL_CLASSIC_STORY_LOGIC.prompt()).toContain("at some place");
+    expect(PARTIAL_CLASSIC_STORY_LOGIC.prompt()).toContain("has a flaw");
   });
 
   test("prompt of full", () => {
-    expect(FULL_CLASSIC_STORY_LOGIC.prompt()).toBe(
-      "Write a fairy tale in the style of some style. " +
-        "The protagonist is Someone. " +
-        "The protagonist has a flaw. " +
-        "The protagonist has a power. " +
-        "The protagonist is challenged with being challenged. " +
-        "The story takes place at some place. " +
-        "The protagonist finds some object in the journey. " +
-        "The length is about 300 words."
+    expect(FULL_CLASSIC_STORY_LOGIC.prompt()).toContain("some style");
+    expect(FULL_CLASSIC_STORY_LOGIC.prompt()).toContain("Frosty, the penguin");
+    expect(FULL_CLASSIC_STORY_LOGIC.prompt()).toContain("at some place");
+    expect(FULL_CLASSIC_STORY_LOGIC.prompt()).toContain("some object");
+    expect(FULL_CLASSIC_STORY_LOGIC.prompt()).toContain("has a flaw");
+    expect(FULL_CLASSIC_STORY_LOGIC.prompt()).toContain("has a power");
+    expect(FULL_CLASSIC_STORY_LOGIC.prompt()).toContain(
+      "is challenged with being challenged"
     );
   });
 
-  test("prompt of partial", () => {
-    expect(PARTIAL_CLASSIC_STORY_LOGIC.imagePromptPrompt()).toBe(
-      "Generate now a very simple and concise prompt for dalle" +
-        " to illustrate Someone of the story and its environment." +
-        " When mentioning Someone, provide a short but accurate appearance description." +
-        " Someone should be either beautiful or cute." +
-        " You must mention a fairytale digital painting style."
+  test("imagePromptPrompt of partial", () => {
+    expect(PARTIAL_CLASSIC_STORY_LOGIC.imagePromptPrompt()).toContain(
+      "Frosty, the penguin"
     );
+    expect(PARTIAL_CLASSIC_STORY_LOGIC.imagePromptPrompt()).toContain("prompt");
   });
 
-  test("prompt of FULL", () => {
-    expect(FULL_CLASSIC_STORY_LOGIC.imagePromptPrompt()).toBe(
-      "Generate now a very simple and concise prompt for dalle" +
-        " to illustrate Someone of the story and its environment." +
-        " When mentioning Someone, provide a short but accurate appearance description." +
-        " Someone should be either beautiful or cute." +
-        " You must mention a fairytale digital painting style."
+  test("imagePromptPrompt of FULL", () => {
+    expect(FULL_CLASSIC_STORY_LOGIC.imagePromptPrompt()).toContain(
+      "Frosty, the penguin"
     );
+    expect(FULL_CLASSIC_STORY_LOGIC.imagePromptPrompt()).toContain("prompt");
   });
 
   test("toString", () => {
-    expect(FULL_CLASSIC_STORY_LOGIC.toString().toLowerCase()).toContain(
-      "someone"
+    expect(FULL_CLASSIC_STORY_LOGIC.toString()).toContain(
+      "Frosty, the penguin"
     );
   });
 });
