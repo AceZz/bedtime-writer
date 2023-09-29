@@ -1,10 +1,18 @@
 # Deployment
 
-## Deployment to production checklist
+## Checklist: before deploying to production
 
 Check the following items before deploying to production:
 1. Check if [the indexes of the dev Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer/firestore/indexes) match [the prod Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer-prod/firestore/indexes).
 2. Check if [the rules of the dev Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer/firestore/rules) match [the prod Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer-prod/firestore/rules). Also check the [local rules](../firestore.rules).
+
+## Deploy the code to production branch
+
+Code is deployed to production branch on GitHub following these steps:
+1. Merge `main` into `prod`.
+2. Define the new version number using [Semantic Versioning](https://semver.org/).
+3. Add a [Git tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) with the new version number 
+   defined.
 
 ## Firebase rules
 
