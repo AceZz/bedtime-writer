@@ -29,7 +29,6 @@ class SharedPreferencesNotifier extends Notifier<Preferences>
     final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
     return Preferences(
       ageConfirmed: sharedPreferences.getBool('ageConfirmed') ?? false,
-      duration: sharedPreferences.getInt('duration') ?? 2,
       hasLoggedOut: sharedPreferences.getBool('hasLoggedOut') ?? false,
       accountCreationLastDate:
           sharedPreferences.getString('accountCreationLastDate') ??
@@ -42,13 +41,6 @@ class SharedPreferencesNotifier extends Notifier<Preferences>
     final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
     await sharedPreferences.setBool('ageConfirmed', newAgeConfirmed);
     state = state.copyWith(ageConfirmed: newAgeConfirmed);
-  }
-
-  @override
-  Future<void> updateDuration(int newDuration) async {
-    final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
-    await sharedPreferences.setInt('duration', newDuration);
-    state = state.copyWith(duration: newDuration);
   }
 
   @override
