@@ -1,5 +1,21 @@
 # Development
 
+## Commit messages
+
+Starting with commit `4763026e0c653d18837a95266db8ac46b895e5de`, we follow the conventions
+of <https://www.conventionalcommits.org/>, with the following types:
+
+* `ci:` for CI settings
+* `docs:` for documentation update
+* `env:` for environment changes (like new packages, changing build settings, etc.)
+* `feat:` for new features
+* `fix:` for bug fixes
+* `refactor:` for refactoring (no fix, no new feature)
+* `release:` for new releases
+* `test:` for modifications exclusive to tests
+
+An optional scope can be added: `backend` or `frontend`.
+
 ## Environments
 
 | Environment | Branch | Firebase project   | Firebase options               | Android package name                    | Apple bundle ID                         |
