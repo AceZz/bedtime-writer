@@ -24,7 +24,7 @@ class UserAccountScreen extends ConsumerWidget {
     }
 
     String logInText = 'You\'re logged in';
-    if (displayName != null) {
+    if (displayName != null && displayName != '') {
       logInText = 'You\'re logged in as $displayName';
     }
 
