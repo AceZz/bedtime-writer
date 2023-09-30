@@ -9,7 +9,6 @@ import 'package:tuple/tuple.dart';
 import '../../backend/concrete.dart';
 import '../../backend/index.dart';
 import '../../widgets/app_scaffold.dart';
-import '../../widgets/share_button.dart';
 import 'favorite_button.dart';
 import 'story_image.dart';
 
@@ -28,31 +27,16 @@ class DisplayStoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final status = ref.watch(storyStatusProvider(storyId)).value;
-
     return ProviderScope(
       overrides: [_currentStoryId.overrideWithValue(storyId)],
-      child: AppScaffold(
+      child: const AppScaffold(
         appBarTitle: 'Story',
         scrollableAppBar: true,
         actions: [
-          if (status == StoryStatus.complete) const _ShareButton(),
-          const _FavoriteButton(),
+          _FavoriteButton(),
         ],
-        child: const _StoryWidget(),
+        child: _StoryWidget(),
       ),
-    );
-  }
-}
-
-class _ShareButton extends ConsumerWidget {
-  const _ShareButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ShareButton(
-      iconSize: 30.sp,
-      text: 'Hey! Check out this amazing story I made with Bedtime stories',
     );
   }
 }
