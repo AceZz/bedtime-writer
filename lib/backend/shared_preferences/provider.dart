@@ -28,17 +28,39 @@ class SharedPreferencesNotifier extends Notifier<Preferences>
   Preferences build() {
     final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
     return Preferences(
-      duration: sharedPreferences.getInt('duration') ?? 2,
+      ageConfirmed: sharedPreferences.getBool('ageConfirmed') ?? false,
+      hasLoggedOut: sharedPreferences.getBool('hasLoggedOut') ?? false,
+      accountCreationLastDate:
+          sharedPreferences.getString('accountCreationLastDate') ??
+              '1900-01-01T00:00:00.000',
     );
   }
 
-  Future<void> updateDuration(int newDuration) async {
+  @override
+  Future<void> updateAgeConfirmed(bool newAgeConfirmed) async {
     final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
-    await sharedPreferences.setInt('duration', newDuration);
-    state = state.copyWith(duration: newDuration);
+    await sharedPreferences.setBool('ageConfirmed', newAgeConfirmed);
+    state = state.copyWith(ageConfirmed: newAgeConfirmed);
+  }
+
+  @override
+  Future<void> updateHasLoggedOut(bool hasLoggedOut) async {
+    final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
+    await sharedPreferences.setBool('hasLoggedOut', hasLoggedOut);
+    state = state.copyWith(hasLoggedOut: hasLoggedOut);
+  }
+
+  @override
+  Future<void> updateAccountCreationLastDate() async {
+    final creationDate =
+        DateTime.now().toIso8601String(); // Stores the date in ISO8601 format
+    final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
+    await sharedPreferences.setString('accountCreationLastDate', creationDate);
+    state = state.copyWith(lastAccountCreationDate: creationDate);
   }
 }
 
 final sharedPreferencesProvider =
     NotifierProvider<SharedPreferencesNotifier, Preferences>(
-        () => SharedPreferencesNotifier());
+  () => SharedPreferencesNotifier(),
+);

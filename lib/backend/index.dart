@@ -3,15 +3,18 @@ export 'concrete.dart'
         createClassicStory,
         favoriteUserStoriesProvider,
         preferencesProvider,
+        collectUserFeedback,
+        resetPassword,
         storyProvider,
         storyPartProvider,
         userProvider,
-        userStoriesProvider;
+        userStoriesProvider,
+        userStatsProvider;
 export 'firebase/index.dart' show configureFirebaseEmulators;
 export 'preferences.dart' show Preferences, PreferencesNotifier;
 export 'shared_preferences/index.dart' show sharedPreferencesBaseProvider;
 export 'story.dart' show Story;
-export 'story_params.dart' show Character, Choice, Question, StoryParams;
+export 'story_form.dart' show Choice, Question, StoryAnswers, StoryForm;
 export 'story_part.dart' show StoryPart;
 export 'story_status.dart' show StoryStatus, tryParseStoryRequestStatus;
 export 'user.dart'
@@ -22,3 +25,5 @@ export 'user.dart'
         RegisteredUser,
         UnauthUser,
         GoogleAuthMixin;
+export 'user_feedback.dart' show UserFeedback;
+export 'user_stats.dart' show UserStats;

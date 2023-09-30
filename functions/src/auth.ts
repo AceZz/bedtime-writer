@@ -1,7 +1,7 @@
-import { https } from "firebase-functions";
+import { AuthData } from "firebase-functions/lib/common/providers/https";
 
-export const getUid = (context: https.CallableContext) => {
-  const uid = context?.auth?.uid ?? null;
+export const getUid = (auth?: AuthData) => {
+  const uid = auth?.uid ?? null;
   if (uid !== null) {
     return uid;
   }

@@ -16,3 +16,39 @@ export enum StoryStatus {
    */
   ERROR = "error",
 }
+
+export function parseStoryStatus(value: string): StoryStatus {
+  switch (value) {
+    case "pending":
+      return StoryStatus.PENDING;
+    case "generating":
+      return StoryStatus.GENERATING;
+    case "complete":
+      return StoryStatus.COMPLETE;
+    case "error":
+      return StoryStatus.ERROR;
+    default:
+      throw new Error(`parseStoryStatus: unrecognized value ${value}`);
+  }
+}
+
+export enum StoryRegenImageStatus {
+  /**
+   * No regeneration has ever been requested for this image id
+   * nor is ongoing.
+   */
+  IDLE = "idle",
+  /**
+   * The image regeneration was requested, but regeneration
+   * is not yet complete.
+   */
+  PENDING = "pending",
+  /**
+   * Image was regenerated.
+   */
+  COMPLETE = "complete",
+  /**
+   * The image regeneration failed.
+   */
+  ERROR = "error",
+}

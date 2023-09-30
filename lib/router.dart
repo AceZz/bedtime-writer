@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'account/index.dart';
 import 'backend/index.dart';
 import 'home/index.dart';
-import 'preferences/index.dart';
 import 'story/index.dart';
 
 final _key = GlobalKey<NavigatorState>();
@@ -42,20 +41,23 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'home',
         path: '/',
-        builder: (context, state) => HomeScreen(),
+        builder: (context, state) {
+          return const HomeScreen();
+        },
       ),
       GoRoute(
         name: 'account',
         path: '/account',
-        builder: (context, state) => UserAccountScreen(redirect: '/'),
+        builder: (context, state) => const UserAccountScreen(redirect: '/'),
       ),
       GoRoute(
         name: 'sign_in',
         path: '/account/sign-in',
         builder: (context, state) {
-          final redirectPath = state.queryParams['redirectPath'] ?? '/';
-          final signInText = signInTexts[state.queryParams['redirectName']] ??
-              defaultSignInText;
+          final redirectPath = state.uri.queryParameters['redirectPath'] ?? '/';
+          final signInText =
+              signInTexts[state.uri.queryParameters['redirectName']] ??
+                  defaultSignInText;
           return SignInScreen(
             redirect: redirectPath,
             signInText: signInText,
@@ -65,21 +67,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'create_story',
         path: '/story/new',
-        builder: (context, state) {
-          final user = ref.read(userProvider.select((user) => user));
-          if (user is UnauthUser) {
-            return FutureBuilder(
-              future: user.signInAnonymously(),
-              builder: (context, snapshot) => const CreateStoryScreen(),
-            );
-          }
-          return const CreateStoryScreen();
-        },
+        builder: (context, state) => const CreateStoryScreen(),
       ),
       GoRoute(
         name: 'library',
         path: '/story/library',
-        builder: (context, state) => LibraryScreen(),
+        builder: (context, state) => const LibraryScreen(),
         redirect: (context, state) => _unregisteredRedirect(ref, state),
       ),
       GoRoute(
@@ -87,17 +80,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/story/library/:id',
         redirect: (context, state) {
           final redirect = _unregisteredRedirect(ref, state);
-          final library = state.params['id'] == null ? '/story/library' : null;
+          final library =
+              state.pathParameters['id'] == null ? '/story/library' : null;
           return redirect ?? library;
         },
         builder: (context, state) =>
-            DisplayStoryScreen(id: state.params['id'] ?? ''),
-      ),
-      GoRoute(
-        name: 'preferences',
-        path: '/preferences',
-        builder: (context, state) => PreferencesScreen(),
-        redirect: (context, state) => _unregisteredRedirect(ref, state),
+            DisplayStoryScreen(storyId: state.pathParameters['id'] ?? ''),
       ),
     ],
   );

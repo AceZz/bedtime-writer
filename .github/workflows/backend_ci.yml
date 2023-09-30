@@ -4,11 +4,14 @@ on:
   push:
     branches:
       - main
-      - 'prod/**'
+      - prod
   pull_request:
     branches:
       - main
-      - 'prod/**'
+      - prod
+
+env:
+  GOOGLE_APPLICATION_CREDENTIALS: "service-account-ci.json"
 
 permissions: read-all
 
@@ -33,6 +36,10 @@ jobs:
           cache: 'npm'
           cache-dependency-path: functions/package-lock.json
 
+      - name: Install Firebase tools
+        run: |
+          npm install -g firebase-tools
+
       - name: Run npm ci
         run: |
           npm ci
@@ -41,9 +48,19 @@ jobs:
         run: |
           npm run lint_check
 
-      - name: Run tests
+      - name: Export Google service account credentials to JSON
         run: |
-          npm test
+          echo ${{ secrets.GOOGLE_SERVICE_ACCOUNT }} | base64 -d > $GOOGLE_APPLICATION_CREDENTIALS
+
+      - name: Firebase use
+        run: |
+          firebase use bedtime-writer-dev
+
+      - name: Run tests with Firebase emulator
+        run: |
+          firebase emulators:exec --only firestore "npm test"
+        env:
+          USE_FIREBASE_EMULATORS: true
 
       - name: Build
         run: |

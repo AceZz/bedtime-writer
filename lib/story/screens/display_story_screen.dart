@@ -2,13 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../backend/concrete.dart';
 import '../../backend/index.dart';
 import '../../widgets/app_scaffold.dart';
-import '../../widgets/share_button.dart';
 import 'favorite_button.dart';
 import 'story_image.dart';
 
@@ -21,35 +21,22 @@ final _currentStoryId = Provider<String>((ref) => throw UnimplementedError());
 final _currentPartIndex = Provider<int>((ref) => throw UnimplementedError());
 
 class DisplayStoryScreen extends ConsumerWidget {
-  final String id;
+  final String storyId;
 
-  const DisplayStoryScreen({Key? key, required this.id}) : super(key: key);
+  const DisplayStoryScreen({Key? key, required this.storyId}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ProviderScope(
-      overrides: [_currentStoryId.overrideWithValue(id)],
-      child: AppScaffold(
+      overrides: [_currentStoryId.overrideWithValue(storyId)],
+      child: const AppScaffold(
         appBarTitle: 'Story',
         scrollableAppBar: true,
         actions: [
-          const _ShareButton(),
-          const _FavoriteButton(),
+          _FavoriteButton(),
         ],
-        child: const _StoryWidget(),
+        child: _StoryWidget(),
       ),
-    );
-  }
-}
-
-class _ShareButton extends ConsumerWidget {
-  const _ShareButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ShareButton(
-      iconSize: 30,
-      text: 'Hey! Check out this amazing story I made with Bedtime stories',
     );
   }
 }
@@ -67,12 +54,12 @@ class _FavoriteButton extends ConsumerWidget {
 
     return FavoriteButton(
       isFavorite: isFavorite,
-      iconSize: 30,
+      iconSize: 30.sp,
       onPressed: () async {
-        final story = ref.read(storyProvider(storyId)).value;
+        final userStory = ref.read(storyProvider(storyId)).value;
 
-        if (story != null) {
-          final isFavorite = await story.toggleIsFavorite();
+        if (userStory != null) {
+          final isFavorite = await userStory.toggleIsFavorite();
           ScaffoldMessenger.of(context).showSnackBar(
             _favoriteSnackBar(context, isFavorite),
           );
@@ -90,7 +77,9 @@ class _StoryWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
+        SizedBox(height: 20.sp),
         const _StoryTitle(),
+        SizedBox(height: 20.sp),
         const _StoryParts(),
         const _BottomRow(),
       ],
@@ -108,15 +97,15 @@ class _StoryTitle extends ConsumerWidget {
       storyProvider(storyId).select((story) => story.valueOrNull?.title ?? ''),
     );
 
-    final _storyTitleStyle =
-        GoogleFonts.amaticSc(fontWeight: FontWeight.bold, fontSize: 52);
+    final storyTitleStyle =
+        GoogleFonts.amaticSc(fontWeight: FontWeight.bold, fontSize: 52.sp);
 
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.symmetric(horizontal: 20.sp),
       child: Text(
         title,
         textAlign: TextAlign.center,
-        style: _storyTitleStyle,
+        style: storyTitleStyle,
       ),
     );
   }
@@ -142,6 +131,7 @@ class _StoryParts extends ConsumerWidget {
             ],
             child: const _StoryPartWidget(),
           ),
+          SizedBox(height: 20.sp),
         ]
       ],
     );
@@ -171,13 +161,15 @@ class _StoryPartWidget extends ConsumerWidget {
     return part.when(
       data: (part) => Column(
         children: [
-          if (part.hasImage)
+          if (part.hasImage) ...[
             StoryImage(
               image: part.image,
-              width: 360,
-              height: 360,
+              width: 360.sp,
+              height: 360.sp,
               fadeColor: Theme.of(context).colorScheme.background,
             ),
+            SizedBox(height: 30.sp),
+          ],
           _textWidget(context, part.text, withBigFirstLetter: partIndex == 0),
         ],
       ),
@@ -186,10 +178,13 @@ class _StoryPartWidget extends ConsumerWidget {
     );
   }
 
-  Widget _textWidget(BuildContext context, String text,
-      {required bool withBigFirstLetter}) {
+  Widget _textWidget(
+    BuildContext context,
+    String text, {
+    required bool withBigFirstLetter,
+  }) {
     return Padding(
-      padding: const EdgeInsets.only(left: 30, right: 30, top: 30, bottom: 10),
+      padding: EdgeInsets.symmetric(horizontal: 30.sp),
       child: RichText(
         text: withBigFirstLetter
             ? _textWithBigFirstLetter(context, text)
@@ -208,16 +203,16 @@ class _StoryPartWidget extends ConsumerWidget {
   }
 
   TextSpan _textWithBigFirstLetter(BuildContext context, String text) {
-    final TextStyle _firstLetterStyle = GoogleFonts.croissantOne(
+    final TextStyle firstLetterStyle = GoogleFonts.croissantOne(
       fontWeight: FontWeight.bold,
-      fontSize: 42,
+      fontSize: 42.sp,
       color: Theme.of(context).primaryTextTheme.bodyMedium?.color,
     );
 
     return TextSpan(
       // Sets a big first letter
       text: text.trim()[0],
-      style: _firstLetterStyle,
+      style: firstLetterStyle,
       // Writes the rest of the text
       children: <TextSpan>[
         TextSpan(
@@ -258,20 +253,14 @@ class _BottomRow extends ConsumerWidget {
     final storyId = ref.watch(_currentStoryId);
     final status = ref.watch(storyStatusProvider(storyId)).value;
 
-    final _theEndStyle = GoogleFonts.amaticSc(
+    final theEndStyle = GoogleFonts.amaticSc(
       fontWeight: FontWeight.bold,
-      fontSize: 46,
+      fontSize: 46.sp,
     );
 
     final theEndWidget = Padding(
-      padding: const EdgeInsets.all(5),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-        ),
-        child:
-            Text('The End', textAlign: TextAlign.center, style: _theEndStyle),
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 10.sp),
+      child: Text('The End', textAlign: TextAlign.center, style: theEndStyle),
     );
 
     return Padding(
@@ -294,7 +283,7 @@ class _BottomRow extends ConsumerWidget {
 
 SnackBar _favoriteSnackBar(BuildContext context, bool isFavorite) {
   final text =
-      isFavorite ? "Story added to favorites" : "Story removed from favorites";
+      isFavorite ? 'Story added to favorites' : 'Story removed from favorites';
 
   return SnackBar(
     content: Center(
@@ -302,6 +291,6 @@ SnackBar _favoriteSnackBar(BuildContext context, bool isFavorite) {
     ),
     backgroundColor: Theme.of(context).colorScheme.primary,
     behavior: SnackBarBehavior.floating,
-    duration: Duration(seconds: 3),
+    duration: const Duration(seconds: 3),
   );
 }
