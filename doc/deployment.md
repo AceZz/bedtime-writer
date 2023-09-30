@@ -1,5 +1,11 @@
 # Deployment
 
+## Configure signing the app
+
+1. Ask Tristan or Pierre to get the keystore used for the app.
+2. Follow the steps from [Flutter doc](https://docs.flutter.dev/deployment/android#signing-the-app) on signing the app,
+   skipping the keystore creation step.
+
 ## Checklist: before deploying to production
 
 Check the following items before deploying to production:
