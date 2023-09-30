@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'account/index.dart';
 import 'backend/index.dart';
 import 'home/index.dart';
-import 'preferences/index.dart';
 import 'story/index.dart';
 
 final _key = GlobalKey<NavigatorState>();
@@ -87,12 +86,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
         builder: (context, state) =>
             DisplayStoryScreen(storyId: state.pathParameters['id'] ?? ''),
-      ),
-      GoRoute(
-        name: 'preferences',
-        path: '/preferences',
-        builder: (context, state) => const PreferencesScreen(),
-        redirect: (context, state) => _unregisteredRedirect(ref, state),
       ),
     ],
   );
