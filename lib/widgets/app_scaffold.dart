@@ -57,15 +57,17 @@ class AppScaffold extends StatelessWidget {
       ],
     );
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      // Must specify app bar only in the non-scrollable case
-      appBar: (showAppBar & !scrollableAppBar) ? appBar : null,
-      body: stack,
-      floatingActionButton:
-          showAccountButton ? const FloatingAccountButton() : null,
-      floatingActionButtonLocation:
-          showAccountButton ? FloatingActionButtonLocation.endTop : null,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        // Must specify app bar only in the non-scrollable case
+        appBar: (showAppBar & !scrollableAppBar) ? appBar : null,
+        body: stack,
+        floatingActionButton:
+            showAccountButton ? const FloatingAccountButton() : null,
+        floatingActionButtonLocation:
+            showAccountButton ? FloatingActionButtonLocation.endTop : null,
+      ),
     );
   }
 }
