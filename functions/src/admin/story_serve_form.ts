@@ -128,7 +128,7 @@ async function promptFormId(
   if (unservedFormIds.length === 0) {
     console.log(
       "\nAll approved forms are already served. You may want to:\n" +
-        "  * Generate new forms with `npm run story_gen_forms`.\n" +
+        "  * Generate new forms with `npm run story_forms_gen`.\n" +
         "  * Cache generated forms with `npm run story_forms_cache`.\n" +
         "  * Approve cached forms with `npm run admin_interface`."
     );
