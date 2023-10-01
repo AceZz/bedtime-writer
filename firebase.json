@@ -4,10 +4,16 @@
       "source": "functions",
       "codebase": "default",
       "ignore": [
-        "node_modules",
         ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log"
+        "admin_data",
+        "lbd",
+        "node_modules",
+        "test",
+        "*.ts",
+        "*.log",
+        ".env.local",
+        ".secret.local",
+        "service-account*.json"
       ],
       "predeploy": [
         "npm --prefix \"$RESOURCE_DIR\" run lint",

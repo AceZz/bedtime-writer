@@ -1,161 +1,82 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../backend/concrete.dart';
 import '../../backend/index.dart';
-import 'data.dart';
+import '../../utils.dart';
 
-final _random = new Random();
-
-/// List of writing styles.
-const List<String> _styles = [
-  'the Arabian Nights',
-  'Hans Christian Andersen',
-  'the Brothers Grimm',
-  'Charles Perrault',
-];
-
-/// State for the story creation feature.
-///
-/// This object contains a [StoryParams] and a queue of [questions]. It can
-/// [update] its [StoryParams] by answering the questions in the
-/// queue, either with a provided [Choice] or randomly.
-///
-/// The maximum number of randomly answered questions is controlled by
-/// [numRandom].
+/// A state that contains a [StoryForm] and a [StoryAnswers].
 @immutable
 class CreateStoryState {
-  final StoryParams storyParams;
+  final StoryForm? _storyForm;
+  final StoryAnswers storyAnswers;
+  final int currentQuestionIndex;
 
-  final List<Question> questions;
+  const CreateStoryState._internal(
+    this._storyForm,
+    this.storyAnswers,
+    this.currentQuestionIndex,
+  );
 
-  /// Maximum number of questions which can be answered randomly.
-  final int numRandom;
-
-  const CreateStoryState({
-    required this.storyParams,
-    required this.questions,
-    required this.numRandom,
-  });
-
-  bool get hasQuestions => this.questions.isNotEmpty;
-
-  Question get currentQuestion => this.questions.first;
-
-  CreateStoryState copyWith({
-    StoryParams? storyParams,
-    List<Question>? questions,
-    int? numRandom,
+  factory CreateStoryState({
+    required StoryForm? storyForm,
   }) {
-    return CreateStoryState(
-      storyParams: storyParams ?? this.storyParams,
-      questions: questions ?? this.questions,
-      numRandom: numRandom ?? this.numRandom,
+    final DynMap answers = {};
+
+    return CreateStoryState._internal(
+      storyForm,
+      StoryAnswers(answers: answers),
+      0,
     );
   }
 
-  /// Answers the [currentQuestion].
+  StoryForm get storyForm => _storyForm!;
+
+  /// If true, the story form has been loaded and can be used.
+  bool get hasStoryForm => _storyForm != null;
+
+  bool get hasRemainingQuestions =>
+      currentQuestionIndex < storyForm.questions.length;
+
+  Question get currentQuestion => storyForm.questions[currentQuestionIndex];
+
+  /// Returns a new [CreateStoryState] with an answer to the current question.
   ///
-  /// If [choice] is provided, answers the [currentQuestion] with it.
-  /// Otherwise, answers randomly.
-  CreateStoryState _answer(Choice? choice) {
-    // No question, so no answer.
-    if (!hasQuestions) return this;
+  /// If there are no remaining questions, returns this object as is.
+  CreateStoryState answerCurrentQuestion(Choice choice) {
+    if (!hasRemainingQuestions) return this;
 
-    if (choice == null) {
-      // Answer randomly.
-      return copyWith(
-        storyParams: currentQuestion.answerRandom(storyParams),
-        questions: questions.sublist(1),
-        numRandom: numRandom - 1,
-      );
-    }
-
-    return copyWith(
-      storyParams: currentQuestion.answer(storyParams, choice),
-      questions: questions.sublist(1),
+    return CreateStoryState._internal(
+      _storyForm,
+      storyAnswers.answer(currentQuestion, choice),
+      currentQuestionIndex + 1,
     );
   }
 
-  /// Updates the [story].
-  ///
-  /// If a [choice] is provided, answers the [currentQuestion] with it.
-  ///
-  /// In all cases, tries to answer the following questions randomly.
-  /// To decide whether a question should be answered randomly, a random draw is
-  /// made, taking the number of remaining questions into account.
-  CreateStoryState update([Choice? choice]) {
-    var newState = this;
-
-    if (choice != null) newState = _answer(choice);
-
-    while (newState.numRandom > 0 && newState.hasQuestions) {
-      // We randomly pick one of the following indices:
-      // | 0 | 1 | 2 | ... | newState.numRandom | ... | numRandomQuestions - 1 |
-      // If it's less than newState.numRandom, the question is answered
-      // randomly.
-      var numRandomQuestions =
-          newState.questions.where((question) => question.randomAllowed).length;
-      var answerRandomly = newState.currentQuestion.randomAllowed &&
-          _random.nextInt(numRandomQuestions) < newState.numRandom;
-
-      if (answerRandomly) {
-        newState = newState._answer(null);
-      } else {
-        // The question will not be answered randomly. We stop updating the
-        // story parameters.
-        break;
-      }
-    }
-
-    return newState;
+  DynMap serialize() {
+    return {'formId': storyForm.id, ...storyAnswers.serialize()};
   }
 }
-
-var defaultCreateStoryState = CreateStoryState(
-  storyParams: StoryParams(),
-  questions: allQuestions,
-  numRandom: 0,
-);
 
 class CreateStoryStateNotifier extends StateNotifier<CreateStoryState> {
   final Ref ref;
 
   CreateStoryStateNotifier({required this.ref})
-      : super(defaultCreateStoryState);
+      : super(CreateStoryState(storyForm: null));
 
-  String _getRandomStyle() {
-    final int randomIndex = Random().nextInt(_styles.length);
-    return _styles[randomIndex];
-  }
-
-  List<Question> _getQuestions() {
-    var questions = allQuestions
-        .where(
-          (Question question) => question.randomAllowed,
-        )
-        .toList();
-    questions.shuffle();
-    return [characterQuestion, ...questions.take(2)];
-  }
-
-  /// Resets the StoryState.
   void reset() {
-    final Preferences preferences = ref.read(preferencesProvider);
+    state = CreateStoryState(storyForm: null);
+  }
+
+  Future<void> loadStoryForm() async {
     state = CreateStoryState(
-      storyParams: StoryParams(
-        style: _getRandomStyle(),
-        duration: preferences.duration,
-      ),
-      questions: _getQuestions(),
-      numRandom: 0,
+      storyForm: await getRandomStoryForm(),
     );
   }
 
-  /// Updates the story, as done by [CreateStoryState.update].
-  void updateStoryParams([Choice? choice]) {
-    state = state.update(choice);
+  /// Updates the story, as done by [CreateStoryState.answerCurrentQuestion].
+  void answerCurrentQuestion(Choice choice) {
+    state = state.answerCurrentQuestion(choice);
   }
 }
 

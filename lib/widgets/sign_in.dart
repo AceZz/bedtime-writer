@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GoogleSignInButton extends StatelessWidget {
   final String text;
   final void Function() onPressed;
 
-  const GoogleSignInButton(
-      {Key? key, required this.text, required this.onPressed})
-      : super(key: key);
+  const GoogleSignInButton({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final logo = Image(
-      image: AssetImage('assets/logos/google_light.png'),
-      height: 42,
+      image: const AssetImage('assets/logos/google_light.png'),
+      height: 42.sp,
     );
 
     final TextStyle textStyle = GoogleFonts.outfit(
       color: Colors.black87,
       fontWeight: FontWeight.normal,
-      fontSize: 16,
+      fontSize: 16.sp,
     );
 
     final Widget textWidget = Text(text, style: textStyle);
@@ -53,7 +56,7 @@ class SignInScreenButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(5),

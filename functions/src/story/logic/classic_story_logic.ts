@@ -1,4 +1,5 @@
 import { StoryLogic } from "./story_logic";
+import { APPEARANCE } from "./prompt_data";
 
 export const MAX_DURATION = 10;
 export const MAX_STRING_LENGTH = 50;
@@ -7,6 +8,9 @@ export const MAX_STRING_LENGTH = 50;
  * A story logic with prompts adapted to a classic story (no interactivity).
  */
 export class ClassicStoryLogic implements StoryLogic {
+  private readonly logicType = "classic";
+  private readonly appearance: string;
+
   constructor(
     private readonly duration: number,
     private readonly style: string,
@@ -16,7 +20,9 @@ export class ClassicStoryLogic implements StoryLogic {
     private readonly characterFlaw?: string,
     private readonly characterPower?: string,
     private readonly characterChallenge?: string
-  ) {}
+  ) {
+    this.appearance = APPEARANCE[this.characterName];
+  }
 
   /**
    * Return a copy of the current object with a selection of updated parameters.
@@ -67,10 +73,6 @@ export class ClassicStoryLogic implements StoryLogic {
     );
   }
 
-  title(): string {
-    return `The story of ${this.characterName}`;
-  }
-
   prompt(): string {
     return (
       this.getIntroPrompt() +
@@ -95,29 +97,33 @@ export class ClassicStoryLogic implements StoryLogic {
   }
 
   private getCharacterIntroPrompt(): string {
-    return ` The protagonist is ${this.characterName}.`;
+    if (this.appearance === undefined) {
+      throw new Error(
+        `getCharacterIntroPrompt: ${this.characterName} does not have an appearance defined.`
+      );
+    } else {
+      return ` The protagonist is ${this.characterName}. ${this.appearance}.`;
+    }
   }
 
   private getCharacterFlawPrompt(): string {
     const flaw = this.characterFlaw;
-    return flaw === undefined ? "" : ` It ${flaw}.`;
+    return flaw === undefined ? "" : ` The protagonist ${flaw}.`;
   }
 
   private getCharacterPowerPrompt(): string {
     const power = this.characterPower;
-    return power === undefined ? "" : ` It ${power}.`;
+    return power === undefined ? "" : ` The protagonist ${power}.`;
   }
 
   private getCharacterChallengePrompt(): string {
     const challenge = this.characterChallenge;
-    return challenge === undefined
-      ? ""
-      : ` It is challenged with ${challenge}.`;
+    return challenge === undefined ? "" : ` The protagonist ${challenge}.`;
   }
 
   private getPlacePrompt(): string {
     const place = this.place;
-    return place === undefined ? "" : ` The story happens ${place}.`;
+    return place === undefined ? "" : ` The story takes place ${place}.`;
   }
 
   private getObjectPrompt(): string {
@@ -132,15 +138,64 @@ export class ClassicStoryLogic implements StoryLogic {
     return ` The length is about ${100 * this.duration} words.`;
   }
 
+  titlePrompt(): string {
+    return (
+      "Generate now an engaging and captivating title for this story." +
+      " The title should be short." +
+      " Write directly the title, with no punctuations or symbols."
+    );
+  }
+
   imagePromptPrompt(): string {
     const name = this.characterName;
-
     return (
-      "Generate now a very simple and concise prompt for dalle" +
-      ` to illustrate ${name} of the story and its environment.` +
-      ` When mentioning ${name}, provide a short but accurate appearance description.` +
-      ` ${name} should be either beautiful or cute.` +
-      " You must mention a fairytale digital painting style."
+      `Generate now a detailed prompt for dalle, to paint ${name} of the story and their environment.` +
+      `When mentioning ${name}, provide an accurate appearance description.` +
+      `${name} should be either beautiful or cute.` +
+      "You must mention regarding style: text-free illustration, fairytale, dreamy atmosphere, whimsical, magical." +
+      "You must mention one or two emotions among the following: wonder, calm, curiosity, joy, intrigue, inspiration, nostalgia, mystery, serenity." +
+      "Your prompt must be 100 words or less." +
+      "Your prompt must start with: Create a digital painting of ..." +
+      "Directly write the prompt. Do not make paragraphs."
     );
+  }
+
+  toJson(): { [key: string]: string | number | undefined } {
+    return {
+      logicType: this.logicType,
+      duration: this.duration,
+      style: this.style,
+      characterName: this.characterName,
+      place: this.place,
+      object: this.object,
+      characterFlaw: this.characterFlaw,
+      characterPower: this.characterPower,
+      characterChallenge: this.characterChallenge,
+    };
+  }
+
+  toString(): string {
+    const parts = [];
+    parts.push(`characterName: ${this.characterName}`);
+    if (this.place) {
+      parts.push(`place: ${this.place}`);
+    }
+    if (this.object) {
+      parts.push(`object: ${this.object}`);
+    }
+    if (this.characterFlaw) {
+      parts.push(`characterFlaw: ${this.characterFlaw}`);
+    }
+    if (this.characterPower) {
+      parts.push(`characterPower: ${this.characterPower}`);
+    }
+    if (this.characterChallenge) {
+      parts.push(`characterChallenge: ${this.characterChallenge}`);
+    }
+    parts.push(`logicType: ${this.logicType}`);
+    parts.push(`duration: ${this.duration}`);
+    parts.push(`style: ${this.style}`);
+
+    return parts.join(" | ");
   }
 }

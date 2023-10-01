@@ -24,7 +24,7 @@ class UserAccountScreen extends ConsumerWidget {
     }
 
     String logInText = 'You\'re logged in';
-    if (displayName != null) {
+    if (displayName != null && displayName != '') {
       logInText = 'You\'re logged in as $displayName';
     }
 
@@ -71,6 +71,7 @@ void _onPressed(BuildContext context, WidgetRef ref, String redirect) async {
   } else if (user is AnonymousUser) {
     throw Exception('User should be signed in to see this sign out button');
   } else if (user is AuthUser) {
+    ref.read(preferencesProvider.notifier).updateHasLoggedOut(true);
     await user.signOut();
   }
 

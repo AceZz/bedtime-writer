@@ -1,7 +1,7 @@
 {
   "file_generated_by": "FlutterFire CLI",
   "purpose": "FirebaseAppID & ProjectID for this Firebase app in this directory",
-  "GOOGLE_APP_ID": "1:596701039771:ios:cfb3a9e40ab28c60758a3e",
-  "FIREBASE_PROJECT_ID": "bedtime-writer",
-  "GCM_SENDER_ID": "596701039771"
+  "GOOGLE_APP_ID": "1:558387951881:ios:9cce8dd2822e0d26bf7bd8",
+  "FIREBASE_PROJECT_ID": "bedtime-writer-dev",
+  "GCM_SENDER_ID": "558387951881"
 }

@@ -3,17 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../backend/index.dart';
 
-class HomeScreenDebug extends ConsumerWidget {
-  const HomeScreenDebug({Key? key}) : super(key: key);
+class HomeScreenDebugAuth extends ConsumerWidget {
+  const HomeScreenDebugAuth({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
-    final _button = button(user);
+    final buttonWidget = button(user);
 
     List<Widget> children = [
       Text(user.toString()),
-      if (_button != null) _button,
+      if (buttonWidget != null) buttonWidget,
     ];
 
     return Column(
@@ -29,7 +29,7 @@ class HomeScreenDebug extends ConsumerWidget {
         onPressed: () async {
           await user.signInAnonymously();
         },
-        child: Text('Anonymous log in'),
+        child: const Text('Anonymous log in'),
       );
     }
 
@@ -38,10 +38,41 @@ class HomeScreenDebug extends ConsumerWidget {
         onPressed: () async {
           await user.signOut();
         },
-        child: Text('Log out'),
+        child: const Text('Log out'),
       );
     }
 
     return null;
+  }
+}
+
+class HomeScreenDebugUserStats extends ConsumerWidget {
+  const HomeScreenDebugUserStats({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
+    final preferences = ref.watch(preferencesProvider);
+
+    AsyncValue<UserStats> userStats = ref.watch(userStatsProvider);
+
+    Widget userStatsWidget = userStats.when(
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => Text('numStories error: $err'),
+      data: (userStats_) => Text(
+        'numStories: ${userStats_.numStories}\nremainingStories: ${userStats_.remainingStories}\nhasLoggedOut: ${preferences.hasLoggedOut}',
+      ),
+    );
+
+    List<Widget> children = [
+      userStatsWidget,
+      Text(user.toString()),
+    ];
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
   }
 }

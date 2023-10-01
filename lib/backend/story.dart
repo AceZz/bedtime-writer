@@ -12,16 +12,11 @@ abstract class Story {
 
   String get author;
 
-  DateTime get dateTime;
+  DateTime get createdAt;
 
   StoryStatus get status;
 
   bool get isFavorite;
-
-  /// Toggle the [isFavorite] state the story.
-  ///
-  /// Returns the new [isFavorite] state.
-  Future<bool> toggleIsFavorite();
 
   int get numParts;
 
@@ -29,4 +24,9 @@ abstract class Story {
   String getPartId(int index);
 
   Future<Uint8List?> get thumbnail;
+
+  /// Toggle the [isFavorite] state of the story.
+  ///
+  /// Returns the new [isFavorite] state.
+  Future<bool> toggleIsFavorite();
 }
