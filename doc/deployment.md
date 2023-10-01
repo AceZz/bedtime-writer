@@ -26,7 +26,8 @@ each PR merge).
    increment `MINOR`; otherwise, increment `PATCH`.
    Yes, we are using a single version number for _two_ different projects (frontend and backend),
    which is not perfect.
-2. Create a new branch called `dev-<version>` (e.g. `dev-1.2.3`) that forks `main`.
+2. Create a new branch called `dev-<version>` from `main` (e.g. `git switch main` then
+   `git switch -c dev-1.2.3`).
 3. Set the version number in `pubspec.yaml`.
 4. Commit with the message `release: <version>` (e.g. `git commit -a -m "release: 1.2.3"`).
 5. Add an annotated Git tag (e.g. `git tag -a 1.2.3 -m "release: 1.2.3"`).
@@ -36,7 +37,8 @@ each PR merge).
 
 ## Step 3: merge `main` in `prod`
 
-1. Create a new branch called `prod-<version>` (e.g. `prod-1.2.3`) that forks `prod`.
+1. Create a new branch called `prod-<version>` from `prod` (e.g. `git switch prod` then
+   `git switch -c prod-1.2.3`).
 2. Merge `main` (the one which was just upgraded) into `prod-<version>`.
 3. Push a PR **targeting `prod`**.
 4. Merge the PR after the CI passes.
