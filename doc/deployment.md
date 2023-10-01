@@ -30,18 +30,18 @@ each PR merge).
    `git switch -c dev-1.2.3`).
 3. Set the version number in `pubspec.yaml`.
 4. Commit with the message `release: <version>` (e.g. `git commit -a -m "release: 1.2.3"`).
-5. Add an annotated Git tag (e.g. `git tag -a 1.2.3 -m "release: 1.2.3"`).
-6. Push a PR **targeting `main`** (e.g. `git push -u origin dev-1.2.3`).
-7. Push the tag (e.g. `git push origin 1.2.3`).
-8. Merge the PR after the CI passes.
+5. Push a PR **targeting `main`** (e.g. `git push -u origin dev-1.2.3`).
+6. Merge the PR after the CI passes ("Rebase and merge").
+7. After the PR is merged, pull `main`, switch to `main`, and add an annotated Git tag
+   (e.g. `git tag -a 1.2.3 -m "release: 1.2.3"`).
+8. Push the tag (e.g. `git push origin 1.2.3`).
 
 ## Step 3: merge `main` in `prod`
 
-1. Create a new branch called `prod-<version>` from `prod` (e.g. `git switch prod` then
-   `git switch -c prod-1.2.3`).
-2. Merge `main` (the one which was just upgraded) into `prod-<version>`.
-3. Push a PR **targeting `prod`**.
-4. Merge the PR after the CI passes.
+1. Go to <https://github.com/App-Galaxy/bedtime-writer/compare/prod...main>, and create a new PR *
+   *targeting `prod`**.
+2. After the CI passes, merge the PR with "Create a merge commit", with the message
+   `release: <version>-prod` (e.g. "release: 1.2.3-prod").
 
 ## Step 4: deploy on `prod`
 
