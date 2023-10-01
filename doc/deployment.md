@@ -69,9 +69,11 @@ each PR merge).
 3. Run `flutter build web --web-renderer canvaskit` (using this specific Web renderer is important
    for the Lottie animations). If the Firebase emulators are running, visit <http://localhost:5000>
    to preview what you are about to deploy.
-4. Deploy with `npm run deploy_hosting_dev` in the `functions` folder. This deploys the app with
-   Firebase Hosting. You can retrieve the link in
-   [the console](https://console.firebase.google.com/project/bedtime-writer/hosting/sites). Be aware
+4. Deploy with `npm run deploy_hosting_dev` or `npm run deploy_hosting_prod` in the `functions`
+   folder. This deploys the app with Firebase Hosting. You can retrieve the link in
+   the console (
+   [dev](https://console.firebase.google.com/project/bedtime-writer-dev/hosting/sites),
+   [prod](https://console.firebase.google.com/project/bedtime-writer/hosting/sites)). Be aware
    that the link expires after 7 days by default (this can be changed in the console).
 
 **Never publish anything to the "real", live channel.** Our goal is not to publish to the Web, we
