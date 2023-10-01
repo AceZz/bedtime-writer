@@ -55,7 +55,7 @@ jobs:
 
       - name: Build APK (prod)
         if: matrix.target == 'apk' && startsWith(github.base_ref, 'prod')
-        run: flutter build apk --flavor prod
+        run: flutter build apk --debug --flavor prod
 
       - name: Build web
         if: matrix.target == 'web'
