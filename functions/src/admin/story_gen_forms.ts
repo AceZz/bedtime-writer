@@ -2,7 +2,7 @@
  * Generate random story forms from the questions in the Firestore database.
  *
  * This tool uses the questions uploaded to Firestore. If there are no
- * questions, run `story_set_questions` first.
+ * questions, run `story_questions_set` first.
  */
 
 import { prompt } from "../utils";
@@ -103,7 +103,7 @@ async function readQuestions(
   if (questions.size === 0) {
     throw Error(
       `No questions were found in ${firestore.storyQuestions.collectionPath}` +
-        "Please run `npm run story_set_questions`."
+        "Please run `npm run story_questions_set`."
     );
   }
 
