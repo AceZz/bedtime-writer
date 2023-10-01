@@ -76,7 +76,7 @@ class StoryFormGenerator {
       console.log(
         "The stories of all the forms in " +
           `${firestore.storyFormsLanding.collectionPath} are cached.\n` +
-          "Call `npm run story_gen_forms` to generate new forms.\n" +
+          "Call `npm run story_forms_gen` to generate new forms.\n" +
           "Abort."
       );
       process.exit();
