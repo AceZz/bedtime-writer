@@ -47,32 +47,32 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCh-zZZN9dHaNX2i31q9pmK8tsmmeH1q4s',
-    appId: '1:558387951881:web:ad8780ded0c7d912bf7bd8',
-    messagingSenderId: '558387951881',
-    projectId: 'bedtime-writer-dev',
-    authDomain: 'bedtime-writer-dev.firebaseapp.com',
-    storageBucket: 'bedtime-writer-dev.appspot.com',
+    apiKey: 'AIzaSyAzm4JnLoPx5xDuW2x3VDRb494838r63JQ',
+    appId: '1:596701039771:web:e5d7490b2ef4c0e2758a3e',
+    messagingSenderId: '596701039771',
+    projectId: 'bedtime-writer',
+    authDomain: 'bedtime-writer.firebaseapp.com',
+    storageBucket: 'bedtime-writer.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDlz_iCI6CwsmrWNU1aHnCSMjExckXU518',
-    appId: '1:558387951881:android:be2d026ddbf54fe8bf7bd8',
-    messagingSenderId: '558387951881',
-    projectId: 'bedtime-writer-dev',
-    storageBucket: 'bedtime-writer-dev.appspot.com',
+    apiKey: 'AIzaSyAO-2jQTyEPCOYJsI37ZFiSf9gNWBZWvoo',
+    appId: '1:596701039771:android:cf3f69aa22184f11758a3e',
+    messagingSenderId: '596701039771',
+    projectId: 'bedtime-writer',
+    storageBucket: 'bedtime-writer.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAvbsOpnKzWpJAra6f9csZcrbRvnkkkS64',
-    appId: '1:558387951881:ios:9cce8dd2822e0d26bf7bd8',
-    messagingSenderId: '558387951881',
-    projectId: 'bedtime-writer-dev',
-    storageBucket: 'bedtime-writer-dev.appspot.com',
+    apiKey: 'AIzaSyAxg_LFlr0sZrbpHe27rAqIsEfFMACSecI',
+    appId: '1:596701039771:ios:cfb3a9e40ab28c60758a3e',
+    messagingSenderId: '596701039771',
+    projectId: 'bedtime-writer',
+    storageBucket: 'bedtime-writer.appspot.com',
     androidClientId:
-        '558387951881-fmuuljdv05e4rcn8nf8vkmh40nuo430d.apps.googleusercontent.com',
+        '596701039771-nq09rc923s6f70t7akajicl5irbgsjpv.apps.googleusercontent.com',
     iosClientId:
-        '558387951881-pdvrogb1b430v45b2863v6ckib8p1srl.apps.googleusercontent.com',
-    iosBundleId: 'com.dreamstorestudios.bedtimewriter.dev',
+        '596701039771-r7enjm9rgh7fdgmr346p5hu9qp9m6nb3.apps.googleusercontent.com',
+    iosBundleId: 'com.dreamstorestudios.bedtimewriter',
   );
 }
