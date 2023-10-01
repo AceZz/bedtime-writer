@@ -11,7 +11,7 @@ User getFirebaseUser(ProviderRef<User> ref) {
   final firebaseUser = ref.watch(_firebaseUserProvider).value;
 
   if (firebaseUser == null) {
-    return _FirebaseUnauthUser();
+    return const _FirebaseUnauthUser();
   }
 
   if (firebaseUser.providerData.isEmpty) {
@@ -44,8 +44,9 @@ abstract class _FirebaseUser with GoogleAuthMixin implements User {
 
   /// Only used for iOS for now.
   String? get _clientId {
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS)
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
       return DefaultFirebaseOptions.currentPlatform.iosClientId;
+    }
     return null;
   }
 }
@@ -134,7 +135,7 @@ class _FirebaseAnonymousUser extends _FirebaseAuthUser
       if (_credentialAlreadyUsed(e)) {
         return firebaseAuth.signInWithCredential(credential);
       }
-      throw e;
+      rethrow;
     }
   }
 
@@ -184,8 +185,20 @@ class _FirebaseRegisteredUser extends _FirebaseAuthUser
     } on firebase_auth.FirebaseAuthException catch (e) {
       // If the credential is already used in another account, stay with that
       // account.
-      if (!_credentialAlreadyUsed(e)) throw e;
+      if (!_credentialAlreadyUsed(e)) rethrow;
     }
+  }
+}
+
+/// A function to reset the password for a provided email
+Future<void> firebaseResetPassword(String email) async {
+  try {
+    _validateEmail(email);
+    await firebaseAuth.sendPasswordResetEmail(email: email);
+  } on firebase_auth.FirebaseAuthException catch (e) {
+    throw AuthException(code: e.code);
+  } on FormatException {
+    rethrow;
   }
 }
 
@@ -202,8 +215,8 @@ Future _signInWithEmailAndPassword({
     );
   } on firebase_auth.FirebaseAuthException catch (e) {
     throw AuthException(code: e.code);
-  } on FormatException catch (e) {
-    throw e;
+  } on FormatException {
+    rethrow;
   }
 }
 
@@ -221,8 +234,8 @@ Future _createUserWithEmailAndPassword({
     );
   } on firebase_auth.FirebaseAuthException catch (e) {
     throw AuthException(code: e.code);
-  } on FormatException catch (e) {
-    throw e;
+  } on FormatException {
+    rethrow;
   }
 }
 
@@ -242,8 +255,8 @@ Future _linkUserWithEmailAndPassword({
     return await firebaseAuth.currentUser?.linkWithCredential(credential);
   } on firebase_auth.FirebaseAuthException catch (e) {
     throw AuthException(code: e.code);
-  } on FormatException catch (e) {
-    throw e;
+  } on FormatException {
+    rethrow;
   }
 }
 

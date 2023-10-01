@@ -1,0 +1,42 @@
+characterNameV1:
+  promptParam: characterName
+  text: "Who is the hero of tonight's story?"
+  priority: 0
+  choices:
+    blaze:
+      text: "Blaze, the kind dragon"
+      prompt: "The protagonist is Blaze, the kind dragon."
+      imagePath: "test/story/data/choice.jpg"
+    frosty:
+      text: "Frosty, the penguin"
+      prompt: "The protagonist is Frosty, the penguin."
+      imagePath: "test/story/data/choice.jpg"
+    sparkles:
+      text: "Sparkles, the magical horse"
+      prompt: "The protagonist is Sparkles, the magical horse."
+      imagePath: "test/story/data/choice.jpg"
+characterFlawV1:
+  promptParam: characterFlaw
+  text: "What flaw does the hero have?"
+  priority: 1
+  choices:
+    failure:
+      text: "Being afraid of failure"
+      prompt: "The protagonist is afraid of failure."
+      imagePath: "test/story/data/choice.jpg"
+    giveUp:
+      text: "Giving up easily"
+      prompt: "The protagonist gives up easily."
+      imagePath: "test/story/data/choice.jpg"
+    lazy:
+      text: "Being a bit lazy"
+      prompt: "The protagonist is a bit lazy."
+      imagePath: "test/story/data/choice.jpg"
+    noAdvice:
+      text: "Not listening to advice"
+      prompt: "The protagonist does not listen to advice."
+      imagePath: "test/story/data/choice.jpg"
+    selfConfidence:
+      text: "Lacking self-confidence"
+      prompt: "The protagonist lacks self-confidence."
+      imagePath: "test/story/data/choice.jpg"

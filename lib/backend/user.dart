@@ -13,11 +13,15 @@ abstract class UnauthUser extends User {
 
   Future signInWithGoogle();
 
-  Future signInWithEmailAndPassword(
-      {required String email, required String password});
+  Future signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  });
 
-  Future createUserWithEmailAndPassword(
-      {required String email, required String password});
+  Future createUserWithEmailAndPassword({
+    required String email,
+    required String password,
+  });
 }
 
 /// An authenticated [User].
@@ -38,13 +42,18 @@ abstract class AnonymousUser extends AuthUser {
 
   /// Links this account to a Google account. If it fails, keeps using the
   /// current account.
+  @override
   Future linkToGoogle();
 
-  Future signInWithEmailAndPassword(
-      {required String email, required String password});
+  Future signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  });
 
-  Future createUserWithEmailAndPassword(
-      {required String email, required String password});
+  Future createUserWithEmailAndPassword({
+    required String email,
+    required String password,
+  });
 }
 
 /// An [AuthUser] with a permanent account.
@@ -56,6 +65,7 @@ abstract class RegisteredUser extends AuthUser {
 
   /// Links this account to a Google account. If it fails because the Google
   /// account is already linked to another account, sign-in to that account.
+  @override
   Future linkToGoogle();
 }
 

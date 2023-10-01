@@ -5,30 +5,75 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    match /requests_v1/{r} {
-      allow get: if isAuth() && resource.data.author == request.auth.uid;
-      allow list: if false;
-      allow write: if false;
-    }
-
-    match /stories/{story} {
+    match /story__realtime/{story} {
       allow read: if isAuth() && resource.data.author == request.auth.uid;
       allow create: if isAuth();
       allow update: if (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isFavorite']));
       allow delete: if false;
 
       match /images/{image} {
-        allow read: if isAuth() && get(/databases/$(database)/documents/stories/$(story)).data.author == request.auth.uid;
+        allow read: if isAuth() && get(/databases/$(database)/documents/story__realtime/$(story)).data.author == request.auth.uid;
         allow create: if isAuth();
         allow update: if false;
         allow delete: if false;
       }
 
       match /parts/{part} {
-        allow read: if isAuth() && get(/databases/$(database)/documents/stories/$(story)).data.author == request.auth.uid;
+        allow read: if isAuth() && get(/databases/$(database)/documents/story__realtime/$(story)).data.author == request.auth.uid;
         allow create: if isAuth();
         allow update: if false;
         allow delete: if false;
+      }
+    }
+
+    match /story__cache_serving/{story} {
+      allow get: if isAuth();
+      allow list: if false;
+      allow write: if false;
+
+      match /images/{image} {
+        allow get: if isAuth();
+        allow list: if false;
+        allow write: if false;
+      }
+
+      match /parts/{part} {
+        allow get: if isAuth();
+        allow list: if false;
+        allow write: if false;
+      }
+    }
+
+    match /story__forms_serving/{form} {
+      allow read: if isAuth();
+      allow write: if false;
+    }
+
+    match /story__questions_serving/{question} {
+      allow read: if isAuth();
+      allow write: if false;
+
+      match /choices/{choice} {
+        allow read: if isAuth();
+        allow write: if false;
+      }
+    }
+
+    match /user__stats/{r} {
+      allow get: if isAuth() && r == request.auth.uid;
+      allow list: if false;
+      allow write: if false;
+    }
+
+    match /user__stories/{uid} {
+      allow get: if isAuth() && uid == request.auth.uid;
+      allow write: if false;
+
+      match /cache/{storyId} {
+       allow read: if isAuth() && uid == request.auth.uid;
+       allow create: if false;
+       allow update: if (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isFavorite']));
+       allow delete: if false;
       }
     }
   }

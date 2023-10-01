@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'account_button.dart';
+import 'app_background_container.dart';
 
 /// Augmented [Scaffold] that comes with a full-width [Container].
 ///
@@ -28,38 +29,45 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget titleWidget = Text(
+    final titleWidget = Text(
       appBarTitle,
       style: Theme.of(context).primaryTextTheme.headlineSmall,
     );
 
-    Widget screenBodyWidget = Container(
+    final screenBodyWidget = SizedBox(
       width: MediaQuery.of(context).size.width,
       child: child,
     );
 
-    AppBar appBar = AppBar(
+    final appBar = AppBar(
       title: titleWidget,
       bottom: bottom,
     );
 
-    Widget _scrollView = _ScrollView(
+    final scrollView = _ScrollView(
       title: titleWidget,
       actions: actions,
       body: screenBodyWidget,
     );
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      // Must specify app bar only in the non-scrollable case
-      appBar: (showAppBar & !scrollableAppBar) ? appBar : null,
-      body: (showAppBar & scrollableAppBar)
-          ? SafeArea(child: _scrollView)
-          : SafeArea(child: screenBodyWidget),
-      floatingActionButton:
-          showAccountButton ? const FloatingAccountButton() : null,
-      floatingActionButtonLocation:
-          showAccountButton ? FloatingActionButtonLocation.endTop : null,
+    final stack = Stack(
+      children: [
+        const AppBackgroundContainer(),
+        scrollableAppBar ? scrollView : screenBodyWidget,
+      ],
+    );
+
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        // Must specify app bar only in the non-scrollable case
+        appBar: (showAppBar & !scrollableAppBar) ? appBar : null,
+        body: stack,
+        floatingActionButton:
+            showAccountButton ? const FloatingAccountButton() : null,
+        floatingActionButtonLocation:
+            showAccountButton ? FloatingActionButtonLocation.endTop : null,
+      ),
     );
   }
 }
@@ -70,7 +78,7 @@ class _ScrollView extends StatefulWidget {
   final List<Widget>? actions;
   final Widget body;
 
-  _ScrollView({
+  const _ScrollView({
     required this.title,
     required this.actions,
     required this.body,
@@ -87,17 +95,17 @@ class _ScrollViewState extends State<_ScrollView> {
 
   @override
   Widget build(BuildContext context) {
-    final ScrollController _scrollController = ScrollController();
+    final ScrollController scrollController = ScrollController();
 
-    void _onScroll() {
-      if (_scrollController.position.atEdge) {
-        if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent) {
+    void onScroll() {
+      if (scrollController.position.atEdge) {
+        if (scrollController.position.pixels ==
+            scrollController.position.maxScrollExtent) {
           setState(() {
             _pinnedAppBar = true;
           });
         }
-      } else if (_scrollController.position.userScrollDirection ==
+      } else if (scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         setState(() {
           _pinnedAppBar = false;
@@ -105,10 +113,10 @@ class _ScrollViewState extends State<_ScrollView> {
       }
     }
 
-    _scrollController.addListener(_onScroll);
+    scrollController.addListener(onScroll);
 
     return CustomScrollView(
-      controller: _scrollController,
+      controller: scrollController,
       slivers: [
         SliverAppBar(
           floating: true,

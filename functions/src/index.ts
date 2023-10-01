@@ -1,112 +1,128 @@
-import process from "node:process";
-
-import { region } from "firebase-functions";
 import { initializeApp } from "firebase-admin/app";
+import { region } from "firebase-functions";
+import { setGlobalOptions } from "firebase-functions/v2";
+import { onCall } from "firebase-functions/v2/https";
+import { onSchedule } from "firebase-functions/v2/scheduler";
 
 import { getUid } from "./auth";
 import { logger } from "./logger";
+import { parseEnvAsNumber, pickRandom } from "./utils";
 import {
-  OpenAiTextApi,
-  OpenAiImageApi,
-  FakeTextApi,
-  FakeImageApi,
-  FirebaseStoryWriter,
-  NPartStoryGenerator,
-  StoryMetadata,
-  ImageApi,
-  TextApi,
-  CLASSIC_LOGIC,
-} from "./story/";
-import { getOpenAiApi } from "./open_ai";
-import { StoryRequestV1Manager, StoryRequestV1 } from "./story/request";
+  FirebaseUserFeedbackManager,
+  FirebaseUserStatsManager,
+  FirebaseUserStoriesManager,
+  UserFeedback,
+  UserStats,
+} from "./user";
+import { FirebaseStoryReader, FirestoreContext } from "./firebase";
+import {
+  BucketRateLimiter,
+  FirestoreBucketRateLimiterStorage,
+  RateLimiter,
+} from "./rate_limiter";
 
 initializeApp();
 
+// Set Firestore paths.
+const firestore = new FirestoreContext();
+
+// Set the default region.
+setGlobalOptions({ region: "europe-west6" });
+
 /**
- * Request a story. See `StoryRequestV1` for the expected fields (except
- * `author`).
+ * Create a classic story for a user.
  *
- * Return the ID of the story.
+ * Returns the story id. It matches the cache with
+ * the answers in the request and adds the story
+ * id to the user's list of stories.
  */
-export const createClassicStoryRequest = region("europe-west1").https.onCall(
-  async (data, context) => {
-    data.author = getUid(context);
+export const createClassicStory = onCall(async (request) => {
+  // Check limit rate
+  const uid = getUid(request.auth);
+  const userRateLimiter = getRateLimiter(
+    parseEnvAsNumber("RATE_LIMITER_MAX_REQUESTS_PER_DAY_USER", 50)
+  );
+  await userRateLimiter.addRequests(uid, ["story"]);
 
-    const requestManager = new StoryRequestV1Manager();
-    const id = await requestManager.create(CLASSIC_LOGIC, data);
+  const globalRateLimiter = getRateLimiter(
+    parseEnvAsNumber("RATE_LIMITER_MAX_REQUESTS_PER_DAY_GLOBAL", 1000)
+  );
+  await globalRateLimiter.addRequests("global", ["story"]);
 
-    return id;
+  // Retrieve the story
+  const answers = request.data;
+  const reader = new FirebaseStoryReader(firestore.storyCacheServing);
+  const filter = { request: answers };
+  const storyIds = await reader.getIds(filter);
+
+  if (storyIds.length === 0) {
+    const error = `createClassicStory: no story found for request ${answers}`;
+    logger.error(error);
+    throw new Error(error);
   }
-);
+
+  const storyId = pickRandom(storyIds);
+  const userStoriesManager = new FirebaseUserStoriesManager(
+    firestore.userStories
+  );
+  await userStoriesManager.addCacheStory(uid, storyId);
+
+  // Update user stats
+  const userStatsManager = new FirebaseUserStatsManager(firestore.userStats);
+  await userStatsManager.updateStatsAfterStory(uid);
+
+  return storyId;
+});
 
 /**
- * Listen to the stories collection in Firestore and create the appropriate
- * story.
+ * Initialize user stats in the user__stats collection from Firestore upon new user creation.
  */
-export const createStory = region("europe-west1")
-  .runWith({ secrets: ["OPENAI_API_KEY"] })
-  .firestore.document("stories/{story_id}")
-  .onCreate(async (snapshot) => {
-    const storyId = snapshot.id;
+export const initializeUserStats = region("europe-west6")
+  .auth.user()
+  .onCreate(async (user) => {
+    const userStatsManager = new FirebaseUserStatsManager(firestore.userStats);
 
-    const requestManager = new StoryRequestV1Manager();
-    const request = await requestManager.get(storyId);
+    const userStoriesLimit = parseEnvAsNumber("STORY_DAILY_LIMIT", 2);
+    const initialUserStats = new UserStats(0, userStoriesLimit);
 
-    if (request.logic == CLASSIC_LOGIC) {
-      createClassicStory(storyId, request);
-    } else {
-      throw new Error(
-        `Story id ${storyId}: unrecognized logic ${request.logic}.`
-      );
-    }
+    await userStatsManager.initUser(user.uid, initialUserStats);
   });
 
 /**
- * Generate a classic story and add it to Firestore.
+ * Resets the daily stories limit at a fixed schedule.
  */
-async function createClassicStory(storyId: string, request: StoryRequestV1) {
-  // Transform the request into a `ClassicStoryLogic`.
-  const logic = request.toClassicStoryLogic();
-  const textApi = getTextApi();
-  const imageApi = getImageApi();
+export const resetDailyLimits = onSchedule("every day 01:00", async () => {
+  logger.info("resetDailyLimits: started");
+  const userStoriesLimit = parseEnvAsNumber("STORY_DAILY_LIMIT", 2);
 
-  // Generate and save the story.
-  const generator = new NPartStoryGenerator(logic, textApi, imageApi);
-  const metadata = new StoryMetadata(request.author, generator.title());
-  const writer = new FirebaseStoryWriter(metadata, storyId);
+  const userStatsManager = new FirebaseUserStatsManager(firestore.userStats);
 
-  await writer.writeMetadata();
+  await userStatsManager.setAllRemainingStories(userStoriesLimit);
+});
 
-  for await (const part of generator.storyParts()) {
-    await writer.writePart(part);
-  }
+/**
+ * Collect the user feedback and write it in the database.
+ */
+export const collectUserFeedback = onCall(async (request) => {
+  const data = request.data;
 
-  await writer.writeComplete();
+  const text = data.text;
+  const createdAt = new Date(data.createdAt);
+  const uid = getUid(request.auth);
 
-  logger.info(
-    `createClassicStory: story ${storyId} was generated and added to Firestore`
+  const feedback = new UserFeedback(text, createdAt, uid);
+
+  const feedbackManager = new FirebaseUserFeedbackManager(
+    firestore.userFeedback
   );
-}
 
-function getTextApi(): TextApi {
-  if (process.env.TEXT_API?.toLowerCase() === "fake") {
-    logger.info("using FakeTextApi");
-    return new FakeTextApi();
-  }
+  await feedbackManager.write(feedback);
+});
 
-  logger.info("using OpenAiTextApi");
-  return new OpenAiTextApi(
-    getOpenAiApi(process.env.OPENAI_API_KEY),
-    "gpt-3.5-turbo"
+function getRateLimiter(limit: number): RateLimiter {
+  return new BucketRateLimiter(
+    new FirestoreBucketRateLimiterStorage(),
+    new Map([["story", limit]]),
+    new Map([["story", 24 * 3600]])
   );
-}
-
-function getImageApi(): ImageApi {
-  if (process.env.IMAGE_API?.toLowerCase() === "fake") {
-    logger.info("using FakeImageApi");
-    return new FakeImageApi();
-  }
-
-  logger.info("using OpenAiImageApi");
-  return new OpenAiImageApi(getOpenAiApi(process.env.OPENAI_API_KEY));
 }

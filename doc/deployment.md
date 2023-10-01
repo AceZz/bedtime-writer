@@ -1,26 +1,61 @@
 # Deployment
 
-## Deployment to production checklist
+## Step 0: configure signing the app
 
-Check the following items before deploying to production:
-1. Check if [the indexes of the dev Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer/firestore/indexes) match [the prod Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer-prod/firestore/indexes).
-2. Check if [the rules of the dev Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer/firestore/rules) match [the prod Firestore](https://console.firebase.google.com/u/0/project/bedtime-writer-prod/firestore/rules). Also check the [local rules](../firestore.rules).
+Normally, you should only do this once per machine:
 
-## Firebase rules
+1. Ask Tristan or Pierre to get the keystore used for the app.
+2. Follow the steps from [Flutter doc](https://docs.flutter.dev/deployment/android#signing-the-app)
+   on signing the app, skipping the keystore creation step.
 
-The `*.rules` files in the main folder are only used for the Firebase emulators. To deploy them on
-the production server, use the
-[Firebase console](https://console.firebase.google.com/project/bedtime-writer/firestore/rules).
+## Step 1: deploy on `dev`
 
-## Secrets
+The Cloud functions, Firestore rules, and Firestore indexes should be up-to-date (updated before
+each PR merge).
 
-We use Google Cloud Secret Manager to store secrets such as the Open AI API key. See
-[the corresponding documentation](https://firebase.google.com/docs/functions/config-env#secret-manager).
+1. If needed, run scripts to populate the database (see [Administration tools](./admin.md)).
+2. Check that the Firebase rules are equal to the `*.rules` files.
+3. Check that everything works (in particular, the Firestore indexes).
 
-## Deploy the backend
+## Step 2: release a new version on `main`
 
-Run `npm run deploy_functions_dev` or `npm run deploy_functions_prod` in the `functions` folder.
-Reminder: it will use the `.env` file, not `.env.local`.
+1. Define the new version number using [Semantic Versioning](https://semver.org/):
+   `MAJOR.MINOR.PATCH`. Display the commits since the last release with `git log <last_version>..`
+   (you can find the last version with `git tag` or in `pubspec.yaml`).
+   If there is a `BREAKING CHANGE` (or `!`), increment `MAJOR`; if there is a `feat:`,
+   increment `MINOR`; otherwise, increment `PATCH`.
+   Yes, we are using a single version number for _two_ different projects (frontend and backend),
+   which is not perfect.
+2. Create a new branch called `dev-<version>` (e.g. `dev-1.2.3`) that forks `main`.
+3. Set the version number in `pubspec.yaml`.
+4. Commit with the message `release: <version>` (e.g. `git commit -a -m "release: 1.2.3"`).
+5. Add an annotated Git tag (e.g. `git tag -a 1.2.3 -m "release: 1.2.3"`).
+6. Push a PR **targeting `main`** (e.g. `git push -u origin dev-1.2.3`).
+7. Push the tag (e.g. `git push origin 1.2.3`).
+8. Merge the PR after the CI passes.
+
+## Step 3: merge `main` in `prod`
+
+1. Create a new branch called `prod-<version>` (e.g. `prod-1.2.3`) that forks `prod`.
+2. Merge `main` (the one which was just upgraded) into `prod-<version>`.
+3. Push a PR **targeting `prod`**.
+4. Merge the PR after the CI passes.
+
+## Step 4: deploy on `prod`
+
+1. Ensure 
+   [the prod rules](https://console.firebase.google.com/project/bedtime-writer/firestore/rules)
+   match
+   [the dev rules](https://console.firebase.google.com/project/bedtime-writer-dev/firestore/rules).
+2. Ensure
+   [the prod indexes](https://console.firebase.google.com/project/bedtime-writer/firestore/indexes)
+   match
+   [the dev indexes](https://console.firebase.google.com/project/bedtime-writer-dev/firestore/indexes).
+3. Deploy the Cloud functions: run `npm run deploy_functions_prod` in the `functions` folder.
+   Reminder: it will use the `.env` file, not `.env.local`.
+4. If needed, run scripts to populate the database (see [Administration tools](./admin.md)).
+5. Build the app and upload it to Google Play / the App Store.
+   * For Android, see <https://docs.flutter.dev/deployment/android#building-the-app-for-release>
 
 ## Deploy the Web frontend
 
@@ -45,3 +80,20 @@ access.
 If you ever publish to the live channel, delete everything inside the `bedtime-writer/build/web`
 folder, create a blank `index.html` file in it, and run `firebase deploy --only hosting` from the
 `functions` folder. This should erase everything you uploaded.
+
+## iOS
+
+### Dependencies
+
+CocoaPods is used as a dependency manager. Flutter will automatically run `pod install` to install 
+the correct pods (dependencies) for you when you are doing `flutter run` or `flutter build` for an 
+iOS device.
+
+As an optimization for build duration, a fixed version of the `FirebaseFirestore` pod is directly 
+downloaded from GitHub as specified in `ios/Podfile`. SDK version needs to be updated manually if 
+issues are found, followed by a `flutter clean`.
+
+### Emulators
+
+To reset the cache of an iOS simulated device, go the iOS simulator menu: Device > Erase All
+Content And Settings.

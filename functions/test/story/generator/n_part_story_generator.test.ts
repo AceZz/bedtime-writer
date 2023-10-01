@@ -1,39 +1,48 @@
 import { beforeAll, describe, expect, test } from "@jest/globals";
 import { mkdir, writeFile } from "node:fs/promises";
 
-import { getOpenAiApi } from "../../../src/open_ai";
 import {
-  FAKE_IMAGE_BYTES,
-  FakeImageApi,
   OpenAiImageApi,
-} from "../../../src/story/generator/image_api";
-import { NPartStoryGenerator } from "../../../src/story/generator/n_part_story_generator";
-import {
-  FakeTextApi,
   OpenAiTextApi,
-} from "../../../src/story/generator/text_api";
+  getOpenAiApi,
+} from "../../../src/open_ai";
+import { NPartStoryGenerator } from "../../../src/story";
 import { FULL_CLASSIC_STORY_LOGIC } from "../logic/data";
+import { FAKE_IMAGE_BYTES_0 } from "../../../src/fake";
+import { FAKE_IMAGE_API, FAKE_TEXT_API } from "../data";
+import { DUMMY_STORY_TEXT } from "./data";
+
+class TestNPartStoryGenerator extends NPartStoryGenerator {
+  storyText = "";
+
+  setStoryText(text: string) {
+    this.storyText = text;
+  }
+}
 
 describe("with fake APIs", () => {
   function initGenerator() {
-    const textApi = new FakeTextApi(5, 100, 500, 100);
-    const imageApi = new FakeImageApi();
-    const generator = new NPartStoryGenerator(
+    const generator = new TestNPartStoryGenerator(
       FULL_CLASSIC_STORY_LOGIC,
-      textApi,
-      imageApi
+      FAKE_TEXT_API,
+      FAKE_TEXT_API,
+      FAKE_IMAGE_API
     );
 
     return {
-      textApi,
-      imageApi,
+      textApi: FAKE_TEXT_API,
+      imageApi: FAKE_IMAGE_API,
       generator,
     };
   }
 
-  test("title", () => {
+  test("title", async () => {
     const { generator } = initGenerator();
-    expect(generator.title()).toBe("The story of Someone");
+    generator.setStoryText(DUMMY_STORY_TEXT);
+
+    const actual = await generator.title();
+
+    expect(actual).not.toBe("");
   });
 
   test("nextStoryPart", async () => {
@@ -58,7 +67,7 @@ describe("with fake APIs", () => {
       );
 
       if (index === 0) {
-        expect(part.image).toBe(FAKE_IMAGE_BYTES);
+        expect(part.image).toBe(FAKE_IMAGE_BYTES_0);
         expect(part.imagePrompt?.trim()).toBe(
           Array.from(textApi.getTokens()).join("").trim()
         );
@@ -88,6 +97,7 @@ describe.skip("with OpenAI APIs", () => {
   function initGenerator() {
     return new NPartStoryGenerator(
       FULL_CLASSIC_STORY_LOGIC,
+      new OpenAiTextApi(API, "gpt-4"),
       new OpenAiTextApi(API, "gpt-3.5-turbo"),
       new OpenAiImageApi(API)
     );

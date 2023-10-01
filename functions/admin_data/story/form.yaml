@@ -1,0 +1,4 @@
+questions:
+  characterName: ["blaze", "frosty", "sparkles"]
+  characterFlaw: ["failure", "lazy", "noAdvice"]
+  characterChallenge: ["animal", "lost", "riddle"]

@@ -5,9 +5,13 @@
 export interface StoryLogic {
   isValid(): boolean;
 
-  title(): string;
-
   prompt(): string;
 
+  titlePrompt(): string;
+
   imagePromptPrompt(): string;
+
+  toJson(): { [key: string]: string | number | undefined };
+
+  toString(): string;
 }

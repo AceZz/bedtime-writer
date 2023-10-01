@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 final _files = [
   'assets/lottie/dog.json',
@@ -24,8 +25,8 @@ class LottieLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Lottie.asset(
       _randomLottie(),
-      width: 180,
-      height: 180,
+      width: 180.sp,
+      height: 180.sp,
       fit: BoxFit.cover,
       animate: true,
     );
