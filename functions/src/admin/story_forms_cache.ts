@@ -166,7 +166,7 @@ class StoryFormGenerator {
           `${this.allAnswers.length - missingStoriesAfterGen.length} ` +
           `cached stories, ${missingStoriesAfterGen.length} stories ` +
           "are missing.\n" +
-          "Run `npm run story_gen_cache` again."
+          "Run `npm run story_forms_cache` again."
       );
     }
   }
