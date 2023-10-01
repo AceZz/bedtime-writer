@@ -61,8 +61,8 @@ launched!
 * `npm run story_set_questions [questions.yaml]`: set the story questions for the current project
   (on the emulator if `USE_FIREBASE_EMULATORS` is `true`). By default,
   `admin_data/story/questions.yaml` is used.
-* `npm run story_compress_images [folder]`: compress the images of the story choices. By default,
-  `admin_data/` is used.
+* `npm run compress_images [folder]`: compress the images of the story choices. By default,
+  `admin_data/story/` is used.
 * `npm run story_gen_forms`: generate story forms and write them to the Firestore database.
 * `npm run story_gen_cache`: select a story form, generate all the stories for it, and write them to
   the Firestore database.
