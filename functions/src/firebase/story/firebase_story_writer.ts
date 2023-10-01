@@ -206,7 +206,7 @@ export class FirebaseStoryWriter extends StoryWriter {
       );
     }
 
-    await imageRef.set({ data: image });
+    await imageRef.set({ data: image, isApproved: false });
   }
 
   private async setRegenImageStatus(
