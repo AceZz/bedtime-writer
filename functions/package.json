@@ -20,8 +20,8 @@
     "compress_images": "node lib/src/admin/compress_images.js",
     "story_forms_cache": "node lib/src/admin/story_forms_cache.js",
     "story_forms_gen": "node lib/src/admin/story_forms_gen.js",
-    "story_questions_set": "node lib/src/admin/story_questions_set.js",
-    "story_serve_form": "node lib/src/admin/story_serve_form.js"
+    "story_forms_serve": "node lib/src/admin/story_forms_serve.js",
+    "story_questions_set": "node lib/src/admin/story_questions_set.js"
   },
   "main": "lib/src/index.js",
   "dependencies": {

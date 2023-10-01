@@ -66,7 +66,7 @@ launched!
 * `npm run story_forms_gen`: generate story forms and write them to the Firestore database.
 * `npm run story_forms_cache`: select a story form, generate all the stories for it, and write them
   to the Firestore database.
-* `npm run story_serve_form`: copy a story form (and related story questions / cached stories) from
+* `npm run story_forms_serve`: copy a story form (and related story questions / cached stories) from
   the landing area to the serving area.
 
 ## Start the local backend with pre-loaded data
