@@ -12,8 +12,18 @@ import {
   GENERATOR_0,
   METADATA_0,
 } from "../../story/data";
-import { FakeImageApi, FAKE_IMAGE_BYTES_1 } from "../../../src/fake";
+import {
+  FakeImageApi,
+  FakeTextApi,
+  FAKE_IMAGE_BYTES_1,
+} from "../../../src/fake";
 import { StoryRegenImageStatus } from "../../../src/story";
+
+class FailTextApi extends FakeTextApi {
+  async getText(): Promise<string> {
+    throw new Error("FailTextApi: getText will always throw an error.");
+  }
+}
 
 class FailImageApi extends FakeImageApi {
   async getImage(): Promise<Buffer> {
@@ -101,8 +111,9 @@ describe("FirebaseStoryWriter", () => {
       const reader = new FirebaseStoryReader(storyCacheLanding);
       const imageId = (await reader.getImageIds(storyId))[0];
 
+      const textApi = new FakeTextApi();
       const imageApi = new FakeImageApi(SEED_1);
-      await writer.regenImage(storyId, imageId, imageApi);
+      await writer.regenImage(storyId, imageId, textApi, imageApi);
 
       await storyCacheLanding.expectImageToBe(
         storyId,
@@ -123,8 +134,9 @@ describe("FirebaseStoryWriter", () => {
       const reader = new FirebaseStoryReader(storyCacheLanding);
       const imageId = (await reader.getImageIds(storyId))[0];
 
+      const textApi = new FailTextApi();
       const imageApi = new FailImageApi();
-      await writer.regenImage(storyId, imageId, imageApi);
+      await writer.regenImage(storyId, imageId, textApi, imageApi);
 
       await storyCacheLanding.expectImageRegenStatusToBe(
         storyId,
