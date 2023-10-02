@@ -266,7 +266,7 @@ describe("FirebaseStoryReader", () => {
     const imageId = await storyRealtime.getPartImageId(storyId, partId);
 
     const reader = new FirebaseStoryReader(storyRealtime);
-    const actual = await reader.getImagePrompt(storyId, imageId);
+    const actual = (await reader.getImagePrompt(storyId, imageId)).imagePrompt;
 
     expect(actual).toBe(expected);
   });
