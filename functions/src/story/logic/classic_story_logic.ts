@@ -79,7 +79,8 @@ export class ClassicStoryLogic implements StoryLogic {
       this.getCharacterPrompt() +
       this.getPlacePrompt() +
       this.getObjectPrompt() +
-      this.getNumWordsPrompt()
+      this.getNumWordsPrompt() +
+      this.getFormatPrompt()
     );
   }
 
@@ -136,6 +137,10 @@ export class ClassicStoryLogic implements StoryLogic {
   private getNumWordsPrompt(): string {
     // One minute is about 100 words.
     return ` The length is about ${100 * this.duration} words.`;
+  }
+
+  private getFormatPrompt(): string {
+    return " Do not write a title, directly start writing the story.";
   }
 
   titlePrompt(): string {
