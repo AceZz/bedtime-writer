@@ -26,20 +26,22 @@ each PR merge).
    increment `MINOR`; otherwise, increment `PATCH`.
    Yes, we are using a single version number for _two_ different projects (frontend and backend),
    which is not perfect.
-2. Create a new branch called `dev-<version>` (e.g. `dev-1.2.3`) that forks `main`.
+2. Create a new branch called `dev-<version>` from `main` (e.g. `git switch main` then
+   `git switch -c dev-1.2.3`).
 3. Set the version number in `pubspec.yaml`.
 4. Commit with the message `release: <version>` (e.g. `git commit -a -m "release: 1.2.3"`).
-5. Add an annotated Git tag (e.g. `git tag -a 1.2.3 -m "release: 1.2.3"`).
-6. Push a PR **targeting `main`** (e.g. `git push -u origin dev-1.2.3`).
-7. Push the tag (e.g. `git push origin 1.2.3`).
-8. Merge the PR after the CI passes.
+5. Push a PR **targeting `main`** (e.g. `git push -u origin dev-1.2.3`).
+6. Merge the PR after the CI passes ("Rebase and merge").
+7. After the PR is merged, pull `main`, switch to `main`, and add an annotated Git tag
+   (e.g. `git tag -a 1.2.3 -m "release: 1.2.3"`).
+8. Push the tag (e.g. `git push origin 1.2.3`).
 
 ## Step 3: merge `main` in `prod`
 
-1. Create a new branch called `prod-<version>` (e.g. `prod-1.2.3`) that forks `prod`.
-2. Merge `main` (the one which was just upgraded) into `prod-<version>`.
-3. Push a PR **targeting `prod`**.
-4. Merge the PR after the CI passes.
+1. Go to <https://github.com/App-Galaxy/bedtime-writer/compare/prod...main>, and create a new PR *
+   *targeting `prod`**.
+2. After the CI passes, merge the PR with "Create a merge commit", with the message
+   `release: <version>-prod` (e.g. "release: 1.2.3-prod").
 
 ## Step 4: deploy on `prod`
 
@@ -67,9 +69,11 @@ each PR merge).
 3. Run `flutter build web --web-renderer canvaskit` (using this specific Web renderer is important
    for the Lottie animations). If the Firebase emulators are running, visit <http://localhost:5000>
    to preview what you are about to deploy.
-4. Deploy with `npm run deploy_hosting_dev` in the `functions` folder. This deploys the app with
-   Firebase Hosting. You can retrieve the link in
-   [the console](https://console.firebase.google.com/project/bedtime-writer/hosting/sites). Be aware
+4. Deploy with `npm run deploy_hosting_dev` or `npm run deploy_hosting_prod` in the `functions`
+   folder. This deploys the app with Firebase Hosting. You can retrieve the link in
+   the console (
+   [dev](https://console.firebase.google.com/project/bedtime-writer-dev/hosting/sites),
+   [prod](https://console.firebase.google.com/project/bedtime-writer/hosting/sites)). Be aware
    that the link expires after 7 days by default (this can be changed in the console).
 
 **Never publish anything to the "real", live channel.** Our goal is not to publish to the Web, we

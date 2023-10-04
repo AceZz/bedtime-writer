@@ -59,6 +59,7 @@ class _FavoriteButton extends ConsumerWidget {
         final userStory = ref.read(storyProvider(storyId)).value;
 
         if (userStory != null) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
           final isFavorite = await userStory.toggleIsFavorite();
           ScaffoldMessenger.of(context).showSnackBar(
             _favoriteSnackBar(context, isFavorite),

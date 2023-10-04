@@ -12,6 +12,9 @@ import {
   ImageApi,
   StoryRegenImageStatus,
   IMAGE_SIZE_DEFAULT,
+  TextApi,
+  SystemTextPrompt,
+  UserTextPrompt,
 } from "../../story";
 import { valueOrNull } from "../../utils";
 import { FirestoreStories } from "./firestore_stories";
@@ -164,6 +167,7 @@ export class FirebaseStoryWriter extends StoryWriter {
   async regenImage(
     storyId: string,
     imageId: string,
+    textApi: TextApi,
     imageApi: ImageApi
   ): Promise<void> {
     try {
@@ -172,14 +176,37 @@ export class FirebaseStoryWriter extends StoryWriter {
         imageId,
         StoryRegenImageStatus.PENDING
       );
-      const prompt = await this.reader.getImagePrompt(storyId, imageId);
 
-      const newImage = await imageApi.getImage(prompt, {
+      const { imagePrompt, partId } = await this.reader.getImagePrompt(
+        storyId,
+        imageId
+      );
+      const reformulationPrompt = `Reformulate slightly the following prompt.
+      Keep names and meaning identical. Directly write your answer. Make sure all sentences are finished. Here is the prompt:
+      ${imagePrompt}`;
+
+      const newImagePrompt = await textApi.getText(
+        [
+          new SystemTextPrompt(
+            "Act as a professional illustrator for children."
+          ),
+          new UserTextPrompt(reformulationPrompt),
+        ],
+        {
+          max_tokens: 100,
+          temperature: 0.4,
+          frequency_penalty: 0,
+          presence_penalty: 0,
+        }
+      );
+
+      const newImage = await imageApi.getImage(newImagePrompt, {
         n: 1,
         size: IMAGE_SIZE_DEFAULT,
       });
 
       await this.replaceImage(storyId, imageId, newImage);
+      await this.replaceImagePrompt(storyId, partId, newImagePrompt);
       await this.setRegenImageStatus(
         storyId,
         imageId,
@@ -206,7 +233,25 @@ export class FirebaseStoryWriter extends StoryWriter {
       );
     }
 
-    await imageRef.set({ data: image });
+    await imageRef.set({ data: image, isApproved: false });
+  }
+
+  private async replaceImagePrompt(
+    storyId: string,
+    partId: string,
+    newImagePrompt: string
+  ) {
+    const promptsDocRef = this.stories.promptsDocRef(storyId, partId);
+
+    const imagePrompt = (await promptsDocRef.get()).data()?.imagePrompt;
+
+    if (imagePrompt === undefined || imagePrompt === null) {
+      throw new Error(
+        `replaceImagePrompt: no current image prompt found for story ${storyId} and partId ${partId}`
+      );
+    }
+
+    await promptsDocRef.update({ imagePrompt: newImagePrompt });
   }
 
   private async setRegenImageStatus(

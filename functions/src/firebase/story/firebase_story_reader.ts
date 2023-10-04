@@ -125,20 +125,22 @@ export class FirebaseStoryReader implements StoryReader {
     return Array.from(formIdsSet);
   }
 
-  async getImagePrompt(storyId: string, imageId: string): Promise<string> {
+  async getImagePrompt(
+    storyId: string,
+    imageId: string
+  ): Promise<{ imagePrompt: string; partId: string }> {
     const partsRef = this.stories.partsRef(storyId);
     const partId = (await partsRef.where("image", "==", imageId).get()).docs[0]
       .id;
-    const prompts = (
-      await this.stories.promptsDocRef(storyId, partId).get()
-    ).data();
+    const snapshot = await this.stories.promptsDocRef(storyId, partId).get();
+    const prompts = snapshot.data();
     const imagePrompt = prompts?.imagePrompt;
 
     if (imagePrompt === undefined) {
       throw new Error("getImagePrompt: image prompt is undefined");
     }
 
-    return imagePrompt;
+    return { imagePrompt, partId };
   }
 
   async getImageIds(storyId: string): Promise<string[]> {

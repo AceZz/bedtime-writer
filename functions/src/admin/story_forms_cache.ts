@@ -76,7 +76,7 @@ class StoryFormGenerator {
       console.log(
         "The stories of all the forms in " +
           `${firestore.storyFormsLanding.collectionPath} are cached.\n` +
-          "Call `npm run story_gen_forms` to generate new forms.\n" +
+          "Call `npm run story_forms_gen` to generate new forms.\n" +
           "Abort."
       );
       process.exit();
@@ -166,7 +166,7 @@ class StoryFormGenerator {
           `${this.allAnswers.length - missingStoriesAfterGen.length} ` +
           `cached stories, ${missingStoriesAfterGen.length} stories ` +
           "are missing.\n" +
-          "Run `npm run story_gen_cache` again."
+          "Run `npm run story_forms_cache` again."
       );
     }
   }

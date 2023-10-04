@@ -14,13 +14,14 @@
     "lbd": "firebase emulators:start --import=lbd",
     "deploy_functions_dev": "firebase deploy --only functions --project bedtime-writer-dev",
     "deploy_functions_prod": "firebase deploy --only functions --project bedtime-writer",
-    "deploy_hosting_dev": "firebase hosting:channel:deploy preview --expires 7d",
+    "deploy_hosting_dev": "firebase hosting:channel:deploy preview --expires 7d --project bedtime-writer-dev",
+    "deploy_hosting_prod": "firebase hosting:channel:deploy preview --expires 7d --project bedtime-writer",
     "admin_interface": "nodemon lib/src/admin/interface/index.js --ext js,pug",
-    "story_set_questions": "node lib/src/admin/story_set_questions",
-    "story_compress_images": "node lib/src/admin/story_compress_images.js",
-    "story_gen_cache": "node lib/src/admin/story_gen_cache.js",
-    "story_gen_forms": "node lib/src/admin/story_gen_forms.js",
-    "story_serve_form": "node lib/src/admin/story_serve_form.js"
+    "compress_images": "node lib/src/admin/compress_images.js",
+    "story_forms_cache": "node lib/src/admin/story_forms_cache.js",
+    "story_forms_gen": "node lib/src/admin/story_forms_gen.js",
+    "story_forms_serve": "node lib/src/admin/story_forms_serve.js",
+    "story_questions_set": "node lib/src/admin/story_questions_set.js"
   },
   "main": "lib/src/index.js",
   "dependencies": {

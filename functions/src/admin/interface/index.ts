@@ -1,5 +1,5 @@
 import express, { json } from "express";
-import { getImageApi } from "../../api";
+import { getImageApi, getTextApi } from "../../api";
 
 import {
   FirestoreContext,
@@ -108,7 +108,8 @@ app.post("/regen-image", async (req, res) => {
   const storyWriter = new FirebaseStoryWriter(firestore.storyCacheLanding);
   try {
     const imageApi = getImageApi();
-    await storyWriter.regenImage(storyId, imageId, imageApi);
+    const textApi = getTextApi("gpt-3.5-turbo");
+    await storyWriter.regenImage(storyId, imageId, textApi, imageApi);
     res.json({ status: "success", message: "Image approved" });
   } catch (err) {
     res.json({ status: "error", message: `${err}` });
