@@ -37,9 +37,9 @@ class CreateStoryScreen extends ConsumerWidget {
     final isBlockedOrUnauth = (isAnonymousBlocked || isUnauth);
     final errorScreenText = isBlockedOrUnauth
         ? 'Your storytelling magic has reached its limit. Sign in to discover new stories.'
-        : 'Come back to Dreamy Tales tomorrow to discover new stories. Make sure to sign-in to find your stories in the magical library.';
-    const errorScreenButtonText = 'Sign In';
-    const errorScreenDestination = 'sign_in';
+        : 'Come back to Dreamy Tales tomorrow to discover new stories. Find your stories in the magical library.';
+    final errorScreenButtonText = isBlockedOrUnauth ? 'Sign In' : 'Library';
+    final errorScreenDestination = isBlockedOrUnauth ? 'sign_in' : 'library';
     final errorScreenButtonColor = Theme.of(context).colorScheme.primary;
 
     // Loads the [StoryForm] if needed.
