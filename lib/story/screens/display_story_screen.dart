@@ -210,14 +210,20 @@ class _StoryPartWidget extends ConsumerWidget {
       color: Theme.of(context).primaryTextTheme.bodyMedium?.color,
     );
 
+    final textTrim = text.trim();
+    final textSpanLetter = textTrim.isNotEmpty ? textTrim[0] : '';
+    final textSpanNoEnd = _removeTheEnd(text);
+    final textSpanRest =
+        textSpanNoEnd.isNotEmpty ? textSpanNoEnd.substring(1) : '';
+
     return TextSpan(
       // Sets a big first letter
-      text: text.trim()[0],
+      text: textSpanLetter,
       style: firstLetterStyle,
       // Writes the rest of the text
       children: <TextSpan>[
         TextSpan(
-          text: _removeTheEnd(text).substring(1),
+          text: textSpanRest,
           style: Theme.of(context).primaryTextTheme.bodyMedium,
         ),
       ],
