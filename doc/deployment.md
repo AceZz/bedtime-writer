@@ -28,7 +28,7 @@ each PR merge).
    which is not perfect.
 2. Create a new branch called `dev-<version>` from `main` (e.g. `git switch main` then
    `git switch -c dev-1.2.3`).
-3. Set the version number in `pubspec.yaml`.
+3. Set the version number and increment build number in `pubspec.yaml`.
 4. Commit with the message `release: <version>` (e.g. `git commit -a -m "release: 1.2.3"`).
 5. Push a PR **targeting `main`** (e.g. `git push -u origin dev-1.2.3`).
 6. Merge the PR after the CI passes ("Rebase and merge").
@@ -56,7 +56,7 @@ each PR merge).
 3. Deploy the Cloud functions: run `npm run deploy_functions_prod` in the `functions` folder.
    Reminder: it will use the `.env` file, not `.env.local`.
 4. If needed, run scripts to populate the database (see [Administration tools](./admin.md)).
-5. Build the app and upload it to Google Play / the App Store.
+5. Build the app and upload it to Google Play / App Store: `flutter build appbundle --flavor prod`.
    * For Android, see <https://docs.flutter.dev/deployment/android#building-the-app-for-release>
 
 ## Deploy the Web frontend
