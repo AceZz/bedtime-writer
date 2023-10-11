@@ -54,9 +54,10 @@ each PR merge).
    match
    [the dev indexes](https://console.firebase.google.com/project/bedtime-writer-dev/firestore/indexes).
 3. Deploy the Cloud functions: run `npm run deploy_functions_prod` in the `functions` folder.
-   Reminder: it will use the `.env` file, not `.env.local`.
+   Reminder: it will use the `functions/.env` file, not `functions/.env.local`.
 4. If needed, run scripts to populate the database (see [Administration tools](./admin.md)).
-5. Build the app and upload it to Google Play / App Store: `flutter build appbundle --flavor prod`.
+5. Ensure the `.env` file at project root has debug options set to false and has remote backend.
+6. Build the app and upload it to Google Play / App Store: `flutter build appbundle --flavor prod`.
    * For Android, see <https://docs.flutter.dev/deployment/android#building-the-app-for-release>
 
 ## Deploy the Web frontend
