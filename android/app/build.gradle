@@ -62,7 +62,7 @@ android {
     defaultConfig { //Overridden by productFlavors if they are specified
         applicationId "com.dreamstorestudios.bedtimewriter"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
