@@ -261,6 +261,10 @@ Future _linkUserWithEmailAndPassword({
 }
 
 void _validateEmail(String email) {
+  if (email.isEmpty) {
+    throw FormatException(code: 'empty-email');
+  }
+
   // Email validation regular expression
   final RegExp emailRegex =
       RegExp(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$');
