@@ -39,8 +39,11 @@ class HomeScreen extends ConsumerWidget {
     Widget libraryButton =
         const _HomeScreenButton(text: 'Library', destination: 'library');
 
+    const privacyPolicy = PrivacyPolicy();
+    const feedbackButton = FeedbackButton(text: 'Send feedback');
+
     Widget menuWidget = Column(
-      children: [newStoryButton, libraryButton]
+      children: [newStoryButton, libraryButton, feedbackButton, privacyPolicy]
           .asMap()
           .map(
             // The buttons will fade in one after the other
@@ -60,9 +63,6 @@ class HomeScreen extends ConsumerWidget {
           .toList(),
     );
 
-    const privacyPolicy = PrivacyPolicy();
-    const feedbackButton = FeedbackButton(text: 'Send feedback');
-
     return AppScaffold(
       showAppBar: false,
       showAccountButton: true,
@@ -79,10 +79,6 @@ class HomeScreen extends ConsumerWidget {
             const _DisplayRemainingStories(),
             const SizedBox(height: 20),
             menuWidget,
-            const SizedBox(height: 10),
-            feedbackButton,
-            const SizedBox(height: 10),
-            privacyPolicy,
             if (debugAuth())
               const _CustomCenterAtBottom(child: HomeScreenDebugAuth()),
             if (debugUserStats())
