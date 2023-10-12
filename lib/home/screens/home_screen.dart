@@ -5,9 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../backend/index.dart';
 import '../../config.dart';
 import '../../story/index.dart';
-import '../../widgets/app_scaffold.dart';
-import '../../widgets/fade_in.dart';
 import '../../widgets/feedback_button.dart';
+import '../../widgets/index.dart';
 import 'home_screen_debug.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -61,6 +60,7 @@ class HomeScreen extends ConsumerWidget {
           .toList(),
     );
 
+    const privacyPolicy = PrivacyPolicy();
     const feedbackButton = FeedbackButton(text: 'Send feedback');
 
     return AppScaffold(
@@ -81,6 +81,8 @@ class HomeScreen extends ConsumerWidget {
             menuWidget,
             const SizedBox(height: 10),
             feedbackButton,
+            const SizedBox(height: 10),
+            privacyPolicy,
             if (debugAuth())
               const _CustomCenterAtBottom(child: HomeScreenDebugAuth()),
             if (debugUserStats())
