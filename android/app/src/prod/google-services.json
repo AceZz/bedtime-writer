@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "596701039771-j2ouv3qv0s5vuusvl0ut38egskfe37tp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dreamstorestudios.bedtimewriter",
+            "certificate_hash": "9414cf4ae87db141c418b88a052dd044b6b81701"
+          }
+        },
+        {
           "client_id": "596701039771-nq09rc923s6f70t7akajicl5irbgsjpv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

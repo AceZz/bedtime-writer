@@ -565,6 +565,9 @@ String _convertExceptionToText({required Exception e}) {
     }
   } else if (e is FormatException) {
     switch (e.code) {
+      case 'empty-email':
+        text = 'Please enter an email';
+        break;
       case 'invalid-email-format':
         text = 'The email format is not valid';
         break;

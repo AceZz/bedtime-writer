@@ -8,6 +8,17 @@ Normally, you should only do this once per machine:
 2. Follow the steps from [Flutter doc](https://docs.flutter.dev/deployment/android#signing-the-app)
    on signing the app, skipping the keystore creation step.
 
+### Signing for production release
+
+Normally, this should only be done once per app. Before publishing the app to Google Play (either
+for real, or for a closed testing), Google requires the use of a specific certificate.
+See `Setup > App signing` in the Google Play Console of the app.
+
+This certificate generates SHA-1 and SHA-256 fingerprints that **must be added to the Firebase
+Android application** (only `prod`, obviously). Go to
+<https://console.firebase.google.com/u/0/project/bedtime-writer/settings/general/android:com.dreamstorestudios.bedtimewriter>
+to do so. Do not forget to update the `google-services.json` (for `prod`) afterwards.
+
 ## Step 1: deploy on `dev`
 
 The Cloud functions, Firestore rules, and Firestore indexes should be up-to-date (updated before
@@ -54,9 +65,10 @@ each PR merge).
    match
    [the dev indexes](https://console.firebase.google.com/project/bedtime-writer-dev/firestore/indexes).
 3. Deploy the Cloud functions: run `npm run deploy_functions_prod` in the `functions` folder.
-   Reminder: it will use the `.env` file, not `.env.local`.
+   Reminder: it will use the `functions/.env` file, not `functions/.env.local`.
 4. If needed, run scripts to populate the database (see [Administration tools](./admin.md)).
-5. Build the app and upload it to Google Play / App Store: `flutter build appbundle --flavor prod`.
+5. Ensure the `.env` file at project root has debug options set to false and has remote backend.
+6. Build the app and upload it to Google Play / App Store: `flutter build appbundle --flavor prod`.
    * For Android, see <https://docs.flutter.dev/deployment/android#building-the-app-for-release>
 
 ## Deploy the Web frontend

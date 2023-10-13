@@ -5,9 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../backend/index.dart';
 import '../../config.dart';
 import '../../story/index.dart';
-import '../../widgets/app_scaffold.dart';
-import '../../widgets/fade_in.dart';
 import '../../widgets/feedback_button.dart';
+import '../../widgets/index.dart';
 import 'home_screen_debug.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -40,8 +39,11 @@ class HomeScreen extends ConsumerWidget {
     Widget libraryButton =
         const _HomeScreenButton(text: 'Library', destination: 'library');
 
+    const privacyPolicy = PrivacyPolicy();
+    const feedbackButton = FeedbackButton(text: 'Send feedback');
+
     Widget menuWidget = Column(
-      children: [newStoryButton, libraryButton]
+      children: [newStoryButton, libraryButton, feedbackButton, privacyPolicy]
           .asMap()
           .map(
             // The buttons will fade in one after the other
@@ -61,8 +63,6 @@ class HomeScreen extends ConsumerWidget {
           .toList(),
     );
 
-    const feedbackButton = FeedbackButton(text: 'Send feedback');
-
     return AppScaffold(
       showAppBar: false,
       showAccountButton: true,
@@ -79,8 +79,6 @@ class HomeScreen extends ConsumerWidget {
             const _DisplayRemainingStories(),
             const SizedBox(height: 20),
             menuWidget,
-            const SizedBox(height: 10),
-            feedbackButton,
             if (debugAuth())
               const _CustomCenterAtBottom(child: HomeScreenDebugAuth()),
             if (debugUserStats())

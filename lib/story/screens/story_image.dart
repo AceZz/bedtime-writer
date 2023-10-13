@@ -5,6 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../config.dart';
 
+var _borderRadius = BorderRadius.circular(20);
+
 /// Displays the [image] of a story.
 class StoryImage extends StatelessWidget {
   final Future<Uint8List?> image;
@@ -74,7 +76,7 @@ class StoryImageDecoration extends StatelessWidget {
       children: [
         // Wraps the image in a rectangle with rounded corners
         ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: _borderRadius,
           child: Container(
             width: width,
             height: height,
@@ -131,6 +133,7 @@ class _LinearFadeWidget extends StatelessWidget {
             ],
           ),
           shape: BoxShape.rectangle,
+          borderRadius: _borderRadius,
         ),
       ),
     );
@@ -152,7 +155,7 @@ class _EdgesFadeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: _borderRadius,
       child: Stack(
         children: [
           Container(
