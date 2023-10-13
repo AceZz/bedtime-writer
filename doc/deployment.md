@@ -8,6 +8,17 @@ Normally, you should only do this once per machine:
 2. Follow the steps from [Flutter doc](https://docs.flutter.dev/deployment/android#signing-the-app)
    on signing the app, skipping the keystore creation step.
 
+### Signing for production release
+
+Normally, this should only be done once per app. Before publishing the app to Google Play (either
+for real, or for a closed testing), Google requires the use of a specific certificate.
+See `Setup > App signing` in the Google Play Console of the app.
+
+This certificate generates SHA-1 and SHA-256 fingerprints that **must be added to the Firebase
+Android application** (only `prod`, obviously). Go to
+<https://console.firebase.google.com/u/0/project/bedtime-writer/settings/general/android:com.dreamstorestudios.bedtimewriter>
+to do so. Do not forget to update the `google-services.json` (for `prod`) afterwards.
+
 ## Step 1: deploy on `dev`
 
 The Cloud functions, Firestore rules, and Firestore indexes should be up-to-date (updated before
