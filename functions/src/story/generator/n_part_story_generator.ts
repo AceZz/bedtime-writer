@@ -132,7 +132,7 @@ export class NPartStoryGenerator implements StoryGenerator {
     );
   }
 
-  private async getImagePromptThenImage(
+  public async getImagePromptThenImage(
     storyText: string
   ): Promise<[string, Buffer]> {
     const imagePrompt = await this.getImagePrompt(storyText);

@@ -6,6 +6,7 @@ import {
   parseStoryStatus,
   StoryRegenImageStatus,
   ClassicStoryLogic,
+  StoryPart,
 } from "../../story";
 import { StoryReaderFilter } from "../../story/story_reader";
 import { FirestoreStories } from "./firestore_stories";
@@ -123,6 +124,39 @@ export class FirebaseStoryReader implements StoryReader {
     });
 
     return Array.from(formIdsSet);
+  }
+
+  async getStoryParts(storyId: string): Promise<Map<string, StoryPart>> {
+    const parts = new Map();
+
+    const snapshot = await this.stories.storyRef(storyId).get();
+    const partIds = snapshot.data()?.partIds;
+
+    for (const partId of partIds) {
+      const partSnapshot = await this.stories.partRef(storyId, partId).get();
+      const promptSnapshot = await this.stories
+        .promptsDocRef(storyId, partId)
+        .get();
+
+      const imageId = partSnapshot.data()?.image ?? undefined;
+      const imageSnapshot =
+        imageId === undefined
+          ? undefined
+          : await this.stories.imageRef(storyId, imageId).get();
+
+      parts.set(
+        partId,
+        new StoryPart(
+          partSnapshot.data()?.text,
+          promptSnapshot.data()?.textPrompt,
+          imageSnapshot?.data()?.data,
+          promptSnapshot.data()?.imagePrompt,
+          promptSnapshot.data()?.imagePromptPrompt
+        )
+      );
+    }
+
+    return parts;
   }
 
   async getImagePrompts(

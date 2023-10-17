@@ -11,10 +11,8 @@ import {
   StoryLogic,
   ImageApi,
   StoryRegenImageStatus,
-  IMAGE_SIZE_DEFAULT,
   TextApi,
-  SystemTextPrompt,
-  UserTextPrompt,
+  NPartStoryGenerator,
 } from "../../story";
 import { valueOrNull } from "../../utils";
 import { FirestoreStories } from "./firestore_stories";
@@ -177,33 +175,24 @@ export class FirebaseStoryWriter extends StoryWriter {
         StoryRegenImageStatus.PENDING
       );
 
-      const { imagePrompt, partId } = await this.reader.getImagePrompts(
-        storyId,
-        imageId
-      );
-      const reformulationPrompt = `Reformulate slightly the following prompt.
-      Keep names and meaning identical. Directly write your answer. Make sure all sentences are finished. Here is the prompt:
-      ${imagePrompt}`;
-
-      const newImagePrompt = await textApi.getText(
-        [
-          new SystemTextPrompt(
-            "Act as a professional illustrator for children."
-          ),
-          new UserTextPrompt(reformulationPrompt),
-        ],
-        {
-          max_tokens: 100,
-          temperature: 0.4,
-          frequency_penalty: 0,
-          presence_penalty: 0,
-        }
+      const logic = await this.reader.getClassicStoryLogic(storyId);
+      const generator = new NPartStoryGenerator(
+        logic,
+        textApi, // Won't be used in that function.
+        textApi,
+        imageApi
       );
 
-      const newImage = await imageApi.getImage(newImagePrompt, {
-        n: 1,
-        size: IMAGE_SIZE_DEFAULT,
-      });
+      const storyParts = await this.reader.getStoryParts(storyId);
+      const storyText = Array.from(storyParts.values())
+        .map((part) => part.text)
+        .join("\n");
+
+      const [newImagePrompt, newImage] =
+        await generator.getImagePromptThenImage(storyText);
+
+      // Assume we replace the image of the first part.
+      const partId = Array.from(storyParts.keys())[0];
 
       await this.replaceImage(storyId, imageId, newImage);
       await this.replaceImagePrompt(storyId, partId, newImagePrompt);

@@ -257,6 +257,35 @@ describe("FirebaseStoryReader", () => {
     expect(actual.toString().toLowerCase()).toContain("frosty");
   });
 
+  test("getParts", async () => {
+    const writer = new TestFirebaseStoryWriter(storyRealtime);
+    const storyPart1 = new StoryPart(
+      "part 1",
+      "part 1 prompt",
+      Buffer.from(""),
+      "part 1 image prompt",
+      "part 1 image prompt prompt"
+    );
+    const storyPart2 = new StoryPart(
+      "part 2",
+      "part 2 prompt",
+      Buffer.from(""),
+      "part 2 image prompt",
+      "part 2 image prompt prompt"
+    );
+
+    const storyId = await writer.writeInit(METADATA_0);
+    const storyPartId1 = await writer.writePart(storyPart1);
+    const storyPartId2 = await writer.writePart(storyPart2);
+
+    const reader = new FirebaseStoryReader(storyRealtime);
+    const expected = new Map([
+      [storyPartId1, storyPart1],
+      [storyPartId2, storyPart2],
+    ]);
+    expect(await reader.getStoryParts(storyId)).toEqual(expected);
+  });
+
   test("getImagePrompt should get right prompt", async () => {
     const writer = new TestFirebaseStoryWriter(storyRealtime);
     const storyId = await writer.writeInit(METADATA_0);
