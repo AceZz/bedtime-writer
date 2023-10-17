@@ -10,6 +10,7 @@ import {
   FirebaseStoryFormWriter,
 } from "../../firebase";
 import { initLocalSecrets } from "../../firebase/utils";
+import _ from "lodash";
 
 initEnv();
 initLocalSecrets();
@@ -71,7 +72,11 @@ app.get("/form", async (req, res) => {
   const uiIndex = index + 1;
   const maxUiIndex = storyImageIds.length;
 
-  const logic = (await storyReader.getClassicStoryLogic(storyId)).toString();
+  // Remove the "null" from the story logic and stringify it.
+  const fullLogic = await storyReader.getClassicStoryLogic(storyId);
+  const filteredLogic = _.omitBy(fullLogic, _.isNull);
+  const logic = JSON.stringify(filteredLogic, null, 2);
+
   const { imagePromptPrompt, imagePrompt } = await storyReader.getImagePrompts(
     storyId,
     imageId
