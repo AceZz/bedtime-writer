@@ -10,6 +10,7 @@ import { CLASSIC_LOGIC_0, GENERATOR_0, METADATA_0 } from "../../story/data";
 import { StoryMetadata, StoryPart, StoryStatus } from "../../../src/story";
 import {
   DUMMY_IMAGE_PROMPT,
+  DUMMY_IMAGE_PROMPT_PROMPT,
   DUMMY_STORY_PART_1,
   DUMMY_STORY_PART_2,
 } from "../../story/data/stories";
@@ -260,15 +261,19 @@ describe("FirebaseStoryReader", () => {
     const writer = new TestFirebaseStoryWriter(storyRealtime);
     const storyId = await writer.writeInit(METADATA_0);
 
-    const expected = DUMMY_IMAGE_PROMPT;
-    const storyPart = await DUMMY_STORY_PART_1(expected);
+    const storyPart = await DUMMY_STORY_PART_1();
     const partId = await writer.writePart(storyPart);
     const imageId = await storyRealtime.getPartImageId(storyId, partId);
 
     const reader = new FirebaseStoryReader(storyRealtime);
-    const actual = (await reader.getImagePrompt(storyId, imageId)).imagePrompt;
+    const actualImagePromptPrompt = (
+      await reader.getImagePrompts(storyId, imageId)
+    ).imagePromptPrompt;
+    const actualImagePrompt = (await reader.getImagePrompts(storyId, imageId))
+      .imagePrompt;
 
-    expect(actual).toBe(expected);
+    expect(actualImagePromptPrompt).toBe(DUMMY_IMAGE_PROMPT_PROMPT);
+    expect(actualImagePrompt).toBe(DUMMY_IMAGE_PROMPT);
   });
 
   test("getImageIds should get all images", async () => {

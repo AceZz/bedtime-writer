@@ -177,7 +177,7 @@ export class FirebaseStoryWriter extends StoryWriter {
         StoryRegenImageStatus.PENDING
       );
 
-      const { imagePrompt, partId } = await this.reader.getImagePrompt(
+      const { imagePrompt, partId } = await this.reader.getImagePrompts(
         storyId,
         imageId
       );

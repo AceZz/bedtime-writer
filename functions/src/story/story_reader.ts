@@ -54,14 +54,18 @@ export interface StoryReader {
   getClassicStoryLogic(storyId: string): Promise<ClassicStoryLogic>;
 
   /**
-   * Get the prompt used to generate the image.
+   * Get the prompts used to generate the image.
    *
    * Returns the corresponding partId too
    */
-  getImagePrompt(
+  getImagePrompts(
     storyId: string,
     imageId: string
-  ): Promise<{ imagePrompt: string; partId: string }>;
+  ): Promise<{
+    imagePromptPrompt: string;
+    imagePrompt: string;
+    partId: string;
+  }>;
 
   /**
    * Get the image ids for the story.
