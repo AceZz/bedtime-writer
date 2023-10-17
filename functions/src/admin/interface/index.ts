@@ -72,6 +72,10 @@ app.get("/form", async (req, res) => {
   const maxUiIndex = storyImageIds.length;
 
   const logic = (await storyReader.getClassicStoryLogic(storyId)).toString();
+  const { imagePromptPrompt, imagePrompt } = await storyReader.getImagePrompts(
+    storyId,
+    imageId
+  );
 
   const isFormApprovable = await storyReader.checkAllFormImagesApproved(formId);
 
@@ -80,6 +84,8 @@ app.get("/form", async (req, res) => {
     storyId,
     imageId,
     logic,
+    imagePromptPrompt,
+    imagePrompt,
     image,
     uiIndex,
     maxUiIndex,

@@ -5,6 +5,7 @@ import { StoryPart } from "../../../src/story";
 /**
  * A dummy image prompt.
  */
+export const DUMMY_IMAGE_PROMPT_PROMPT = "dummy image prompt prompt";
 export const DUMMY_IMAGE_PROMPT = "dummy image prompt";
 
 /**
@@ -16,8 +17,8 @@ export async function DUMMY_STORY_PART_1(imagePrompt?: string) {
     "dummy text",
     "dummy text prompt",
     image,
-    imagePrompt ?? "dummy image prompt",
-    "dummy image prompt prompt"
+    imagePrompt ?? DUMMY_IMAGE_PROMPT,
+    DUMMY_IMAGE_PROMPT_PROMPT
   );
 }
 
@@ -30,7 +31,7 @@ export async function DUMMY_STORY_PART_2(imagePrompt?: string) {
     "dummy text",
     "dummy text prompt",
     image,
-    imagePrompt ?? "dummy image prompt",
-    "dummy image prompt prompt"
+    imagePrompt ?? DUMMY_IMAGE_PROMPT,
+    DUMMY_IMAGE_PROMPT_PROMPT
   );
 }

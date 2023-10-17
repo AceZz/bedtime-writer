@@ -129,12 +129,14 @@ html
         p= `storyId: ${storyId}`
         p= `imageId: ${imageId}`
         p= `logic: ${logic}`
+        p= `imagePromptPrompt: ${imagePromptPrompt}`
+        p= `imagePrompt: ${imagePrompt}`
         img(src=`data:image/png;base64,${image.imageB64}`)
         .status-container
-          span regenStatus: 
+          span regenStatus:
           strong(style=`color: ${image.regenStatus == 'pending' ? 'orange' : 'black'};`)= `${image.regenStatus}`
-          span.separator | 
-          span isApproved: 
+          span.separator |
+          span isApproved:
           strong(style=`color: ${image.isApproved ? 'green' : 'black'};`)= `${image.isApproved}`
       if nextImageId
         .button-container
@@ -162,7 +164,7 @@ html
               });
           button(id="regenButton") Regen
             script.
-              document.getElementById('regenButton').addEventListener('click', async () => {       
+              document.getElementById('regenButton').addEventListener('click', async () => {
                 fetch('/regen-image', {
                   method: 'POST',
                   headers: {
@@ -172,4 +174,3 @@ html
                 });
                 setTimeout(() => location.reload(), 100);
               });
-            
