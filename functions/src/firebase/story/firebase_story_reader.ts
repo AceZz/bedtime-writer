@@ -6,6 +6,7 @@ import {
   parseStoryStatus,
   StoryRegenImageStatus,
   ClassicStoryLogic,
+  StoryPart,
 } from "../../story";
 import { StoryReaderFilter } from "../../story/story_reader";
 import { FirestoreStories } from "./firestore_stories";
@@ -125,22 +126,63 @@ export class FirebaseStoryReader implements StoryReader {
     return Array.from(formIdsSet);
   }
 
-  async getImagePrompt(
+  async getStoryParts(storyId: string): Promise<Map<string, StoryPart>> {
+    const parts = new Map();
+
+    const snapshot = await this.stories.storyRef(storyId).get();
+    const partIds = snapshot.data()?.partIds;
+
+    for (const partId of partIds) {
+      const partSnapshot = await this.stories.partRef(storyId, partId).get();
+      const promptSnapshot = await this.stories
+        .promptsDocRef(storyId, partId)
+        .get();
+
+      const imageId = partSnapshot.data()?.image ?? undefined;
+      const imageSnapshot =
+        imageId === undefined
+          ? undefined
+          : await this.stories.imageRef(storyId, imageId).get();
+
+      parts.set(
+        partId,
+        new StoryPart(
+          partSnapshot.data()?.text,
+          promptSnapshot.data()?.textPrompt,
+          imageSnapshot?.data()?.data,
+          promptSnapshot.data()?.imagePrompt,
+          promptSnapshot.data()?.imagePromptPrompt
+        )
+      );
+    }
+
+    return parts;
+  }
+
+  async getImagePrompts(
     storyId: string,
     imageId: string
-  ): Promise<{ imagePrompt: string; partId: string }> {
+  ): Promise<{
+    imagePromptPrompt: string;
+    imagePrompt: string;
+    partId: string;
+  }> {
     const partsRef = this.stories.partsRef(storyId);
     const partId = (await partsRef.where("image", "==", imageId).get()).docs[0]
       .id;
     const snapshot = await this.stories.promptsDocRef(storyId, partId).get();
     const prompts = snapshot.data();
+    const imagePromptPrompt = prompts?.imagePromptPrompt;
     const imagePrompt = prompts?.imagePrompt;
 
+    if (imagePromptPrompt === undefined) {
+      throw new Error("getImagePrompts: imagePromptPrompt is undefined");
+    }
     if (imagePrompt === undefined) {
-      throw new Error("getImagePrompt: image prompt is undefined");
+      throw new Error("getImagePrompts: imagePrompt is undefined");
     }
 
-    return { imagePrompt, partId };
+    return { imagePromptPrompt, imagePrompt, partId };
   }
 
   async getImageIds(storyId: string): Promise<string[]> {
