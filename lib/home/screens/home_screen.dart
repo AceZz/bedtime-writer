@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../backend/index.dart';
 import '../../config.dart';
 import '../../story/index.dart';
-import '../../widgets/feedback_button.dart';
 import '../../widgets/index.dart';
 import 'home_screen_debug.dart';
 
@@ -61,6 +60,13 @@ class HomeScreen extends ConsumerWidget {
           )
           .values
           .toList(),
+    );
+
+    final preferences = ref.watch(preferencesProvider);
+    _showInitialFeedbackPopUp(
+      ref: ref,
+      context: context,
+      preferences: preferences,
     );
 
     return AppScaffold(
@@ -201,5 +207,35 @@ class _DisplayRemainingStories extends ConsumerWidget {
     );
 
     return displayWidget;
+  }
+}
+
+void _showInitialFeedbackPopUp({
+  required WidgetRef ref,
+  required BuildContext context,
+  required Preferences preferences,
+}) async {
+  // After using `pushNamed`, `HomeScreen` is *still* built and displayed at
+  // the bottom of the screens stack (cf. the behaviour of `Navigator`), even
+  // though it is hidden by the other screens.
+  // Without the `isTopScreen` check, the feedback dialog could thus be
+  // displayed on other screens.
+  final isTopScreen = ModalRoute.of(context)?.isCurrent ?? false;
+  final numStories = ref.read(userStatsProvider).when(
+        data: (data) => data.numStories,
+        error: (err, stack) => 0,
+        loading: () => 0,
+      );
+
+  if (!preferences.initialFeedbackAsked && isTopScreen && numStories > 0) {
+    ref.read(preferencesProvider.notifier).updateInitialFeedbackAsked();
+    await Future.delayed(const Duration(seconds: 1));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showFeedbackAlertDialog(
+        context: context,
+        title: 'Congrats on your first story!\nShare with us your feedback.',
+        hintText: 'Let us know what you think about this app.',
+      );
+    });
   }
 }

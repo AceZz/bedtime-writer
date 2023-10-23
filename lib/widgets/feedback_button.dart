@@ -29,8 +29,10 @@ class FeedbackButton extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: GestureDetector(
-            onTap: () => _showFeedbackAlertDialog(
+            onTap: () => showFeedbackAlertDialog(
               context: context,
+              title: 'Feedback',
+              hintText: 'Let\'s hear from you',
             ),
             child: Text(
               text,
@@ -43,17 +45,19 @@ class FeedbackButton extends StatelessWidget {
   }
 }
 
-_showFeedbackAlertDialog({required BuildContext context}) {
+showFeedbackAlertDialog({
+  required BuildContext context,
+  required String title,
+  required String hintText,
+}) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      const title = 'Feedback';
-
       final controller = TextEditingController();
 
       final content = AppTextField(
         controller: controller,
-        hintText: 'Let\'s hear from you',
+        hintText: hintText,
         obscureText: false,
         maxLines: 5,
       );

@@ -33,6 +33,8 @@ class SharedPreferencesNotifier extends Notifier<Preferences>
       accountCreationLastDate:
           sharedPreferences.getString('accountCreationLastDate') ??
               '1900-01-01T00:00:00.000',
+      initialFeedbackAsked:
+          sharedPreferences.getBool('initialFeedbackAsked') ?? false,
     );
   }
 
@@ -57,6 +59,13 @@ class SharedPreferencesNotifier extends Notifier<Preferences>
     final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
     await sharedPreferences.setString('accountCreationLastDate', creationDate);
     state = state.copyWith(lastAccountCreationDate: creationDate);
+  }
+
+  @override
+  Future<void> updateInitialFeedbackAsked() async {
+    final sharedPreferences = ref.watch(sharedPreferencesBaseProvider);
+    await sharedPreferences.setBool('initialFeedbackAsked', true);
+    state = state.copyWith(initialFeedbackAsked: true);
   }
 }
 
