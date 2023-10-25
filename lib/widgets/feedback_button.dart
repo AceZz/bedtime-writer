@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../backend/index.dart';
 import 'app_alert_dialog.dart';
+import 'app_text_button.dart';
 import 'app_text_field.dart';
 
 class FeedbackButton extends StatelessWidget {
@@ -16,25 +15,15 @@ class FeedbackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = GoogleFonts.outfit(
-      color: Theme.of(context).primaryTextTheme.bodySmall?.color!,
-      fontWeight: FontWeight.normal,
-      fontSize: 16.sp,
-      decoration: TextDecoration.underline,
-    );
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: GestureDetector(
+          child: AppTextButton(
+            text: text,
             onTap: () => _showFeedbackAlertDialog(
               context: context,
-            ),
-            child: Text(
-              text,
-              style: style,
             ),
           ),
         ),

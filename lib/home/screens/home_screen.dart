@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../backend/index.dart';
 import '../../config.dart';
 import '../../story/index.dart';
-import '../../widgets/feedback_button.dart';
 import '../../widgets/index.dart';
 import 'home_screen_debug.dart';
 
@@ -39,7 +39,10 @@ class HomeScreen extends ConsumerWidget {
     Widget libraryButton =
         const _HomeScreenButton(text: 'Library', destination: 'library');
 
-    const privacyPolicy = PrivacyPolicy();
+    var privacyPolicy = AppTextButton(
+      text: 'Privacy policy',
+      onTap: () => launchUrl(Uri.parse('https://www.dreamy-tales.com/privacy')),
+    );
     const feedbackButton = FeedbackButton(text: 'Send feedback');
 
     Widget menuWidget = Column(
