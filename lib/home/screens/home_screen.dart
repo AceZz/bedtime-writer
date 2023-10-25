@@ -14,9 +14,9 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Widget titleWidget = FadeIn(
-      duration: const Duration(milliseconds: 1500),
-      delay: const Duration(milliseconds: 500),
+    final fadeInGroup = FadeInGroup(delay: 500, duration: 1500);
+
+    Widget titleWidget = fadeInGroup.add(
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: 0.2 * MediaQuery.of(context).size.width,
@@ -27,47 +27,6 @@ class HomeScreen extends ConsumerWidget {
           style: Theme.of(context).primaryTextTheme.headlineLarge,
         ),
       ),
-    );
-
-    Widget newStoryButton = const _HomeScreenButton(
-      text: 'New story',
-      destination: 'create_story',
-      resetStoryState: true,
-      dependsOnUserStats: true,
-    );
-
-    Widget libraryButton =
-        const _HomeScreenButton(text: 'Library', destination: 'library');
-
-    var feedbackButton = AppTextButton(
-      text: 'Send feedback',
-      onTap: () => context.pushNamed('feedback'),
-    );
-
-    var privacyPolicy = AppTextButton(
-      text: 'Privacy policy',
-      onTap: () => launchUrl(Uri.parse('https://www.dreamy-tales.com/privacy')),
-    );
-
-    Widget menuWidget = Column(
-      children: [newStoryButton, libraryButton, feedbackButton, privacyPolicy]
-          .asMap()
-          .map(
-            // The buttons will fade in one after the other
-            (i, button) => MapEntry(
-              i,
-              FadeIn(
-                duration: const Duration(milliseconds: 500),
-                delay: Duration(milliseconds: 500 + 500 * (i + 1)),
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: button,
-                ),
-              ),
-            ),
-          )
-          .values
-          .toList(),
     );
 
     return AppScaffold(
@@ -83,9 +42,33 @@ class HomeScreen extends ConsumerWidget {
               child: titleWidget,
             ),
             const SizedBox(height: 20),
-            const _DisplayRemainingStories(),
+            fadeInGroup.add(child: const _DisplayRemainingStories()),
             const SizedBox(height: 20),
-            menuWidget,
+            _Menu(
+              fadeInGroup: fadeInGroup,
+              children: [
+                const _HomeScreenButton(
+                  text: 'New story',
+                  destination: 'create_story',
+                  resetStoryState: true,
+                  dependsOnUserStats: true,
+                ),
+                const _HomeScreenButton(
+                  text: 'Library',
+                  destination: 'library',
+                ),
+                AppTextButton(
+                  text: 'Send feedback',
+                  onTap: () => context.pushNamed('feedback'),
+                ),
+                AppTextButton(
+                  text: 'Privacy policy',
+                  onTap: () => launchUrl(
+                    Uri.parse('https://www.dreamy-tales.com/privacy'),
+                  ),
+                ),
+              ],
+            ),
             if (debugAuth())
               const _CustomCenterAtBottom(child: HomeScreenDebugAuth()),
             if (debugUserStats())
@@ -190,23 +173,43 @@ class _DisplayRemainingStories extends ConsumerWidget {
       loading: () => const CircularProgressIndicator(),
       error: (err, stack) => const CircularProgressIndicator(),
       data: (userStats) {
-        return FadeIn(
-          duration: const Duration(milliseconds: 1500),
-          delay: const Duration(milliseconds: 500),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 0.2 * MediaQuery.of(context).size.width,
-            ),
-            child: Text(
-              'Daily stories: ${userStats.remainingStories}',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).primaryTextTheme.bodyMedium,
-            ),
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 0.2 * MediaQuery.of(context).size.width,
+          ),
+          child: Text(
+            'Daily stories: ${userStats.remainingStories}',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).primaryTextTheme.bodyMedium,
           ),
         );
       },
     );
 
     return displayWidget;
+  }
+}
+
+class _Menu extends StatelessWidget {
+  final FadeInGroup fadeInGroup;
+  final List<Widget> children;
+
+  const _Menu({Key? key, required this.fadeInGroup, required this.children})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: children
+          .map(
+            (child) => fadeInGroup.add(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: child,
+              ),
+            ),
+          )
+          .toList(),
+    );
   }
 }
