@@ -39,11 +39,15 @@ class HomeScreen extends ConsumerWidget {
     Widget libraryButton =
         const _HomeScreenButton(text: 'Library', destination: 'library');
 
+    var feedbackButton = AppTextButton(
+      text: 'Send feedback',
+      onTap: () => context.pushNamed('feedback'),
+    );
+
     var privacyPolicy = AppTextButton(
       text: 'Privacy policy',
       onTap: () => launchUrl(Uri.parse('https://www.dreamy-tales.com/privacy')),
     );
-    const feedbackButton = FeedbackButton(text: 'Send feedback');
 
     Widget menuWidget = Column(
       children: [newStoryButton, libraryButton, feedbackButton, privacyPolicy]
