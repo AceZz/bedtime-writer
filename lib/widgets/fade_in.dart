@@ -55,3 +55,28 @@ class FadeInState extends State<FadeIn> {
     );
   }
 }
+
+/// Each call to [add] returns a [FadeIn] that starts [delay] ms after the
+/// previous one.
+///
+/// Note: the first [FadeIn] starts after [delay] ms.
+class FadeInGroup {
+  final int delay;
+  final int duration;
+  int _previousDelay = 0;
+
+  FadeInGroup({
+    this.delay = 500,
+    this.duration = 1500,
+  });
+
+  FadeIn add({required Widget child}) {
+    _previousDelay += delay;
+
+    return FadeIn(
+      duration: Duration(milliseconds: duration),
+      delay: Duration(milliseconds: _previousDelay),
+      child: child,
+    );
+  }
+}
