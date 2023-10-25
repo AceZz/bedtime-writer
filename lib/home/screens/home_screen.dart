@@ -16,15 +16,18 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final fadeInGroup = FadeInGroup(delay: 500, duration: 1500);
 
-    Widget titleWidget = fadeInGroup.add(
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 0.2 * MediaQuery.of(context).size.width,
-        ),
-        child: Text(
-          'Dreamy\nTales',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).primaryTextTheme.headlineLarge,
+    final title = fadeInGroup.add(
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 0.2 * MediaQuery.of(context).size.width,
+          ),
+          child: Text(
+            'Dreamy\nTales',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).primaryTextTheme.headlineLarge,
+          ),
         ),
       ),
     );
@@ -37,10 +40,7 @@ class HomeScreen extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 60),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: titleWidget,
-            ),
+            title,
             const SizedBox(height: 20),
             fadeInGroup.add(child: const _DisplayRemainingStories()),
             const SizedBox(height: 20),
@@ -80,12 +80,65 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
+class _DisplayRemainingStories extends ConsumerWidget {
+  const _DisplayRemainingStories({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    AsyncValue<UserStats> stats = ref.watch(userStatsProvider);
+
+    Widget displayWidget = stats.when(
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => const CircularProgressIndicator(),
+      data: (userStats) {
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 0.2 * MediaQuery.of(context).size.width,
+          ),
+          child: Text(
+            'Daily stories: ${userStats.remainingStories}',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).primaryTextTheme.bodyMedium,
+          ),
+        );
+      },
+    );
+
+    return displayWidget;
+  }
+}
+
+class _Menu extends StatelessWidget {
+  final FadeInGroup fadeInGroup;
+  final List<Widget> children;
+
+  const _Menu({Key? key, required this.fadeInGroup, required this.children})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: children
+          .map(
+            (child) => fadeInGroup.add(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: child,
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
 class _HomeScreenButton extends ConsumerWidget {
   final String text;
   final String destination;
   final bool resetStoryState;
-  final bool
-      dependsOnUserStats; //Indicates if the button depends on user stats to be clickable.
+
+  /// Whether the button depends on user stats to be clickable.
+  final bool dependsOnUserStats;
 
   const _HomeScreenButton({
     Key? key,
@@ -102,7 +155,8 @@ class _HomeScreenButton extends ConsumerWidget {
       style: Theme.of(context).primaryTextTheme.headlineSmall,
     );
 
-    // User stats are fetched from Firestore which can have some latency. We handle this delay by showing a CircularProgressIndicator
+    // User stats are fetched from Firestore which can have some latency.
+    // We handle this delay by showing a CircularProgressIndicator
     final userStats = ref.watch(userStatsProvider);
     final userStatsIsLoadingOrError =
         userStats is AsyncLoading || userStats is AsyncError;
@@ -158,58 +212,6 @@ class _CustomCenterAtBottom extends StatelessWidget {
           children: [Flexible(child: child)],
         ),
       ),
-    );
-  }
-}
-
-class _DisplayRemainingStories extends ConsumerWidget {
-  const _DisplayRemainingStories({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    AsyncValue<UserStats> stats = ref.watch(userStatsProvider);
-
-    Widget displayWidget = stats.when(
-      loading: () => const CircularProgressIndicator(),
-      error: (err, stack) => const CircularProgressIndicator(),
-      data: (userStats) {
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 0.2 * MediaQuery.of(context).size.width,
-          ),
-          child: Text(
-            'Daily stories: ${userStats.remainingStories}',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).primaryTextTheme.bodyMedium,
-          ),
-        );
-      },
-    );
-
-    return displayWidget;
-  }
-}
-
-class _Menu extends StatelessWidget {
-  final FadeInGroup fadeInGroup;
-  final List<Widget> children;
-
-  const _Menu({Key? key, required this.fadeInGroup, required this.children})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: children
-          .map(
-            (child) => fadeInGroup.add(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: child,
-              ),
-            ),
-          )
-          .toList(),
     );
   }
 }
