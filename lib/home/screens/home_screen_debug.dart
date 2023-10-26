@@ -76,3 +76,29 @@ class HomeScreenDebugUserStats extends ConsumerWidget {
     );
   }
 }
+
+class HomeScreenDebugPreferences extends ConsumerWidget {
+  const HomeScreenDebugPreferences({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'initialFeedbackAsked: '
+          '${ref.watch(preferencesProvider).initialFeedbackAsked}',
+        ),
+        OutlinedButton(
+          onPressed: () async {
+            await ref
+                .read(preferencesProvider.notifier)
+                .updateInitialFeedbackAsked(false);
+          },
+          child: const Text('Reset initial feedback'),
+        )
+      ],
+    );
+  }
+}

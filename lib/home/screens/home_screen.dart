@@ -73,6 +73,8 @@ class HomeScreen extends ConsumerWidget {
               const _CustomCenterAtBottom(child: HomeScreenDebugAuth()),
             if (debugUserStats())
               const _CustomCenterAtBottom(child: HomeScreenDebugUserStats()),
+            if (debugPreferences())
+              const _CustomCenterAtBottom(child: HomeScreenDebugPreferences()),
           ],
         ),
       ),

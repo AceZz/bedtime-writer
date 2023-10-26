@@ -15,6 +15,11 @@ bool debugUserStats() {
   return debug.toLowerCase() == 'true';
 }
 
+bool debugPreferences() {
+  final debug = dotenv.get('DEBUG_PREFERENCES', fallback: 'false');
+  return debug.toLowerCase() == 'true';
+}
+
 bool debugStory() {
   final debug = dotenv.get('DEBUG_STORY', fallback: 'false');
   return debug.toLowerCase() == 'true';
