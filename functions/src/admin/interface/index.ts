@@ -1,4 +1,5 @@
 import express, { json } from "express";
+import multer from "multer";
 import { getImageApi, getTextApi } from "../../api";
 
 import {
@@ -11,6 +12,8 @@ import {
 } from "../../firebase";
 import { initLocalSecrets } from "../../firebase/utils";
 import _ from "lodash";
+import { compressToPng } from "../../utils";
+import sharp from "sharp";
 
 initEnv();
 initLocalSecrets();
@@ -22,6 +25,7 @@ app.use(json());
 app.set("view engine", "pug");
 app.set("views", "./src/admin/interface/views");
 const port = 3000;
+const upload = multer();
 
 const firestore = new FirestoreContext();
 const storyReader = new FirebaseStoryReader(firestore.storyCacheLanding);
@@ -125,6 +129,37 @@ app.post("/regen-image", async (req, res) => {
   } catch (err) {
     res.json({ status: "error", message: `${err}` });
   }
+});
+
+app.post("/upload-image", upload.single("image"), async (req, res) => {
+  const { formId, storyId, imageId } = req.body;
+  let buffer = req.file?.buffer;
+
+  // Compress and resize the image to 512 x 512 (the image is cropped if the
+  // ratio is not 1:1).
+  if (buffer === undefined) {
+    res.json({ status: "error", message: "buffer is undefined" });
+    return;
+  }
+  buffer = await sharp(buffer).resize(512, 512, { fit: "cover" }).toBuffer();
+  buffer = await compressToPng(buffer, {
+    effort: 3,
+    compressionLevel: 9,
+  });
+
+  // Replace the image.
+  const storyWriter = new FirebaseStoryWriter(firestore.storyCacheLanding);
+
+  try {
+    await storyWriter.replaceImage(storyId, imageId, buffer);
+  } catch (err) {
+    res.json({ status: "error", message: `${err}` });
+  }
+
+  // Approve it by default.
+  await storyWriter.approveImage(storyId, imageId);
+
+  res.redirect(`/form?formId=${formId}`);
 });
 
 app.post("/approve-form", async (req, res) => {
