@@ -7,12 +7,14 @@ class AppTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final int maxLines;
+  final EdgeInsets scrollPadding;
 
   const AppTextField({
     Key? key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
+    this.scrollPadding = const EdgeInsets.all(20.0),
     this.maxLines = 1,
   }) : super(key: key);
 
@@ -47,6 +49,7 @@ class AppTextField extends StatelessWidget {
         hintStyle: hintStyle,
       ),
       maxLines: maxLines,
+      scrollPadding: scrollPadding,
     );
   }
 }
