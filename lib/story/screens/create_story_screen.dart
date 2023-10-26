@@ -27,12 +27,17 @@ class CreateStoryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     CreateStoryState state = ref.watch(createStoryStateProvider);
     User user = ref.watch(userProvider);
-    Preferences preferences = ref.watch(preferencesProvider);
+    // It is CRITICAL to use select here. Otherwise, if `CreateStoryScreen` is
+    // still in the Widget tree, it may be rebuilt every time ANY preference
+    // changes. This is dramatic, because we could trigger `createClassicStory`
+    // again.
+    final hasLoggedOut = ref.watch(
+      preferencesProvider.select((preferences) => preferences.hasLoggedOut),
+    );
 
     Widget nextScreen;
 
-    final isAnonymousBlocked =
-        (user is AnonymousUser) && preferences.hasLoggedOut;
+    final isAnonymousBlocked = (user is AnonymousUser) && hasLoggedOut;
     final isUnauth = (user is UnauthUser);
     final isBlockedOrUnauth = (isAnonymousBlocked || isUnauth);
     final errorScreenText = isBlockedOrUnauth
