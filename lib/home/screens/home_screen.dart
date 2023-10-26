@@ -14,6 +14,25 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // After using `pushNamed`, `HomeScreen` is *still* built and displayed at
+    // the bottom of the screens stack (cf. the behaviour of `Navigator`), even
+    // though it is hidden by the other screens.
+    // Without the `isTopScreen` check, the feedback redirect could thus be
+    // triggered on other screens.
+    final isTopScreen = ModalRoute.of(context)?.isCurrent ?? false;
+    final alreadyAsked = ref.watch(
+      preferencesProvider
+          .select((preferences) => preferences.initialFeedbackAsked),
+    );
+    final numStories = ref.watch(userStatsProvider).value?.numStories ?? 0;
+
+    if (isTopScreen && !alreadyAsked && numStories > 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(preferencesProvider.notifier).updateInitialFeedbackAsked(true);
+        context.pushNamed('feedback');
+      });
+    }
+
     final fadeInGroup = FadeInGroup(delay: 500, duration: 1500);
 
     final title = fadeInGroup.add(
