@@ -211,7 +211,7 @@ export class FirebaseStoryWriter extends StoryWriter {
     }
   }
 
-  private async replaceImage(storyId: string, imageId: string, image: Buffer) {
+  async replaceImage(storyId: string, imageId: string, image: Buffer) {
     const imageRef = this.stories.imageRef(storyId, imageId);
 
     const imageData = (await imageRef.get()).data()?.data;
