@@ -59,6 +59,13 @@ html
             .card
               .card-header
                 h5.mb-0
+                  button.btn.btn-link(data-toggle='collapse' data-target='#collapseImagePromptD3') Image prompt for DALL·E 3
+              .collapse.show#collapseImagePromptD3
+                .card-body
+                  p=imagePromptD3
+            .card
+              .card-header
+                h5.mb-0
                   button.btn.btn-link(data-toggle='collapse' data-target='#collapseImagePromptPrompt') Image prompt prompt
               .collapse#collapseImagePromptPrompt
                 .card-body

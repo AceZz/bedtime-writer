@@ -86,6 +86,8 @@ app.get("/form", async (req, res) => {
     imageId
   );
 
+  const imagePromptD3 = getImagePromptD3(imagePrompt);
+
   const isFormApprovable = await storyReader.checkAllFormImagesApproved(formId);
 
   res.render("form", {
@@ -95,6 +97,7 @@ app.get("/form", async (req, res) => {
     logic,
     imagePromptPrompt,
     imagePrompt,
+    imagePromptD3,
     image,
     uiIndex,
     maxUiIndex,
@@ -106,6 +109,12 @@ app.get("/form", async (req, res) => {
     isFormApprovable,
   });
 });
+
+function getImagePromptD3(imagePrompt: string): string {
+  // Ensure the prompt is complete.
+  const indexOfLastDot = imagePrompt.lastIndexOf(".");
+  return `Square image. ${imagePrompt.substring(0, indexOfLastDot + 1)}`;
+}
 
 app.post("/approve-image", async (req, res) => {
   const { storyId, imageId } = req.body;
