@@ -29,7 +29,10 @@ class HomeScreen extends ConsumerWidget {
     if (isTopScreen && !alreadyAsked && numStories > 0) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(preferencesProvider.notifier).updateInitialFeedbackAsked(true);
-        context.pushNamed('feedback');
+        context.pushNamed(
+          'feedback',
+          pathParameters: {'context': 'firstStory'},
+        );
       });
     }
 
@@ -78,7 +81,10 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 AppTextButton(
                   text: 'Send feedback',
-                  onTap: () => context.pushNamed('feedback'),
+                  onTap: () => context.pushNamed(
+                    'feedback',
+                    pathParameters: {'context': 'default'},
+                  ),
                 ),
                 AppTextButton(
                   text: 'Privacy policy',

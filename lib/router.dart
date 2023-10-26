@@ -90,8 +90,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         name: 'feedback',
-        path: '/feedback',
-        builder: (context, state) => const FeedbackScreen(),
+        path: '/feedback/:context',
+        builder: (context, state) {
+          final feedbackContext = state.pathParameters['context'];
+          return FeedbackScreen(feedbackContext: feedbackContext);
+        },
       )
     ],
   );

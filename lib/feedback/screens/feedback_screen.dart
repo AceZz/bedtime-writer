@@ -1,27 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../backend/index.dart';
 import '../../widgets/index.dart';
 
-class FeedbackScreen extends ConsumerWidget {
-  const FeedbackScreen({Key? key}) : super(key: key);
+class FeedbackScreen extends StatefulWidget {
+  final String? feedbackContext;
+
+  const FeedbackScreen({Key? key, required this.feedbackContext})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final controller = TextEditingController();
+  State<FeedbackScreen> createState() => _FeedbackScreenState();
+}
 
+class _FeedbackScreenState extends State<FeedbackScreen> {
+  final controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
     Widget image = Image.asset(
       'assets/decoration/feedback_panda.png',
       height: 150,
+    );
+
+    final message = Text(
+      textMessage(),
+      style: Theme.of(context).primaryTextTheme.bodyMedium,
     );
 
     final textField = AppTextField(
       controller: controller,
       hintText: 'Let\'s hear from you',
       obscureText: false,
-      maxLines: 8,
+      maxLines: 5,
+      scrollPadding: const EdgeInsets.only(bottom: 200),
     );
 
     final submit = TextButton(
@@ -41,10 +54,11 @@ class FeedbackScreen extends ConsumerWidget {
       appBarTitle: 'Send feedback',
       child: Padding(
         padding: const EdgeInsets.all(40.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: ListView(
           children: [
             image,
+            const SizedBox(height: 50),
+            message,
             const SizedBox(height: 50),
             textField,
             const SizedBox(height: 20),
@@ -53,6 +67,17 @@ class FeedbackScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  String textMessage() {
+    switch (widget.feedbackContext) {
+      case 'firstStory':
+        return 'Congrats on your first story! '
+            'We\'d love to have your feedback.';
+      default:
+        return 'Thank you for using Dreamy Tales! '
+            'Please share your feedback with us.';
+    }
   }
 }
 
