@@ -168,7 +168,7 @@ app.post("/upload-image", upload.single("image"), async (req, res) => {
   // Approve it by default.
   await storyWriter.approveImage(storyId, imageId);
 
-  res.redirect(`/form?formId=${formId}`);
+  res.redirect(`/form?formId=${formId}&storyId=${storyId}&imageId=${imageId}`);
 });
 
 app.post("/approve-form", async (req, res) => {
