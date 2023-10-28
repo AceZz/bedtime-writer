@@ -59,6 +59,13 @@ html
             .card
               .card-header
                 h5.mb-0
+                  button.btn.btn-link(data-toggle='collapse' data-target='#collapseImagePromptD3') Image prompt for DALL·E 3
+              .collapse.show#collapseImagePromptD3
+                .card-body
+                  p=imagePromptD3
+            .card
+              .card-header
+                h5.mb-0
                   button.btn.btn-link(data-toggle='collapse' data-target='#collapseImagePromptPrompt') Image prompt prompt
               .collapse#collapseImagePromptPrompt
                 .card-body
@@ -125,6 +132,18 @@ html
                   document.getElementById('refreshButton').addEventListener('click', async () => {
                     location.reload();
                   });
+
+            p.my-3
+              form(action="/upload-image" method="post", enctype="multipart/form-data")
+                div.form-group
+                  input(type="hidden" name="formId" value=`${formId}`)
+                  input(type="hidden" name="storyId" value=`${storyId}`)
+                  input(type="hidden" name="imageId" value=`${imageId}`)
+
+                  label(for="imageInput") Upload an image (resized and cropped to 512 x 512)
+                  input.form-control-file#imageInput(type="file" name="image")
+
+                button.btn.btn-primary(type="submit") Upload
 
     script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js' integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN' crossorigin='anonymous')
     script(src='https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js' integrity='sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q' crossorigin='anonymous')

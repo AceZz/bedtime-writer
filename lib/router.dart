@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'account/index.dart';
 import 'backend/index.dart';
+import 'feedback/index.dart';
 import 'home/index.dart';
 import 'story/index.dart';
 
@@ -87,6 +88,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) =>
             DisplayStoryScreen(storyId: state.pathParameters['id'] ?? ''),
       ),
+      GoRoute(
+        name: 'feedback',
+        path: '/feedback/:context',
+        builder: (context, state) {
+          final feedbackContext = state.pathParameters['context'];
+          return FeedbackScreen(feedbackContext: feedbackContext);
+        },
+      )
     ],
   );
 });
