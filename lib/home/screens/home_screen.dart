@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../backend/index.dart';
 import '../../config.dart';
+import '../../logger.dart';
 import '../../story/index.dart';
 import '../../widgets/index.dart';
 import 'home_screen_debug.dart';
@@ -94,6 +96,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ],
             ),
+            const TestButton(),
             if (debugAuth())
               const _CustomCenterAtBottom(child: HomeScreenDebugAuth()),
             if (debugUserStats())
@@ -103,6 +106,28 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class TestButton extends StatelessWidget {
+  const TestButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () async {
+        const fbLogger =
+            MethodChannel('com.dreamstorestudios.bedtimewriter.fb_logger');
+        try {
+          logger.severe('event');
+          final result = await fbLogger.invokeMethod<bool>('custom');
+          logger.severe('event $result');
+        } on PlatformException catch (e) {
+          logger.severe(e);
+        }
+      },
+      icon: const Icon(Icons.add),
     );
   }
 }

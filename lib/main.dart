@@ -19,6 +19,16 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
+  const fbLogger =
+      MethodChannel('com.dreamstorestudios.bedtimewriter.fb_logger');
+  try {
+    logger.severe('Configuring');
+    final result = await fbLogger.invokeMethod<bool>('configure');
+    logger.severe('Configured $result');
+  } on PlatformException catch (e) {
+    logger.severe(e);
+  }
+
   // Force portrait orientation for display
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
