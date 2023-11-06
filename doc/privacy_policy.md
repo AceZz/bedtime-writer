@@ -16,9 +16,10 @@ The app does use third-party services that may collect information used to ident
 
 Link to the privacy policy of third-party service providers used by the app
 
-* [Google Play Services](https://www.google.com/policies/privacy/)
-* [Google Analytics](https://marketingplatform.google.com/about/analytics/terms/us/)
 * [Firebase Crashlytics](https://firebase.google.com/support/privacy/)
+* [Google Analytics](https://marketingplatform.google.com/about/analytics/terms/us/)
+* [Google Play Services](https://www.google.com/policies/privacy/)
+* [Meta SDK](https://www.facebook.com/privacy/policy/)
 
 Please note that our Privacy Policy does not extend to these third-party services.
 
