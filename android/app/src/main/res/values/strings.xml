@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <string name="app_name">Bedtime writer</string>
-
+    <string name="facebook_app_id">313577871535907</string>
+    <string name="facebook_client_token">e0ef8505376a9e90f7a15e89070b3789</string>
 </resources>
