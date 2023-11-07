@@ -354,12 +354,7 @@ class _ChoiceButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Size size = MediaQuery.of(context).size;
-    double buttonWidth = 0.3 * size.width;
-    double textWidth = 0.5 * size.width;
-
-    var text = SizedBox(
-      width: textWidth,
+    final text = Expanded(
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Text(
@@ -371,9 +366,9 @@ class _ChoiceButton extends ConsumerWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.all(15),
-      child: SizedBox(
-        width: buttonWidth + textWidth,
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 500, maxHeight: 150),
         child: Material(
           color: Theme.of(context).colorScheme.primary,
           elevation: 10,
@@ -389,10 +384,7 @@ class _ChoiceButton extends ConsumerWidget {
               child: Row(
                 children: [
                   if (choice.image != null)
-                    SizedBox(
-                      width: buttonWidth,
-                      child: ClipOval(child: Image.memory(choice.image!)),
-                    ),
+                    ClipOval(child: Image.memory(choice.image!)),
                   text,
                 ],
               ),
