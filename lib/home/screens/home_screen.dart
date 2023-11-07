@@ -118,15 +118,10 @@ class _DisplayRemainingStories extends ConsumerWidget {
       loading: () => const CircularProgressIndicator(),
       error: (err, stack) => const CircularProgressIndicator(),
       data: (userStats) {
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 0.2 * MediaQuery.of(context).size.width,
-          ),
-          child: Text(
-            'Daily stories: ${userStats.remainingStories}',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).primaryTextTheme.bodyMedium,
-          ),
+        return Text(
+          'Daily stories: ${userStats.remainingStories}',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).primaryTextTheme.bodyMedium,
         );
       },
     );
