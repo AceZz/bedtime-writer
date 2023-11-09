@@ -118,15 +118,10 @@ class _DisplayRemainingStories extends ConsumerWidget {
       loading: () => const CircularProgressIndicator(),
       error: (err, stack) => const CircularProgressIndicator(),
       data: (userStats) {
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 0.2 * MediaQuery.of(context).size.width,
-          ),
-          child: Text(
-            'Daily stories: ${userStats.remainingStories}',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).primaryTextTheme.bodyMedium,
-          ),
+        return Text(
+          'Daily stories: ${userStats.remainingStories}',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).primaryTextTheme.bodyMedium,
         );
       },
     );
@@ -189,9 +184,8 @@ class _HomeScreenButton extends ConsumerWidget {
         userStats is AsyncLoading || userStats is AsyncError;
     final waitingUserStats = dependsOnUserStats && userStatsIsLoadingOrError;
 
-    return SizedBox(
-      width: 0.7 * MediaQuery.of(context).size.width,
-      height: 60,
+    return Container(
+      constraints: const BoxConstraints(maxHeight: 60, maxWidth: 350),
       child: Material(
         color: Theme.of(context).colorScheme.primary,
         elevation: 10,
