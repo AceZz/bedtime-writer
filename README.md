@@ -4,6 +4,14 @@
 
 All rights reserved to Tristan Stampfler and Pierre Wan-Fat.
 
+## Screenshots
+<img src="doc/img/create_story.png" width="200"/>
+<img src="doc/img/library.png" width="200"/>
+
+<img src="doc/img/story_image_1.png" width="200"/>
+<img src="doc/img/story_image_2.png" width="200"/>
+<img src="doc/img/story_image_3.png" width="200"/>
+
 ## Documentation
 
 * [Local setup](doc/setup.md): setup and run the project locally.
